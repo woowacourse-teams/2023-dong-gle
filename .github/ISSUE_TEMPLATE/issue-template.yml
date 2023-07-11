@@ -2,28 +2,28 @@ name: "Issue Template"
 description: "이슈를 작성해주세요."
 labels: "🛠️ Issue"
 body:
-- type: input
-  attributes:
-    label: ⏰ Estimated Time
-    description: "작업이 얼마나 걸릴 것 같나요?"
-    placeholder: "시간"
-  validations:
-    required: true
+  - type: input
+    attributes:
+      label: ⏰ Estimated Time
+      description: "작업이 얼마나 걸릴 것 같나요?"
+      placeholder: "시간"
+    validations:
+      required: true
   - type: textarea
     attributes:
       label:  🛠️ Description
-      description: 설명을 작성해 주세요.
-      placeholder: 기능 개발 맥락, 배경(optional)
+      description: "설명을 작성해 주세요."
+      placeholder: "기능 개발 맥락, 배경(optional)"
     validations:
       required: true
   - type: textarea
     attributes:
       label: ✅ Tasks
-      description: 해야 하는 일에 대한 Tasks를 작성해 주세요.
-      placeholder: 구현할 사항들을 명시
+      description: "해야 하는 일에 대한 Tasks를 작성해 주세요."
+      placeholder: "구현할 사항들을 명시"
     validations:
       required: true
   - type: textarea
     attributes:
       label: 📝 Note
-      description: 참고 사항(optional)
+      description: "참고 사항(optional)"

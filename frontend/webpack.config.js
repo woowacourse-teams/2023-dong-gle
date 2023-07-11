@@ -1,33 +1,46 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: "development",
-  entry: "./src/index.tsx",
+  mode: 'development',
+  entry: './src/index.tsx',
   module: {
     rules: [
       {
         test: /\.(ts|tsx)$/i,
-        use: "ts-loader",
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js", ".jsx"],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    alias: {
+      '@styles': path.resolve(__dirname, './src/styles'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@common': path.resolve(__dirname, './src/components/@common'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@customTypes': path.resolve(__dirname, './src/types'),
+      '@constants': path.resolve(__dirname, './src/constants'),
+      '@mocks': path.resolve(__dirname, './src/mocks'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@apis': path.resolve(__dirname, './src/apis'),
+    },
   },
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "public", "index.html"),
+      template: path.join(__dirname, 'public', 'index.html'),
     }),
   ],
   devServer: {
-    static: path.join(__dirname, "dist"),
+    static: path.join(__dirname, 'dist'),
     hot: true,
     open: true,
   },

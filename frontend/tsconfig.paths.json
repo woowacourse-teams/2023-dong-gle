@@ -5,12 +5,14 @@
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
-      "@pages/*": ["components/pages/*"],
-      "@commons/*": ["components/commons/*"],
+      "@common/*": ["components/@common/*"],
+      "@pages/*": ["pages/*"],
       "@hooks/*": ["hooks/*"],
       "@types/*": ["types/*"],
       "@constants/*": ["constants/*"],
-      "@apis/*": ["apis/*"]
+      "@apis/*": ["apis/*"],
+      "@utils/*": ["utils/*"],
+      "@mocks/*": ["mocks/*"]
     }
   }
 }

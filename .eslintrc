@@ -22,11 +22,13 @@
     "plugin:jsx-a11y/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:storybook/recommended",
     "prettier"
   ],
   "rules": {
     "eqeqeq": "error",
-    "no-console": "warn"
+    "no-console": "warn",
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "import/resolver": {

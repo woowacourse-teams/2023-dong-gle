@@ -1,10 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-
-import GlobalStyle from './styles/GlobalStyle';
-import App from './App';
 import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme';
+
+import GlobalStyle from '@styles/GlobalStyle';
+import { theme } from '@styles/theme';
+import App from './App';
 
 const root = createRoot(document.getElementById('app') as HTMLElement);
 root.render(

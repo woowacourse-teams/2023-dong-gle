@@ -4,9 +4,14 @@ import { ThemeProvider } from 'styled-components';
 
 import GlobalStyle from '@styles/GlobalStyle';
 import { theme } from '@styles/theme';
+import { worker } from '@mocks/browser';
 import App from './App';
 
-const root = createRoot(document.getElementById('app') as HTMLElement);
+if (process.env.NODE_ENV === 'development') {
+  worker.start();
+}
+
+const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>

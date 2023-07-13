@@ -4,7 +4,7 @@ import { RuleSet } from 'styled-components/dist/types';
 import { Color } from 'styles/theme';
 
 // Type
-export const Variant = ['primary'] as const;
+export const Variant = ['primary', 'text'] as const;
 export type Variant = (typeof Variant)[number];
 
 export const Size = ['small', 'medium', 'large'] as const;
@@ -44,6 +44,37 @@ const Button = (
 export default forwardRef(Button);
 
 // Styled
+const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> => {
+  const styles: Record<typeof variant, ReturnType<typeof genVariantStyle>> = {
+    primary: css`
+      color: ${({ theme }) => theme.color.gray10};
+      outline: 1px solid ${({ theme }) => theme.color.gray1};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.color.primary};
+        color: ${({ theme }) => theme.color.gray2};
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 3px ${({ theme }) => theme.color.primary};
+      }
+    `,
+    text: css`
+      color: ${({ theme }) => theme.color.gray10};
+      outline: 1px solid ${({ theme }) => theme.color.gray1};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.color.gray4};
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 3px ${({ theme }) => theme.color.gray4};
+      }
+    `,
+  };
+  return styles[variant];
+};
+
 const genSizeStyle = (size: Required<Props>['size']): RuleSet<object> => {
   const styles: Record<typeof size, ReturnType<typeof genSizeStyle>> = {
     small: css`
@@ -64,23 +95,13 @@ const genSizeStyle = (size: Required<Props>['size']): RuleSet<object> => {
 
 const StyledButton = styled.button<Props>`
   ${({ size = 'medium' }) => genSizeStyle(size)};
+  ${({ variant = 'primary' }) => genVariantStyle(variant)};
 
   width: ${({ block }) => block && '100%'};
   border: none;
   border-radius: 4px;
   background-color: ${({ theme, disabled }) => (disabled ? theme.color.gray2 : theme.color.gray1)};
-  color: ${({ theme }) => theme.color.gray10};
-  outline: 1px solid ${({ theme }) => theme.color.gray1};
   text-align: ${({ align }) => align};
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.color.primary};
-    color: ${({ theme }) => theme.color.gray2};
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.color.primary};
-  }
 `;

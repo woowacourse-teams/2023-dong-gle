@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "target": "ES2021",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "jsx": "react-jsx",
@@ -13,6 +14,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["node_modules"],
-  "extends": "./tsconfig.paths.json"
+  "exclude": ["node_modules"]
 }

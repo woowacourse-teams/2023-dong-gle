@@ -26,6 +26,7 @@
     "@storybook/react": "^7.0.26",
     "@storybook/react-webpack5": "^7.0.26",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@svgr/webpack": "^8.0.1",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@types/styled-components": "5.1.26",
@@ -46,6 +47,7 @@
     "ts-loader": "9.4.4",
     "tsconfig-paths-webpack-plugin": "4.0.1",
     "typescript": "5.1.6",
+    "url-loader": "^4.1.1",
     "webpack": "5.88.1",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "4.15.1"

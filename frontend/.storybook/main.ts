@@ -13,7 +13,7 @@ const config: StorybookConfig = {
     options: {},
   },
   docs: {
-    autodocs: 'tag',
+    autodocs: true,
   },
   webpackFinal: async (config) => {
     if (config.resolve) {
@@ -24,6 +24,28 @@ const config: StorybookConfig = {
         }),
       ];
     }
+
+    if (!config.module || !config.module.rules) {
+      return config;
+    }
+
+    config.module.rules = [
+      ...config.module.rules.map((rule) => {
+        if (!rule || rule === '...') {
+          return rule;
+        }
+
+        if (rule.test && /svg/.test(String(rule.test))) {
+          return { ...rule, exclude: /\.svg$/i };
+        }
+        return rule;
+      }),
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack', 'url-loader'],
+      },
+    ];
+
     return config;
   },
 };

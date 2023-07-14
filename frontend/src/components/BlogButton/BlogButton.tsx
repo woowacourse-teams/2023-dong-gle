@@ -21,8 +21,9 @@ export const publishWritingToBlog = async (publishTo: string, writingId: number)
   };
 
   const response = await fetch(url, options);
+
+  // TODO: 에러 처리 고도화 및 추상화
   if (!response.ok) {
-    // TODO: 던져주는 에러메세지 UI에 렌더링, 에러 처리 고도화 및 추상화
     throw new Error(response.status.toString());
   }
 };
@@ -32,8 +33,12 @@ type Props = {
 };
 
 const BlogButton = ({ blogName }: Props) => {
-  const handleBlogButtonClick = () => {
-    // publishWritingToBlog(blogName, 1);
+  const handleBlogButtonClick = async () => {
+    try {
+      // await publishWritingToBlog(blogName, 1);
+    } catch (error) {
+      // TODO: 던져주는 에러메세지 UI에 렌더링
+    }
   };
 
   // TODO: 쿠마 버튼 완성되면 컴포넌트 교체

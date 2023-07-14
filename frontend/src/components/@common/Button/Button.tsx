@@ -62,6 +62,7 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
   const styles: Record<typeof variant, ReturnType<typeof genVariantStyle>> = {
     primary: css`
       color: ${({ theme }) => theme.color.gray10};
+      background-color: ${({ theme }) => theme.color.gray1};
       outline: 1px solid ${({ theme }) => theme.color.gray1};
 
       &:hover {
@@ -75,6 +76,7 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
     `,
     text: css`
       color: ${({ theme }) => theme.color.gray10};
+      background-color: ${({ theme }) => theme.color.gray1};
       outline: 1px solid ${({ theme }) => theme.color.gray1};
 
       &:hover {

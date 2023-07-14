@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
 
 import Button, { Variant, Size, Align } from './Button';
+import { HomeIcon, CalendarIcon, PlusCircleIcon, SearchIcon, StatsIcon } from 'assets/icons';
 
 const meta = {
   title: 'common/Button',
@@ -31,6 +32,18 @@ const meta = {
     align: {
       description: '버튼 내부 글자의 정렬을 결정합니다.',
       options: Object.values(Align),
+      control: { type: 'radio' },
+    },
+    icon: {
+      description: '버튼에 아이콘을 추가합니다.',
+      options: {
+        none: false,
+        HomeIcon: <HomeIcon />,
+        CalendarIcon: <CalendarIcon />,
+        PlusCircleIcon: <PlusCircleIcon />,
+        SearchIcon: <SearchIcon />,
+        StatsIcon: <StatsIcon />,
+      },
       control: { type: 'radio' },
     },
     children: {
@@ -109,6 +122,23 @@ export const Aligns: Story = {
         <StoryItemContainer style={{ width: '400px' }}>
           <StoryItemTitle>right</StoryItemTitle>
           <Button align='right'>right</Button>
+        </StoryItemContainer>
+      </StoryContainer>
+    );
+  },
+};
+
+export const WithIcon: Story = {
+  render: () => {
+    return (
+      <StoryContainer>
+        <StoryItemContainer>
+          <StoryItemTitle>home</StoryItemTitle>
+          <Button icon={<HomeIcon />}>Home</Button>
+        </StoryItemContainer>
+        <StoryItemContainer>
+          <StoryItemTitle>plus-circle</StoryItemTitle>
+          <Button icon={<PlusCircleIcon />}>Add Post</Button>
         </StoryItemContainer>
       </StoryContainer>
     );

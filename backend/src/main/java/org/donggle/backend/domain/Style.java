@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.content.NormalContent;
 
 @Entity
 @Getter
@@ -23,8 +24,8 @@ public class Style {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "block_id")
-    private Block block;
+    @JoinColumn(name = "normal_content_id")
+    private NormalContent content;
     @Min(0)
     private int startIndex;
     @Min(0)

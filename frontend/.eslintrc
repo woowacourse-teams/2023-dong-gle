@@ -29,12 +29,23 @@
   "rules": {
     "eqeqeq": "error",
     "no-console": "warn",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "import/no-unresolved": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
       "typescript": true,
       "node": true
     }
-  }
+  },
+  "ignorePatterns": ["public", "dist", "webpack.config.js"]
 }

@@ -1,7 +1,16 @@
-import { ComponentPropsWithRef, ForwardedRef, forwardRef } from 'react';
+// import { HomeIcon } from 'assets/icons';
+import {
+  CSSProperties,
+  ComponentPropsWithRef,
+  ForwardedRef,
+  ReactElement,
+  forwardRef,
+} from 'react';
+
 import { css, styled } from 'styled-components';
 import { RuleSet } from 'styled-components/dist/types';
-import { Color } from 'styles/theme';
+
+import type { Color } from 'styles/theme';
 
 // Type
 export const Variant = ['primary', 'text'] as const;
@@ -20,6 +29,7 @@ export type Props = {
   fontColor?: Color;
   block?: boolean;
   align?: Align;
+  icon?: ReactElement;
 } & ComponentPropsWithRef<'button'>;
 
 // Component
@@ -30,14 +40,18 @@ const Button = (
     size = 'medium',
     block = false,
     align = 'center',
+    icon,
     ...rest
   }: Props,
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   return (
-    <StyledButton ref={ref} variant={variant} size={size} block={block} align={align} {...rest}>
-      {children}
-    </StyledButton>
+    <S.Button ref={ref} variant={variant} size={size} block={block} align={align} {...rest}>
+      <S.IconTextContainer>
+        {Boolean(icon) && <S.IconWrapper size={size}>{icon}</S.IconWrapper>}
+        <p>{children}</p>
+      </S.IconTextContainer>
+    </S.Button>
   );
 };
 
@@ -93,15 +107,59 @@ const genSizeStyle = (size: Required<Props>['size']): RuleSet<object> => {
   return styles[size];
 };
 
-const StyledButton = styled.button<Props>`
-  ${({ size = 'medium' }) => genSizeStyle(size)};
-  ${({ variant = 'primary' }) => genVariantStyle(variant)};
+const genIconStyle = (size: Required<Props>['size']): RuleSet<object> => {
+  const styles: Record<typeof size, ReturnType<typeof genIconStyle>> = {
+    small: css`
+      width: 2rem;
+      height: 2rem;
+    `,
+    medium: css`
+      width: 2.2rem;
+      height: 2.2rem;
+    `,
+    large: css`
+      width: 2.4rem;
+      height: 2.4rem;
+    `,
+  };
+  return styles[size];
+};
 
-  width: ${({ block }) => block && '100%'};
-  border: none;
-  border-radius: 4px;
-  background-color: ${({ theme, disabled }) => (disabled ? theme.color.gray2 : theme.color.gray1)};
-  text-align: ${({ align }) => align};
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-`;
+const genAlignStyle = (align: Required<Props>['align']): RuleSet<object> => {
+  const genAlign: Record<typeof align, CSSProperties['justifyContent']> = {
+    left: 'flex-start',
+    center: 'space-evenly',
+    right: 'flex-end',
+  };
+
+  return css`
+    justify-content: ${genAlign[align]};
+    align-items: center;
+  `;
+};
+
+const S = {
+  Button: styled.button<Props>`
+    ${({ size = 'medium' }) => genSizeStyle(size)};
+    ${({ variant = 'primary' }) => genVariantStyle(variant)};
+    ${({ align = 'center' }) => genAlignStyle(align)};
+
+    display: flex;
+    width: ${({ block }) => block && '100%'};
+    border: none;
+    border-radius: 4px;
+
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  `,
+
+  IconTextContainer: styled.div<Props>`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  `,
+
+  IconWrapper: styled.div<Props>`
+    ${({ size = 'medium' }) => genIconStyle(size)};
+  `,
+};

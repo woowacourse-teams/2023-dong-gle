@@ -1,4 +1,4 @@
-package org.donggle.backend.domain;
+package org.donggle.backend.domain.content;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class CodeBlockContent extends Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 20, nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private String rawText;
+    @Column(nullable = false)
+    private String language;
 }

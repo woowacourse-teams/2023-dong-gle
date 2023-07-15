@@ -17,11 +17,13 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/writings")
 public class UploadApiController {
+    private static final String MD_FORMAT = ".md";
+
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> upload(final MultipartFile file) {
         final String originalFilename = file.getOriginalFilename();
         System.out.println("file.getOriginalFilename() = " + originalFilename);
-        if (!Objects.requireNonNull(originalFilename).endsWith(".md")) {
+        if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
             System.out.println("지원하지 않는 형식입니다.");
             throw new UnsupportedOperationException();
         }

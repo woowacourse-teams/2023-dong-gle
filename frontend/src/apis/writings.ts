@@ -7,9 +7,7 @@ const writingURL = `${baseURL}/writings`;
 // 글 생성(글 업로드): POST
 export const addWriting = (body: AddWritingRequest) =>
   http.post(`${writingURL}/file`, {
-    body: JSON.stringify({
-      body,
-    }),
+    body: JSON.stringify(body),
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -25,7 +23,5 @@ export const getWritingProperties = (writingId: number) =>
 // 글 발행하기: POST
 export const publishWriting = (writingId: number, body: PublishWritingRequest) =>
   http.get(`${writingURL}/${writingId}/publish`, {
-    body: JSON.stringify({
-      body,
-    }),
+    body: JSON.stringify(body),
   });

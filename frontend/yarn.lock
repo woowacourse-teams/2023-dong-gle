@@ -3064,6 +3064,13 @@
   resolved "https://registry.yarnpkg.com/@types/doctrine/-/doctrine-0.0.3.tgz#e892d293c92c9c1d3f9af72c15a554fbc7e0895a"
   integrity sha512-w5jZ0ee+HaPOaX25X2/2oGR/7rgAQSYII7X7pp0m9KgBfMP7uKfMfTvcpl5Dj+eDBbpxKGiqE+flqDr6XTd2RA==
 
+"@types/dompurify@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-3.0.2.tgz#c1cd33a475bc49c43c2a7900e41028e2136a4553"
+  integrity sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==
+  dependencies:
+    "@types/trusted-types" "*"
+
 "@types/ejs@^3.1.1":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.1.2.tgz#75d277b030bc11b3be38c807e10071f45ebc78d9"
@@ -3369,6 +3376,11 @@
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.0.tgz#199a3f473f0c3a6f6e4e1b17cdbc967f274bdc6b"
   integrity sha512-n4sx2bqL0mW1tvDf/loQ+aMX7GQD3lc3fkCMC55VFNDu/vBOabO+LTIeXKM14xK0ppk5TUGcWRjiSpIlUpghKw==
+
+"@types/trusted-types@*":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.3.tgz#a136f83b0758698df454e328759dbd3d44555311"
+  integrity sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==
 
 "@types/unist@^2.0.0":
   version "2.0.6"
@@ -5056,6 +5068,11 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   integrity sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
   dependencies:
     domelementtype "^2.3.0"
+
+dompurify@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.0.5.tgz#eb3d9cfa10037b6e73f32c586682c4b2ab01fbed"
+  integrity sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==
 
 domutils@^2.5.2, domutils@^2.8.0:
   version "2.8.0"

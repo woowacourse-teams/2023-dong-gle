@@ -44,6 +44,7 @@
     "eslint-plugin-storybook": "0.6.12",
     "html-webpack-plugin": "5.5.3",
     "msw": "1.2.2",
+    "msw-storybook-addon": "^1.8.0",
     "prettier": "3.0.0",
     "storybook": "^7.0.26",
     "ts-loader": "9.4.4",

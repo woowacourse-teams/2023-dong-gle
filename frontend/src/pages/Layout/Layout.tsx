@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import { DefaultTheme, css, styled } from 'styled-components';
+
 import { theme } from 'styles/theme';
 
 const Layout = ({ children }: PropsWithChildren) => {
@@ -37,7 +38,6 @@ const S = {
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    padding: 0.4rem;
   `,
 
   Header: styled.header`

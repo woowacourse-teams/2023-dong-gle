@@ -1,5 +1,8 @@
 // src/mocks/handlers.js
+import { writingURL } from 'constants/apis/url';
 import { rest } from 'msw';
+import type { GetWritingResponse } from 'types/apis/writings';
+import { writingContentMock } from './writingContentMock';
 
 export const handlers = [
   // 글 생성(글 업로드): POST
@@ -16,5 +19,17 @@ export const handlers = [
     if (!blog.includes(publishTo) || typeof writingId !== 'number') return res(ctx.status(404));
 
     return res(ctx.status(200));
+  rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
+    const writingId = Number(req.params.writingId);
+
+    return res(
+      ctx.delay(300),
+      ctx.status(200),
+      ctx.json<GetWritingResponse>({
+        id: writingId,
+        title: '테스트 글 제목',
+        content: writingContentMock,
+      }),
+    );
   }),
 ];

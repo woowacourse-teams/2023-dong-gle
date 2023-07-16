@@ -1,5 +1,7 @@
 import { PropsWithChildren } from 'react';
-import { styled } from 'styled-components';
+
+import { DefaultTheme, css, styled } from 'styled-components';
+import { theme } from 'styles/theme';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
@@ -15,13 +17,27 @@ const Layout = ({ children }: PropsWithChildren) => {
 
 export default Layout;
 
+export const LAYOUT_COMMON_STYLE = {
+  gap: '0.4rem',
+
+  border: (({ theme }: DefaultTheme) => {
+    return `2px solid ${theme.color.gray13}`;
+  })({ theme }),
+} as const;
+
+export const SIDEBAR_SECTION_STYLE = css`
+  width: 32rem;
+  border: ${LAYOUT_COMMON_STYLE.border};
+  border-radius: 8px;
+`;
+
 const S = {
   Container: styled.div`
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    padding: 8px;
+    padding: 0.4rem;
   `,
 
   Header: styled.header`
@@ -32,13 +48,11 @@ const S = {
   Row: styled.div`
     flex: 1;
     display: flex;
-    gap: 0.4rem;
+    gap: ${LAYOUT_COMMON_STYLE.gap};
   `,
 
   SidebarSection: styled.section`
-    width: 32rem;
-    border: 3px solid black;
-    border-radius: 8px;
+    ${SIDEBAR_SECTION_STYLE}
   `,
 
   Main: styled.main`

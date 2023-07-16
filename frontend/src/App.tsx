@@ -1,5 +1,12 @@
+import Layout from 'pages/Layout/Layout';
+import WritingPage from 'pages/WritingPage/WritingPage';
+
 const App = () => {
-  return <h1>안녕 동글 !</h1>;
+  return (
+    <Layout>
+      <WritingPage />
+    </Layout>
+  );
 };
 
 export default App;

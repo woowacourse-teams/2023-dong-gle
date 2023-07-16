@@ -1,12 +1,15 @@
+import type { AddWritingRequest, PublishWritingRequest } from 'types/apis/writings';
 import { http } from './fetch';
 
 const baseURL = '';
 const writingURL = `${baseURL}/writings`;
 
 // 글 생성(글 업로드): POST
-export const addWriting = (file: FormData) =>
+export const addWriting = (body: AddWritingRequest) =>
   http.post(`${writingURL}/file`, {
-    body: file,
+    body: JSON.stringify({
+      body,
+    }),
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -20,10 +23,9 @@ export const getWritingProperties = (writingId: number) =>
   http.get(`${writingURL}/${writingId}/properties`);
 
 // 글 발행하기: POST
-// TODO: publishTo 타입 블로그 타입으로 변경
-export const publishWriting = (writingId: number, publishTo: string) =>
+export const publishWriting = (writingId: number, body: PublishWritingRequest) =>
   http.get(`${writingURL}/${writingId}/publish`, {
     body: JSON.stringify({
-      publishTo,
+      body,
     }),
   });

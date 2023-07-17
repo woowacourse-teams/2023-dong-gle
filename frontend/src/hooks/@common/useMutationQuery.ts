@@ -1,27 +1,27 @@
 import { useState } from 'react';
 
-interface useMutateQueryArgs<ResponseData> {
-  fetcher: () => Promise<Response>;
+type useMutateQueryArgs<RequestData, ResponseData> = {
+  fetcher: (body: RequestData) => Promise<Response>;
   onSuccess?: (data: { response: ResponseData; headers: Headers }) => void;
   onError?: (error?: Error) => void;
   onSettled?: () => void;
-}
+};
 
-const useMutateQuery = <ResponseData>({
+const useMutateQuery = <RequestData, ResponseData>({
   fetcher,
   onSuccess,
   onError,
   onSettled,
-}: useMutateQueryArgs<ResponseData>) => {
-  const [loading, setLoading] = useState(false);
+}: useMutateQueryArgs<RequestData, ResponseData>) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const mutateQuery = async () => {
-    setLoading(true);
+  const mutateQuery = async (body: RequestData) => {
+    setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetcher();
+      const response = await fetcher(body);
 
       if (!response.ok) {
         const { status, statusText } = response;
@@ -42,10 +42,10 @@ const useMutateQuery = <ResponseData>({
       }
     } finally {
       onSettled?.();
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  return { mutateQuery, loading, error };
+  return { mutateQuery, isLoading, error };
 };
 export default useMutateQuery;

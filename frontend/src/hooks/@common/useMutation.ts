@@ -1,18 +1,18 @@
 import { useState } from 'react';
 
-type useMutateQueryArgs<RequestData, ResponseData> = {
+type useMutationArgs<RequestData, ResponseData> = {
   fetcher: (body: RequestData) => Promise<Response>;
   onSuccess?: (data: { response: ResponseData; headers: Headers }) => void;
   onError?: (error?: Error) => void;
   onSettled?: () => void;
 };
 
-const useMutateQuery = <RequestData, ResponseData>({
+const useMutation = <RequestData, ResponseData>({
   fetcher,
   onSuccess,
   onError,
   onSettled,
-}: useMutateQueryArgs<RequestData, ResponseData>) => {
+}: useMutationArgs<RequestData, ResponseData>) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -48,4 +48,4 @@ const useMutateQuery = <RequestData, ResponseData>({
 
   return { mutateQuery, isLoading, error };
 };
-export default useMutateQuery;
+export default useMutation;

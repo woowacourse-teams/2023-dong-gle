@@ -57,31 +57,35 @@ export default forwardRef(Button);
 const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> => {
   const styles: Record<typeof variant, ReturnType<typeof genVariantStyle>> = {
     primary: css`
-      color: ${({ theme }) => theme.color.gray10};
-      background-color: ${({ theme }) => theme.color.gray1};
-      outline: 1px solid ${({ theme }) => theme.color.gray1};
+      ${({ theme }) => css`
+        color: ${theme.color.gray10};
+        background-color: ${theme.color.gray1};
+        outline: 1px solid ${theme.color.gray1};
 
-      &:hover {
-        background-color: ${({ theme }) => theme.color.primary};
-        color: ${({ theme }) => theme.color.gray2};
-      }
+        &:hover {
+          background-color: ${theme.color.primary};
+          color: ${theme.color.gray2};
+        }
 
-      &:focus {
-        box-shadow: 0 0 0 3px ${({ theme }) => theme.color.primary};
-      }
+        &:focus {
+          box-shadow: 0 0 0 3px ${theme.color.primary};
+        }
+      `}
     `,
     text: css`
-      color: ${({ theme }) => theme.color.gray10};
-      background-color: ${({ theme }) => theme.color.gray1};
-      outline: 1px solid ${({ theme }) => theme.color.gray1};
+      ${({ theme }) => css`
+        color: ${theme.color.gray10};
+        background-color: ${theme.color.gray1};
+        outline: 1px solid ${theme.color.gray1};
 
-      &:hover {
-        background-color: ${({ theme }) => theme.color.gray4};
-      }
+        &:hover {
+          background-color: ${theme.color.gray4};
+        }
 
-      &:focus {
-        box-shadow: 0 0 0 3px ${({ theme }) => theme.color.gray4};
-      }
+        &:focus {
+          box-shadow: 0 0 0 3px ${theme.color.gray4};
+        }
+      `}
     `,
   };
   return styles[variant];

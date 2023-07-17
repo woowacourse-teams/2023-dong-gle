@@ -14,11 +14,11 @@ export const useGetQuery = <ResponseData>({
   onSettled,
 }: UseGetQueryArgs<ResponseData>) => {
   const [data, setData] = useState<ResponseData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const getData = useCallback(async () => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     try {
       const response = await fetcher();
@@ -42,7 +42,7 @@ export const useGetQuery = <ResponseData>({
       }
     } finally {
       onSettled?.();
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [fetcher]);
 
@@ -52,7 +52,7 @@ export const useGetQuery = <ResponseData>({
 
   return {
     data,
-    loading,
+    isLoading,
     error,
     getData,
   };

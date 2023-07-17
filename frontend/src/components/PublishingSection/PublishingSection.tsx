@@ -1,11 +1,15 @@
-import BlogList from 'components/BlogList/BlogList';
+import BlogPublishButtonList from 'components/BlogPublishButtonList/BlogPublishButtonList';
 import { styled } from 'styled-components';
 
-const PublishingSection = () => {
+type PublishingSectionProps = {
+  writingId: number;
+};
+
+const PublishingSection = ({ writingId }: PublishingSectionProps) => {
   return (
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>
-      <BlogList />
+      <BlogPublishButtonList writingId={writingId} />
     </S.PublishingSection>
   );
 };

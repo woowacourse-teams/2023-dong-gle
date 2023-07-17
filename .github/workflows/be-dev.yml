@@ -1,0 +1,78 @@
+name: CICD for Backend Development
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: [self-hosted,dev]
+    steps:
+    - name: change permission
+      run: |
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+
+    ## jdk setting
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin' # https://github.com/actions/setup-java
+
+    ## gradle caching
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend/.gradle/caches
+          /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-
+
+    ## create application-dev.properties
+    - name: make application-dev.properties
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
+      run: |
+        cd ./src/main/resources
+        touch ./application-dev.properties
+        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
+      shell: bash
+
+    ## gradle build
+    - name: Build with Gradle
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
+      run: |
+        chmod +x ./gradlew
+        ./gradlew build
+
+  deploy:
+    runs-on: [self-hosted,dev]
+    needs: build
+    steps:
+    - name: change permission
+      run: |
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+
+    ## docker build & push to develop
+    - name: Docker build & push to dev
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
+      run: |
+          sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
+
+    ## deploy to develop
+    - name: Deploy to dev
+      run: |
+        sudo docker rm -f backend-dev
+        sudo docker pull ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
+        sudo docker run -d -p 8080:8080 --name backend-prod ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev

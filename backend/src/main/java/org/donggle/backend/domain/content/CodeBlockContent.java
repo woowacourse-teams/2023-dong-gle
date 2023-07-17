@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.BlockType;
 
 @Entity
 @Getter
@@ -20,4 +21,20 @@ public class CodeBlockContent extends Content {
     private String rawText;
     @Column(nullable = false)
     private String language;
+
+    public CodeBlockContent(final int depth, final BlockType blockType, final String rawText, final String language) {
+        super(depth, blockType);
+        this.rawText = rawText;
+        this.language = language;
+    }
+
+    @Override
+    public String toString() {
+        return "CodeBlockContent{" +
+                "blocktype=" + getBlockType()+
+                "id=" + id +
+                ", rawText='" + rawText + '\'' +
+                ", language='" + language + '\'' +
+                '}';
+    }
 }

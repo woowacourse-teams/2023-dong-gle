@@ -1,19 +1,19 @@
+import { addWriting } from 'apis/writings';
 import { InputHTMLAttributes, useEffect, useState } from 'react';
+import { AddWritingRequest } from 'types/apis/writings';
+import useMutation from './@common/useMutation';
 
 export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['accept'] = '*') => {
   const [selectedFile, setSelectedFile] = useState<FormData | null>(null);
+  const { mutateQuery } = useMutation<AddWritingRequest, null>({
+    fetcher: (body) => addWriting(body),
+  });
 
   const onFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (!target.files) return;
 
     const newFile = target.files[0];
-    const fileType = newFile.type;
-
-    if (!fileType.includes('md')) {
-      // TODO: 파일 타입 검증
-      return;
-    }
 
     const formData = new FormData();
     formData.append('file', newFile);
@@ -21,11 +21,10 @@ export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['acc
     setSelectedFile(formData);
   };
 
-  const uploadOnServer = (selectedFile: FormData | null) => {
+  const uploadOnServer = async (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
-    // TODO: 파일 선택 시 서버에 업로드 하는 API 연결
-    console.log('upload', selectedFile);
+    await mutateQuery(selectedFile);
   };
 
   const openFinder = () => {

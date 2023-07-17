@@ -1,9 +1,13 @@
 package org.donggle.backend.domain.parser;
 
 import org.assertj.core.api.Assertions;
+import org.donggle.backend.domain.Style;
+import org.donggle.backend.domain.StyleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class MarkDownStyleParserTest {
     private MarkDownStyleParser markDownStyleParser;
@@ -11,6 +15,22 @@ class MarkDownStyleParserTest {
     @BeforeEach
     void setUp() {
         markDownStyleParser = new MarkDownStyleParser();
+    }
+
+    @Test
+    @DisplayName("입력된 문자열의 적용된 스타일을 전부 반환하는 테스트")
+    void extractStyles() {
+        //given
+        final String input = "안`녕하**세요` 여**러분";
+        final String originalText = "안녕하세요 여러분";
+        final Style codeStyle = new Style(1, 4, StyleType.CODE);
+        final Style boldStyle = new Style(3, 6, StyleType.BOLD);
+
+        //then
+        assertAll(
+                () -> Assertions.assertThat(markDownStyleParser.extractStyles(input, originalText).get(1)).usingRecursiveComparison().isEqualTo(codeStyle),
+                () -> Assertions.assertThat(markDownStyleParser.extractStyles(input, originalText).get(0)).usingRecursiveComparison().isEqualTo(boldStyle)
+        );
     }
 
     @Test

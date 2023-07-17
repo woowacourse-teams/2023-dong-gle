@@ -10,8 +10,6 @@ import {
 import { css, styled } from 'styled-components';
 import { RuleSet } from 'styled-components/dist/types';
 
-import type { Color } from 'styles/theme';
-
 // Type
 export const Variant = ['primary', 'text'] as const;
 export type Variant = (typeof Variant)[number];
@@ -25,8 +23,6 @@ export type Align = (typeof Align)[number];
 export type Props = {
   variant?: Variant;
   size?: Size;
-  backgroundColor?: Color;
-  fontColor?: Color;
   block?: boolean;
   align?: Align;
   icon?: ReactElement;

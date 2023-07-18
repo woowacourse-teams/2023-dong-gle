@@ -14,18 +14,26 @@ const WritingViewer = ({ writingId }: Props) => {
   if (loading) return <div>로딩 중...</div>;
 
   return (
-    <S.WritingViewerWrapper
-      dangerouslySetInnerHTML={{
-        __html: DOMPurify.sanitize(data?.content ?? '글 내용이 없습니다'),
-      }}
-    ></S.WritingViewerWrapper>
+    <S.WritingViewerContainer>
+      <S.TitleWrapper>
+        <S.Title>{data?.title}</S.Title>
+      </S.TitleWrapper>
+      <S.ContentWrapper
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(data?.content ?? '글 내용이 없습니다'),
+        }}
+      />
+    </S.WritingViewerContainer>
   );
 };
 
 export default WritingViewer;
 
 const S = {
-  WritingViewerWrapper: styled.section`
+  WritingViewerContainer: styled.section``,
+  TitleWrapper: styled.div``,
+  Title: styled.h1``,
+  ContentWrapper: styled.section`
     // TODO: 태그 별 스타일 지정
     // TODO: <code> 스타일은 highlight.js 고려
   `,

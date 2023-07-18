@@ -1,6 +1,4 @@
-export type AddWritingRequest = {
-  file: FormData;
-};
+export type AddWritingRequest = FormData;
 
 export type GetWritingResponse = {
   id: number;

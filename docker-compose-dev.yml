@@ -1,7 +1,7 @@
 version: "3"
 services:
   frontend:
-    image: registry.echo724.xyz/dong-gle-frontend-dev
+    image: ghcr.io/echo724/dong-gle-frontend-dev
     ports:
       - 8080:3000
     networks:
@@ -9,7 +9,7 @@ services:
       - backend-network
 
   backend:
-    image: registry.echo724.xyz/dong-gle-backend-dev
+    image: ghcr.io/echo724/dong-gle-backend-dev
     networks:
       - backend-network
 

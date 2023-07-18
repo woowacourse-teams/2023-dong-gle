@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted,prod]
+    runs-on: [self-hosted]
     steps:
     - name: change permission
       run: |
@@ -36,7 +36,7 @@ jobs:
           /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
-          ${{ runner.os }}-gradle-
+          ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
     ## create application-prod.properties
     - name: make application-prod.properties
@@ -53,26 +53,27 @@ jobs:
       run: |
         chmod +x ./gradlew
         ./gradlew build
+    
+    ## docker build & push to develop
+    - name: Docker build & push to prod 
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
+      run: |
+          sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod
 
   deploy:
-    runs-on: [self-hosted,prod]
+    runs-on: [self-hosted]
     needs: build
     steps:
     - name: change permission
       run: |
         sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
 
-    ## docker build & push to production
-    - name: Docker build & push to prod
-      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
-      run: |
-          sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          sudo docker build -f Dockerfile-prod -t ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod .
-          sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod
-
     ## deploy to production
     - name: Deploy to prod
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
       run: |
-        sudo docker rm -f backend-prod
-        sudo docker pull ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod
-        sudo docker run -d -p 443:443 --name backend-prod ${{ secrets.DOCKER_REPO }}/dong-gle-backend-prod
+        sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        sudo docker compose -f docker-compose.prod.yml pull
+        sudo docker compose -f docker-compose.prod.yml up -d

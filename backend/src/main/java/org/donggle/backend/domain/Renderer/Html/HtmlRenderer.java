@@ -22,29 +22,33 @@ public class HtmlRenderer {
     public String render(final List<Block> blocks) {
         StringBuilder result = new StringBuilder();
         List<NormalContent> subContent = new ArrayList<>();
-        String temp;
+        String htmlText;
 
         for (Block block : blocks) {
-            Content content = block.getContent();
-            BlockType blockType = content.getBlockType();
-            temp = "";
+            htmlText = createHtmlText(subContent, block.getContent());
 
-            switch (blockType) {
-                case HEADING1, HEADING2, HEADING3, HEADING4, HEADING5, HEADING6, PARAGRAPH, BLOCKQUOTE ->
-                        temp = renderNormalContent((NormalContent) content);
-                case ORDERED_LIST, UNORDERED_LIST -> subContent.add((NormalContent) content);
-                case CODE_BLOCK -> temp = renderCodeBlock((CodeBlockContent) content);
-                //TODO: IMAGE
-            }
-
-            if (!temp.isBlank() && !subContent.isEmpty()) {
+            if (!htmlText.isBlank() && !subContent.isEmpty()) {
                 result.append(renderList(subContent));
                 subContent.clear();
             }
-            result.append(temp);
+            result.append(htmlText);
         }
 
         return String.valueOf(result);
+    }
+
+    private String createHtmlText(final List<NormalContent> subContent, final Content content) {
+        BlockType blockType = content.getBlockType();
+        String htmlText = "";
+
+        switch (blockType) {
+            case HEADING1, HEADING2, HEADING3, HEADING4, HEADING5, HEADING6, PARAGRAPH, BLOCKQUOTE ->
+                    htmlText = renderNormalContent((NormalContent) content);
+            case ORDERED_LIST, UNORDERED_LIST -> subContent.add((NormalContent) content);
+            case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlockContent) content);
+            //TODO: IMAGE
+        }
+        return htmlText;
     }
 
     public String renderNormalContent(final NormalContent content) {

@@ -1,9 +1,7 @@
-package org.donggle.backend.domain.Renderer;
+package org.donggle.backend.domain.Renderer.Html;
 
 import org.donggle.backend.domain.Block;
 import org.donggle.backend.domain.BlockType;
-import org.donggle.backend.domain.Renderer.Html.HtmlRenderer;
-import org.donggle.backend.domain.Renderer.Html.HtmlStyleRenderer;
 import org.donggle.backend.domain.Writing;
 import org.donggle.backend.domain.content.CodeBlockContent;
 import org.donggle.backend.domain.content.NormalContent;

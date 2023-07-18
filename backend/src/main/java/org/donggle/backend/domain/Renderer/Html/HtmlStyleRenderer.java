@@ -9,29 +9,12 @@ import java.util.Map;
 
 public class HtmlStyleRenderer {
     public String render(final String rawText, final List<Style> styles) {
-        StringBuilder result = new StringBuilder();
-
         Map<Integer, List<String>> startTags = new LinkedHashMap<>();
         Map<Integer, List<String>> endTags = new LinkedHashMap<>();
 
         createTags(styles, startTags, endTags);
 
-        for (int i = 0; i < rawText.length(); i++) {
-            if (startTags.containsKey(i)) {
-                List<String> startStyles = startTags.get(i);
-                for (final String startStyle : startStyles) {
-                    result.append(startStyle);
-                }
-            }
-            result.append(rawText.charAt(i));
-            if (endTags.containsKey(i)) {
-                List<String> endStyles = endTags.get(i);
-                for (final String endStyle : endStyles) {
-                    result.append(endStyle);
-                }
-            }
-        }
-        return String.valueOf(result);
+        return createHtmlStyleText(rawText, startTags, endTags);
     }
 
     private void createTags(final List<Style> styles, final Map<Integer, List<String>> startTag, final Map<Integer, List<String>> endTag) {
@@ -61,5 +44,26 @@ public class HtmlStyleRenderer {
         }
         endStyleTags.add(styleEndTag);
         endTag.put(endIndex, endStyleTags);
+    }
+
+    private String createHtmlStyleText(final String rawText, final Map<Integer, List<String>> startTags, final Map<Integer, List<String>> endTags) {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < rawText.length(); i++) {
+            addTags(result, startTags, i);
+            result.append(rawText.charAt(i));
+            addTags(result, endTags, i);
+        }
+
+        return String.valueOf(result);
+    }
+
+    private void addTags(final StringBuilder result, final Map<Integer, List<String>> startTags, final int index) {
+        if (startTags.containsKey(index)) {
+            List<String> startStyles = startTags.get(index);
+            for (final String startStyle : startStyles) {
+                result.append(startStyle);
+            }
+        }
     }
 }

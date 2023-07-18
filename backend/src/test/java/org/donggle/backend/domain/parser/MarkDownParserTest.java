@@ -1,6 +1,5 @@
 package org.donggle.backend.domain.parser;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.domain.BlockType;
 import org.donggle.backend.domain.Style;
 import org.donggle.backend.domain.StyleType;
@@ -92,7 +91,7 @@ class MarkDownParserTest {
             final List<String> textBlocks = markDownParser.splitBlocks(text);
 
             //then
-            Assertions.assertThat(textBlocks).hasSize(7);
+            assertThat(textBlocks).hasSize(7);
         }
     }
 }

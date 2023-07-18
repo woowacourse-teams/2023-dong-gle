@@ -1,14 +1,16 @@
-import { LAYOUT_COMMON_STYLE, SIDEBAR_SECTION_STYLE } from 'pages/Layout/Layout';
-
 import { PropsWithChildren } from 'react';
-
 import { styled } from 'styled-components';
+import PublishingSection from 'components/PublishingSection/PublishingSection';
+import { LAYOUT_COMMON_STYLE, SIDEBAR_SECTION_STYLE } from 'pages/Layout/Layout';
 
 const WritingPage = ({ children }: PropsWithChildren) => {
   return (
     <S.Container>
       <S.Article>{children}</S.Article>
-      <S.SidebarSection>사이드바</S.SidebarSection> {/** 사이드바 컴포넌트 완성되면 대체 */}
+      <S.SidebarSection>
+        <PublishingSection writingId={1} isPublished={false} />
+      </S.SidebarSection>
+      {/** 사이드바 컴포넌트 완성되면 대체 */}
     </S.Container>
   );
 };

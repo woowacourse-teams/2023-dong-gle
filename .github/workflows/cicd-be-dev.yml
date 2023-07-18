@@ -13,12 +13,8 @@ permissions:
 
 jobs: 
   be-build:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     steps:
-    - name: change permission
-      run: |
-        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
-
     ## jdk setting
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -26,44 +22,54 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin' # https://github.com/actions/setup-java
+        cache: gradle
 
     ## gradle caching
     - name: Gradle Caching
       uses: actions/cache@v3
       with:
         path: |
-          /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend/.gradle/caches
-          /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend/.gradle/wrapper
+          .gradle/caches
+          .gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-
 
     ## create application-dev.properties
     - name: make application-dev.properties
-      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
       run: |
-        cd ./src/main/resources
+        cd ./backend/src/main/resources
         touch ./application-dev.properties
         echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
       shell: bash
 
     ## gradle build
     - name: Build with Gradle
-      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
       run: |
+        cd ./backend
         chmod +x ./gradlew
         ./gradlew build
-        
-    ## docker build & push to develop
-    - name: Docker build & push to dev
-      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
-      run: |
-          sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          sudo docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev .
-          sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.DOCKER_REPO }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile-dev
+        push: true
+        tags: ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-dev:latest
     
   deploy:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted,dev]
     needs: be-build
     steps:
     - name: change permission
@@ -74,6 +80,6 @@ jobs:
     - name: Deploy to prod
       working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
       run: |
-        sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose -f docker-compose.dev.yml pull
-        sudo docker compose -f docker-compose.dev.yml up -d
+        sudo docker login ${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        sudo docker compose -f docker-compose-dev.yml pull
+        sudo docker compose -f docker-compose-dev.yml up -d

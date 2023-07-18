@@ -31,6 +31,11 @@ public abstract class Content {
     private BlockType blockType;
 
     public Content(final int depth, final BlockType blockType) {
+        this(null, depth, blockType);
+    }
+
+    public Content(final Long id, final int depth, final BlockType blockType) {
+        this.id = id;
         this.depth = depth;
         this.blockType = blockType;
     }

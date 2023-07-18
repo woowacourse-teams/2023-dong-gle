@@ -26,4 +26,14 @@ public class Block {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id")
     private Content content;
+
+    public Block(final Writing writing, final Content content) {
+        this(null, writing, content);
+    }
+
+    public Block(final Long id, final Writing writing, final Content content) {
+        this.id = id;
+        this.writing = writing;
+        this.content = content;
+    }
 }

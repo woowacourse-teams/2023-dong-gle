@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 
 public class MarkDownParser {
-
     private final MarkDownStyleParser markDownStyleParser;
 
     public MarkDownParser(final MarkDownStyleParser markDownStyleParser) {

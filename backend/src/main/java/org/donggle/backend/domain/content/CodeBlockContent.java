@@ -28,10 +28,17 @@ public class CodeBlockContent extends Content {
         this.language = language;
     }
 
+    public CodeBlockContent(final Long id, final int depth, final BlockType blockType, final String rawText, final String language) {
+        super(depth, blockType);
+        this.id = id;
+        this.rawText = rawText;
+        this.language = language;
+    }
+
     @Override
     public String toString() {
         return "CodeBlockContent{" +
-                "blocktype=" + getBlockType()+
+                "blocktype=" + getBlockType() +
                 "id=" + id +
                 ", rawText='" + rawText + '\'' +
                 ", language='" + language + '\'' +

@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MarkDownStyleParser {
-
     public String removeAllStyles(String textBlock) {
         StringBuilder buffer = new StringBuilder(textBlock);
 

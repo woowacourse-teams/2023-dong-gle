@@ -6,14 +6,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.domain.content.NormalContent;
 
 @Entity
 @Getter
@@ -29,20 +26,20 @@ public class Style {
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private StyleType styleType;
-    @ManyToOne
-    @JoinColumn(name = "normal_content_id")
-    private NormalContent normalContent;
 
     public Style(final int startIndex, final int endIndex, final StyleType styleType) {
+        this(null, startIndex, endIndex, styleType);
+    }
+
+    public Style(final Long id, final int startIndex, final int endIndex, final StyleType styleType) {
+        this.id = id;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.styleType = styleType;
     }
-
 
     @Override
     public String toString() {
         return "Style{" + "startIndex=" + startIndex + ", endIndex=" + endIndex + ", styleType=" + styleType + '}';
     }
 }
-

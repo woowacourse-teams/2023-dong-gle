@@ -1,17 +1,17 @@
-import { getWriting } from 'apis/writings';
 import DOMPurify from 'dompurify';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { styled } from 'styled-components';
+import { getWriting } from 'apis/writings';
+import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { GetWritingResponse } from 'types/apis/writings';
 
 type Props = { writingId: number };
 
 const WritingViewer = ({ writingId }: Props) => {
-  const { data, loading } = useGetQuery<GetWritingResponse>({
+  const { data, isLoading } = useGetQuery<GetWritingResponse>({
     fetcher: () => getWriting(writingId),
   });
 
-  if (loading) return <div>로딩 중...</div>;
+  if (isLoading) return <div>로딩 중...</div>;
 
   return (
     <S.WritingViewerContainer>

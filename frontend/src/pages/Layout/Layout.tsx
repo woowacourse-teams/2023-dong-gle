@@ -11,7 +11,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <S.Container>
-      <S.Header>서비스 컨트롤바 컴포넌트</S.Header>
+      <S.Header />
       <S.Row>
         <S.SidebarSection>
           <Button icon={<PlusCircleIcon />} block={true} align='left' onClick={openFinder}>
@@ -39,7 +39,7 @@ export const SIDEBAR_SECTION_STYLE = css`
   width: 32rem;
   border: ${LAYOUT_COMMON_STYLE.border};
   border-radius: 8px;
-  padding: 20px;
+  padding: 2rem;
 `;
 
 const S = {

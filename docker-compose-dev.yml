@@ -1,0 +1,18 @@
+version: "3"
+services:
+  frontend:
+    image: registry.echo724.xyz/dong-gle-frontend-dev
+    ports:
+      - 8080:3000
+    networks:
+      - frontend-network
+      - backend-network
+
+  backend:
+    image: registry.echo724.xyz/dong-gle-backend-dev
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+  backend-network:

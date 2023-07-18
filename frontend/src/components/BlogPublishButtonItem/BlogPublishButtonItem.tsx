@@ -1,23 +1,28 @@
+import { useState } from 'react';
+import { styled } from 'styled-components';
 import { publishWriting } from 'apis/writings';
 import { CheckSymbol } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import useMutation from 'hooks/@common/useMutation';
-import { styled } from 'styled-components';
-import { PublishWritingArg } from 'types/apis/writings';
+import { PublishToArg, PublishWritingArgs } from 'types/apis/writings';
 
 type Props = {
-  name: string;
+  name: PublishToArg;
   writingId: number;
   isPublished: boolean;
 };
 
+// TODO: 글정보 GET 연결하면 isSucceedPublish를 isPublished로 치환
 const BlogPublishButtonItem = ({ name, writingId, isPublished }: Props) => {
-  const { mutateQuery, isLoading } = useMutation<PublishWritingArg, null>({
+  const [isSucceedPublish, setIsSucceedPublish] = useState(false);
+  const { mutateQuery, isLoading } = useMutation<PublishWritingArgs, null>({
     fetcher: publishWriting,
+    onSuccess: () => setIsSucceedPublish(true),
+    onError: () => setIsSucceedPublish(false),
   });
 
-  const publishWritingToBlog = async (name: string) => {
+  const publishWritingToBlog = async (name: PublishToArg) => {
     const body = {
       publishTo: name,
     };
@@ -31,14 +36,14 @@ const BlogPublishButtonItem = ({ name, writingId, isPublished }: Props) => {
         size='large'
         block={true}
         align='left'
-        disabled={isLoading || isPublished}
+        disabled={isLoading || isSucceedPublish}
         onClick={() => publishWritingToBlog(name)}
       >
         {name}
       </Button>
       <S.PublishStateWrapper>
         {isLoading ? <Spinner /> : <></>}
-        {isPublished ? <CheckSymbol width='2.4rem' height='2.4rem' /> : <></>}
+        {isSucceedPublish ? <CheckSymbol width='2.4rem' height='2.4rem' /> : <></>}
       </S.PublishStateWrapper>
     </S.BlogPublishButtonItem>
   );

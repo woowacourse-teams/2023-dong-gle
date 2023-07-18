@@ -1,3 +1,5 @@
+import { BLOG } from 'constants/blog';
+
 export type AddWritingRequest = FormData;
 
 export type GetWritingResponse = {
@@ -13,11 +15,13 @@ export type GetWritingPropertiesResponse = {
   publishedTo: string[]; // TODO: Blog string literal 타입으로 변경
 };
 
+export type PublishToArg = (typeof BLOG)[keyof typeof BLOG];
+
 export type PublishWritingRequest = {
-  publishTo: string; // TODO: Blog string literal 타입으로 변경
+  publishTo: PublishToArg; // TODO: Blog string literal 타입으로 변경
 };
 
-export type PublishWritingArg = {
+export type PublishWritingArgs = {
   writingId: number;
   body: PublishWritingRequest;
 };

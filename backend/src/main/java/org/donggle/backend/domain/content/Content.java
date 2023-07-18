@@ -29,4 +29,23 @@ public abstract class Content {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private BlockType blockType;
+
+    public Content(final int depth, final BlockType blockType) {
+        this(null, depth, blockType);
+    }
+
+    public Content(final Long id, final int depth, final BlockType blockType) {
+        this.id = id;
+        this.depth = depth;
+        this.blockType = blockType;
+    }
+
+    @Override
+    public String toString() {
+        return "Content{" +
+                "id=" + id +
+                ", depth=" + depth +
+                ", blockType=" + blockType +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
-import BlogPublishButtonList from 'components/BlogPublishButtonList/BlogPublishButtonList';
+import BlogPublishButtonItem from 'components/BlogPublishButtonItem/BlogPublishButtonItem';
+import { BLOG } from 'constants/blog';
 
 type Props = {
   writingId: number;
@@ -10,7 +11,18 @@ const PublishingSection = ({ writingId, isPublished }: Props) => {
   return (
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>
-      <BlogPublishButtonList writingId={writingId} isPublished={isPublished} />
+      <S.BlogPublishButtonList>
+        {Object.values(BLOG).map((name) => {
+          return (
+            <BlogPublishButtonItem
+              key={name}
+              name={name}
+              writingId={writingId}
+              isPublished={isPublished}
+            />
+          );
+        })}
+      </S.BlogPublishButtonList>
     </S.PublishingSection>
   );
 };
@@ -25,8 +37,14 @@ const S = {
   `,
 
   PublishingTitle: styled.h1`
-    font-size: 1.6rem;
+    font-size: 2.4rem;
     font-weight: 70rem;
     line-height: 1.8rem;
+  `,
+
+  BlogPublishButtonList: styled.ul`
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
   `,
 };

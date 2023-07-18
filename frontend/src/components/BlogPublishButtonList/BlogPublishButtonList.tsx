@@ -1,6 +1,6 @@
-import { BLOG } from 'constants/blog';
 import { styled } from 'styled-components';
 import BlogPublishButtonItem from 'components/BlogPublishButtonItem/BlogPublishButtonItem';
+import { BLOG } from 'constants/blog';
 
 type Props = {
   writingId: number;

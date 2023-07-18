@@ -1,5 +1,5 @@
-import type { AddWritingRequest, PublishWritingArg } from 'types/apis/writings';
 import { http } from './fetch';
+import type { AddWritingRequest, PublishWritingArgs } from 'types/apis/writings';
 
 const baseURL = '';
 const writingURL = `${baseURL}/writings`;
@@ -21,7 +21,7 @@ export const getWritingProperties = (writingId: number) =>
   http.get(`${writingURL}/${writingId}/properties`);
 
 // 글 발행하기: POST
-export const publishWriting = ({ writingId, body }: PublishWritingArg) =>
+export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
   http.post(`${writingURL}/${writingId}/publish`, {
     body: JSON.stringify(body),
   });

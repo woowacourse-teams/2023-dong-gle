@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { StoryContainer } from 'styles/storybook';
 import PublishingSection from './PublishingSection';
+import { StoryContainer } from 'styles/storybook';
 
 const meta: Meta<typeof PublishingSection> = {
   title: 'publishing/PublishingSection',

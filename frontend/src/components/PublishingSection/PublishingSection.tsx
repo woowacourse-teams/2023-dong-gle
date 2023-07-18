@@ -1,5 +1,5 @@
-import BlogPublishButtonList from 'components/BlogPublishButtonList/BlogPublishButtonList';
 import { styled } from 'styled-components';
+import BlogPublishButtonList from 'components/BlogPublishButtonList/BlogPublishButtonList';
 
 type Props = {
   writingId: number;

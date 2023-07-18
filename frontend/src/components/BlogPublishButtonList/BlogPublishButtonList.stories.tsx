@@ -7,11 +7,16 @@ const meta: Meta<typeof BlogPublishButtonList> = {
   component: BlogPublishButtonList,
   args: {
     writingId: 1,
+    isPublished: true,
   },
   argTypes: {
     writingId: {
       description: '글의 id값입니다.',
       control: { type: 'number' },
+    },
+    isPublished: {
+      description: '글의 배포 여부입니다.',
+      control: { type: 'boolean' },
     },
   },
 };
@@ -20,10 +25,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  render: ({ writingId }) => {
+  render: ({ writingId, isPublished }) => {
     return (
       <StoryContainer>
-        <BlogPublishButtonList writingId={writingId} />
+        <BlogPublishButtonList writingId={writingId} isPublished={isPublished} />
       </StoryContainer>
     );
   },

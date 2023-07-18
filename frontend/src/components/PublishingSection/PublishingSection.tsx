@@ -3,13 +3,14 @@ import { styled } from 'styled-components';
 
 type Props = {
   writingId: number;
+  isPublished: boolean;
 };
 
-const PublishingSection = ({ writingId }: Props) => {
+const PublishingSection = ({ writingId, isPublished }: Props) => {
   return (
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>
-      <BlogPublishButtonList writingId={writingId} />
+      <BlogPublishButtonList writingId={writingId} isPublished={isPublished} />
     </S.PublishingSection>
   );
 };

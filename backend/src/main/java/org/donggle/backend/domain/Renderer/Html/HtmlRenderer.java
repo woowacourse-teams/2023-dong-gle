@@ -13,6 +13,12 @@ import java.util.List;
 public class HtmlRenderer {
     public static final String HTML_TAB = "&emsp;";
 
+    private final HtmlStyleRenderer htmlStyleRenderer;
+
+    public HtmlRenderer(final HtmlStyleRenderer htmlStyleRenderer) {
+        this.htmlStyleRenderer = htmlStyleRenderer;
+    }
+
     public String render(final List<Block> blocks) {
         StringBuilder result = new StringBuilder();
         List<NormalContent> subContent = new ArrayList<>();
@@ -44,8 +50,7 @@ public class HtmlRenderer {
     public String renderNormalContent(final NormalContent content) {
         HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         String depth = renderDepth(content.getDepth());
-        // TODO: style 추가
-        String rawText = content.getRawText();
+        String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
 
         return htmlType.getStartTag() + depth + rawText + htmlType.getEndTag();
     }
@@ -94,8 +99,8 @@ public class HtmlRenderer {
     }
 
     private String renderLine(final NormalContent content, NormalContent nextContent) {
-        // TODO: style 적용
-        String line = HtmlType.LIST.getStartTag() + content.getRawText() + HtmlType.LIST.getEndTag();
+        String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag();
 
         if (content.getDepth() > nextContent.getDepth()) {
             HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());

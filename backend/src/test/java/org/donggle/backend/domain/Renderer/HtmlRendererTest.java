@@ -3,6 +3,7 @@ package org.donggle.backend.domain.Renderer;
 import org.donggle.backend.domain.Block;
 import org.donggle.backend.domain.BlockType;
 import org.donggle.backend.domain.Renderer.Html.HtmlRenderer;
+import org.donggle.backend.domain.Renderer.Html.HtmlStyleRenderer;
 import org.donggle.backend.domain.Writing;
 import org.donggle.backend.domain.content.CodeBlockContent;
 import org.donggle.backend.domain.content.NormalContent;
@@ -16,15 +17,15 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HtmlRendererTest {
-    private HtmlRenderer htmlRenderer = new HtmlRenderer();
+    private HtmlRenderer htmlRenderer;
 
     @BeforeEach
     void setUp() {
-        htmlRenderer = new HtmlRenderer();
+        htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
     }
 
     @Test
-    @DisplayName("전체 렌더링 테스트")
+    @DisplayName("전체 Block 렌더링")
     void render() {
         //given
         List<Block> blocks = new ArrayList<>();
@@ -171,8 +172,8 @@ class HtmlRendererTest {
     }
 
     @Test
-    @DisplayName("리스트 렌더링 테스트")
-    void listRender() {
+    @DisplayName("리스트 렌더링")
+    void renderList() {
         //given
         List<NormalContent> normalContents = new ArrayList<>();
         normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>()));

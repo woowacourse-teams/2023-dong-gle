@@ -1,15 +1,15 @@
+import { writingURL } from 'constants/apis/url';
 import { Meta, StoryObj } from '@storybook/react';
+import { writingContentMock } from 'mocks/writingContentMock';
 import { rest } from 'msw';
-import WritingViewer from './WritingViewer';
 import {
   StoryContainer,
   StoryItemContainer,
   StoryItemContainerRow,
   StoryItemTitle,
 } from 'styles/storybook';
-import { writingURL } from 'constants/apis/url';
 import { GetWritingResponse } from 'types/apis/writings';
-import { writingContentMock } from 'mocks/writingContentMock';
+import WritingViewer from './WritingViewer';
 
 const meta = {
   title: 'WritingViewer',
@@ -39,24 +39,24 @@ export const Success: Story = {
       </StoryContainer>
     );
   },
-};
-Success.parameters = {
-  msw: {
-    handlers: [
-      rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-        const writingId = Number(req.params.writingId);
+  parameters: {
+    msw: {
+      handlers: [
+        rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
+          const writingId = Number(req.params.writingId);
 
-        return res(
-          ctx.delay(300),
-          ctx.status(200),
-          ctx.json<GetWritingResponse>({
-            id: writingId,
-            title: '테스트 글 제목',
-            content: writingContentMock,
-          }),
-        );
-      }),
-    ],
+          return res(
+            ctx.delay(300),
+            ctx.status(200),
+            ctx.json<GetWritingResponse>({
+              id: writingId,
+              title: '테스트 글 제목',
+              content: writingContentMock,
+            }),
+          );
+        }),
+      ],
+    },
   },
 };
 
@@ -71,14 +71,14 @@ export const Failure: Story = {
       </StoryContainer>
     );
   },
-};
-Failure.parameters = {
-  msw: {
-    handlers: [
-      rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-        return res(ctx.delay(300), ctx.status(404));
-      }),
-    ],
+  parameters: {
+    msw: {
+      handlers: [
+        rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
+          return res(ctx.delay(300), ctx.status(404));
+        }),
+      ],
+    },
   },
 };
 

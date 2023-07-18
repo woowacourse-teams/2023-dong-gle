@@ -45,9 +45,10 @@ class MarkDownStyleParserTest {
         final String result = "안녕하세요 여러분";
 
         //when
-        final String execute = markDownStyleParser.removeAllStyles(input);
+        System.out.println("input = " + input);
+        final String execute = markDownStyleParser.removeStyles(input);
 
         //then
-        Assertions.assertThat(execute).isEqualTo(execute);
+        Assertions.assertThat(execute).isEqualTo(result);
     }
 }

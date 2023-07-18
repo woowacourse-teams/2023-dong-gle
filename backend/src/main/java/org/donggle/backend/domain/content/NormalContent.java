@@ -5,9 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.BlockType;
+import org.donggle.backend.domain.Style;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,4 +25,22 @@ public class NormalContent extends Content {
     private Long id;
     @Column(nullable = false)
     private String rawText;
+    @OneToMany
+    @JoinColumn(name = "style_id")
+    private List<Style> styles = new ArrayList<>();
+
+    public NormalContent(final int depth, final BlockType blockType, final String rawText, final List<Style> styles) {
+        super(depth, blockType);
+        this.styles = styles;
+        this.rawText = rawText;
+    }
+
+    @Override
+    public String toString() {
+        return "NormalContent{" +
+                "type" + getBlockType() +
+                "id=" + id +
+                ", rawText='" + rawText + '\'' +
+                '}';
+    }
 }

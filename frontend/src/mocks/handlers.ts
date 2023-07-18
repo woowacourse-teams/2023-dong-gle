@@ -1,5 +1,4 @@
-// src/mocks/handlers.js
-import { rest } from 'msw';
+import { writingHandlers } from './handlers/writing';
 
 export const handlers = [
   // 글 생성(글 업로드): POST
@@ -18,3 +17,5 @@ export const handlers = [
     return res(ctx.delay(3000), ctx.status(200));
   }),
 ];
+
+export const handlers = [...writingHandlers];

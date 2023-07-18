@@ -2,7 +2,6 @@ package org.donggle.backend.domain;
 
 import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Getter
@@ -16,7 +15,7 @@ public enum BlockType {
     BLOCKQUOTE("^>\\ "),
     UNORDERED_LIST("^-{1}\\ "),
     ORDERED_LIST("^[1-9][0-9]{0,4}\\.\\ "),
-    CODE_BLOCK("^```[a-zA-Z]*\\n([\\s\\S]*?)\\n```$"),
+    CODE_BLOCK("^```([a-zA-Z]*)\\n([\\s\\S]*?)\\n```$"),
     PARAGRAPH("");
     //TODO image type regex 넣기
     //    IMAGE(""),
@@ -25,12 +24,5 @@ public enum BlockType {
 
     BlockType(final String content) {
         this.pattern = Pattern.compile(content);
-    }
-
-    public static BlockType of(final String content) {
-        return Arrays.stream(values())
-                .filter(m -> m.getPattern().matcher(content).find())
-                .findFirst()
-                .orElseThrow();
     }
 }

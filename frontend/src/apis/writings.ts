@@ -1,8 +1,6 @@
+import { writingURL } from 'constants/apis/url';
 import { http } from './fetch';
 import type { AddWritingRequest, PublishWritingArgs } from 'types/apis/writings';
-
-const baseURL = '';
-const writingURL = `${baseURL}/writings`;
 
 // 글 생성(글 업로드): POST
 export const addWriting = (body: AddWritingRequest) =>

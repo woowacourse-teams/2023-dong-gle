@@ -15,7 +15,7 @@ const meta = {
   title: 'WritingViewer',
   component: WritingViewer,
   args: {
-    writingId: 1,
+    writingId: 200,
   },
   argTypes: {
     writingId: {
@@ -39,47 +39,17 @@ export const Success: Story = {
       </StoryContainer>
     );
   },
-  parameters: {
-    msw: {
-      handlers: [
-        rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-          const writingId = Number(req.params.writingId);
-
-          return res(
-            ctx.delay(300),
-            ctx.status(200),
-            ctx.json<GetWritingResponse>({
-              id: writingId,
-              title: '테스트 글 제목',
-              content: writingContentMock,
-            }),
-          );
-        }),
-      ],
-    },
-  },
 };
 
 export const Failure: Story = {
-  render: ({ writingId }) => {
+  render: () => {
     return (
       <StoryContainer>
         <StoryItemContainer>
           <StoryItemTitle>글 가져오기 실패</StoryItemTitle>
-          <WritingViewer writingId={writingId}></WritingViewer>
+          <WritingViewer writingId={404}></WritingViewer>
         </StoryItemContainer>
       </StoryContainer>
     );
   },
-  parameters: {
-    msw: {
-      handlers: [
-        rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-          return res(ctx.delay(300), ctx.status(404));
-        }),
-      ],
-    },
-  },
 };
-
-// TODO: 프로젝트 초기 설정 안정화되면 위 handlers 리팩터링

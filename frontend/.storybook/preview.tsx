@@ -19,6 +19,9 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    msw: {
+      handlers,
+    },
   },
   loaders: [mswLoader],
 };

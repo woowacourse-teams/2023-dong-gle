@@ -16,3 +16,8 @@ export type GetWritingPropertiesResponse = {
 export type PublishWritingRequest = {
   publishTo: string; // TODO: Blog string literal 타입으로 변경
 };
+
+export type PublishWritingArg = {
+  writingId: number;
+  body: PublishWritingRequest;
+};

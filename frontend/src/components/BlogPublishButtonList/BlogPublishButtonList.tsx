@@ -4,11 +4,11 @@ import Button from 'components/@common/Button/Button';
 import { styled } from 'styled-components';
 import { PublishWritingRequest } from 'types/apis/writings';
 
-type BlogPublishButtonListProps = {
+type Props = {
   writingId: number;
 };
 
-const BlogPublishButtonList = ({ writingId }: BlogPublishButtonListProps) => {
+const BlogPublishButtonList = ({ writingId }: Props) => {
   return (
     <S.BlogPublishButtonList>
       {Object.values(BLOG).map((name) => {

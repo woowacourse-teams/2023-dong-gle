@@ -1,11 +1,11 @@
 import BlogPublishButtonList from 'components/BlogPublishButtonList/BlogPublishButtonList';
 import { styled } from 'styled-components';
 
-type PublishingSectionProps = {
+type Props = {
   writingId: number;
 };
 
-const PublishingSection = ({ writingId }: PublishingSectionProps) => {
+const PublishingSection = ({ writingId }: Props) => {
   return (
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>

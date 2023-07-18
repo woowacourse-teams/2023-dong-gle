@@ -11,9 +11,9 @@ on:
 permissions:
   contents: read
 
-jobs:
-  build:
-    runs-on: [self-hosted,dev]
+jobs: 
+  be-build:
+    runs-on: [self-hosted]
     steps:
     - name: change permission
       run: |
@@ -53,15 +53,7 @@ jobs:
       run: |
         chmod +x ./gradlew
         ./gradlew build
-
-  deploy:
-    runs-on: [self-hosted,dev]
-    needs: build
-    steps:
-    - name: change permission
-      run: |
-        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
-
+        
     ## docker build & push to develop
     - name: Docker build & push to dev
       working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/backend
@@ -69,10 +61,19 @@ jobs:
           sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev .
           sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
-
-    ## deploy to develop
-    - name: Deploy to dev
+    
+  deploy:
+    runs-on: [self-hosted]
+    needs: be-build
+    steps:
+    - name: change permission
       run: |
-        sudo docker rm -f backend-dev
-        sudo docker pull ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
-        sudo docker run -d -p 8080:8080 --name backend-prod ${{ secrets.DOCKER_REPO }}/dong-gle-backend-dev
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+
+    ## deploy to production
+    - name: Deploy to prod
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+      run: |
+        sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        sudo docker compose -f docker-compose.dev.yml pull
+        sudo docker compose -f docker-compose.dev.yml up -d

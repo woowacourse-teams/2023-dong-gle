@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import BlogPublishButtonItem from 'components/BlogPublishButtonItem/BlogPublishButtonItem';
-import { BLOG } from 'constants/blog';
+import { BLOG_LIST } from 'constants/blog';
 
 type Props = {
   writingId: number;
@@ -12,7 +12,7 @@ const PublishingSection = ({ writingId, isPublished }: Props) => {
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>
       <S.BlogPublishButtonList>
-        {Object.values(BLOG).map((name) => {
+        {Object.values(BLOG_LIST).map((name) => {
           return (
             <BlogPublishButtonItem
               key={name}

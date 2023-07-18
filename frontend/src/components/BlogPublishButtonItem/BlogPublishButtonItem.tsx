@@ -5,10 +5,11 @@ import { CheckSymbol } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import useMutation from 'hooks/@common/useMutation';
-import { PublishToArg, PublishWritingArgs } from 'types/apis/writings';
+import type { PublishWritingArgs } from 'types/apis/writings';
+import { Blog } from 'types/domain';
 
 type Props = {
-  name: PublishToArg;
+  name: Blog;
   writingId: number;
   isPublished: boolean;
 };
@@ -22,7 +23,7 @@ const BlogPublishButtonItem = ({ name, writingId, isPublished }: Props) => {
     onError: () => setIsSucceedPublish(false),
   });
 
-  const publishWritingToBlog = async (name: PublishToArg) => {
+  const publishWritingToBlog = (name: Blog) => async () => {
     const body = {
       publishTo: name,
     };
@@ -31,19 +32,19 @@ const BlogPublishButtonItem = ({ name, writingId, isPublished }: Props) => {
   };
 
   return (
-    <S.BlogPublishButtonItem key={name} $isLoading={isLoading}>
+    <S.BlogPublishButtonItem key={name} $isLoading={isLoading} $isSucceedPublish={isSucceedPublish}>
       <Button
         size='large'
-        block={true}
+        block
         align='left'
         disabled={isLoading || isSucceedPublish}
-        onClick={() => publishWritingToBlog(name)}
+        onClick={publishWritingToBlog(name)}
       >
         {name}
       </Button>
       <S.PublishStateWrapper>
-        {isLoading ? <Spinner /> : <></>}
-        {isSucceedPublish ? <CheckSymbol width='2.4rem' height='2.4rem' /> : <></>}
+        {isLoading && <Spinner />}
+        {isSucceedPublish && <CheckSymbol width='2.4rem' height='2.4rem' />}
       </S.PublishStateWrapper>
     </S.BlogPublishButtonItem>
   );
@@ -52,7 +53,7 @@ const BlogPublishButtonItem = ({ name, writingId, isPublished }: Props) => {
 export default BlogPublishButtonItem;
 
 const S = {
-  BlogPublishButtonItem: styled.li<Record<'$isLoading', boolean>>`
+  BlogPublishButtonItem: styled.li<{ $isLoading: boolean; $isSucceedPublish: boolean }>`
     position: relative;
 
     & > button {
@@ -60,7 +61,8 @@ const S = {
         $isLoading ? theme.color.primary : theme.color.gray1};
       color: ${({ $isLoading, theme }) => ($isLoading ? theme.color.gray2 : theme.color.gray10)};
 
-      cursor: ${({ $isLoading }) => ($isLoading ? 'default' : 'pointer')};
+      cursor: ${({ $isLoading, $isSucceedPublish }) =>
+        $isLoading || $isSucceedPublish ? 'auto' : 'pointer'};
     }
   `,
 

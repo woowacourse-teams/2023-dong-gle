@@ -2,6 +2,8 @@ package org.donggle.backend.domain;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
@@ -24,5 +26,12 @@ public enum BlockType {
 
     BlockType(final String content) {
         this.pattern = Pattern.compile(content);
+    }
+
+    public static BlockType findBlockType(final Matcher matcher) {
+        return Arrays.stream(BlockType.values())
+                .filter(blockType -> blockType.getPattern().equals(matcher.pattern()))
+                .findFirst()
+                .orElse(PARAGRAPH);
     }
 }

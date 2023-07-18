@@ -80,5 +80,4 @@ class MarkDownParserTest {
             assertThat(result).usingRecursiveComparison().isEqualTo(content);
         }
     }
-
 }

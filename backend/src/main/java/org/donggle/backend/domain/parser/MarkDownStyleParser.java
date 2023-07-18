@@ -9,47 +9,42 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MarkDownStyleParser {
+
+    private static final int INNER_TEXT = 2;
+    private static final int INNER_TEXT_STANDARD = 2;
+
     public String removeAllStyles(final String textBlock) {
-        StringBuilder buffer = new StringBuilder(textBlock);
+        StringBuilder builder = new StringBuilder(textBlock);
+        final StringBuilder replaceBuilder = new StringBuilder();
 
-        for (StyleType type : StyleType.values()) {
-            Pattern pattern = type.getPattern();
-            Matcher matcher = pattern.matcher(buffer.toString());
+        for (final StyleType type : StyleType.values()) {
+            final Pattern pattern = type.getPattern();
+            final Matcher matcher = pattern.matcher(builder.toString());
 
-            StringBuffer replacementBuffer = new StringBuffer();
-
-            while (matcher.find()) {
-                if (matcher.groupCount() >= 2) {
-                    String extractedText = matcher.group(2);
-                    if (!extractedText.isEmpty()) { // 그룹이 비어있지 않은 경우에만 대체
-                        matcher.appendReplacement(replacementBuffer, Matcher.quoteReplacement(extractedText));
-                    }
-                }
+            while (matcher.find() && matcher.groupCount() >= INNER_TEXT_STANDARD) {
+                final String extractedText = matcher.group(INNER_TEXT);
+                matcher.appendReplacement(replaceBuilder, Matcher.quoteReplacement(extractedText));
             }
 
-            matcher.appendTail(replacementBuffer);
-
-            buffer = new StringBuilder(replacementBuffer);
-            replacementBuffer.setLength(0); //버퍼 비우기
+            matcher.appendTail(replaceBuilder);
+            builder = new StringBuilder(replaceBuilder);
+            replaceBuilder.setLength(0);
         }
-
-        return buffer.toString();
+        return builder.toString();
     }
 
     public List<Style> extractStyles(String textBlock, final String originalText) {
-        List<Style> styles = new ArrayList<>();
+        final List<Style> styles = new ArrayList<>();
 
-        for (StyleType styleType : StyleType.values()) {
-            String cleanedInput = removeUnmatchedStyle(textBlock, styleType);
+        for (final StyleType styleType : StyleType.values()) {
+            final String cleanedInput = removeUnmatchedStyle(textBlock, styleType);
+            final Matcher matcher = styleType.getPattern().matcher(cleanedInput);
 
-            Pattern pattern = styleType.getPattern();
-            Matcher matcher = pattern.matcher(cleanedInput);
-
-            while (matcher.find()) {
-                String matchedText = matcher.group(2);
-                int start = originalText.indexOf(matchedText);
-                int end = start + matchedText.length() - 1;
-                Style style = new Style(start, end, styleType);
+            while (matcher.find() && matcher.groupCount() >= INNER_TEXT_STANDARD) {
+                final String matchedText = matcher.group(INNER_TEXT);
+                final int start = originalText.indexOf(matchedText);
+                final int end = start + matchedText.length() - 1;
+                final Style style = new Style(start, end, styleType);
                 styles.add(style);
             }
             textBlock = removePartStyles(textBlock, styleType);
@@ -58,52 +53,40 @@ public class MarkDownStyleParser {
         return styles;
     }
 
+    private String removePartStyles(final String textBlock, final StyleType styleType) {
+        final StringBuilder builder = new StringBuilder(textBlock);
+        final Matcher matcher = styleType.getPattern().matcher(builder);
+        final StringBuilder replacementBuilder = new StringBuilder();
+
+        while (matcher.find() && matcher.groupCount() >= INNER_TEXT_STANDARD) {
+            final String extractedText = matcher.group(INNER_TEXT);
+            matcher.appendReplacement(replacementBuilder, Matcher.quoteReplacement(extractedText));
+        }
+
+        matcher.appendTail(replacementBuilder);
+        return builder.toString();
+    }
+
     private String removeUnmatchedStyle(final String textBlock, final StyleType styleType) {
-        StringBuilder buffer = new StringBuilder(textBlock);
+        StringBuilder builder = new StringBuilder(textBlock);
+        final StringBuilder replacementBuilder = new StringBuilder();
 
-        for (StyleType type : StyleType.values()) {
+        for (final StyleType type : StyleType.values()) {
             if (type != styleType) {
-                Pattern pattern = type.getPattern();
-                Matcher matcher = pattern.matcher(buffer.toString());
+                final Matcher matcher = type.getPattern().matcher(builder.toString());
 
-                StringBuffer replacementBuffer = new StringBuffer();
-
-                while (matcher.find()) {
-                    if (matcher.groupCount() >= 2) {
-                        String extractedText = matcher.group(2);
-                        if (!extractedText.isEmpty()) { // 그룹이 비어있지 않은 경우에만 대체
-                            matcher.appendReplacement(replacementBuffer, Matcher.quoteReplacement(extractedText));
-                        }
+                while (matcher.find() && matcher.groupCount() >= INNER_TEXT_STANDARD) {
+                    final String extractedText = matcher.group(INNER_TEXT);
+                    if (!extractedText.isEmpty()) {
+                        matcher.appendReplacement(replacementBuilder, Matcher.quoteReplacement(extractedText));
                     }
                 }
 
-                matcher.appendTail(replacementBuffer);
-
-                buffer = new StringBuilder(replacementBuffer);
-                replacementBuffer.setLength(0); //버퍼 비우기
+                matcher.appendTail(replacementBuilder);
+                builder = new StringBuilder(replacementBuilder);
+                replacementBuilder.setLength(0);
             }
         }
-
-        return buffer.toString();
-    }
-
-    private String removePartStyles(final String textBlock, final StyleType styleType) {
-        StringBuilder buffer = new StringBuilder(textBlock);
-
-        Pattern pattern = styleType.getPattern();
-        Matcher matcher = pattern.matcher(buffer);
-
-        StringBuffer replacementBuffer = new StringBuffer();
-
-        while (matcher.find()) {
-            if (matcher.groupCount() == 2) {
-                String extractedText = matcher.group(2);
-                if (!extractedText.isEmpty()) { // 그룹이 비어있지 않은 경우에만 대체
-                    matcher.appendReplacement(replacementBuffer, Matcher.quoteReplacement(extractedText));
-                }
-            }
-        }
-        matcher.appendTail(replacementBuffer);
-        return buffer.toString();
+        return builder.toString();
     }
 }

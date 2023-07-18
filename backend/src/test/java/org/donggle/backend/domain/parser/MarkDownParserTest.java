@@ -66,7 +66,7 @@ class MarkDownParserTest {
         @DisplayName("안녕하**세요 여**러분 content구하는 테스트")
         void createCodeBlockContentFromTextBlock() {
             //given
-            final CodeBlockContent content = new CodeBlockContent(0, BlockType.CODE_BLOCK, "나는 자바다", "java");
+            final CodeBlockContent content = new CodeBlockContent(0, BlockType.CODE_BLOCK, "java", "나는 자바다");
 
             //when
             final Content result = markDownParserTest.createContentFromTextBlock(

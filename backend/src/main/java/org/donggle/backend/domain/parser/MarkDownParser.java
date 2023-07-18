@@ -15,7 +15,7 @@ public class MarkDownParser {
         this.markDownStyleParser = markDownStyleParser;
     }
 
-    public Content createContentFromTextBlock(String textBlock) {
+    public Content createContentFromTextBlock(final String textBlock) {
         for (BlockType blockType : BlockType.values()) {
             Matcher matcher = blockType.getPattern().matcher(textBlock);
             if (matcher.find()) {
@@ -27,6 +27,4 @@ public class MarkDownParser {
         }
         return new NormalContent(0, BlockType.PARAGRAPH, textBlock, Collections.emptyList());
     }
-
-
 }

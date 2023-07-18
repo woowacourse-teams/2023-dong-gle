@@ -1,10 +1,10 @@
 package org.donggle.backend.domain.parser;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.domain.BlockType;
 import org.donggle.backend.domain.Style;
 import org.donggle.backend.domain.StyleType;
 import org.donggle.backend.domain.content.CodeBlockContent;
+import org.donggle.backend.domain.content.Content;
 import org.donggle.backend.domain.content.NormalContent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MarkDownParserTest {
 
@@ -32,12 +34,17 @@ class MarkDownParserTest {
             //given
             final NormalContent content = new NormalContent(0, BlockType.HEADING2, "안녕하세요", Collections.emptyList());
 
-            Assertions.assertThat(markDownParserTest.createContentFromTextBlock("## 안녕하세요")).usingRecursiveComparison().isEqualTo(content);
+            //when
+            final Content result = markDownParserTest.createContentFromTextBlock("## 안녕하세요");
+
+            //then
+            assertThat(result).usingRecursiveComparison().isEqualTo(content);
         }
 
         @Test
         @DisplayName("**안`녕*하세요` 여러*분** content구하는 테스트")
         void createNormalContentFromTextBlock2() {
+            //given
             final NormalContent content = new NormalContent(
                     0,
                     BlockType.PARAGRAPH,
@@ -48,20 +55,29 @@ class MarkDownParserTest {
                             new Style(1, 4, StyleType.CODE)
                     ));
 
-            Assertions.assertThat(markDownParserTest.createContentFromTextBlock("**안`녕*하세요` 여러*분**")).usingRecursiveComparison().isEqualTo(content);
+            //when
+            final Content result = markDownParserTest.createContentFromTextBlock("**안`녕*하세요` 여러*분**");
+
+            //then
+            assertThat(result).usingRecursiveComparison().isEqualTo(content);
         }
 
         @Test
         @DisplayName("안녕하**세요 여**러분 content구하는 테스트")
         void createCodeBlockContentFromTextBlock() {
+            //given
             final CodeBlockContent content = new CodeBlockContent(0, BlockType.CODE_BLOCK, "나는 자바다", "java");
 
-            Assertions.assertThat(markDownParserTest.createContentFromTextBlock(
+            //when
+            final Content result = markDownParserTest.createContentFromTextBlock(
                     """
                             ```java
                             나는 자바다
                             ```
-                            """)).usingRecursiveComparison().isEqualTo(content);
+                            """);
+
+            //when
+            assertThat(result).usingRecursiveComparison().isEqualTo(content);
         }
     }
 

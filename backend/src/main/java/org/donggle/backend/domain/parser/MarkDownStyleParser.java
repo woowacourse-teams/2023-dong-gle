@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MarkDownStyleParser {
-    public String removeAllStyles(String textBlock) {
+    public String removeAllStyles(final String textBlock) {
         StringBuilder buffer = new StringBuilder(textBlock);
 
         for (StyleType type : StyleType.values()) {
@@ -36,8 +36,7 @@ public class MarkDownStyleParser {
         return buffer.toString();
     }
 
-
-    public List<Style> extractStyles(String textBlock, String originalText) {
+    public List<Style> extractStyles(String textBlock, final String originalText) {
         List<Style> styles = new ArrayList<>();
 
         for (StyleType styleType : StyleType.values()) {
@@ -59,7 +58,7 @@ public class MarkDownStyleParser {
         return styles;
     }
 
-    private String removeUnmatchedStyle(String textBlock, StyleType styleType) {
+    private String removeUnmatchedStyle(final String textBlock, final StyleType styleType) {
         StringBuilder buffer = new StringBuilder(textBlock);
 
         for (StyleType type : StyleType.values()) {
@@ -88,7 +87,7 @@ public class MarkDownStyleParser {
         return buffer.toString();
     }
 
-    private String removePartStyles(String textBlock, StyleType styleType) {
+    private String removePartStyles(final String textBlock, final StyleType styleType) {
         StringBuilder buffer = new StringBuilder(textBlock);
 
         Pattern pattern = styleType.getPattern();

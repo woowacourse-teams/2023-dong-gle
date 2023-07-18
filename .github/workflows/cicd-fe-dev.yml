@@ -1,0 +1,38 @@
+name: CICD for Frontend Development
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fe-build:
+    runs-on: [self-hosted]
+    steps:
+        - name: Docker build & push to dev
+          working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle/frontend
+          run: |
+            sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dong-gle-frontend-dev .
+            sudo docker push ${{ secrets.DOCKER_REPO }}/dong-gle-frontend-dev
+    
+  deploy:
+    runs-on: [self-hosted]
+    needs: [fe-build]
+    steps:
+      - name: change permission
+        run: |
+            sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+
+      - name: Docker compose
+        working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+        run: |
+            sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker compose -f docker-compose.dev.yml pull
+            sudo docker compose -f docker-compose.dev.yml up -d

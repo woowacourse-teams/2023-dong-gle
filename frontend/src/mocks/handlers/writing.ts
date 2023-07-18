@@ -1,6 +1,6 @@
+import { rest } from 'msw';
 import { writingURL } from 'constants/apis/url';
 import { writingContentMock } from 'mocks/writingContentMock';
-import { rest } from 'msw';
 import { GetWritingResponse } from 'types/apis/writings';
 
 export const writingHandlers = [
@@ -29,11 +29,11 @@ export const writingHandlers = [
   // 글 블로그로 발행: POST
   rest.post('/writings/:writingId/publish', async (req, res, ctx) => {
     const blog = ['MEDIUM', 'TISTORY'];
-    const { writingId } = req.params;
+    const id = Number(req.params.writingId);
     const { publishTo } = await req.json();
 
-    if (!blog.includes(publishTo) || typeof writingId !== 'number') return res(ctx.status(404));
+    if (!blog.includes(publishTo) || typeof id !== 'number') return res(ctx.status(404));
 
-    return res(ctx.status(200));
+    return res(ctx.delay(3000), ctx.status(200));
   }),
 ];

@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.Renderer.Html;
+package org.donggle.backend.domain.renderer.html;
 
 import lombok.Getter;
 import org.donggle.backend.domain.BlockType;

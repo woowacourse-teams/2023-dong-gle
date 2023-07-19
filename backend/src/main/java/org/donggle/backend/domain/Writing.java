@@ -26,4 +26,9 @@ public class Writing {
     @NotNull
     @Column(length = 255)
     private String title;
+
+    public Writing(final Member member, final String title) {
+        this.member = member;
+        this.title = title;
+    }
 }

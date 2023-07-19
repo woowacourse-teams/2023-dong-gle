@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.Renderer.Html;
+package org.donggle.backend.domain.renderer.html;
 
 import org.donggle.backend.domain.Style;
 import org.donggle.backend.domain.StyleType;

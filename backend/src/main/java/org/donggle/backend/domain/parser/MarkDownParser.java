@@ -24,7 +24,13 @@ public class MarkDownParser {
         this.markDownStyleParser = markDownStyleParser;
     }
 
-    public List<String> splitBlocks(final String text) {
+    public List<Content> parse(final String text) {
+        return splitBlocks(text).stream()
+                .map(this::createContentFromTextBlock)
+                .toList();
+    }
+
+    private List<String> splitBlocks(final String text) {
         final Pattern pattern = Pattern.compile(BLOCK_DELIMITER);
         final Matcher matcher = pattern.matcher(text);
 
@@ -51,7 +57,7 @@ public class MarkDownParser {
         return matchText != null && !matchText.isEmpty();
     }
 
-    public Content createContentFromTextBlock(final String textBlock) {
+    private Content createContentFromTextBlock(final String textBlock) {
         final Matcher matcher = findBlockMatcher(textBlock);
         final BlockType blockType = BlockType.findBlockType(matcher);
 

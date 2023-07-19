@@ -22,7 +22,7 @@ public class CodeBlockContent extends Content {
     @Column(nullable = false)
     private String language;
 
-    public CodeBlockContent(final int depth, final BlockType blockType, final String language, final String rawText) {
+    public CodeBlockContent(final int depth, final BlockType blockType, final String rawText, final String language) {
         super(depth, blockType);
         this.rawText = rawText;
         this.language = language;

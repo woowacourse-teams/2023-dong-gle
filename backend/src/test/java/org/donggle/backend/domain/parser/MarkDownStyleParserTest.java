@@ -1,6 +1,5 @@
 package org.donggle.backend.domain.parser;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.domain.Style;
 import org.donggle.backend.domain.StyleType;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class MarkDownStyleParserTest {
@@ -32,9 +32,9 @@ class MarkDownStyleParserTest {
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
 
         //then
-        assertAll(() -> {
-            Assertions.assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(codeStyle);
-        }, () -> Assertions.assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(boldStyle));
+        assertAll(
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(codeStyle),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(boldStyle));
     }
 
     @Test
@@ -45,9 +45,9 @@ class MarkDownStyleParserTest {
         final String result = "안녕하세요 여러분";
 
         //when
-        final String execute = markDownStyleParser.removeAllStyles(input);
+        final String execute = markDownStyleParser.removeStyles(input);
 
         //then
-        Assertions.assertThat(execute).isEqualTo(execute);
+        assertThat(execute).isEqualTo(result);
     }
 }

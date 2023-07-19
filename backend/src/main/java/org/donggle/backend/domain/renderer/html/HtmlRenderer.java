@@ -38,7 +38,7 @@ public class HtmlRenderer {
             result.append(renderList(subContent));
         }
 
-        return String.valueOf(result);
+        return result.toString();
     }
 
     private String createHtmlText(final List<NormalContent> subContent, final Content content) {
@@ -87,7 +87,7 @@ public class HtmlRenderer {
         addInnerHtmlType(contents, result);
         addEndHtmlType(endContent, result);
 
-        return String.valueOf(result);
+        return result.toString();
     }
 
     private void addFirstHtmlType(final NormalContent content, final StringBuilder result) {

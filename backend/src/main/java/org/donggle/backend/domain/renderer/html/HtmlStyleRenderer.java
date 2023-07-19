@@ -46,7 +46,7 @@ public class HtmlStyleRenderer {
             addTags(result, endTags, i);
         }
 
-        return String.valueOf(result);
+        return result.toString();
     }
 
     private void addTags(final StringBuilder result, final Map<Integer, List<String>> tags, final int index) {

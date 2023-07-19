@@ -24,7 +24,7 @@ public class HtmlRenderer {
         final List<NormalContent> subContent = new ArrayList<>();
         String htmlText;
 
-        for (Block block : blocks) {
+        for (final Block block : blocks) {
             htmlText = createHtmlText(subContent, block.getContent());
             if (!htmlText.isBlank() && !subContent.isEmpty()) {
                 result.append(renderList(subContent));
@@ -106,7 +106,7 @@ public class HtmlRenderer {
         }
     }
 
-    private String renderLine(final NormalContent content, NormalContent nextContent) {
+    private String renderLine(final NormalContent content, final NormalContent nextContent) {
         final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
         final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag();
 
@@ -129,9 +129,9 @@ public class HtmlRenderer {
     }
 
     private void addEndHtmlType(final NormalContent content, final StringBuilder result) {
-        HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
-        String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
+        final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
+        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
         result.append(line);
     }
 

@@ -50,7 +50,7 @@ class HtmlRendererTest {
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING6, "heading6", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.PARAGRAPH, "paragraph", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "java", "public void(){}")));
+        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "public void(){}", "java")));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -162,7 +162,7 @@ class HtmlRendererTest {
     @DisplayName("CodeBlock 렌더링")
     void renderCodeBlock() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "java", "public void(){}")));
+        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "public void(){}", "java")));
 
         //when
         final String result = htmlRenderer.render(blocks);

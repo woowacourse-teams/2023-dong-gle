@@ -1,12 +1,10 @@
 package org.donggle.backend.domain.content;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,26 +18,23 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NormalContent extends Content {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
+    @Lob
+    @NotNull
     private String rawText;
-    @OneToMany
-    @JoinColumn(name = "style_id")
+    @OneToMany(mappedBy = "normalContent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Style> styles = new ArrayList<>();
 
     public NormalContent(final int depth, final BlockType blockType, final String rawText, final List<Style> styles) {
         super(depth, blockType);
-        this.styles = styles;
         this.rawText = rawText;
+        styles.forEach(style -> style.setNormalContent(this));
+        this.styles.addAll(styles);
     }
 
     @Override
     public String toString() {
         return "NormalContent{" +
                 "type" + getBlockType() +
-                "id=" + id +
                 ", rawText='" + rawText + '\'' +
                 '}';
     }

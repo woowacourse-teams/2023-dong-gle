@@ -45,5 +45,6 @@ jobs:
         working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
         run: |
             sudo docker login https://${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker rm -f $(sudo docker -qa)
             sudo docker compose -f docker-compose.dev.yml pull
             sudo docker compose -f docker-compose.dev.yml up -d

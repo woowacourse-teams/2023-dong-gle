@@ -14,6 +14,7 @@ import java.util.Objects;
 @Component
 public class MediumApiService {
     private static final String MEDIUM_URL = "https://api.medium.com/v1";
+    
     private final String mediumToken;
     private final WebClient webClient;
 

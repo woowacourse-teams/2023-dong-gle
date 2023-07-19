@@ -12,3 +12,7 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  h2:
+    console:
+      enabled: true
+medium_token: medium_token

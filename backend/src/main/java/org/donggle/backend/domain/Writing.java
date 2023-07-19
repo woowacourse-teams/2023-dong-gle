@@ -1,6 +1,5 @@
 package org.donggle.backend.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +23,6 @@ public class Writing {
     @JoinColumn(name = "member_id")
     private Member member;
     @NotNull
-    @Column(length = 255)
     private String title;
 
     public Writing(final Member member, final String title) {

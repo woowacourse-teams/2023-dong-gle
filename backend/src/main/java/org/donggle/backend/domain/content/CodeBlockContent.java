@@ -1,10 +1,8 @@
 package org.donggle.backend.domain.content;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +12,10 @@ import org.donggle.backend.domain.BlockType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeBlockContent extends Content {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
+    @Lob
+    @NotNull
     private String rawText;
-    @Column(nullable = false)
+    @NotNull
     private String language;
 
     public CodeBlockContent(final int depth, final BlockType blockType, final String rawText, final String language) {
@@ -28,18 +24,10 @@ public class CodeBlockContent extends Content {
         this.language = language;
     }
 
-    public CodeBlockContent(final Long id, final int depth, final BlockType blockType, final String rawText, final String language) {
-        super(depth, blockType);
-        this.id = id;
-        this.rawText = rawText;
-        this.language = language;
-    }
-
     @Override
     public String toString() {
         return "CodeBlockContent{" +
                 "blocktype=" + getBlockType() +
-                "id=" + id +
                 ", rawText='" + rawText + '\'' +
                 ", language='" + language + '\'' +
                 '}';

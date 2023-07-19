@@ -45,7 +45,6 @@ class MarkDownStyleParserTest {
         final String result = "안녕하세요 여러분";
 
         //when
-        System.out.println("input = " + input);
         final String execute = markDownStyleParser.removeStyles(input);
 
         //then

@@ -12,10 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MarkDownParser {
-    public static final int RAW_TEXT_NUMBER = 2;
-    public static final int LANGUAGE_NUMBER = 1;
-    public static final int CODE_INDEX = 1;
-    public static final int NORMAL_INDEX = 2;
+    private static final String BLOCK_DELIMITER = "(?s)(```.*?```).*?|(.*?)(?=```|\\z)";
+    private static final int RAW_TEXT_NUMBER = 2;
+    private static final int LANGUAGE_NUMBER = 1;
+    private static final int CODE_NUMBER = 1;
+    private static final int NORMAL_NUMBER = 2;
+    
     private final MarkDownStyleParser markDownStyleParser;
 
     public MarkDownParser(final MarkDownStyleParser markDownStyleParser) {
@@ -23,14 +25,14 @@ public class MarkDownParser {
     }
 
     public List<String> splitBlocks(final String text) {
-        final Pattern pattern = Pattern.compile("(?s)(```.*?```).*?|(.*?)(?=```|\\z)");
+        final Pattern pattern = Pattern.compile(BLOCK_DELIMITER);
         final Matcher matcher = pattern.matcher(text);
 
         final List<String> textBlocks = new ArrayList<>();
 
         while (matcher.find()) {
-            final String codeBlock = matcher.group(CODE_INDEX);
-            final String normalBlock = matcher.group(NORMAL_INDEX);
+            final String codeBlock = matcher.group(CODE_NUMBER);
+            final String normalBlock = matcher.group(NORMAL_NUMBER);
 
             if (isNotEmpty(codeBlock)) {
                 textBlocks.add(codeBlock.trim());

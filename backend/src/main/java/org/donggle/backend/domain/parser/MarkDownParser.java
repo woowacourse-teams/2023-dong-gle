@@ -17,7 +17,7 @@ public class MarkDownParser {
     private static final int LANGUAGE_NUMBER = 1;
     private static final int CODE_NUMBER = 1;
     private static final int NORMAL_NUMBER = 2;
-    
+
     private final MarkDownStyleParser markDownStyleParser;
 
     public MarkDownParser(final MarkDownStyleParser markDownStyleParser) {
@@ -34,10 +34,10 @@ public class MarkDownParser {
             final String codeBlock = matcher.group(CODE_NUMBER);
             final String normalBlock = matcher.group(NORMAL_NUMBER);
 
-            if (isNotEmpty(codeBlock)) {
+            if (isExist(codeBlock)) {
                 textBlocks.add(codeBlock.trim());
             }
-            if (isNotEmpty(normalBlock)) {
+            if (isExist(normalBlock)) {
                 textBlocks.addAll(Arrays.stream(normalBlock.split("\\n"))
                         .filter(block -> !block.isEmpty())
                         .toList());
@@ -47,7 +47,7 @@ public class MarkDownParser {
         return textBlocks;
     }
 
-    private boolean isNotEmpty(final String matchText) {
+    private boolean isExist(final String matchText) {
         return matchText != null && !matchText.isEmpty();
     }
 

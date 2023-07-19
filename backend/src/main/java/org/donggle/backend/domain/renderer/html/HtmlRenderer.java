@@ -55,16 +55,24 @@ public class HtmlRenderer {
         return htmlText;
     }
 
+    private String renderList(final List<NormalContent> contents) {
+        final StringBuilder result = new StringBuilder();
+        final NormalContent firstContent = contents.get(0);
+        final NormalContent endContent = contents.get(contents.size() - 1);
+
+        addFirstHtmlType(firstContent, result);
+        addInnerHtmlType(contents, result);
+        addEndHtmlType(endContent, result);
+
+        return result.toString();
+    }
+
     private String renderNormalContent(final NormalContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         final String depth = renderDepth(content.getDepth());
         final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
 
         return htmlType.getStartTag() + depth + rawText + htmlType.getEndTag();
-    }
-
-    private String renderDepth(final int depth) {
-        return HTML_TAB.repeat(Math.max(0, depth));
     }
 
     private String renderCodeBlock(final CodeBlockContent content) {
@@ -76,18 +84,6 @@ public class HtmlRenderer {
                 .replace("${language}", language);
 
         return startTag + rawText + htmlType.getEndTag();
-    }
-
-    private String renderList(final List<NormalContent> contents) {
-        final StringBuilder result = new StringBuilder();
-        final NormalContent firstContent = contents.get(0);
-        final NormalContent endContent = contents.get(contents.size() - 1);
-
-        addFirstHtmlType(firstContent, result);
-        addInnerHtmlType(contents, result);
-        addEndHtmlType(endContent, result);
-
-        return result.toString();
     }
 
     private void addFirstHtmlType(final NormalContent content, final StringBuilder result) {
@@ -104,6 +100,17 @@ public class HtmlRenderer {
 
             result.append(renderLine(currentContent, nextContent));
         }
+    }
+
+    private void addEndHtmlType(final NormalContent content, final StringBuilder result) {
+        final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
+        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
+        result.append(line);
+    }
+
+    private String renderDepth(final int depth) {
+        return HTML_TAB.repeat(Math.max(0, depth));
     }
 
     private String renderLine(final NormalContent content, final NormalContent nextContent) {
@@ -126,13 +133,6 @@ public class HtmlRenderer {
 
         final HtmlType nextHtmlType = HtmlType.findByBlockType(nextContent.getBlockType());
         return line + nextHtmlType.getStartTag();
-    }
-
-    private void addEndHtmlType(final NormalContent content, final StringBuilder result) {
-        final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
-        final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
-        result.append(line);
     }
 
     private String renderImage(final ImageContent content) {

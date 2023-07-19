@@ -34,7 +34,7 @@ public class NormalContent extends Content {
     @Override
     public String toString() {
         return "NormalContent{" +
-                "type" + getBlockType() +
+                "type = " + getBlockType() +
                 ", rawText='" + rawText + '\'' +
                 '}';
     }

@@ -11,6 +11,10 @@ import org.donggle.backend.domain.Writing;
 import org.donggle.backend.domain.content.Content;
 import org.donggle.backend.domain.parser.MarkDownParser;
 import org.donggle.backend.domain.parser.MarkDownStyleParser;
+import org.donggle.backend.domain.renderer.html.HtmlRenderer;
+import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
+import org.donggle.backend.dto.WritingResponse;
+import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +23,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UploadWritingService {
+public class WritingService {
     private final MemberRepository memberRepository;
     private final ContentRepository contentRepository;
     private final BlockRepository blockRepository;
@@ -41,5 +45,17 @@ public class UploadWritingService {
         }
 
         return writing.getId();
+    }
+
+    public WritingResponse findWriting(final Long memberId, final Long writingId) {
+        final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
+        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
+        final Writing writing = writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
+
+        final String content = htmlRenderer.render(blocks);
+
+        return new WritingResponse(writing.getId(), writing.getTitle(), content);
     }
 }

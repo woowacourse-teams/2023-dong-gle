@@ -15,7 +15,7 @@ services:
     image: nginx:latest
     restart: always
     volumes:
-      - ./conf/:/etc/nginx/nginx.d
+      - ./conf/:/etc/nginx/conf.d
     ports:
       - 80:80
       - 443:443

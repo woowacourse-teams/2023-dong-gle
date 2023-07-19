@@ -36,11 +36,11 @@ jobs:
           ${{ runner.os }}-
 
     ## create application-dev.properties
-    - name: make application-dev.properties
+    - name: make application-dev.yml
       run: |
         cd ./backend/src/main/resources
-        touch ./application-dev.properties
-        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
+        touch ./application-dev.yml
+        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
       shell: bash
 
     ## gradle build

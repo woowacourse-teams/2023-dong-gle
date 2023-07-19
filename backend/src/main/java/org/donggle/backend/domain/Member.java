@@ -18,4 +18,8 @@ public class Member extends BaseEntity {
     private Long id;
     @Column(length = 20, nullable = false)
     private String name;
+
+    public Member(final String name) {
+        this.name = name;
+    }
 }

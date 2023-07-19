@@ -30,7 +30,12 @@ public class HtmlRenderer {
                 result.append(renderList(subContent));
                 subContent.clear();
             }
+
             result.append(htmlText);
+        }
+
+        if (!subContent.isEmpty()) {
+            result.append(renderList(subContent));
         }
 
         return String.valueOf(result);
@@ -50,7 +55,7 @@ public class HtmlRenderer {
         return htmlText;
     }
 
-    public String renderNormalContent(final NormalContent content) {
+    private String renderNormalContent(final NormalContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         final String depth = renderDepth(content.getDepth());
         final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
@@ -58,11 +63,11 @@ public class HtmlRenderer {
         return htmlType.getStartTag() + depth + rawText + htmlType.getEndTag();
     }
 
-    public String renderDepth(final int depth) {
+    private String renderDepth(final int depth) {
         return HTML_TAB.repeat(Math.max(0, depth));
     }
 
-    public String renderCodeBlock(final CodeBlockContent content) {
+    private String renderCodeBlock(final CodeBlockContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         final String language = content.getLanguage();
         final String rawText = content.getRawText();
@@ -73,7 +78,7 @@ public class HtmlRenderer {
         return startTag + rawText + htmlType.getEndTag();
     }
 
-    public String renderList(final List<NormalContent> contents) {
+    private String renderList(final List<NormalContent> contents) {
         final StringBuilder result = new StringBuilder();
         final NormalContent firstContent = contents.get(0);
         final NormalContent endContent = contents.get(contents.size() - 1);
@@ -130,7 +135,7 @@ public class HtmlRenderer {
         result.append(line);
     }
 
-    public String renderImage(final ImageContent content) {
+    private String renderImage(final ImageContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         final String caption = content.getCaption();
         final String url = content.getUrl();

@@ -17,19 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HtmlRendererTest {
     private HtmlRenderer htmlRenderer;
+    private List<Block> blocks;
+    private Member member;
 
     @BeforeEach
     void setUp() {
         htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
+        blocks = new ArrayList<>();
+        member = new Member("동글이");
     }
 
     @Test
     @DisplayName("전체 Block 렌더링")
     void render() {
         //given
-        final List<Block> blocks = new ArrayList<>();
-        final Member member = new Member("동글이");
-
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "2번줄", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "3번줄", new ArrayList<>())));
@@ -63,10 +64,10 @@ class HtmlRendererTest {
     @DisplayName("Heading1 렌더링")
     void renderHeading1() {
         //given
-        final NormalContent heading1 = new NormalContent(0, BlockType.HEADING1, "Heading1", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING1, "Heading1", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading1);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h1>Heading1</h1>";
 
         //then
@@ -77,10 +78,10 @@ class HtmlRendererTest {
     @DisplayName("Heading2 렌더링")
     void renderHeading2() {
         //given
-        final NormalContent heading2 = new NormalContent(0, BlockType.HEADING2, "Heading2", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING2, "Heading2", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading2);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h2>Heading2</h2>";
 
         //then
@@ -91,10 +92,10 @@ class HtmlRendererTest {
     @DisplayName("Heading3 렌더링")
     void renderHeading3() {
         //given
-        final NormalContent heading3 = new NormalContent(0, BlockType.HEADING3, "Heading3", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING3, "Heading3", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading3);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h3>Heading3</h3>";
 
         //then
@@ -105,10 +106,10 @@ class HtmlRendererTest {
     @DisplayName("Heading4 렌더링")
     void renderHeading4() {
         //given
-        final NormalContent heading4 = new NormalContent(0, BlockType.HEADING4, "Heading4", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING4, "Heading4", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading4);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h4>Heading4</h4>";
 
         //then
@@ -119,10 +120,10 @@ class HtmlRendererTest {
     @DisplayName("Heading5 렌더링")
     void renderHeading5() {
         //given
-        final NormalContent heading5 = new NormalContent(0, BlockType.HEADING5, "Heading5", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING5, "Heading5", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading5);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h5>Heading5</h5>";
 
         //then
@@ -133,10 +134,10 @@ class HtmlRendererTest {
     @DisplayName("Heading6 렌더링")
     void renderHeading6() {
         //given
-        final NormalContent heading6 = new NormalContent(0, BlockType.HEADING6, "Heading6", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING6, "Heading6", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(heading6);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<h6>Heading6</h6>";
 
         //then
@@ -147,10 +148,10 @@ class HtmlRendererTest {
     @DisplayName("Blockquote 렌더링")
     void blockquote() {
         //given
-        final NormalContent blockquote = new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>());
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderNormalContent(blockquote);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<blockquote>blockquote</blockquote>";
 
         //then
@@ -161,10 +162,10 @@ class HtmlRendererTest {
     @DisplayName("CodeBlock 렌더링")
     void renderCodeBlock() {
         //given
-        final CodeBlockContent codeBlockContent = new CodeBlockContent(0, BlockType.CODE_BLOCK, "java", "public void(){}");
+        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "java", "public void(){}")));
 
         //when
-        final String result = htmlRenderer.renderCodeBlock(codeBlockContent);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<pre><code className={`language-java`}>public void(){}</code></pre>";
 
         //then
@@ -175,21 +176,20 @@ class HtmlRendererTest {
     @DisplayName("리스트 렌더링")
     void renderList() {
         //given
-        final List<NormalContent> normalContents = new ArrayList<>();
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "2번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "3번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(1, BlockType.UNORDERED_LIST, "3-1번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(1, BlockType.UNORDERED_LIST, "3-2번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(1, BlockType.ORDERED_LIST, "3-3번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(1, BlockType.ORDERED_LIST, "3-4번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "4번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "5번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(1, BlockType.ORDERED_LIST, "5-1번줄", new ArrayList<>()));
-        normalContents.add(new NormalContent(0, BlockType.UNORDERED_LIST, "6번줄", new ArrayList<>()));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "2번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "3번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-1번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-2번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-3번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-4번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "4번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "5번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "5-1번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "6번줄", new ArrayList<>())));
 
         //when
-        final String result = htmlRenderer.renderList(normalContents);
+        final String result = htmlRenderer.render(blocks);
         final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul>";
 
         //then

@@ -2,14 +2,12 @@ package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.WritingService;
+import org.donggle.backend.application.service.PublishService;
+import org.donggle.backend.dto.PublishRequest;
 import org.donggle.backend.dto.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -27,6 +25,7 @@ public class WritingController {
     private static final String MD_FORMAT = ".md";
 
     private final WritingService writingService;
+    private final PublishService publishService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> writingAddByFile(final MultipartFile file) {
@@ -55,5 +54,11 @@ public class WritingController {
     public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
         final WritingResponse response = writingService.findWriting(1L, writingId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{writingId}/publish")
+    public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId, @RequestBody final PublishRequest request) {
+        publishService.publishWriting(1L, writingId, request);
+        return ResponseEntity.ok().build();
     }
 }

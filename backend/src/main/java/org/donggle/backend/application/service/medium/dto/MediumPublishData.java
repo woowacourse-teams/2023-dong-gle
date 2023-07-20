@@ -1,6 +1,8 @@
 package org.donggle.backend.application.service.medium.dto;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 public record MediumPublishData(
@@ -11,8 +13,11 @@ public record MediumPublishData(
         String url,
         String canonicalUrl,
         String publishStatus,
-        LocalDate publishedAt,
+        Long publishedAt,
         String license,
         String licenseUrl
 ) {
+    public LocalDateTime getPublishedAt() {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(publishedAt), ZoneId.systemDefault());
+    }
 }

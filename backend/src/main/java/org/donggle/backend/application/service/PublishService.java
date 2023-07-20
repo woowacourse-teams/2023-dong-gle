@@ -51,7 +51,6 @@ public class PublishService {
                         .title(writing.getTitle())
                         .content(content)
                         .contentFormat("html")
-                        .publishStatus("draft")
                         .build();
                 final MediumPublishResponse response = mediumApiService.publishContent(request);
                 final BlogWriting blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());

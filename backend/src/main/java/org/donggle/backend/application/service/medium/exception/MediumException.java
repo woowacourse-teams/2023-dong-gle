@@ -1,6 +1,6 @@
 package org.donggle.backend.application.service.medium.exception;
 
-public class MediumException extends RuntimeException {
+public abstract class MediumException extends RuntimeException {
     public MediumException(final String message) {
         super(message);
     }

@@ -34,4 +34,8 @@ public class BlogWriting {
         this.writing = writing;
         this.publishedAt = publishedAt;
     }
+
+    public String getBlogName() {
+        return blog.getBlogType().name();
+    }
 }

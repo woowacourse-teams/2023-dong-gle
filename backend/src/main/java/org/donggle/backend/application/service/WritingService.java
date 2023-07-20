@@ -43,6 +43,7 @@ public class WritingService {
 
         writingRepository.save(writing);
 
+        //TODO : CASCADE 추가
         final List<Content> contents = markDownParser.parse(totalText);
         for (final Content content : contents) {
             final Content savedContent = contentRepository.save(content);
@@ -55,8 +56,7 @@ public class WritingService {
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
-        final Writing writing = writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        final Writing writing = findWriting(writingId);
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
 
         final String content = htmlRenderer.render(blocks);
@@ -64,13 +64,20 @@ public class WritingService {
         return new WritingResponse(writing.getId(), writing.getTitle(), content);
     }
 
+    private Writing findWriting(final Long writingId) {
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
-        final Writing writing = writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        final Writing writing = findWriting(writingId);
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
         final List<PublishedDetailResponse> publishedTos = blogWritings.stream()
-                .map(blogWriting -> new PublishedDetailResponse(blogWriting.getBlog().getBlogType().name(), blogWriting.getPublishedAt()))
+                .map(blogWriting -> new PublishedDetailResponse(
+                        blogWriting.getBlogName(),
+                        blogWriting.getPublishedAt())
+                )
                 .toList();
 
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);

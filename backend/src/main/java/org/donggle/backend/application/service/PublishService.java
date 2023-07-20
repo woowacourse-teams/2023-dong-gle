@@ -34,15 +34,11 @@ public class PublishService {
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final String blogName = publishRequest.publishTo();
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
-
         final Blog blog = blogRepository.findByBlogType(BlogType.valueOf(blogName))
                 .orElseThrow(() -> new BlogNotFoundException(blogName));
-
         final Writing writing = writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
-
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
-
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
 
         switch (blog.getBlogType()) {

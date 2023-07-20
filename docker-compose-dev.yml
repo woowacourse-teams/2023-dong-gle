@@ -1,12 +1,12 @@
 version: "3"
 services:
   frontend:
-    image: ghcr.io/echo724/dong-gle-frontend-dev
+    image: eunchan1001/dong-gle-frontend-dev
     expose:
       - 3000
 
   backend:
-    image: ghcr.io/echo724/dong-gle-backend-dev
+    image: eunchan1001/dong-gle-backend-dev
     expose:
       - 8080
 

@@ -1,11 +1,11 @@
 package org.donggle.backend.domain.renderer.html;
 
-import org.donggle.backend.domain.Block;
-import org.donggle.backend.domain.BlockType;
-import org.donggle.backend.domain.Member;
-import org.donggle.backend.domain.Writing;
-import org.donggle.backend.domain.content.CodeBlockContent;
-import org.donggle.backend.domain.content.NormalContent;
+import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.writing.Block;
+import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.content.CodeBlockContent;
+import org.donggle.backend.domain.writing.content.NormalContent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

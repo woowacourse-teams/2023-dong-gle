@@ -1,11 +1,12 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.WritingService;
 import org.donggle.backend.application.service.PublishService;
-import org.donggle.backend.dto.PublishRequest;
-import org.donggle.backend.dto.WritingPropertiesResponse;
-import org.donggle.backend.dto.WritingResponse;
+import org.donggle.backend.application.service.WritingService;
+import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.exception.business.InvalidFileFormatException;
+import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +35,13 @@ public class WritingController {
     private final PublishService publishService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> writingAddByFile(final MultipartFile file) {
+    public ResponseEntity<Void> writingAdd(final MultipartFile file) {
         final String originalFilename = file.getOriginalFilename();
         validateFileFormat(originalFilename);
 
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+        try (final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))
+        ) {
             final String content = reader.lines().collect(Collectors.joining("\n"));
             final int endIndex = originalFilename.lastIndexOf(MD_FORMAT);
             final String title = originalFilename.substring(0, endIndex);
@@ -52,7 +55,8 @@ public class WritingController {
 
     private void validateFileFormat(final String originalFilename) {
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
-            throw new UnsupportedOperationException();
+            //TODO : 파일형식 자르기
+            throw new InvalidFileFormatException();
         }
     }
 

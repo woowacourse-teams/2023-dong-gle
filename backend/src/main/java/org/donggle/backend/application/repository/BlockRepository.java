@@ -1,6 +1,6 @@
 package org.donggle.backend.application.repository;
 
-import org.donggle.backend.domain.Block;
+import org.donggle.backend.domain.writing.Block;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

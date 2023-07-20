@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.renderer.html;
 
-import org.donggle.backend.domain.Style;
-import org.donggle.backend.domain.StyleType;
+import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

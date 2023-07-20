@@ -1,6 +1,6 @@
 package org.donggle.backend.domain.renderer.html;
 
-import org.donggle.backend.domain.Style;
+import org.donggle.backend.domain.writing.Style;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

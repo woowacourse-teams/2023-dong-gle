@@ -1,8 +1,8 @@
 package org.donggle.backend.application.service.medium;
 
-import org.donggle.backend.application.service.medium.dto.MediumPublishRequest;
-import org.donggle.backend.application.service.medium.dto.MediumPublishResponse;
-import org.donggle.backend.application.service.medium.dto.MediumUserResponse;
+import org.donggle.backend.application.service.medium.dto.request.MediumPublishRequest;
+import org.donggle.backend.application.service.medium.dto.response.MediumPublishResponse;
+import org.donggle.backend.application.service.medium.dto.response.MediumUserResponse;
 import org.donggle.backend.application.service.medium.exception.MediumBadRequestException;
 import org.donggle.backend.application.service.medium.exception.MediumForbiddenException;
 import org.donggle.backend.application.service.medium.exception.MediumInternalServerError;
@@ -34,19 +34,6 @@ public class MediumApiService {
         this.webClient = WebClient.create(MEDIUM_URL);
     }
 
-    public String getUserId() {
-        final MediumUserResponse response = webClient.get()
-                .uri("/me")
-                .accept(MediaType.APPLICATION_JSON)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .header(AUTHORIZATION, BEARER + mediumToken)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> handle4xxException(clientResponse.statusCode().value()))
-                .bodyToMono(MediumUserResponse.class)
-                .block();
-        return Objects.requireNonNull(response).data().id();
-    }
-
     public MediumPublishResponse publishContent(final MediumPublishRequest request) {
         return webClient.post()
                 .uri("/users/{userId}/posts", getUserId())
@@ -61,6 +48,19 @@ public class MediumApiService {
                 .bodyToMono(MediumPublishResponse.class)
                 .block();
 
+    }
+
+    public String getUserId() {
+        final MediumUserResponse response = webClient.get()
+                .uri("/me")
+                .accept(MediaType.APPLICATION_JSON)
+                .acceptCharset(StandardCharsets.UTF_8)
+                .header(AUTHORIZATION, BEARER + mediumToken)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> handle4xxException(clientResponse.statusCode().value()))
+                .bodyToMono(MediumUserResponse.class)
+                .block();
+        return Objects.requireNonNull(response).data().id();
     }
 
     private Mono<? extends Throwable> handle4xxException(final int code) {

@@ -8,7 +8,11 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.medium.MediumApiService;
 import org.donggle.backend.application.service.medium.dto.MediumPublishRequest;
 import org.donggle.backend.application.service.medium.dto.MediumPublishResponse;
-import org.donggle.backend.domain.*;
+import org.donggle.backend.domain.Block;
+import org.donggle.backend.domain.Blog;
+import org.donggle.backend.domain.BlogType;
+import org.donggle.backend.domain.BlogWriting;
+import org.donggle.backend.domain.Writing;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.dto.PublishRequest;
@@ -48,8 +52,7 @@ public class PublishService {
                         .publishStatus("draft")
                         .build();
                 final MediumPublishResponse mediumPublishResponse = mediumApiService.publishContent(publishRequest);
-                writing.changePublishStatus(mediumPublishResponse.data().getPublishedAt());
-                final BlogWriting blogWriting = new BlogWriting(blog, writing);
+                final BlogWriting blogWriting = new BlogWriting(blog, writing, mediumPublishResponse.data().getPublishedAt());
                 blogWritingRepository.save(blogWriting);
                 break;
             case TISTORY:

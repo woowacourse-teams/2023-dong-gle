@@ -4,10 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.WritingService;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.dto.PublishRequest;
+import org.donggle.backend.dto.WritingPropertiesResponse;
 import org.donggle.backend.dto.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -53,6 +59,12 @@ public class WritingController {
     @GetMapping("/{writingId}")
     public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
         final WritingResponse response = writingService.findWriting(1L, writingId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{writingId}/properties")
+    public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(@PathVariable final Long writingId) {
+        final WritingPropertiesResponse response = writingService.findWritingProperties(1L, writingId);
         return ResponseEntity.ok(response);
     }
 

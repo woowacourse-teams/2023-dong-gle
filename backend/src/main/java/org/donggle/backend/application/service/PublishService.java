@@ -17,6 +17,7 @@ import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.dto.PublishRequest;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
+import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,36 +31,34 @@ public class PublishService {
     private final BlogWritingRepository blogWritingRepository;
     private final MediumApiService mediumApiService;
 
-    public void publishWriting(final Long memberId, final Long writingId, final PublishRequest request) {
-        final String blogName = request.publishTo();
-        System.out.println("blogName = " + blogName);
+    public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
+        final String blogName = publishRequest.publishTo();
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
-        final Blog blog = blogRepository.findByName(blogName)
-                .orElseThrow(() -> new BlogNotFoundException(blogName));
-        final Writing writing = writingRepository.findById(writingId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 글을 찾을 수 없습니다."));
-        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
-        final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
-        final String content = htmlRenderer.render(blocks);
 
-        switch (BlogType.valueOf(blogName)) {
-            case MEDIUM:
-                // TODO : Medium API 호출
-                final MediumPublishRequest publishRequest = MediumPublishRequest.builder()
+        final Blog blog = blogRepository.findByBlogType(BlogType.valueOf(blogName))
+                .orElseThrow(() -> new BlogNotFoundException(blogName));
+
+        final Writing writing = writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+
+        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
+
+        final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
+
+        switch (blog.getBlogType()) {
+            case MEDIUM -> {
+                final MediumPublishRequest request = MediumPublishRequest.builder()
                         .title(writing.getTitle())
                         .content(content)
                         .contentFormat("html")
-                        .publishStatus("draft")
                         .build();
-                final MediumPublishResponse mediumPublishResponse = mediumApiService.publishContent(publishRequest);
-                final BlogWriting blogWriting = new BlogWriting(blog, writing, mediumPublishResponse.data().getPublishedAt());
+                final MediumPublishResponse response = mediumApiService.publishContent(request);
+                final BlogWriting blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
                 blogWritingRepository.save(blogWriting);
-                break;
-            case TISTORY:
-                // TODO : Tistory API 호출
-                break;
-            default:
-                throw new IllegalArgumentException("지원하지 않는 블로그입니다.");
+            }
+            case TISTORY -> {
+                //TODO : TISTORY API 연동
+            }
         }
     }
 }

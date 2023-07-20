@@ -70,7 +70,7 @@ public class WritingService {
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
         final List<PublishedDetailResponse> publishedTos = blogWritings.stream()
-                .map(blogWriting -> new PublishedDetailResponse(blogWriting.getBlog().getName(), blogWriting.getPublishedAt()))
+                .map(blogWriting -> new PublishedDetailResponse(blogWriting.getBlog().getBlogType().name(), blogWriting.getPublishedAt()))
                 .toList();
 
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);

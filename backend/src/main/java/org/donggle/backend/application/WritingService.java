@@ -13,6 +13,7 @@ import org.donggle.backend.domain.parser.MarkDownParser;
 import org.donggle.backend.domain.parser.MarkDownStyleParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
+import org.donggle.backend.dto.WritingPropertiesResponse;
 import org.donggle.backend.dto.WritingResponse;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,9 @@ public class WritingService {
         final String content = htmlRenderer.render(blocks);
 
         return new WritingResponse(writing.getId(), writing.getTitle(), content);
+    }
+
+    public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
+        return null;
     }
 }

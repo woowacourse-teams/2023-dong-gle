@@ -14,7 +14,13 @@ const Layout = ({ children }: PropsWithChildren) => {
       <S.Header />
       <S.Row>
         <S.SidebarSection>
-          <Button icon={<PlusCircleIcon />} block={true} align='left' onClick={openFinder}>
+          <Button
+            size={'large'}
+            icon={<PlusCircleIcon />}
+            block={true}
+            align='left'
+            onClick={openFinder}
+          >
             Add Post
           </Button>
         </S.SidebarSection>
@@ -40,6 +46,7 @@ export const SIDEBAR_SECTION_STYLE = css`
   border: ${LAYOUT_COMMON_STYLE.border};
   border-radius: 8px;
   padding: 2rem;
+  flex: 0 0 32rem;
 `;
 
 const S = {
@@ -48,11 +55,12 @@ const S = {
     flex-direction: column;
     width: 100vw;
     height: 100vh;
+    padding: 0 1rem;
   `,
 
   Header: styled.header`
     flex-shrink: 0;
-    height: 4rem;
+    height: 1rem;
   `,
 
   Row: styled.div`

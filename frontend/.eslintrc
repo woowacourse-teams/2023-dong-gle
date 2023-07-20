@@ -47,5 +47,5 @@
       "node": true
     }
   },
-  "ignorePatterns": ["public", "dist", "webpack.config.js"]
+  "ignorePatterns": ["public", "dist", "webpack.*"]
 }

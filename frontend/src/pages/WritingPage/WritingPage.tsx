@@ -1,12 +1,14 @@
-import { PropsWithChildren } from 'react';
 import { styled } from 'styled-components';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
+import WritingViewer from 'components/WritingViewer/WritingViewer';
 import { LAYOUT_COMMON_STYLE, SIDEBAR_SECTION_STYLE } from 'pages/Layout/Layout';
 
-const WritingPage = ({ children }: PropsWithChildren) => {
+const WritingPage = () => {
   return (
     <S.Container>
-      <S.Article>{children}</S.Article>
+      <S.Article>
+        <WritingViewer writingId={200} />
+      </S.Article>
       <S.SidebarSection>
         <PublishingSection writingId={1} isPublished={false} />
       </S.SidebarSection>

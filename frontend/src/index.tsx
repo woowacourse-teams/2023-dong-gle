@@ -7,11 +7,11 @@ import { Router } from 'routes/Router';
 import GlobalStyle from 'styles/GlobalStyle';
 import { theme } from 'styles/theme';
 
-if (process.env.NODE_ENV === 'development') {
-  worker.start({
-    onUnhandledRequest: 'bypass',
-  });
-}
+// if (process.env.NODE_ENV === 'development' && process.env.MOCKING) {
+//   worker.start({
+//     onUnhandledRequest: 'bypass',
+//   });
+// }
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(

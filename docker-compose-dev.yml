@@ -1,0 +1,24 @@
+version: "3"
+services:
+  frontend:
+    image: ghcr.io/echo724/dong-gle-frontend-dev
+    expose:
+      - 3000
+
+  backend:
+    image: ghcr.io/echo724/dong-gle-backend-dev
+    expose:
+      - 8080
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./conf/:/etc/nginx/conf.d
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - frontend
+      - backend

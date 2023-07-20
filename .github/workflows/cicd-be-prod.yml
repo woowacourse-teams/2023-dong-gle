@@ -1,0 +1,85 @@
+name: CICD for Backend Production
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs: 
+  be-build:
+    runs-on: ubuntu-latest
+    steps:
+    ## jdk setting
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin' # https://github.com/actions/setup-java
+        cache: gradle
+
+    ## gradle caching
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          .gradle/caches
+          .gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-
+
+    ## create application-prod.properties
+    - name: make application-prod.yml
+      run: |
+        cd ./backend/src/main/resources
+        touch ./application-prod.yml
+        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
+      shell: bash
+
+    ## gradle build
+    - name: Build with Gradle
+      run: |
+        cd ./backend
+        chmod +x ./gradlew
+        ./gradlew build
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.DOCKER_REPO }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile-prod
+        push: true
+        tags: ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-prod:latest
+    
+  deploy:
+    runs-on: [self-hosted,prod]
+    needs: be-build
+    steps:
+    - name: change permission
+      run: |
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+
+    ## deploy to production
+    - name: Deploy to prod
+      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
+      run: |
+        sudo docker login ${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        sudo docker compose -f docker-compose-prod.yml pull
+        sudo docker compose -f docker-compose-prod.yml up -d

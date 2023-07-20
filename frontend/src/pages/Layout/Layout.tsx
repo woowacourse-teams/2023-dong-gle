@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react';
+import { Outlet } from 'react-router-dom';
 import { DefaultTheme, css, styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
@@ -25,7 +26,9 @@ const Layout = ({ children }: PropsWithChildren) => {
           </Button>
         </S.SidebarSection>
         {/** 사이드바 컴포넌트 완성되면 대체 */}
-        <S.Main>{children}</S.Main>
+        <S.Main>
+          <Outlet />
+        </S.Main>
       </S.Row>
     </S.Container>
   );

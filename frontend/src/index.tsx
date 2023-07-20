@@ -1,11 +1,11 @@
-import { worker } from 'mocks/browser';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
+import { worker } from 'mocks/browser';
+import { Router } from 'routes/Router';
 
 import GlobalStyle from 'styles/GlobalStyle';
 import { theme } from 'styles/theme';
-import App from './App';
 
 if (process.env.NODE_ENV === 'development') {
   worker.start({
@@ -18,7 +18,7 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <App />
+      <Router />
     </ThemeProvider>
   </React.StrictMode>,
 );

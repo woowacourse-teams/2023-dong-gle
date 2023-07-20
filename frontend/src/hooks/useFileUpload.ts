@@ -1,13 +1,20 @@
-import { addWriting } from 'apis/writings';
 import { InputHTMLAttributes, useEffect, useState } from 'react';
-import { AddWritingRequest } from 'types/apis/writings';
+import { useNavigate } from 'react-router-dom';
 import useMutation from './@common/useMutation';
+import { addWriting } from 'apis/writings';
+import { AddWritingRequest } from 'types/apis/writings';
 
 export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['accept'] = '*') => {
   const [selectedFile, setSelectedFile] = useState<FormData | null>(null);
   const { mutateQuery } = useMutation<AddWritingRequest, null>({
     fetcher: (body) => addWriting(body),
+    onSuccess: (data) => {
+      const writingId = data.headers.get('Location')?.split('/')[2];
+      navigate(`/writing/${writingId}`);
+    },
   });
+
+  const navigate = useNavigate();
 
   const onFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;

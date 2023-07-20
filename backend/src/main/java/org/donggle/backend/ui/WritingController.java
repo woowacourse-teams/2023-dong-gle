@@ -1,11 +1,11 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.WritingService;
 import org.donggle.backend.application.service.PublishService;
-import org.donggle.backend.dto.PublishRequest;
-import org.donggle.backend.dto.WritingPropertiesResponse;
-import org.donggle.backend.dto.WritingResponse;
+import org.donggle.backend.application.service.WritingService;
+import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

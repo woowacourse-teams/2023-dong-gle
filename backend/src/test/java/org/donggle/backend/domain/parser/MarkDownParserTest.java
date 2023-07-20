@@ -1,9 +1,11 @@
 package org.donggle.backend.domain.parser;
 
-import org.donggle.backend.domain.BlockType;
-import org.donggle.backend.domain.content.CodeBlockContent;
-import org.donggle.backend.domain.content.Content;
-import org.donggle.backend.domain.content.NormalContent;
+import org.donggle.backend.domain.parser.markdown.MarkDownParser;
+import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
+import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.content.CodeBlockContent;
+import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.NormalContent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

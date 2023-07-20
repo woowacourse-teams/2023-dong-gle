@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.renderer.html;
 
 import lombok.Getter;
-import org.donggle.backend.domain.BlockType;
+import org.donggle.backend.domain.writing.BlockType;
 
 @Getter
 public enum HtmlType {

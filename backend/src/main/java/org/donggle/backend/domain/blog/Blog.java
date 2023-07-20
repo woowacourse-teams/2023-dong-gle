@@ -19,4 +19,8 @@ public class Blog {
     private Long id;
     @Enumerated(value = EnumType.STRING)
     private BlogType blogType;
+    
+    public Blog(final BlogType blogType) {
+        this.blogType = blogType;
+    }
 }

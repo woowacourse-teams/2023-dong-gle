@@ -5,8 +5,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack",
-    "start": "webpack serve",
+    "build": "webpack --config webpack.dev.js",
+    "start": "webpack serve --config webpack.dev.js",
+    "start:mocking": "yarn start && --env MOCKING",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

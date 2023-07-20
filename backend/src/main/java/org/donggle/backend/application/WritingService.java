@@ -15,6 +15,7 @@ import org.donggle.backend.domain.parser.MarkDownParser;
 import org.donggle.backend.domain.parser.MarkDownStyleParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
+import org.donggle.backend.dto.PublishedDetailResponse;
 import org.donggle.backend.dto.WritingPropertiesResponse;
 import org.donggle.backend.dto.WritingResponse;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
@@ -67,12 +68,11 @@ public class WritingService {
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
-        List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
-
-        List<String> blogNames = blogWritings.stream()
-                .map(blogWriting -> blogWriting.getBlog().getName())
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
+        final List<PublishedDetailResponse> publishedTos = blogWritings.stream()
+                .map(blogWriting -> new PublishedDetailResponse(blogWriting.getBlog().getName(), blogWriting.getPublishedAt()))
                 .toList();
 
-        return new WritingPropertiesResponse(writing.getCreatedAt(), writing.isPublished(), writing.getPublishedAt(), blogNames);
+        return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
     }
 }

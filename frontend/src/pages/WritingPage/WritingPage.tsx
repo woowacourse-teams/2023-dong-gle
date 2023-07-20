@@ -1,16 +1,19 @@
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import WritingViewer from 'components/WritingViewer/WritingViewer';
 import { LAYOUT_COMMON_STYLE, SIDEBAR_SECTION_STYLE } from 'pages/Layout/Layout';
 
 const WritingPage = () => {
+  const { writingId } = useParams();
+
   return (
     <S.Container>
       <S.Article>
-        <WritingViewer writingId={200} />
+        <WritingViewer writingId={Number(writingId)} />
       </S.Article>
       <S.SidebarSection>
-        <PublishingSection writingId={1} isPublished={false} />
+        <PublishingSection writingId={Number(writingId)} isPublished={false} />
       </S.SidebarSection>
       {/** 사이드바 컴포넌트 완성되면 대체 */}
     </S.Container>

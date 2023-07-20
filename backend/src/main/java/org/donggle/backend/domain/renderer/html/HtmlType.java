@@ -15,7 +15,7 @@ public enum HtmlType {
     UNORDERED_LIST("<ul>", "</ul>"),
     ORDERED_LIST("<ol>", "</ol>"),
     LIST("<li>", "</li>"),
-    CODE_BLOCK("<pre><code className={`language-${language}`}>", "</code></pre>"),
+    CODE_BLOCK("<pre><code class=\"language-${language}\">", "</code></pre>"),
     PARAGRAPH("<p>", "</p>"),
     IMAGE("<img src=\"url\", alt=\"caption\">", "</img>");
 

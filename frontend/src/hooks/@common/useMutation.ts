@@ -32,7 +32,7 @@ const useMutation = <RequestData, ResponseData>({
       const responseData = await response.text();
       const jsonData = responseData === '' ? {} : JSON.parse(responseData);
 
-      onSuccess?.({ response: jsonData, headers: response.headers });
+      onSuccess?.({ response: jsonData as ResponseData, headers: response.headers });
     } catch (error) {
       if (error instanceof Error) {
         setError(error);

@@ -122,23 +122,19 @@ const S = {
         color: #0968da;
       }
     }
-    /* 
-    pre,
-    pre > code {
-      background-color: skyblue;
-    }
 
-    pre > code {
-    } */
-
-    /* code {
+    code {
       padding: 0.2rem 0.4rem;
       margin: 0.1rem;
       border: none solid #eee;
       border-radius: 4px;
       background-color: ${({ theme }) => theme.color.gray4};
       color: #eb5756;
-    } */
+    }
+
+    pre > code {
+      color: inherit;
+    }
 
     img {
       max-width: 100%;

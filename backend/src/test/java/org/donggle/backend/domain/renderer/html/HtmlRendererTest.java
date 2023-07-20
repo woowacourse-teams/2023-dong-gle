@@ -54,7 +54,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code className={`language-java`}>public void(){}</code></pre>";
+        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code class=\"language-java\">public void(){}</code></pre>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -166,7 +166,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<pre><code className={`language-java`}>public void(){}</code></pre>";
+        final String expected = "<pre><code class=\"language-java\">public void(){}</code></pre>";
 
         //then
         assertThat(result).isEqualTo(expected);

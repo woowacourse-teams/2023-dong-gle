@@ -54,8 +54,8 @@ public class PublishService {
                         .publishStatus("draft")
                         .build();
                 final MediumPublishResponse response = mediumApiService.publishContent(request);
-                writing.changePublishStatus(response.data().getPublishedAt());
-                blogWritingRepository.save(new BlogWriting(blog, writing));
+                final BlogWriting blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
+                blogWritingRepository.save(blogWriting);
             }
             case TISTORY -> {
                 //TODO : TISTORY API 연동

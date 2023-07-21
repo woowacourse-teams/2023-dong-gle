@@ -79,6 +79,6 @@ jobs:
         medium_token: ${{ secrets.MEDIUM_TOKEN }}
       run: |
         sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose -f ~/docker-compose-dev.yml down
-        sudo docker compose -f ~/docker-compose-dev.yml pull
-        sudo docker compose -f ~/docker-compose-dev.yml up -d
+        sudo docker compose -f docker-compose-dev.yml down
+        sudo docker compose -f docker-compose-dev.yml pull
+        sudo docker compose -f docker-compose-dev.yml up -d

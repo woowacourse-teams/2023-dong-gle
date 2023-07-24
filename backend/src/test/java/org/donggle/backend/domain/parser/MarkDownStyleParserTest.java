@@ -39,6 +39,24 @@ class MarkDownStyleParserTest {
     }
 
     @Test
+    @DisplayName("중복으로 입력된 문자열의 적용된 스타일을 전부 반환하는 테스트")
+    void extractStyles_duplicate() {
+        //given
+        final String input = "**안녕하**세요 **안녕하**세요";
+        final String originalText = "안녕하세요 안녕하세요";
+        final Style codeStyle = new Style(0, 2, StyleType.BOLD);
+        final Style boldStyle = new Style(6, 8, StyleType.BOLD);
+
+        //when
+        final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
+
+        //then
+        assertAll(
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(codeStyle),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(boldStyle));
+    }
+
+    @Test
     @DisplayName("입력된 문자열의 스타일을 전부 제거하는 테스트")
     void removeAllStyles() {
         //given

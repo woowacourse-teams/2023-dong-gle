@@ -40,7 +40,7 @@ class MarkDownStyleParserTest {
 
     @Test
     @DisplayName("중복으로 입력된 문자열의 적용된 스타일을 전부 반환하는 테스트")
-    void extractStyles123() {
+    void extractStyles_duplicate() {
         //given
         final String input = "**안녕하**세요 **안녕하**세요";
         final String originalText = "안녕하세요 안녕하세요";
@@ -50,7 +50,6 @@ class MarkDownStyleParserTest {
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
 
-        System.out.println(result);
         //then
         assertAll(
                 () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(codeStyle),

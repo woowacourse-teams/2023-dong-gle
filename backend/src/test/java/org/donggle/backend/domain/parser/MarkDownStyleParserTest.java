@@ -39,7 +39,7 @@ class MarkDownStyleParserTest {
     }
 
     @Test
-    @DisplayName("입력된 문자열의 적용된 스타일을 전부 반환하는 테스트")
+    @DisplayName("중복으로 입력된 문자열의 적용된 스타일을 전부 반환하는 테스트")
     void extractStyles123() {
         //given
         final String input = "**안녕하**세요 **안녕하**세요";

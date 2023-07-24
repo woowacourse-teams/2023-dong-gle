@@ -18,13 +18,16 @@ public class MarkDownStyleParser {
             final String extractedByStyle = extractByStyle(textBlock, styleType);
             final Matcher matcher = styleType.getPattern().matcher(extractedByStyle);
 
+            int currentIndex = 0;
+
             while (matcher.find()) {
                 final String matchedText = matcher.group(INNER_TEXT);
                 if (!matchedText.isEmpty()) {
-                    final int startIndex = originalText.indexOf(matchedText);
+                    final int startIndex = originalText.indexOf(matchedText, currentIndex);
                     final int endIndex = startIndex + matchedText.length() - 1;
                     final Style style = new Style(startIndex, endIndex, styleType);
                     styles.add(style);
+                    currentIndex = startIndex + 1;
                 }
             }
             textBlock = removeStyles(textBlock, styleType);

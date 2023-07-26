@@ -1,5 +1,6 @@
 import { getCategoryIdWritingList } from 'apis/writings';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 import { dateFormatter } from 'utils/date';
@@ -7,9 +8,12 @@ import { dateFormatter } from 'utils/date';
 type Props = { categoryId: number };
 
 const WritingTable = ({ categoryId }: Props) => {
+  const navigate = useNavigate();
   const { data } = useGetQuery<GetCategoryIdWritingListResponse>({
     fetcher: () => getCategoryIdWritingList(categoryId),
   });
+
+  const goWritingPage = (writingId: number) => navigate(`/writing/${writingId}`);
 
   return (
     <>
@@ -21,7 +25,7 @@ const WritingTable = ({ categoryId }: Props) => {
           <th>Published Time</th>
         </tr>
         {data?.writings.map((writing) => (
-          <tr>
+          <tr onClick={() => goWritingPage(writing.id)}>
             <td>{writing.title}</td>
             <td>{writing.publishedDetails[0].blogName}</td>
             <td>{dateFormatter(writing.createdAt, 'YYYY.MM.DD.')}</td>

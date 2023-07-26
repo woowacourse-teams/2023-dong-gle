@@ -34,7 +34,7 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "type"],
         "alphabetize": {
           "order": "asc"
         }
@@ -47,5 +47,5 @@
       "node": true
     }
   },
-  "ignorePatterns": ["public", "dist", "webpack.*"]
+  "ignorePatterns": ["public", "dist", "webpack.*", "jest.config.js", "__test__"]
 }

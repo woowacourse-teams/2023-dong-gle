@@ -64,5 +64,11 @@ const S = {
     td:last-child {
       border-right: none;
     }
+
+    tr:not(:first-child):hover {
+      cursor: pointer;
+      transform: scale(1.01);
+      transition: all 300ms;
+    }
   `,
 };

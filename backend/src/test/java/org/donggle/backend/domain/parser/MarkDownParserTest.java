@@ -5,6 +5,7 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.NormalContent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class MarkDownParserTest {
-
     private MarkDownParser markDownParser;
 
     @BeforeEach
@@ -53,5 +54,24 @@ class MarkDownParserTest {
 
         //then
         assertThat(parse).usingRecursiveComparison().isEqualTo(result);
+    }
+
+    @Test
+    @DisplayName("이미지 파싱 테스트")
+    void parserImage() {
+        //given
+        final String text = "![imageName](www.naver.com)";
+        final ImageContent expected = new ImageContent(0, BlockType.IMAGE, "www.naver.com", "imageName");
+
+        //when
+        final List<Content> result = markDownParser.parse(text);
+        final ImageContent resultContent = (ImageContent) result.get(0);
+
+        //then
+        assertAll(
+                () -> assertThat(resultContent.getDepth()).isEqualTo(expected.getDepth()),
+                () -> assertThat(resultContent.getUrl()).isEqualTo(expected.getUrl()),
+                () -> assertThat(resultContent.getCaption()).isEqualTo(expected.getCaption())
+        );
     }
 }

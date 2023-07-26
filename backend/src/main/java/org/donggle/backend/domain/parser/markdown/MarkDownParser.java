@@ -3,6 +3,7 @@ package org.donggle.backend.domain.parser.markdown;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.NormalContent;
 
 import java.util.ArrayList;
@@ -13,10 +14,6 @@ import java.util.regex.Pattern;
 
 public class MarkDownParser {
     private static final String BLOCK_DELIMITER = "(?s)(```.*?```).*?|(.*?)(?=```|\\z)";
-    private static final int RAW_TEXT_NUMBER = 2;
-    private static final int LANGUAGE_NUMBER = 1;
-    private static final int CODE_NUMBER = 1;
-    private static final int NORMAL_NUMBER = 2;
 
     private final MarkDownStyleParser markDownStyleParser;
 
@@ -37,8 +34,8 @@ public class MarkDownParser {
         final List<String> textBlocks = new ArrayList<>();
 
         while (matcher.find()) {
-            final String codeBlock = matcher.group(CODE_NUMBER);
-            final String normalBlock = matcher.group(NORMAL_NUMBER);
+            final String codeBlock = matcher.group(1);
+            final String normalBlock = matcher.group(2);
 
             if (isExist(codeBlock)) {
                 textBlocks.add(codeBlock.trim());
@@ -61,13 +58,20 @@ public class MarkDownParser {
         final Matcher matcher = findBlockMatcher(textBlock);
         final BlockType blockType = BlockType.findBlockType(matcher);
 
-        if (blockType == BlockType.CODE_BLOCK) {
-            return new CodeBlockContent(0, blockType, matcher.group(RAW_TEXT_NUMBER), matcher.group(LANGUAGE_NUMBER));
+        switch (blockType) {
+            case CODE_BLOCK -> {
+                return new CodeBlockContent(0, blockType, matcher.group(2), matcher.group(1));
+            }
+            case IMAGE -> {
+                // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
+                return new ImageContent(0, blockType, matcher.group(2), matcher.group(1));
+            }
+            default -> {
+                final String cleanedText = matcher.replaceAll("");
+                final String rawText = markDownStyleParser.removeStyles(cleanedText);
+                return new NormalContent(0, blockType, rawText, markDownStyleParser.extractStyles(cleanedText, rawText));
+            }
         }
-
-        final String cleanedText = matcher.replaceAll("");
-        final String rawText = markDownStyleParser.removeStyles(cleanedText);
-        return new NormalContent(0, blockType, rawText, markDownStyleParser.extractStyles(cleanedText, rawText));
     }
 
     private Matcher findBlockMatcher(final String textBlock) {
@@ -75,6 +79,6 @@ public class MarkDownParser {
                 .map(blockType -> blockType.getPattern().matcher(textBlock))
                 .filter(Matcher::find)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("BLOCK의 속성을 찾을 수 없습니다."));
+                .orElseThrow(UnsupportedOperationException::new);
     }
 }

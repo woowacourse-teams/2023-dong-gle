@@ -8,7 +8,7 @@
     "ecmaVersion": 2021,
     "sourceType": "module",
     "project": "./tsconfig.json",
-    "tsconfigRootDir": "."
+    "tsconfigRootDir": "./frontend"
   },
   "env": {
     "browser": true,
@@ -24,6 +24,7 @@
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:storybook/recommended",
+    "plugin:@typescript-eslint/parser",
     "prettier"
   ],
   "rules": {

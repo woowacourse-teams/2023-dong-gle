@@ -1,8 +1,7 @@
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest'],
+    '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
   },
   moduleNameMapper: {
     '^apis/(.*)$': '<rootDir>/src/apis/$1',
@@ -15,5 +14,6 @@ module.exports = {
     '^styles/(.*)$': '<rootDir>/src/styles/$1',
     '^types/(.*)$': '<rootDir>/src/types/$1',
     '^utils/(.*)$': '<rootDir>/src/utils/$1',
+    '\\.svg': '<rootDir>/src/mocks/svg.ts',
   },
 };

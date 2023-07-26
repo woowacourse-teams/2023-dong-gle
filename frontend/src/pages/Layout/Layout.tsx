@@ -1,13 +1,13 @@
 import { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router-dom';
-import { DefaultTheme, css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import { useFileUpload } from 'hooks/useFileUpload';
 
-import { theme } from 'styles/theme';
+import { LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = () => {
   const { openFinder } = useFileUpload('.md');
 
   return (
@@ -36,29 +36,13 @@ const Layout = ({ children }: PropsWithChildren) => {
 
 export default Layout;
 
-export const LAYOUT_COMMON_STYLE = {
-  gap: '0.4rem',
-
-  border: (({ theme }: DefaultTheme) => {
-    return `2px solid ${theme.color.gray13}`;
-  })({ theme }),
-} as const;
-
-export const SIDEBAR_SECTION_STYLE = css`
-  width: 32rem;
-  border: ${LAYOUT_COMMON_STYLE.border};
-  border-radius: 8px;
-  padding: 2rem;
-  flex: 0 0 32rem;
-`;
-
 const S = {
   Container: styled.div`
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    padding: 0 1rem;
+    padding: ${LAYOUT_STYLE.padding};
   `,
 
   Header: styled.header`
@@ -69,11 +53,11 @@ const S = {
   Row: styled.div`
     flex: 1;
     display: flex;
-    gap: ${LAYOUT_COMMON_STYLE.gap};
+    gap: ${LAYOUT_STYLE.gap};
   `,
 
   SidebarSection: styled.section`
-    ${SIDEBAR_SECTION_STYLE}
+    ${sidebarStyle}
   `,
 
   Main: styled.main`

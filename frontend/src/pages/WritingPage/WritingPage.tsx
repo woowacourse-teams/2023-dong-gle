@@ -2,10 +2,12 @@ import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import WritingViewer from 'components/WritingViewer/WritingViewer';
-import { LAYOUT_COMMON_STYLE, SIDEBAR_SECTION_STYLE } from 'pages/Layout/Layout';
+import { LAYOUT_STYLE, SIDEBAR_STYLE, sidebarStyle } from 'styles/layoutStyle';
 
 const WritingPage = () => {
   const { writingId } = useParams();
+
+  // TODO: getWritingProperties() 실행
 
   return (
     <S.Container>
@@ -25,19 +27,22 @@ export default WritingPage;
 const S = {
   Container: styled.div`
     display: flex;
-    gap: ${LAYOUT_COMMON_STYLE.gap};
+    gap: ${LAYOUT_STYLE.gap};
     height: 100%;
   `,
 
   Article: styled.article`
     flex: 1;
-    border: ${LAYOUT_COMMON_STYLE.border};
+    max-width: calc(
+      100vw - (${SIDEBAR_STYLE.width} + ${LAYOUT_STYLE.padding} + ${LAYOUT_STYLE.gap}) * 2
+    );
+    border: ${LAYOUT_STYLE.border};
     border-radius: 8px;
 
     background-color: ${({ theme }) => theme.color.gray1};
   `,
 
   SidebarSection: styled.section`
-    ${SIDEBAR_SECTION_STYLE}
+    ${sidebarStyle}
   `,
 };

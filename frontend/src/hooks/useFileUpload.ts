@@ -9,7 +9,7 @@ export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['acc
   const { mutateQuery } = useMutation<AddWritingRequest, null>({
     fetcher: (body) => addWriting(body),
     onSuccess: (data) => {
-      const writingId = data.headers.get('Location')?.split('/')[2];
+      const writingId = data.headers.get('Location')?.split('/').pop();
       navigate(`/writing/${writingId}`);
     },
   });

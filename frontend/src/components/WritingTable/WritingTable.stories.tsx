@@ -10,7 +10,9 @@ import {
 const meta = {
   title: 'WritingTable',
   component: WritingTable,
-  // args: {},
+  args: {
+    categoryId: 1,
+  },
   // argTypes: {},
 } satisfies Meta<typeof WritingTable>;
 

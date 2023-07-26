@@ -10,9 +10,17 @@ import { GetWritingResponse } from 'types/apis/writings';
 type Props = { writingId: number };
 
 const WritingViewer = ({ writingId }: Props) => {
-  const { data, isLoading } = useGetQuery<GetWritingResponse>({
+  const { data, isLoading, getData } = useGetQuery<GetWritingResponse>({
     fetcher: () => getWriting(writingId),
+    // onSuccess: () => hljs.highlightAll(),
   });
+
+  useEffect(() => {
+    const refetch = async () => {
+      await getData();
+    };
+    refetch();
+  }, [writingId]);
 
   useEffect(() => {
     hljs.highlightAll();

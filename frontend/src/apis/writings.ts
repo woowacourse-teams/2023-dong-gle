@@ -6,9 +6,9 @@ import type { AddWritingRequest, PublishWritingArgs } from 'types/apis/writings'
 export const addWriting = (body: AddWritingRequest) =>
   http.post(`${writingURL}/file`, {
     body,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    // headers: {
+    //   'Content-Type': 'multipart/form-data',
+    // },
   });
 
 // 글 조회: GET
@@ -22,4 +22,7 @@ export const getWritingProperties = (writingId: number) =>
 export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
   http.post(`${writingURL}/${writingId}/publish`, {
     body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });

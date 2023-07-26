@@ -1,0 +1,68 @@
+import { getCategoryIdWritingList } from 'apis/writings';
+import { useGetQuery } from 'hooks/@common/useGetQuery';
+import { styled } from 'styled-components';
+import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
+import { dateFormatter } from 'utils/date';
+
+type Props = { categoryId: number };
+
+const WritingTable = ({ categoryId }: Props) => {
+  const { data } = useGetQuery<GetCategoryIdWritingListResponse>({
+    fetcher: () => getCategoryIdWritingList(categoryId),
+  });
+
+  return (
+    <>
+      <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
+      <S.WritingTableContainer>
+        <tr>
+          <th>Title</th>
+          <th>Published To</th>
+          <th>Published Time</th>
+        </tr>
+        {data?.writings.map((writing) => (
+          <tr>
+            <td>{writing.title}</td>
+            <td>{writing.publishedDetails[0].blogName}</td>
+            <td>{dateFormatter(writing.createdAt, 'YYYY.MM.DD.')}</td>
+          </tr>
+        ))}
+      </S.WritingTableContainer>
+    </>
+  );
+};
+
+export default WritingTable;
+
+const S = {
+  CategoryNameTitle: styled.h1`
+    font-size: 3rem;
+  `,
+
+  WritingTableContainer: styled.table`
+    width: 100%;
+    border-left: none;
+    text-align: left;
+    font-size: 1.4rem;
+
+    th {
+      color: ${({ theme }) => theme.color.gray7};
+    }
+
+    th,
+    td {
+      padding: 1.1rem;
+      border: 1px solid ${({ theme }) => theme.color.gray5};
+    }
+
+    th:first-child,
+    td:first-child {
+      border-left: none;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: none;
+    }
+  `,
+};

@@ -3,7 +3,6 @@ package org.donggle.backend.application.service;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
-import org.donggle.backend.application.repository.ContentRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.BlogWriting;
@@ -36,7 +35,6 @@ public class WritingService {
     private static final String MD_FORMAT = ".md";
 
     private final MemberRepository memberRepository;
-    private final ContentRepository contentRepository;
     private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;
     private final BlogWritingRepository blogWritingRepository;
@@ -58,8 +56,7 @@ public class WritingService {
         //TODO : CASCADE 추가
         final List<Content> contents = markDownParser.parse(originalFileText);
         for (final Content content : contents) {
-            final Content savedContent = contentRepository.save(content);
-            blockRepository.save(new Block(writing, savedContent));
+            blockRepository.save(new Block(writing, content));
         }
 
         return writing.getId();

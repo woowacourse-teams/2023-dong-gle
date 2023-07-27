@@ -9,6 +9,7 @@ import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.NormalContent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -73,5 +74,85 @@ class MarkDownParserTest {
                 () -> assertThat(resultContent.getUrl()).isEqualTo(expected.getUrl()),
                 () -> assertThat(resultContent.getCaption()).isEqualTo(expected.getCaption())
         );
+    }
+
+    @Nested
+    @DisplayName("depth 파싱을 테스트한다.")
+    class ParseDepth {
+        @Test
+        @DisplayName("공백 4개")
+        void parseDepth() {
+            //given
+            final String text = "    - hello world\n        - hubcreator";
+            final NormalContent expected1 = new NormalContent(1, BlockType.UNORDERED_LIST, "hello world", List.of());
+            final NormalContent expected2 = new NormalContent(2, BlockType.UNORDERED_LIST, "hubcreator", List.of());
+
+            //when
+            final List<Content> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
+                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth())
+            );
+        }
+
+        @Test
+        @DisplayName("탭")
+        void parseDepth2() {
+            //given
+            final String text = "\t- hello world\n\t\t - hubcreator";
+            final NormalContent expected1 = new NormalContent(1, BlockType.UNORDERED_LIST, "hello world", List.of());
+            final NormalContent expected2 = new NormalContent(2, BlockType.UNORDERED_LIST, "hubcreator", List.of());
+
+            //when
+            final List<Content> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
+                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth())
+            );
+        }
+
+        @Test
+        @DisplayName("공백 4개와 탭이 섞여있는 경우")
+        void parseDepthWithListMixed() {
+            //given
+            final String text = "- depth1\n\t- depth2\n    \t- depth3\n    \t    - depth4";
+            final NormalContent expected1 = new NormalContent(0, BlockType.UNORDERED_LIST, "depth1", List.of());
+            final NormalContent expected2 = new NormalContent(1, BlockType.UNORDERED_LIST, "depth2", List.of());
+            final NormalContent expected3 = new NormalContent(2, BlockType.UNORDERED_LIST, "depth3", List.of());
+            final NormalContent expected4 = new NormalContent(3, BlockType.UNORDERED_LIST, "depth4", List.of());
+
+            //when
+            final List<Content> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
+                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth()),
+                    () -> assertThat(result.get(2).getDepth()).isEqualTo(expected3.getDepth()),
+                    () -> assertThat(result.get(3).getDepth()).isEqualTo(expected4.getDepth())
+            );
+        }
+
+        @Test
+        @DisplayName("공백 4개와 탭이 섞여있고, 중간에 공백 4개가 있는 경우")
+        void parseDepthWithListMixed2() {
+            //given
+            final String text = "- depth1    hel\tlo\n";
+            final NormalContent expected1 = new NormalContent(0, BlockType.UNORDERED_LIST, "depth1    hel\tlo", List.of());
+
+            //when
+            final List<Content> result = markDownParser.parse(text);
+            final NormalContent resultContent = (NormalContent) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(resultContent.getDepth()).isEqualTo(expected1.getDepth()),
+                    () -> assertThat(resultContent.getRawText()).isEqualTo(expected1.getRawText())
+            );
+        }
     }
 }

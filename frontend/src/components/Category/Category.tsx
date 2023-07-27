@@ -4,18 +4,18 @@ import { CategoryResponse } from 'types/apis/category';
 
 type Props = {
   numberOfWritings: number;
-  renameCategory: () => void;
-  deleteCategory: () => void;
-} & Pick<CategoryResponse, 'categoryName'>;
+  onPencilClick?: () => void;
+  onTrashcanClick: () => void;
+} & CategoryResponse;
 
-const Category = ({ categoryName, numberOfWritings, renameCategory, deleteCategory }: Props) => {
+const Category = ({ categoryName, numberOfWritings, onPencilClick, onTrashcanClick }: Props) => {
   return (
     <S.Container>
       <S.Text>{categoryName}</S.Text>
       <S.RightContainer>
         <S.IconContainer>
-          <PencilIcon onClick={renameCategory} width={12} height={12} />
-          <DeleteIcon onClick={deleteCategory} width={12} height={12} />
+          <PencilIcon onClick={onPencilClick} width={12} height={12} />
+          <DeleteIcon onClick={onTrashcanClick} width={12} height={12} />
         </S.IconContainer>
         <S.NumberText>{numberOfWritings}</S.NumberText>
       </S.RightContainer>

@@ -2,13 +2,13 @@ export type AddCategoriesRequest = {
   categoryName: string;
 };
 
-type Category = {
+export type CategoryResponse = {
   id: number;
   categoryName: string;
 };
 
 export type GetCategoriesResponse = {
-  categories: Category[];
+  categories: CategoryResponse[];
 };
 
 type WritingInCategory = {
@@ -18,4 +18,4 @@ type WritingInCategory = {
 
 export type GetWritingsInCategoriesResponse = {
   writings: WritingInCategory[];
-} & Category;
+} & CategoryResponse;

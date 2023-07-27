@@ -11,3 +11,4 @@ spring:
         format_sql: true
     show-sql: true
 medium_token: ${MEDIUM_TOKEN}
+notion_token: ${NOTION_TOKEN}

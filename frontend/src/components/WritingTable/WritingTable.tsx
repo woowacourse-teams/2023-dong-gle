@@ -1,6 +1,5 @@
 import { MediumLogoIcon, TistoryLogoIcon } from 'assets/icons';
-import { BLOG_LIST } from 'constants/blog';
-import { useNavigate } from 'react-router-dom';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { Writing } from 'types/apis/writings';
 import { Blog } from 'types/domain';
@@ -9,9 +8,7 @@ import { dateFormatter } from 'utils/date';
 type Props = { writings: Writing[] };
 
 const WritingTable = ({ writings }: Props) => {
-  const navigate = useNavigate();
-
-  const goWritingPage = (writingId: number) => navigate(`/writing/${writingId}`);
+  const { goWritingPage } = usePageNavigate();
 
   const getPublishedToLogoIcon = (blogName: Blog) => {
     switch (blogName) {

@@ -18,3 +18,6 @@ export const patchCategory = (categoryId: number, body: PatchCategory) =>
   http.patch(`${categoryURL}/${categoryId}`, {
     body: JSON.stringify(body),
   });
+
+// DELETE: 카테고리 삭제
+export const deleteCategory = (categoryId: number) => http.delete(`${categoryURL}/${categoryId}`);

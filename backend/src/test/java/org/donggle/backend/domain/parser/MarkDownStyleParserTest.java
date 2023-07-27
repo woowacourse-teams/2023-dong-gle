@@ -69,4 +69,37 @@ class MarkDownStyleParserTest {
         //then
         assertThat(execute).isEqualTo(result);
     }
+
+    @Test
+    @DisplayName("링크 스타일을 파싱하는 테스트")
+    void linkParser() {
+        //given
+        final String input = "[네이버](www.naver.com)";
+        final String expected = "네이버www.naver.com";
+
+        //when
+        final String result = markDownStyleParser.removeStyles(input);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("링크 스타일을 저장하는 테스트")
+    void linkStyleSave() {
+        //given
+        final String input = "[네이버](www)";
+        final String originalText = "네이버www";
+        final Style caption = new Style(0, 2, StyleType.LINK);
+        final Style url = new Style(3, 5, StyleType.LINK);
+
+        //when
+        final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
+
+        //then
+        assertAll(
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(caption),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(url)
+        );
+    }
 }

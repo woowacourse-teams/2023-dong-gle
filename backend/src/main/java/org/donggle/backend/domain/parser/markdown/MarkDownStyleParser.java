@@ -9,33 +9,45 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class MarkDownStyleParser {
-    private static final int INNER_TEXT = 2;
+    private static final int INNER_GROUP_INDEX = 2;
+    private static final int CAPTION_GROUP_INDEX = 2;
+    private static final int URL_GROUP_INDEX = 4;
 
-    public List<Style> extractStyles(String textBlock, final String originalText) {
+    public List<Style> extractStyles(String removedBlockTypeText, final String removedStyleTypeText) {
         final List<Style> styles = new ArrayList<>();
 
         for (final StyleType styleType : StyleType.values()) {
-            final String extractedByStyle = extractByStyle(textBlock, styleType);
-            final Matcher matcher = styleType.getPattern().matcher(extractedByStyle);
+            final String targetStyleTypeText = extractByStyle(removedBlockTypeText, styleType);
+            final Matcher matcher = styleType.getPattern().matcher(targetStyleTypeText);
 
             int currentIndex = 0;
 
             while (matcher.find()) {
-                final String matchedText = matcher.group(INNER_TEXT);
+                String matchedText = matcher.group(INNER_GROUP_INDEX);
                 if (!matchedText.isEmpty()) {
-                    final int startIndex = originalText.indexOf(matchedText, currentIndex);
+                    if (styleType == StyleType.LINK) {
+                        final String caption = matcher.group(CAPTION_GROUP_INDEX);
+                        final String url = matcher.group(URL_GROUP_INDEX);
+
+                        final int startIndex = removedStyleTypeText.indexOf(caption, currentIndex);
+                        final int endIndex = startIndex + matchedText.length() - 1;
+                        final Style style = new Style(startIndex, endIndex, styleType);
+                        styles.add(style);
+                        currentIndex = startIndex + 1;
+                        matchedText = url;
+                    }
+                    final int startIndex = removedStyleTypeText.indexOf(matchedText, currentIndex);
                     final int endIndex = startIndex + matchedText.length() - 1;
                     final Style style = new Style(startIndex, endIndex, styleType);
                     styles.add(style);
                     currentIndex = startIndex + 1;
                 }
             }
-            textBlock = removeStyles(textBlock, styleType);
+            removedBlockTypeText = removeStyles(removedBlockTypeText, styleType);
         }
 
         return styles;
     }
-
 
     private String extractByStyle(final String textBlock, final StyleType styleType) {
         final List<StyleType> styleTypes = new ArrayList<>(Arrays.asList(StyleType.values()));
@@ -43,37 +55,50 @@ public class MarkDownStyleParser {
         return removeStyles(textBlock, styleTypes);
     }
 
-    public String removeStyles(final String textBlock) {
+    public String removeStyles(final String removedBlockTypeText) {
         final List<StyleType> styleTypes = Arrays.asList(StyleType.values());
-        return removeStyles(textBlock, styleTypes);
+        return removeStyles(removedBlockTypeText, styleTypes);
     }
 
-    private String removeStyles(final String textBlock, final List<StyleType> styleTypes) {
-        final StringBuilder textBuilder = new StringBuilder(textBlock);
+    private String removeStyles(final String removedBlockTypeText, final List<StyleType> styleTypes) {
+        final StringBuilder textBuilder = new StringBuilder(removedBlockTypeText);
 
-        for (StyleType type : styleTypes) {
-            final Matcher matcher = type.getPattern().matcher(textBuilder);
-            replaceStringBuilder(textBuilder, replaceAndAppend(matcher));
+        for (final StyleType styleType : styleTypes) {
+            final Matcher matcher = styleType.getPattern().matcher(textBuilder);
+            replaceStringBuilder(textBuilder, replaceAndAppend(matcher, styleType));
         }
 
         return textBuilder.toString();
     }
 
-    private void replaceStringBuilder(final StringBuilder stringBuilder, final String string) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(string);
+    private void replaceStringBuilder(final StringBuilder textBuilder, final String string) {
+        textBuilder.setLength(0);
+        textBuilder.append(string);
     }
 
-    private String replaceAndAppend(final Matcher matcher) {
-        final StringBuilder builder = new StringBuilder();
+    private String replaceAndAppend(final Matcher matcher, final StyleType styleType) {
+        final StringBuilder textBuilder = new StringBuilder();
         while (matcher.find()) {
-            final String matchedText = matcher.group(INNER_TEXT);
-            if (!matchedText.isEmpty()) {
-                matcher.appendReplacement(builder, Matcher.quoteReplacement(matchedText));
-            }
+            replaceAndAppend(matcher, textBuilder, styleType);
         }
-        matcher.appendTail(builder);
-        return builder.toString();
+        matcher.appendTail(textBuilder);
+        return textBuilder.toString();
+    }
+
+    private void replaceAndAppend(final Matcher matcher, final StringBuilder textBuilder, final StyleType styleType) {
+        String matchedText;
+        switch (styleType) {
+            case LINK -> {
+                final String caption = matcher.group(CAPTION_GROUP_INDEX);
+                final String url = matcher.group(URL_GROUP_INDEX);
+                matchedText = caption + url;
+            }
+            default -> matchedText = matcher.group(INNER_GROUP_INDEX);
+        }
+
+        if (!matchedText.isEmpty()) {
+            matcher.appendReplacement(textBuilder, Matcher.quoteReplacement(matchedText));
+        }
     }
 
     private String removeStyles(final String textBlock, final StyleType styleType) {

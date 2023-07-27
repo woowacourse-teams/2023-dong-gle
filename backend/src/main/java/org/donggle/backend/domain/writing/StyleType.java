@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 public enum StyleType {
     BOLD("(\\*\\*|\\_\\_)(.*?)(\\*\\*|\\_\\_)"),
     ITALIC("(\\*|\\_)(.*?)(\\*|\\_)"),
-    CODE("(\\`)(.*?)(\\`)");
+    CODE("(\\`)(.*?)(\\`)"),
+    LINK("(\\[)(.*)(\\]\\()(.*)(\\))");
 
     private final Pattern pattern;
 

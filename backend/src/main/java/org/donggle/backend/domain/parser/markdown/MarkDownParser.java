@@ -1,28 +1,34 @@
 package org.donggle.backend.domain.parser.markdown;
 
+import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.ImageCaption;
+import org.donggle.backend.domain.writing.content.ImageContent;
+import org.donggle.backend.domain.writing.content.ImageUrl;
+import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.RawText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiredArgsConstructor
 public class MarkDownParser {
-    private static final String BLOCK_DELIMITER = "(?s)(```.*?```).*?|(.*?)(?=```|\\z)";
-    private static final int RAW_TEXT_NUMBER = 2;
-    private static final int LANGUAGE_NUMBER = 1;
-    private static final int CODE_NUMBER = 1;
-    private static final int NORMAL_NUMBER = 2;
+    private static final String BLOCK_SPLIT_REGEX = "(?s)(```.*?```).*?|(.*?)(?=```|\\z)";
+    private static final String DEPTH_SPLIT_REGEX = "^(\\t)|^(\\s{4})";
+    private static final int CODE_GROUP_INDEX = 1;
+    private static final int NORMAL_GROUP_INDEX = 2;
+    private static final int TAB_GROUP_INDEX = 1;
+    private static final int SPACE_GROUP_INDEX = 2;
 
     private final MarkDownStyleParser markDownStyleParser;
-
-    public MarkDownParser(final MarkDownStyleParser markDownStyleParser) {
-        this.markDownStyleParser = markDownStyleParser;
-    }
 
     public List<Content> parse(final String text) {
         return splitBlocks(text).stream()
@@ -31,14 +37,14 @@ public class MarkDownParser {
     }
 
     private List<String> splitBlocks(final String text) {
-        final Pattern pattern = Pattern.compile(BLOCK_DELIMITER);
+        final Pattern pattern = Pattern.compile(BLOCK_SPLIT_REGEX);
         final Matcher matcher = pattern.matcher(text);
 
         final List<String> textBlocks = new ArrayList<>();
 
         while (matcher.find()) {
-            final String codeBlock = matcher.group(CODE_NUMBER);
-            final String normalBlock = matcher.group(NORMAL_NUMBER);
+            final String codeBlock = matcher.group(CODE_GROUP_INDEX);
+            final String normalBlock = matcher.group(NORMAL_GROUP_INDEX);
 
             if (isExist(codeBlock)) {
                 textBlocks.add(codeBlock.trim());
@@ -58,16 +64,48 @@ public class MarkDownParser {
     }
 
     private Content createContentFromTextBlock(final String textBlock) {
-        final Matcher matcher = findBlockMatcher(textBlock);
+        final int depth = parseDepth(textBlock);
+        String removedDepthText = removeDepth(depth, textBlock);
+        final Matcher matcher = findBlockMatcher(removedDepthText);
         final BlockType blockType = BlockType.findBlockType(matcher);
 
-        if (blockType == BlockType.CODE_BLOCK) {
-            return new CodeBlockContent(0, blockType, matcher.group(RAW_TEXT_NUMBER), matcher.group(LANGUAGE_NUMBER));
+        switch (blockType) {
+            case CODE_BLOCK -> {
+                return new CodeBlockContent(blockType, new RawText(matcher.group(2)), new Language(matcher.group(1)));
+            }
+            case IMAGE -> {
+                // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
+                return new ImageContent(blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+            }
+            default -> {
+                final String removedBlockTypeText = matcher.replaceAll("");
+                final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
+                final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
+                return new NormalContent(depth, blockType, removedStyleTypeText, styles);
+            }
         }
+    }
 
-        final String cleanedText = matcher.replaceAll("");
-        final String rawText = markDownStyleParser.removeStyles(cleanedText);
-        return new NormalContent(0, blockType, rawText, markDownStyleParser.extractStyles(cleanedText, rawText));
+    private String removeDepth(final int depth, String removedDepthText) {
+        for (int i = 0; i < depth; i++) {
+            removedDepthText = removedDepthText.replaceFirst(DEPTH_SPLIT_REGEX, "");
+        }
+        return removedDepthText;
+    }
+
+    private int parseDepth(String textBlock) {
+        Matcher matcher = Pattern.compile(DEPTH_SPLIT_REGEX).matcher(textBlock);
+        int depthCount = 0;
+        while (matcher.find()) {
+            final String tab = matcher.group(TAB_GROUP_INDEX);
+            final String space = matcher.group(SPACE_GROUP_INDEX);
+            if (!Objects.isNull(tab) || !Objects.isNull(space)) {
+                textBlock = textBlock.replaceFirst(DEPTH_SPLIT_REGEX, "");
+                matcher = Pattern.compile(DEPTH_SPLIT_REGEX).matcher(textBlock);
+                depthCount += 1;
+            }
+        }
+        return depthCount;
     }
 
     private Matcher findBlockMatcher(final String textBlock) {
@@ -75,6 +113,6 @@ public class MarkDownParser {
                 .map(blockType -> blockType.getPattern().matcher(textBlock))
                 .filter(Matcher::find)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("BLOCK의 속성을 찾을 수 없습니다."));
+                .orElseThrow(UnsupportedOperationException::new);
     }
 }

@@ -1,6 +1,7 @@
 package org.donggle.backend.domain.parser.markdown;
 
 import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
 import org.donggle.backend.domain.writing.content.ImageContent;
@@ -67,9 +68,10 @@ public class MarkDownParser {
                 return new ImageContent(0, blockType, matcher.group(2), matcher.group(1));
             }
             default -> {
-                final String cleanedText = matcher.replaceAll("");
-                final String rawText = markDownStyleParser.removeStyles(cleanedText);
-                return new NormalContent(0, blockType, rawText, markDownStyleParser.extractStyles(cleanedText, rawText));
+                final String removedBlockTypeText = matcher.replaceAll("");
+                final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
+                final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
+                return new NormalContent(0, blockType, removedStyleTypeText, styles);
             }
         }
     }

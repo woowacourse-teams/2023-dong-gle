@@ -10,6 +10,7 @@ export const StoryContainer = styled.div`
 export const StoryItemContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
 `;
 

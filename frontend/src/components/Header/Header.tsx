@@ -1,17 +1,30 @@
 import { SettingIcon, SidebarLeftIcon, SidebarRightIcon } from 'assets/icons';
 import { styled } from 'styled-components';
 
-type Props = {};
+type Props = {
+  toggleLeftSidebar: () => void;
+  toggleRightSidebar: () => void;
+};
 
-const Header = ({}: Props) => {
+const Header = ({ toggleLeftSidebar, toggleRightSidebar }: Props) => {
   return (
     <S.Container>
       <div className='left'>
         <SettingIcon width='2.4rem' height='2.4rem' className='icon' />
-        <SidebarLeftIcon width='2.4rem' height='2.4rem' className='icon' />
+        <SidebarLeftIcon
+          width='2.4rem'
+          height='2.4rem'
+          className='icon'
+          onClick={toggleLeftSidebar}
+        />
       </div>
       <div className='right'>
-        <SidebarRightIcon width='2.4rem' height='2.4rem' className='icon' />
+        <SidebarRightIcon
+          width='2.4rem'
+          height='2.4rem'
+          className='icon'
+          onClick={toggleRightSidebar}
+        />
       </div>
     </S.Container>
   );

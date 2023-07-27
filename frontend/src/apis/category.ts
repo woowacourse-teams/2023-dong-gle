@@ -1,6 +1,6 @@
 import { categoryURL } from 'constants/apis/url';
 import { http } from './fetch';
-import { AddCategoriesRequest } from 'types/apis/category';
+import { AddCategoriesRequest, PatchCategory } from 'types/apis/category';
 
 // POST: 카테고리 추가
 export const addCategory = (body: AddCategoriesRequest) =>
@@ -12,3 +12,9 @@ export const getCategories = () => http.get(categoryURL);
 // GET: 카테고리 글 목록 조회
 export const getWritingsInCategory = (categoryId: number) =>
   http.get(`${categoryURL}/${categoryId}`);
+
+// PATCH: 카테고리 수정
+export const patchCategory = (categoryId: number, body: PatchCategory) =>
+  http.patch(`${categoryURL}/${categoryId}`, {
+    body: JSON.stringify(body),
+  });

@@ -44,4 +44,13 @@ export const categoryHandlers = [
 
     return res(ctx.delay(300), ctx.status(204));
   }),
+
+  // 카테고리 삭제
+  rest.delete(`${categoryURL}/:categoryId`, (req, res, ctx) => {
+    const categoryId = Number(req.params.categoryId);
+
+    if (categoryId !== 200) return res(ctx.delay(300), ctx.status(404));
+
+    return res(ctx.delay(300), ctx.status(204));
+  }),
 ];

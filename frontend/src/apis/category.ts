@@ -10,4 +10,5 @@ export const addCategory = (body: AddCategoriesRequest) =>
 export const getCategories = () => http.get(categoryURL);
 
 // GET: 카테고리 글 목록 조회
-export const WritingsInCategory = (categoryId: number) => http.get(`${categoryURL}/${categoryId}`);
+export const getWritingsInCategory = (categoryId: number) =>
+  http.get(`${categoryURL}/${categoryId}`);

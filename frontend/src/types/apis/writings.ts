@@ -25,7 +25,7 @@ export type PublishWritingArgs = {
 };
 
 export type PublishedDetail = {
-  blogName: string;
+  blogName: Blog;
   publishedAt: Date;
 };
 

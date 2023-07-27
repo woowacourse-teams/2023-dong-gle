@@ -1,6 +1,6 @@
 import { categoryURL } from 'constants/apis/url';
 import { http } from './fetch';
-import { AddCategoriesRequest, PatchCategory } from 'types/apis/category';
+import { AddCategoriesRequest, PatchCategoryArgs } from 'types/apis/category';
 
 // POST: 카테고리 추가
 export const addCategory = (body: AddCategoriesRequest) =>
@@ -14,7 +14,7 @@ export const getWritingsInCategory = (categoryId: number) =>
   http.get(`${categoryURL}/${categoryId}`);
 
 // PATCH: 카테고리 수정
-export const patchCategory = (categoryId: number, body: PatchCategory) =>
+export const patchCategory = ({ categoryId, body }: PatchCategoryArgs) =>
   http.patch(`${categoryURL}/${categoryId}`, {
     body: JSON.stringify(body),
   });

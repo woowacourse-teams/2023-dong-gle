@@ -24,3 +24,8 @@ export type PatchCategory = {
   categoryName?: string;
   nextCategoryId?: number;
 };
+
+export type PatchCategoryArgs = {
+  categoryId: number;
+  body: PatchCategory;
+};

@@ -1,5 +1,6 @@
 import { MediumLogoIcon, TistoryLogoIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
+import { Fragment } from 'react';
 import { styled } from 'styled-components';
 import { Writing } from 'types/apis/writings';
 import { Blog } from 'types/domain';
@@ -32,9 +33,11 @@ const WritingTable = ({ writings }: Props) => {
             <td>{writing.title}</td>
             <td>
               <div className='publishedTo'>
-                {writing.publishedDetails.map((publishedDetail) =>
-                  getPublishedToLogoIcon(publishedDetail.blogName),
-                )}
+                {writing.publishedDetails.map((publishedDetail) => (
+                  <Fragment key={publishedDetail.blogName}>
+                    {getPublishedToLogoIcon(publishedDetail.blogName)}
+                  </Fragment>
+                ))}
               </div>
             </td>
             <td>{dateFormatter(writing.createdAt, 'YYYY.MM.DD.')}</td>

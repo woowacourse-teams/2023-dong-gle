@@ -5,8 +5,12 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.ImageCaption;
 import org.donggle.backend.domain.writing.content.ImageContent;
+import org.donggle.backend.domain.writing.content.ImageUrl;
+import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.RawText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -47,7 +51,7 @@ class MarkDownParserTest {
         final List<Content> result = List.of(
                 new NormalContent(0, BlockType.PARAGRAPH, "###안녕", Collections.emptyList()),
                 new NormalContent(0, BlockType.PARAGRAPH, "  안녕", Collections.emptyList()),
-                new CodeBlockContent(0, BlockType.CODE_BLOCK, "나는 자바다", "java")
+                new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("나는 자바다"), new Language("java"))
         );
 
         //when
@@ -62,7 +66,7 @@ class MarkDownParserTest {
     void parserImage() {
         //given
         final String text = "![imageName](www.naver.com)";
-        final ImageContent expected = new ImageContent(0, BlockType.IMAGE, "www.naver.com", "imageName");
+        final ImageContent expected = new ImageContent(BlockType.IMAGE, new ImageUrl("www.naver.com"), new ImageCaption("imageName"));
 
         //when
         final List<Content> result = markDownParser.parse(text);
@@ -71,8 +75,8 @@ class MarkDownParserTest {
         //then
         assertAll(
                 () -> assertThat(resultContent.getDepth()).isEqualTo(expected.getDepth()),
-                () -> assertThat(resultContent.getUrl()).isEqualTo(expected.getUrl()),
-                () -> assertThat(resultContent.getCaption()).isEqualTo(expected.getCaption())
+                () -> assertThat(resultContent.getImageUrlValue()).isEqualTo(expected.getImageUrlValue()),
+                () -> assertThat(resultContent.getImageCaptionValue()).isEqualTo(expected.getImageCaptionValue())
         );
     }
 

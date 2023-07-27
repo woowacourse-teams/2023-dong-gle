@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class MarkDownStyleParser {
-    private static final int INNER_TEXT = 2;
+    private static final int INNER_GROUP_INDEX = 2;
+    private static final int CAPTION_GROUP_INDEX = 2;
+    private static final int URL_GROUP_INDEX = 4;
 
     public List<Style> extractStyles(String removedBlockTypeText, final String removedStyleTypeText) {
         final List<Style> styles = new ArrayList<>();
@@ -21,11 +23,11 @@ public class MarkDownStyleParser {
             int currentIndex = 0;
 
             while (matcher.find()) {
-                String matchedText = matcher.group(INNER_TEXT);
+                String matchedText = matcher.group(INNER_GROUP_INDEX);
                 if (!matchedText.isEmpty()) {
                     if (styleType == StyleType.LINK) {
-                        final String caption = matcher.group(2);
-                        final String url = matcher.group(4);
+                        final String caption = matcher.group(CAPTION_GROUP_INDEX);
+                        final String url = matcher.group(URL_GROUP_INDEX);
 
                         final int startIndex = removedStyleTypeText.indexOf(caption, currentIndex);
                         final int endIndex = startIndex + matchedText.length() - 1;
@@ -63,7 +65,7 @@ public class MarkDownStyleParser {
 
         for (final StyleType styleType : styleTypes) {
             final Matcher matcher = styleType.getPattern().matcher(textBuilder);
-            replaceStringBuilder(textBuilder, replaceAndAppend(matcher));
+            replaceStringBuilder(textBuilder, replaceAndAppend(matcher, styleType));
         }
 
         return textBuilder.toString();
@@ -74,25 +76,29 @@ public class MarkDownStyleParser {
         textBuilder.append(string);
     }
 
-    private String replaceAndAppend(final Matcher matcher) {
+    private String replaceAndAppend(final Matcher matcher, final StyleType styleType) {
         final StringBuilder textBuilder = new StringBuilder();
         while (matcher.find()) {
-            if (matcher.groupCount() == 5) {
-                final String caption = matcher.group(2);
-                final String url = matcher.group(4);
-                final String matchedText = caption + url;
-                if (!matchedText.isEmpty()) {
-                    matcher.appendReplacement(textBuilder, Matcher.quoteReplacement(matchedText));
-                }
-                continue;
-            }
-            final String matchedText = matcher.group(2);
-            if (!matchedText.isEmpty()) {
-                matcher.appendReplacement(textBuilder, Matcher.quoteReplacement(matchedText));
-            }
+            replaceAndAppend(matcher, textBuilder, styleType);
         }
         matcher.appendTail(textBuilder);
         return textBuilder.toString();
+    }
+
+    private void replaceAndAppend(final Matcher matcher, final StringBuilder textBuilder, final StyleType styleType) {
+        String matchedText;
+        switch (styleType) {
+            case LINK -> {
+                final String caption = matcher.group(CAPTION_GROUP_INDEX);
+                final String url = matcher.group(URL_GROUP_INDEX);
+                matchedText = caption + url;
+            }
+            default -> matchedText = matcher.group(INNER_GROUP_INDEX);
+        }
+
+        if (!matchedText.isEmpty()) {
+            matcher.appendReplacement(textBuilder, Matcher.quoteReplacement(matchedText));
+        }
     }
 
     private String removeStyles(final String textBlock, final StyleType styleType) {

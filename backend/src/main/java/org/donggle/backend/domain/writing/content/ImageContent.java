@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing.content;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -11,14 +12,26 @@ import org.donggle.backend.domain.writing.BlockType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageContent extends Content {
-    @NotNull
-    private String url;
-    @NotNull
-    private String caption;
+    private static final int DEFAULT_DEPTH = 0;
 
-    public ImageContent(final int depth, final BlockType blockType, final String url, final String caption) {
-        super(depth, blockType);
-        this.url = url;
-        this.caption = caption;
+    @NotNull
+    @Embedded
+    private ImageUrl imageUrl;
+    @NotNull
+    @Embedded
+    private ImageCaption imageCaption;
+
+    public ImageContent(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(DEFAULT_DEPTH, blockType);
+        this.imageUrl = imageUrl;
+        this.imageCaption = imageCaption;
+    }
+
+    public String getImageUrlValue() {
+        return imageUrl.getImageUrl();
+    }
+
+    public String getImageCaptionValue() {
+        return imageCaption.getImageCaption();
     }
 }

@@ -14,9 +14,9 @@ const WritingTable = ({ writings }: Props) => {
   const getPublishedToLogoIcon = (blogName: Blog) => {
     switch (blogName) {
       case 'MEDIUM':
-        return <MediumLogoIcon width='2.4rem' />;
+        return <MediumLogoIcon width='2.4rem' height='2.4rem' />;
       case 'TISTORY':
-        return <TistoryLogoIcon width='2.4rem' />;
+        return <TistoryLogoIcon width='2.4rem' height='2.4rem' />;
     }
   };
 

@@ -23,26 +23,30 @@ const WritingTable = ({ writings }: Props) => {
   return (
     <>
       <S.WritingTableContainer>
-        <tr>
-          <th>Title</th>
-          <th>Published To</th>
-          <th>Published Time</th>
-        </tr>
-        {writings.map((writing) => (
-          <tr key={writing.id} onClick={() => goWritingPage(writing.id)}>
-            <td>{writing.title}</td>
-            <td>
-              <div className='publishedTo'>
-                {writing.publishedDetails.map((publishedDetail) => (
-                  <Fragment key={publishedDetail.blogName}>
-                    {getPublishedToLogoIcon(publishedDetail.blogName)}
-                  </Fragment>
-                ))}
-              </div>
-            </td>
-            <td>{dateFormatter(writing.createdAt, 'YYYY.MM.DD.')}</td>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Published To</th>
+            <th>Published Time</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {writings.map((writing) => (
+            <tr key={writing.id} onClick={() => goWritingPage(writing.id)}>
+              <td>{writing.title}</td>
+              <td>
+                <div className='publishedTo'>
+                  {writing.publishedDetails.map((publishedDetail) => (
+                    <Fragment key={publishedDetail.blogName}>
+                      {getPublishedToLogoIcon(publishedDetail.blogName)}
+                    </Fragment>
+                  ))}
+                </div>
+              </td>
+              <td>{dateFormatter(writing.createdAt, 'YYYY.MM.DD.')}</td>
+            </tr>
+          ))}
+        </tbody>
       </S.WritingTableContainer>
     </>
   );

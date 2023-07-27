@@ -6,7 +6,8 @@ export const getWritingTableMock = (categoryId: number): GetCategoryIdWritingLis
   writings: [
     {
       id: 33,
-      title: '우테코 레벨1',
+      title:
+        '우테코에서 뜻또라는 사람은 2023년에 이 편지를 받았습니다. 그는 쿠마에게 복사해서 보내라고 했습니다. 며칠 뒤에 복권이 당첨되어 20억을 받았습니다.',
       createdAt: new Date('2023-07-11T06:55:46.922Z'),
       publishedDetails: [
         {

@@ -87,7 +87,7 @@ const S = {
       border-right: none;
     }
 
-    tr:not(:first-child):hover {
+    tbody tr:hover {
       cursor: pointer;
       transform: scale(1.01);
       transition: all 300ms;

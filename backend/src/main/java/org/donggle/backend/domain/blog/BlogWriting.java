@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.Writing;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -37,5 +38,22 @@ public class BlogWriting {
 
     public String getBlogName() {
         return blog.getBlogType().name();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final BlogWriting that = (BlogWriting) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

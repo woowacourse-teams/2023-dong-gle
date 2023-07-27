@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.member.Member;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,5 +32,22 @@ public class Writing extends BaseEntity {
     public Writing(final Member member, final String title) {
         this.member = member;
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Writing writing = (Writing) o;
+        return Objects.equals(id, writing.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

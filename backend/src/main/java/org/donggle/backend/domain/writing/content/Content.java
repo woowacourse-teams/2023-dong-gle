@@ -15,11 +15,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 
+import java.util.Objects;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +40,23 @@ public abstract class Content {
         this.id = id;
         this.depth = depth;
         this.blockType = blockType;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Content content = (Content) o;
+        return Objects.equals(id, content.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

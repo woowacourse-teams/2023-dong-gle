@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.content.NormalContent;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,12 +47,29 @@ public class Style {
         this.styleType = styleType;
     }
 
+    public void setNormalContent(final NormalContent normalContent) {
+        this.normalContent = normalContent;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Style style = (Style) o;
+        return Objects.equals(id, style.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     @Override
     public String toString() {
         return "Style{" + "startIndex=" + startIndex + ", endIndex=" + endIndex + ", styleType=" + styleType + '}';
-    }
-
-    public void setNormalContent(final NormalContent normalContent) {
-        this.normalContent = normalContent;
     }
 }

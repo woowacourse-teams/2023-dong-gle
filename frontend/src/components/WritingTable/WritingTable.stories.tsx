@@ -6,12 +6,13 @@ import {
   StoryItemContainerRow,
   StoryItemTitle,
 } from 'styles/storybook';
+import { getWritingTableMock } from 'mocks/writingTableMock';
 
 const meta = {
   title: 'WritingTable',
   component: WritingTable,
   args: {
-    categoryId: 1,
+    writings: getWritingTableMock(1).writings,
   },
   // argTypes: {},
 } satisfies Meta<typeof WritingTable>;
@@ -21,12 +22,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: ({ categoryId }) => {
+  render: ({ writings }) => {
     return (
       <StoryContainer>
         <StoryItemContainer style={{ width: '800px' }}>
           <StoryItemTitle>기본</StoryItemTitle>
-          <WritingTable categoryId={categoryId} />
+          <WritingTable writings={writings} />
         </StoryItemContainer>
       </StoryContainer>
     );

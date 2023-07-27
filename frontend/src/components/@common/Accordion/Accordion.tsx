@@ -1,32 +1,41 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { RuleSet, css, styled } from 'styled-components';
-import Item from './Item';
+import AccordionItem from './AccordionItem';
 import { TextAlign, Size, Variant } from 'types/components/common';
 
+export type AccordionTitle = ReactNode;
+export type Panel = ReactNode;
+
 type Props = {
-  headers: string[];
-  bodies: ReactNode[];
+  accordionContents: [AccordionTitle, Panel][];
+  onTitleClick?: () => void;
+  onPanelClick?: () => void;
   variant?: Variant;
   size?: Size;
   textAlign?: TextAlign;
 } & ComponentPropsWithoutRef<'ul'>;
 
 const Accordion = ({
-  headers,
-  bodies,
+  accordionContents,
+  onTitleClick,
+  onPanelClick,
   variant = 'primary',
   size = 'medium',
   textAlign = 'start',
   ...rest
 }: Props) => {
-  if (headers.length !== bodies.length) return null;
-
-  const accordionValues = headers.map((header, index) => [header, bodies[index]]);
-
   return (
     <S.List variant={variant} size={size} textAlign={textAlign} {...rest}>
-      {accordionValues.map(([header, body]) => {
-        return <Item key={`${header}`} header={header} body={body} />;
+      {accordionContents.map(([accordionTitle, panel]) => {
+        return (
+          <AccordionItem
+            key={`${accordionTitle}`}
+            accordionTitle={accordionTitle}
+            panel={panel}
+            onTitleClick={onTitleClick}
+            onPanelClick={onPanelClick}
+          />
+        );
       })}
     </S.List>
   );

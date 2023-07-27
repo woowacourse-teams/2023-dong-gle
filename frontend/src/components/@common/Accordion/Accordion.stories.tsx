@@ -3,35 +3,32 @@ import { Meta, StoryObj } from '@storybook/react';
 import Accordion from './Accordion';
 import { Size, TextAlign, Variant } from 'constants/components/common';
 import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
+import { ReactNode } from 'react';
 
-const ITEMS = [
-  { header: '제목1', body: <p>내용</p> },
-  { header: '제목2', body: <p>내용1 내용2</p> },
-  {
-    header: '제목3',
-    body: [<p key={1}>내용1</p>, <p key={2}>내용2</p>, <p key={3}>내용3</p>],
-  },
-];
-
-const headers = ITEMS.map((item) => item.header);
-const bodies = ITEMS.map((item) => item.body);
+const accordionContents = [
+  [<StoryItemTitle>제목</StoryItemTitle>, <p>내용</p>],
+  [<StoryItemTitle>제목</StoryItemTitle>, <p>내용1 내용2</p>],
+  [
+    <StoryItemTitle>제목</StoryItemTitle>,
+    <div>
+      <p key={1}>내용1</p>
+      <p key={2}>내용2</p>
+      <p key={3}>내용3</p>
+    </div>,
+  ],
+] as [ReactNode, ReactNode][];
 
 const meta = {
   title: 'common/Accordion',
   args: {
-    headers,
-    bodies,
+    accordionContents: accordionContents,
     variant: 'primary',
     size: 'medium',
     textAlign: 'start',
   },
   argTypes: {
-    headers: {
-      description: '제목들로 이루어진 배열입니다.',
-      control: { type: 'text' },
-    },
-    bodies: {
-      description: '내용으로 이루어진 배열입니다.',
+    accordionContents: {
+      description: '제목과 내용으로 이루어진 튜플 배열입니다.',
       control: { type: 'text' },
     },
     variant: {
@@ -65,7 +62,7 @@ export const Variants: Story = {
         {Object.values(Variant).map((variant) => (
           <StoryItemContainer key={variant}>
             <StoryItemTitle>{variant}</StoryItemTitle>
-            <Accordion headers={headers} bodies={bodies} variant={variant} />
+            <Accordion accordionContents={accordionContents} variant={variant} />
           </StoryItemContainer>
         ))}
       </StoryContainer>
@@ -80,7 +77,7 @@ export const Sizes: Story = {
         {Object.values(Size).map((size) => (
           <StoryItemContainer key={size}>
             <StoryItemTitle>{size}</StoryItemTitle>
-            <Accordion headers={headers} bodies={bodies} variant='dark' size={size} />
+            <Accordion accordionContents={accordionContents} variant='dark' size={size} />
           </StoryItemContainer>
         ))}
       </StoryContainer>
@@ -95,7 +92,7 @@ export const TextAligns: Story = {
         {Object.values(TextAlign).map((textAlign) => (
           <StoryItemContainer key={textAlign}>
             <StoryItemTitle>{textAlign}</StoryItemTitle>
-            <Accordion headers={headers} bodies={bodies} textAlign={textAlign} />
+            <Accordion accordionContents={accordionContents} textAlign={textAlign} />
           </StoryItemContainer>
         ))}
       </StoryContainer>

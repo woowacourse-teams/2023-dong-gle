@@ -3,22 +3,22 @@ import { styled } from 'styled-components';
 import { ArrowRightIcon } from 'assets/icons';
 
 type Props = {
-  header: ReactNode;
+  accordionTitle: ReactNode;
   isOpen: boolean;
 } & ComponentPropsWithoutRef<'button'>;
 
-const HeaderButton = ({ header, isOpen, ...rest }: Props) => {
+const AccordionTitle = ({ accordionTitle, isOpen, ...rest }: Props) => {
   return (
     <S.Button {...rest}>
       <S.Container isOpen={isOpen}>
         <ArrowRightIcon width={8} height={14} />
-        <p>{header}</p>
+        {accordionTitle}
       </S.Container>
     </S.Button>
   );
 };
 
-export default HeaderButton;
+export default AccordionTitle;
 
 const S = {
   Button: styled.button`

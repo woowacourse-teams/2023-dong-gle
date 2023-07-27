@@ -36,7 +36,9 @@ const S = {
 
   Article: styled.article`
     flex: 1;
-    width: 100%;
+    max-width: calc(
+      100vw - (${SIDEBAR_STYLE.width} + ${LAYOUT_STYLE.padding}) - (${LAYOUT_STYLE.gap}) * 2
+    );
     border: ${LAYOUT_STYLE.border};
     border-radius: 8px;
     padding: 8rem 4rem;

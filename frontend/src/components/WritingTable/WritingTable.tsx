@@ -23,6 +23,11 @@ const WritingTable = ({ writings }: Props) => {
   return (
     <>
       <S.WritingTableContainer>
+        <colgroup>
+          <col style={{ width: '60%' }} />
+          <col style={{ width: '20%' }} />
+          <col style={{ width: '20%' }} />
+        </colgroup>
         <thead>
           <tr>
             <th>Title</th>

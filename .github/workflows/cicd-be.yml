@@ -35,20 +35,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-
 
-    ## create application-dev.properties
-    # - name: make application-dev.yml
-    #   run: |
-    #     cd ./backend/src/main/resources
-    #     touch ./application-dev.properties
-    #     echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
-    #   shell: bash
-
     ## gradle build
+    - name: Test with Gradle
+      run: |
+        cd ./backend
+        ./gradlew test
+    
     - name: Build with Gradle
       run: |
         cd ./backend
-        chmod +x ./gradlew
-        ./gradlew build
+        ./gradlew build -x test
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -63,22 +59,12 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: ./backend
-        file: ./backend/Dockerfile-dev
+        file: ./backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-dev:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend:latest
         platforms: linux/arm64
     
   deploy:
-    runs-on: [self-hosted,dev]
     needs: build
-    steps:
-    - uses: actions/checkout@v3
-    ## deploy to production
-    - name: Deploy to prod
-      env:
-        medium_token: ${{ secrets.MEDIUM_TOKEN }}
-      run: |
-        sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose -f docker-compose-dev.yml down
-        sudo docker compose -f docker-compose-dev.yml pull
-        sudo docker compose -f docker-compose-dev.yml up -d
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

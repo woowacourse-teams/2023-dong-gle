@@ -1,0 +1,30 @@
+name: Run Docker Compose
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: [self-hosted,dev]
+    steps:
+    - uses: actions/checkout@v3
+    - name: create .env
+      run: |
+        touch .env
+        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+        echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "MEDIUM_TOKEN=${{ secrets.medium_token }}" >> .env
+        echo "SPRING_PROFILES_ACTIVE=${{ secrets.PROFILE }}" >> .env
+    ## deploy to production
+    - name: Deploy to prod
+      run: |
+        sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        sudo docker compose down
+        sudo docker compose pull
+        sudo docker compose up -d

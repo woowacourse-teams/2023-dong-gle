@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { categoryURL } from 'constants/apis/url';
 import { categories, writingsInCategory } from 'mocks/categoryContentsMock';
-import { AddCategoriesRequest } from 'types/apis/category';
+import { AddCategoriesRequest, PatchCategory } from 'types/apis/category';
 
 export const categoryHandlers = [
   // 카테고리 목록 조회
@@ -25,5 +25,23 @@ export const categoryHandlers = [
     if (categoryId !== 200) return res(ctx.delay(300), ctx.status(404));
 
     return res(ctx.delay(300), ctx.status(200), ctx.json(writingsInCategory));
+  }),
+
+  // 카테고리 이름 수정
+  rest.patch(`${categoryURL}/:categoryId`, (req, res, ctx) => {
+    const categoryName = req.body as PatchCategory;
+
+    if (!categoryName) return res(ctx.delay(300), ctx.status(404));
+
+    return res(ctx.delay(300), ctx.status(204));
+  }),
+
+  // 카테고리 경로 수정
+  rest.patch(`${categoryURL}/:categoryId`, (req, res, ctx) => {
+    const nextCategoryId = req.body as PatchCategory;
+
+    if (!nextCategoryId) return res(ctx.delay(300), ctx.status(404));
+
+    return res(ctx.delay(300), ctx.status(204));
   }),
 ];

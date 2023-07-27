@@ -19,3 +19,8 @@ type WritingInCategory = {
 export type GetWritingsInCategoriesResponse = {
   writings: WritingInCategory[];
 } & CategoryResponse;
+
+export type PatchCategory = {
+  categoryName?: string;
+  nextCategoryId?: number;
+};

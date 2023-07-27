@@ -29,7 +29,7 @@
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/warn/%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>logs/history/warn/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>
@@ -48,7 +48,7 @@
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/error/%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>logs/history/error/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>

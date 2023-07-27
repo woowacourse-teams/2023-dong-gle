@@ -61,6 +61,13 @@ const S = {
       color: ${({ theme }) => theme.color.gray7};
     }
 
+    td {
+      .publishedTo {
+        display: flex;
+        gap: 0.8rem;
+      }
+    }
+
     th,
     td {
       padding: 1.1rem;

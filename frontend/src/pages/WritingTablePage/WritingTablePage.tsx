@@ -6,9 +6,7 @@ import { styled } from 'styled-components';
 import { LAYOUT_STYLE, SIDEBAR_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
-type Props = {};
-
-const WritingTablePage = ({}: Props) => {
+const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
 
   const { data } = useGetQuery<GetCategoryIdWritingListResponse>({

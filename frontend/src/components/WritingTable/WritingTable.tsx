@@ -35,11 +35,11 @@ const WritingTable = ({ writings }: Props) => {
           <tr key={id} onClick={() => goWritingPage(id)}>
             <td>{title}</td>
             <td>
-              <div className='publishedTo'>
+              <S.PublishedToIconContainer>
                 {publishedDetails.map(({ blogName }) => (
                   <Fragment key={blogName}>{blogIcon[blogName]}</Fragment>
                 ))}
-              </div>
+              </S.PublishedToIconContainer>
             </td>
             <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
           </tr>
@@ -59,13 +59,6 @@ const S = {
 
     th {
       color: ${({ theme }) => theme.color.gray7};
-    }
-
-    td {
-      .publishedTo {
-        display: flex;
-        gap: 0.8rem;
-      }
     }
 
     th,
@@ -89,5 +82,10 @@ const S = {
       transform: scale(1.01);
       transition: all 300ms;
     }
+  `,
+
+  PublishedToIconContainer: styled.div`
+    display: flex;
+    gap: 0.8rem;
   `,
 };

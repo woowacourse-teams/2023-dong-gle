@@ -1,6 +1,6 @@
 import { MediumLogoIcon, TistoryLogoIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { Fragment } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { Writing } from 'types/apis/writings';
 import { Blog } from 'types/domain';
@@ -8,17 +8,13 @@ import { dateFormatter } from 'utils/date';
 
 type Props = { writings: Writing[] };
 
+const blogIcon: Record<Blog, ReactElement> = {
+  MEDIUM: <MediumLogoIcon width='2.4rem' height='2.4rem' />,
+  TISTORY: <TistoryLogoIcon width='2.4rem' height='2.4rem' />,
+};
+
 const WritingTable = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
-
-  const getPublishedToLogoIcon = (blogName: Blog) => {
-    switch (blogName) {
-      case 'MEDIUM':
-        return <MediumLogoIcon width='2.4rem' height='2.4rem' />;
-      case 'TISTORY':
-        return <TistoryLogoIcon width='2.4rem' height='2.4rem' />;
-    }
-  };
 
   return (
     <S.WritingTableContainer>
@@ -41,7 +37,7 @@ const WritingTable = ({ writings }: Props) => {
             <td>
               <div className='publishedTo'>
                 {publishedDetails.map(({ blogName }) => (
-                  <Fragment key={blogName}>{getPublishedToLogoIcon(blogName)}</Fragment>
+                  <Fragment key={blogName}>{blogIcon[blogName]}</Fragment>
                 ))}
               </div>
             </td>

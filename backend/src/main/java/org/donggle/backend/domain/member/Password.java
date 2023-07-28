@@ -1,8 +1,7 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Lob;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,12 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RawText {
-    @Lob
-    @Column(nullable = false)
-    private String rawText;
+public class Password {
+    @Column(length = 50, nullable = false)
+    private String password;
 
-    public RawText(final String rawText) {
-        this.rawText = rawText;
+    public Password(final String password) {
+        this.password = password;
     }
 
     @Override
@@ -29,12 +27,19 @@ public class RawText {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final RawText rawText1 = (RawText) o;
-        return Objects.equals(rawText, rawText1.rawText);
+        final Password password1 = (Password) o;
+        return Objects.equals(password, password1.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rawText);
+        return Objects.hash(password);
+    }
+
+    @Override
+    public String toString() {
+        return "Password{" +
+                "password='" + password + '\'' +
+                '}';
     }
 }

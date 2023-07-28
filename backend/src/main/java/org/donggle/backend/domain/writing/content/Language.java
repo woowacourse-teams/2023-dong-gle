@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing.content;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Language {
+    @Column(length = 20, nullable = false)
     private String language;
 
     public Language(final String language) {

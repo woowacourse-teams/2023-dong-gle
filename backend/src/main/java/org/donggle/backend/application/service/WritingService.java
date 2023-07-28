@@ -6,7 +6,10 @@ import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.BlogWriting;
+import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
@@ -49,17 +52,18 @@ public class WritingService {
 
         final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
         // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member member = memberRepository.save(new Member("동그리"));
-        final Writing writing = new Writing(member, findFileName(originalFilename));
-        writingRepository.save(writing);
+        Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member savedMember = memberRepository.save(member);
+        final Writing writing = new Writing(savedMember, findFileName(originalFilename));
+        final Writing savedWriting = writingRepository.save(writing);
 
         //TODO : CASCADE 추가
         final List<Content> contents = markDownParser.parse(originalFileText);
         for (final Content content : contents) {
-            blockRepository.save(new Block(writing, content));
+            blockRepository.save(new Block(savedWriting, content));
         }
 
-        return writing.getId();
+        return savedWriting.getId();
     }
 
     private String findFileName(final String originalFilename) {
@@ -89,7 +93,7 @@ public class WritingService {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
         final List<PublishedDetailResponse> publishedTos = blogWritings.stream()
                 .map(blogWriting -> new PublishedDetailResponse(
-                        blogWriting.getBlogName(),
+                        blogWriting.getBlogTypeValue(),
                         blogWriting.getPublishedAt())
                 )
                 .toList();

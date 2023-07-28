@@ -1,6 +1,7 @@
 package org.donggle.backend.domain.writing.content;
 
 import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,19 +28,24 @@ public abstract class Content {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    private int depth;
-    @Enumerated(value = EnumType.STRING)
+    @Embedded
+    private Depth depth;
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     private BlockType blockType;
 
-    public Content(final int depth, final BlockType blockType) {
+    public Content(final Depth depth, final BlockType blockType) {
         this(null, depth, blockType);
     }
 
-    public Content(final Long id, final int depth, final BlockType blockType) {
+    public Content(final Long id, final Depth depth, final BlockType blockType) {
         this.id = id;
         this.depth = depth;
         this.blockType = blockType;
+    }
+
+    public int getDepthValue() {
+        return this.depth.getDepth();
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.Depth;
 import org.donggle.backend.domain.writing.content.ImageCaption;
 import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.ImageUrl;
@@ -64,8 +65,8 @@ public class MarkDownParser {
     }
 
     private Content createContentFromTextBlock(final String textBlock) {
-        final int depth = parseDepth(textBlock);
-        String removedDepthText = removeDepth(depth, textBlock);
+        final Depth depth = parseDepth(textBlock);
+        String removedDepthText = removeDepth(depth.getDepth(), textBlock);
         final Matcher matcher = findBlockMatcher(removedDepthText);
         final BlockType blockType = BlockType.findBlockType(matcher);
 
@@ -81,7 +82,7 @@ public class MarkDownParser {
                 final String removedBlockTypeText = matcher.replaceAll("");
                 final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
                 final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
-                return new NormalContent(depth, blockType, removedStyleTypeText, styles);
+                return new NormalContent(depth, blockType, new RawText(removedStyleTypeText), styles);
             }
         }
     }
@@ -93,7 +94,7 @@ public class MarkDownParser {
         return removedDepthText;
     }
 
-    private int parseDepth(String textBlock) {
+    private Depth parseDepth(String textBlock) {
         Matcher matcher = Pattern.compile(DEPTH_SPLIT_REGEX).matcher(textBlock);
         int depthCount = 0;
         while (matcher.find()) {
@@ -105,7 +106,7 @@ public class MarkDownParser {
                 depthCount += 1;
             }
         }
-        return depthCount;
+        return Depth.from(depthCount);
     }
 
     private Matcher findBlockMatcher(final String textBlock) {

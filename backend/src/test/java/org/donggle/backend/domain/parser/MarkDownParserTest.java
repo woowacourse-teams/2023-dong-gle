@@ -5,6 +5,7 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.Depth;
 import org.donggle.backend.domain.writing.content.ImageCaption;
 import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.ImageUrl;
@@ -49,8 +50,8 @@ class MarkDownParserTest {
                 """;
 
         final List<Content> result = List.of(
-                new NormalContent(0, BlockType.PARAGRAPH, "###안녕", Collections.emptyList()),
-                new NormalContent(0, BlockType.PARAGRAPH, "  안녕", Collections.emptyList()),
+                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, new RawText("###안녕"), Collections.emptyList()),
+                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, new RawText("  안녕"), Collections.emptyList()),
                 new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("나는 자바다"), new Language("java"))
         );
 
@@ -74,7 +75,7 @@ class MarkDownParserTest {
 
         //then
         assertAll(
-                () -> assertThat(resultContent.getDepth()).isEqualTo(expected.getDepth()),
+                () -> assertThat(resultContent.getDepthValue()).isEqualTo(expected.getDepthValue()),
                 () -> assertThat(resultContent.getImageUrlValue()).isEqualTo(expected.getImageUrlValue()),
                 () -> assertThat(resultContent.getImageCaptionValue()).isEqualTo(expected.getImageCaptionValue())
         );
@@ -88,16 +89,16 @@ class MarkDownParserTest {
         void parseDepth() {
             //given
             final String text = "    - hello world\n        - hubcreator";
-            final NormalContent expected1 = new NormalContent(1, BlockType.UNORDERED_LIST, "hello world", List.of());
-            final NormalContent expected2 = new NormalContent(2, BlockType.UNORDERED_LIST, "hubcreator", List.of());
+            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("hello world"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("hubcreator"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
 
             //then
             assertAll(
-                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
-                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth())
+                    () -> assertThat(result.get(0).getDepthValue()).isEqualTo(expected1.getDepthValue()),
+                    () -> assertThat(result.get(1).getDepthValue()).isEqualTo(expected2.getDepthValue())
             );
         }
 
@@ -106,16 +107,16 @@ class MarkDownParserTest {
         void parseDepth2() {
             //given
             final String text = "\t- hello world\n\t\t - hubcreator";
-            final NormalContent expected1 = new NormalContent(1, BlockType.UNORDERED_LIST, "hello world", List.of());
-            final NormalContent expected2 = new NormalContent(2, BlockType.UNORDERED_LIST, "hubcreator", List.of());
+            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("hello world"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("hubcreator"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
 
             //then
             assertAll(
-                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
-                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth())
+                    () -> assertThat(result.get(0).getDepthValue()).isEqualTo(expected1.getDepthValue()),
+                    () -> assertThat(result.get(1).getDepthValue()).isEqualTo(expected2.getDepthValue())
             );
         }
 
@@ -124,20 +125,20 @@ class MarkDownParserTest {
         void parseDepthWithListMixed() {
             //given
             final String text = "- depth1\n\t- depth2\n    \t- depth3\n    \t    - depth4";
-            final NormalContent expected1 = new NormalContent(0, BlockType.UNORDERED_LIST, "depth1", List.of());
-            final NormalContent expected2 = new NormalContent(1, BlockType.UNORDERED_LIST, "depth2", List.of());
-            final NormalContent expected3 = new NormalContent(2, BlockType.UNORDERED_LIST, "depth3", List.of());
-            final NormalContent expected4 = new NormalContent(3, BlockType.UNORDERED_LIST, "depth4", List.of());
+            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("depth1"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("depth2"), List.of());
+            final NormalContent expected3 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("depth3"), List.of());
+            final NormalContent expected4 = new NormalContent(Depth.from(3), BlockType.UNORDERED_LIST, new RawText("depth4"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
 
             //then
             assertAll(
-                    () -> assertThat(result.get(0).getDepth()).isEqualTo(expected1.getDepth()),
-                    () -> assertThat(result.get(1).getDepth()).isEqualTo(expected2.getDepth()),
-                    () -> assertThat(result.get(2).getDepth()).isEqualTo(expected3.getDepth()),
-                    () -> assertThat(result.get(3).getDepth()).isEqualTo(expected4.getDepth())
+                    () -> assertThat(result.get(0).getDepthValue()).isEqualTo(expected1.getDepthValue()),
+                    () -> assertThat(result.get(1).getDepthValue()).isEqualTo(expected2.getDepthValue()),
+                    () -> assertThat(result.get(2).getDepthValue()).isEqualTo(expected3.getDepthValue()),
+                    () -> assertThat(result.get(3).getDepthValue()).isEqualTo(expected4.getDepthValue())
             );
         }
 
@@ -146,7 +147,7 @@ class MarkDownParserTest {
         void parseDepthWithListMixed2() {
             //given
             final String text = "- depth1    hel\tlo\n";
-            final NormalContent expected1 = new NormalContent(0, BlockType.UNORDERED_LIST, "depth1    hel\tlo", List.of());
+            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("depth1    hel\tlo"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
@@ -154,8 +155,8 @@ class MarkDownParserTest {
 
             //then
             assertAll(
-                    () -> assertThat(resultContent.getDepth()).isEqualTo(expected1.getDepth()),
-                    () -> assertThat(resultContent.getRawText()).isEqualTo(expected1.getRawText())
+                    () -> assertThat(resultContent.getDepthValue()).isEqualTo(expected1.getDepthValue()),
+                    () -> assertThat(resultContent.getRawTextValue()).isEqualTo(expected1.getRawTextValue())
             );
         }
     }

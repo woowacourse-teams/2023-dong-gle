@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
     @EntityGraph(attributePaths = {"content"})
-    List<Block> findAllByWritingId(Long writingId);
+    List<Block> findAllByWritingId(final Long writingId);
 
-    @EntityGraph(attributePaths = {"content"})
     @Override
-    Optional<Block> findById(Long aLong);
+    @EntityGraph(attributePaths = {"content"})
+    Optional<Block> findById(final Long id);
 }

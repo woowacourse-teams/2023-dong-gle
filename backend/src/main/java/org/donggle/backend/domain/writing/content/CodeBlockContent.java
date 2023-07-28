@@ -12,8 +12,6 @@ import org.donggle.backend.domain.writing.BlockType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeBlockContent extends Content {
-    private static final int DEFAULT_DEPTH = 0;
-
     @NotNull
     @Embedded
     private RawText rawText;
@@ -22,7 +20,7 @@ public class CodeBlockContent extends Content {
     private Language language;
 
     public CodeBlockContent(final BlockType blockType, final RawText rawText, final Language language) {
-        super(DEFAULT_DEPTH, blockType);
+        super(Depth.empty(), blockType);
         this.rawText = rawText;
         this.language = language;
     }

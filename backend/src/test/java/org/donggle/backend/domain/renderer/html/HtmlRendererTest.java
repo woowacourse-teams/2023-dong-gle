@@ -1,10 +1,14 @@
 package org.donggle.backend.domain.renderer.html;
 
+import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.writing.Block;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
+import org.donggle.backend.domain.writing.content.Depth;
 import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalContent;
 import org.donggle.backend.domain.writing.content.RawText;
@@ -26,32 +30,32 @@ class HtmlRendererTest {
     void setUp() {
         htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         blocks = new ArrayList<>();
-        member = new Member("동글이");
+        member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
     }
 
     @Test
     @DisplayName("전체 Block 렌더링")
     void render() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "2번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "3번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-2번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-3번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-4번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "4번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "5번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "5-1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "6번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING1, "heading1", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING2, "heading2", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING3, "heading3", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING4, "heading4", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING5, "heading5", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING6, "heading6", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.PARAGRAPH, "paragraph", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("2번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("3번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("3-1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("3-2번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("3-3번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("3-4번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("4번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("5번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("5-1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("6번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING1, new RawText("heading1"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING2, new RawText("heading2"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING3, new RawText("heading3"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING4, new RawText("heading4"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING5, new RawText("heading5"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING6, new RawText("heading6"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.BLOCKQUOTE, new RawText("blockquote"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.PARAGRAPH, new RawText("paragraph"), new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("public void(){}"), new Language("java"))));
 
         //when
@@ -66,7 +70,7 @@ class HtmlRendererTest {
     @DisplayName("Heading1 렌더링")
     void renderHeading1() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING1, "Heading1", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING1, new RawText("Heading1"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -80,7 +84,7 @@ class HtmlRendererTest {
     @DisplayName("Heading2 렌더링")
     void renderHeading2() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING2, "Heading2", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING2, new RawText("Heading2"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -94,7 +98,7 @@ class HtmlRendererTest {
     @DisplayName("Heading3 렌더링")
     void renderHeading3() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING3, "Heading3", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING3, new RawText("Heading3"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -108,7 +112,7 @@ class HtmlRendererTest {
     @DisplayName("Heading4 렌더링")
     void renderHeading4() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING4, "Heading4", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING4, new RawText("Heading4"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -122,7 +126,7 @@ class HtmlRendererTest {
     @DisplayName("Heading5 렌더링")
     void renderHeading5() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING5, "Heading5", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING5, new RawText("Heading5"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -136,7 +140,7 @@ class HtmlRendererTest {
     @DisplayName("Heading6 렌더링")
     void renderHeading6() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING6, "Heading6", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.HEADING6, new RawText("Heading6"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -150,7 +154,7 @@ class HtmlRendererTest {
     @DisplayName("Blockquote 렌더링")
     void blockquote() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.BLOCKQUOTE, new RawText("blockquote"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -178,17 +182,17 @@ class HtmlRendererTest {
     @DisplayName("리스트 렌더링")
     void renderList() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "2번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "3번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.UNORDERED_LIST, "3-2번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-3번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "3-4번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "4번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "5번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(1, BlockType.ORDERED_LIST, "5-1번줄", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.UNORDERED_LIST, "6번줄", new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("2번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("3번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("3-1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("3-2번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("3-3번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("3-4번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("4번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("5번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.from(1), BlockType.ORDERED_LIST, new RawText("5-1번줄"), new ArrayList<>())));
+        blocks.add(new Block(new Writing(member, "title"), new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("6번줄"), new ArrayList<>())));
 
         //when
         final String result = htmlRenderer.render(blocks);

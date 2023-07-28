@@ -1,6 +1,6 @@
 package org.donggle.backend.domain.member;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,11 +21,19 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @Column(length = 20)
-    private String name;
+    @Embedded
+    private MemberName memberName;
+    @NotNull
+    @Embedded
+    private Email email;
+    @NotNull
+    @Embedded
+    private Password password;
 
-    public Member(final String name) {
-        this.name = name;
+    public Member(final MemberName memberName, final Email email, final Password password) {
+        this.memberName = memberName;
+        this.email = email;
+        this.password = password;
     }
 
     @Override

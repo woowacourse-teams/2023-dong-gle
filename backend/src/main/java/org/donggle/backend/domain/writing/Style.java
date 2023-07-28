@@ -1,5 +1,8 @@
 package org.donggle.backend.domain.writing;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,9 +29,13 @@ public class Style {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Min(0)
-    private int startIndex;
+    @Embedded
+    @AttributeOverride(name = "index", column = @Column(name = "start_index"))
+    private StyleIndex startIndex;
     @Min(0)
-    private int endIndex;
+    @Embedded
+    @AttributeOverride(name = "index", column = @Column(name = "end_index"))
+    private StyleIndex endIndex;
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private StyleType styleType;
@@ -36,15 +43,23 @@ public class Style {
     @JoinColumn(name = "normal_content_id")
     private NormalContent normalContent;
 
-    public Style(final int startIndex, final int endIndex, final StyleType styleType) {
+    public Style(final StyleIndex startIndex, final StyleIndex endIndex, final StyleType styleType) {
         this(null, startIndex, endIndex, styleType);
     }
 
-    public Style(final Long id, final int startIndex, final int endIndex, final StyleType styleType) {
+    public Style(final Long id, final StyleIndex startIndex, final StyleIndex endIndex, final StyleType styleType) {
         this.id = id;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.styleType = styleType;
+    }
+
+    public int getStartIndexValue() {
+        return this.startIndex.getIndex();
+    }
+
+    public int getEndIndexValue() {
+        return this.endIndex.getIndex();
     }
 
     public void setNormalContent(final NormalContent normalContent) {

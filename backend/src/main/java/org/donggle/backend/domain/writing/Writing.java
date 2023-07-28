@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,11 +28,16 @@ public class Writing extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
     @NotNull
-    private String title;
+    @Embedded
+    private Title title;
 
-    public Writing(final Member member, final String title) {
+    public Writing(final Member member, final Title title) {
         this.member = member;
         this.title = title;
+    }
+
+    public String getTitleValue() {
+        return this.title.getTitle();
     }
 
     @Override

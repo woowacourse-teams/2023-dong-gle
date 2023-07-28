@@ -2,6 +2,7 @@ package org.donggle.backend.domain.parser;
 
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleIndex;
 import org.donggle.backend.domain.writing.StyleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +27,8 @@ class MarkDownStyleParserTest {
         //given
         final String input = "안`녕하**세요` 여**러분";
         final String originalText = "안녕하세요 여러분";
-        final Style codeStyle = new Style(1, 4, StyleType.CODE);
-        final Style boldStyle = new Style(3, 6, StyleType.BOLD);
+        final Style codeStyle = new Style(new StyleIndex(1), new StyleIndex(4), StyleType.CODE);
+        final Style boldStyle = new Style(new StyleIndex(3), new StyleIndex(6), StyleType.BOLD);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
@@ -44,8 +45,8 @@ class MarkDownStyleParserTest {
         //given
         final String input = "**안녕하**세요 **안녕하**세요";
         final String originalText = "안녕하세요 안녕하세요";
-        final Style codeStyle = new Style(0, 2, StyleType.BOLD);
-        final Style boldStyle = new Style(6, 8, StyleType.BOLD);
+        final Style codeStyle = new Style(new StyleIndex(0), new StyleIndex(2), StyleType.BOLD);
+        final Style boldStyle = new Style(new StyleIndex(6), new StyleIndex(8), StyleType.BOLD);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
@@ -90,8 +91,8 @@ class MarkDownStyleParserTest {
         //given
         final String input = "[네이버](www)";
         final String originalText = "네이버www";
-        final Style caption = new Style(0, 2, StyleType.LINK);
-        final Style url = new Style(3, 5, StyleType.LINK);
+        final Style caption = new Style(new StyleIndex(0), new StyleIndex(2), StyleType.LINK);
+        final Style url = new Style(new StyleIndex(3), new StyleIndex(5), StyleType.LINK);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);

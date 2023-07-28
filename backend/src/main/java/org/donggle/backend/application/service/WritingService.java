@@ -15,6 +15,7 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Block;
+import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Content;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
@@ -54,7 +55,7 @@ public class WritingService {
         // TODO : authentication 후 member 객체 가져오도록 수정
         Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
         final Member savedMember = memberRepository.save(member);
-        final Writing writing = new Writing(savedMember, findFileName(originalFilename));
+        final Writing writing = new Writing(savedMember, new Title(findFileName(originalFilename)));
         final Writing savedWriting = writingRepository.save(writing);
 
         //TODO : CASCADE 추가
@@ -79,7 +80,7 @@ public class WritingService {
 
         final String content = htmlRenderer.render(blocks);
 
-        return new WritingResponse(writing.getId(), writing.getTitle(), content);
+        return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
     }
 
     private Writing findWriting(final Long writingId) {

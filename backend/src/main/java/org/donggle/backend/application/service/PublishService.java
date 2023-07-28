@@ -44,7 +44,7 @@ public class PublishService {
         switch (blog.getBlogType()) {
             case MEDIUM -> {
                 final MediumPublishRequest request = MediumPublishRequest.builder()
-                        .title(writing.getTitle())
+                        .title(writing.getTitleValue())
                         .content(content)
                         .contentFormat("html")
                         .build();

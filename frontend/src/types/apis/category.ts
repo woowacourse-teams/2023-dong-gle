@@ -11,12 +11,12 @@ export type GetCategoriesResponse = {
   categories: CategoryResponse[];
 };
 
-type WritingInCategory = {
+export type WritingInCategory = {
   id: number;
   title: string;
 };
 
-export type GetWritingsInCategoriesResponse = {
+export type GetCategoryDetailsResponse = {
   writings: WritingInCategory[];
 } & CategoryResponse;
 

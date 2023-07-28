@@ -6,10 +6,14 @@ import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.ContentRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.notion.NotionApiService;
+import org.donggle.backend.application.service.notion.NotionBlockNode;
+import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
+import org.donggle.backend.domain.parser.notion.NotionParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Block;
@@ -28,6 +32,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class WritingService {
+    private final NotionApiService notionApiService;
     private final MemberRepository memberRepository;
     private final ContentRepository contentRepository;
     private final BlockRepository blockRepository;
@@ -45,10 +50,35 @@ public class WritingService {
 
         //TODO : CASCADE 추가
         final List<Content> contents = markDownParser.parse(totalText);
-        for (final Content content : contents) {
-            final Content savedContent = contentRepository.save(content);
-            blockRepository.save(new Block(writing, savedContent));
-        }
+        saveBlocks(writing, contents);
+
+        return writing.getId();
+    }
+
+    private void saveBlocks(final Writing writing, final List<Content> contents) {
+        contents.stream()
+                .map(contentRepository::save)
+                .map(savedContent -> new Block(writing, savedContent))
+                .forEach(blockRepository::save);
+    }
+
+    public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
+        // TODO : authentication 후 member 객체 가져오도록 수정
+        final Member member = memberRepository.save(new Member("동그리"));
+
+        final String blockId = request.blockId();
+        final NotionParser notionParser = new NotionParser();
+
+        final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
+        final String title = notionParser.parseTitle(parentBlockNode);
+        final Writing writing = new Writing(member, title);
+
+        writingRepository.save(writing);
+
+        final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode);
+        final List<Content> contents = notionParser.parseBody(bodyBlockNodes);
+
+        saveBlocks(writing, contents);
 
         return writing.getId();
     }

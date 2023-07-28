@@ -3,6 +3,7 @@ package org.donggle.backend.ui;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.application.service.WritingService;
+import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
@@ -58,6 +59,12 @@ public class WritingController {
             //TODO : 파일형식 자르기
             throw new InvalidFileFormatException();
         }
+    }
+
+    @PostMapping("/notion")
+    public ResponseEntity<Void> writingAdd(@RequestBody final NotionUploadRequest request) {
+        final Long writingId = writingService.uploadNotionPage(1L, request);
+        return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 
     @GetMapping("/{writingId}")

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.writing.BlockType;
 
 import java.util.Objects;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @DiscriminatorColumn
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Content {
+public abstract class Content extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

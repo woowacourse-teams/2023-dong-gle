@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.writing.Writing;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BlogWriting {
+public class BlogWriting extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

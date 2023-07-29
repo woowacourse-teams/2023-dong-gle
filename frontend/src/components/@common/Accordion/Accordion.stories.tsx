@@ -3,34 +3,15 @@ import { Meta, StoryObj } from '@storybook/react';
 import Accordion from './Accordion';
 import { Size, TextAlign, Variant } from 'constants/components/common';
 import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
-import { ReactNode } from 'react';
-
-const accordionContents = [
-  [<StoryItemTitle>제목</StoryItemTitle>, <p>내용</p>],
-  [<StoryItemTitle>제목</StoryItemTitle>, <p>내용1 내용2</p>],
-  [
-    <StoryItemTitle>제목</StoryItemTitle>,
-    <div>
-      <p key={1}>내용1</p>
-      <p key={2}>내용2</p>
-      <p key={3}>내용3</p>
-    </div>,
-  ],
-] as [ReactNode, ReactNode][];
 
 const meta = {
   title: 'common/Accordion',
   args: {
-    accordionContents: accordionContents,
     variant: 'primary',
     size: 'medium',
     textAlign: 'start',
   },
   argTypes: {
-    accordionContents: {
-      description: '제목과 내용으로 이루어진 튜플 배열입니다.',
-      control: { type: 'text' },
-    },
     variant: {
       description: '정의된 스타일입니다.',
       options: Object.values(Variant),
@@ -53,6 +34,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const AccordionValues = [
+  { title: '제목1', panel: '내용' },
+  { title: '제목2', panel: '내용' },
+  { title: '제목3', panel: '내용' },
+  { title: '제목4', panel: '내용' },
+];
+
 export const Playground: Story = {};
 
 export const Variants: Story = {
@@ -62,7 +50,16 @@ export const Variants: Story = {
         {Object.values(Variant).map((variant) => (
           <StoryItemContainer key={variant}>
             <StoryItemTitle>{variant}</StoryItemTitle>
-            <Accordion accordionContents={accordionContents} variant={variant} />
+            <Accordion>
+              {AccordionValues.map((value) => {
+                return (
+                  <Accordion.Item key={value.title}>
+                    <Accordion.Title>{value.title}</Accordion.Title>
+                    <Accordion.Panel>{value.panel}</Accordion.Panel>
+                  </Accordion.Item>
+                );
+              })}
+            </Accordion>
           </StoryItemContainer>
         ))}
       </StoryContainer>
@@ -77,7 +74,18 @@ export const Sizes: Story = {
         {Object.values(Size).map((size) => (
           <StoryItemContainer key={size}>
             <StoryItemTitle>{size}</StoryItemTitle>
-            <Accordion accordionContents={accordionContents} variant='dark' size={size} />
+            <Accordion>
+              <Accordion.Item>
+                {AccordionValues.map((value) => {
+                  return (
+                    <Accordion.Item key={value.title}>
+                      <Accordion.Title>{value.title}</Accordion.Title>
+                      <Accordion.Panel>{value.panel}</Accordion.Panel>
+                    </Accordion.Item>
+                  );
+                })}
+              </Accordion.Item>
+            </Accordion>
           </StoryItemContainer>
         ))}
       </StoryContainer>
@@ -92,7 +100,16 @@ export const TextAligns: Story = {
         {Object.values(TextAlign).map((textAlign) => (
           <StoryItemContainer key={textAlign}>
             <StoryItemTitle>{textAlign}</StoryItemTitle>
-            <Accordion accordionContents={accordionContents} textAlign={textAlign} />
+            <Accordion>
+              {AccordionValues.map((value) => {
+                return (
+                  <Accordion.Item key={value.title}>
+                    <Accordion.Title>{value.title}</Accordion.Title>
+                    <Accordion.Panel>{value.panel}</Accordion.Panel>
+                  </Accordion.Item>
+                );
+              })}
+            </Accordion>
           </StoryItemContainer>
         ))}
       </StoryContainer>

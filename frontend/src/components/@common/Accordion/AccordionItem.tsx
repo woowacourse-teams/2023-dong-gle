@@ -1,28 +1,34 @@
-import { ComponentPropsWithoutRef, ReactNode, useState } from 'react';
+import {
+  Children,
+  ComponentPropsWithoutRef,
+  ReactElement,
+  cloneElement,
+  isValidElement,
+  useState,
+} from 'react';
 import { styled } from 'styled-components';
-import AccordionPanel from './AccordionPanel';
 import AccordionTitle from './AccordionTitle';
+import AccordionPanel from './AccordionPanel';
 
-type Props = {
-  accordionTitle: ReactNode;
-  panel: ReactNode;
-  onTitleClick?: () => void;
-  onPanelClick?: () => void;
-} & ComponentPropsWithoutRef<'li'>;
-
-const AccordionItem = ({ accordionTitle, panel, onTitleClick, onPanelClick }: Props) => {
+const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
   const [isOpen, isSetOpen] = useState(false);
-
-  const handlePanelClick = () => {
-    isSetOpen(!isOpen);
-
-    if (onTitleClick) onTitleClick();
-  };
 
   return (
     <S.Item>
-      <AccordionTitle accordionTitle={accordionTitle} isOpen={isOpen} onClick={handlePanelClick} />
-      <AccordionPanel panel={panel} isOpen={isOpen} onPanelClick={onPanelClick} />
+      {Children.map(children, (child) => {
+        if (!child || !isValidElement(child)) return null;
+
+        if (child.type === AccordionTitle) {
+          return cloneElement(child as ReactElement, {
+            isOpen,
+            onClick: () => isSetOpen(!isOpen),
+          });
+        }
+
+        if (child.type === AccordionPanel) {
+          return cloneElement(child as ReactElement, { isOpen });
+        }
+      })}
     </S.Item>
   );
 };

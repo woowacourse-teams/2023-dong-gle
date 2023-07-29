@@ -1,47 +1,38 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { RuleSet, css, styled } from 'styled-components';
-import AccordionItem from './AccordionItem';
 import { TextAlign, Size, Variant } from 'types/components/common';
+import AccordionItem from './AccordionItem';
+import AccordionTitle from './AccordionTitle';
+import AccordionPanel from './AccordionPanel';
 
 export type AccordionTitle = ReactNode;
 export type Panel = ReactNode;
 
 type Props = {
-  accordionContents: [AccordionTitle, Panel][];
-  onTitleClick?: () => void;
-  onPanelClick?: () => void;
   variant?: Variant;
   size?: Size;
   textAlign?: TextAlign;
 } & ComponentPropsWithoutRef<'ul'>;
 
 const Accordion = ({
-  accordionContents,
-  onTitleClick,
-  onPanelClick,
   variant = 'primary',
   size = 'medium',
   textAlign = 'start',
+  children,
   ...rest
 }: Props) => {
   return (
     <S.List variant={variant} size={size} textAlign={textAlign} {...rest}>
-      {accordionContents.map(([accordionTitle, panel]) => {
-        return (
-          <AccordionItem
-            key={`${accordionTitle}`}
-            accordionTitle={accordionTitle}
-            panel={panel}
-            onTitleClick={onTitleClick}
-            onPanelClick={onPanelClick}
-          />
-        );
-      })}
+      {children}
     </S.List>
   );
 };
 
 export default Accordion;
+
+Accordion.Item = AccordionItem;
+Accordion.Title = AccordionTitle;
+Accordion.Panel = AccordionPanel;
 
 const generateVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> => {
   const styles: Record<typeof variant, ReturnType<typeof generateVariantStyle>> = {

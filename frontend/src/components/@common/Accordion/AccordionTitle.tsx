@@ -1,18 +1,18 @@
-import { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { styled } from 'styled-components';
 import { ArrowRightIcon } from 'assets/icons';
 
 type Props = {
-  accordionTitle: ReactNode;
-  isOpen: boolean;
+  isOpen?: boolean;
+  onClick?: () => void;
 } & ComponentPropsWithoutRef<'button'>;
 
-const AccordionTitle = ({ accordionTitle, isOpen, ...rest }: Props) => {
+const AccordionTitle = ({ isOpen = false, onClick, children }: Props) => {
   return (
-    <S.Button {...rest}>
+    <S.Button onClick={onClick}>
       <S.Container isOpen={isOpen}>
         <ArrowRightIcon width={8} height={14} />
-        {accordionTitle}
+        {children}
       </S.Container>
     </S.Button>
   );
@@ -28,7 +28,7 @@ const S = {
     border-radius: 4px;
   `,
 
-  Container: styled.div<Pick<Props, 'isOpen'>>`
+  Container: styled.div<Record<'isOpen', boolean>>`
     display: flex;
     gap: 0.8rem;
     width: 100%;

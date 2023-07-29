@@ -15,8 +15,12 @@ public class Language {
     @Column(length = 20, nullable = false)
     private String language;
 
-    public Language(final String language) {
+    private Language(final String language) {
         this.language = language;
+    }
+
+    public static Language from(final String language) {
+        return new Language(language);
     }
 
     @Override

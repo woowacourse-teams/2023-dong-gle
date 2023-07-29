@@ -66,13 +66,13 @@ public class MarkDownParser {
 
     private Content createContentFromTextBlock(final String textBlock) {
         final Depth depth = parseDepth(textBlock);
-        String removedDepthText = removeDepth(depth.getDepth(), textBlock);
+        final String removedDepthText = removeDepth(depth, textBlock);
         final Matcher matcher = findBlockMatcher(removedDepthText);
         final BlockType blockType = BlockType.findBlockType(matcher);
 
         switch (blockType) {
             case CODE_BLOCK -> {
-                return new CodeBlockContent(blockType, new RawText(matcher.group(2)), new Language(matcher.group(1)));
+                return new CodeBlockContent(blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
             }
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
@@ -82,13 +82,13 @@ public class MarkDownParser {
                 final String removedBlockTypeText = matcher.replaceAll("");
                 final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
                 final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
-                return new NormalContent(depth, blockType, new RawText(removedStyleTypeText), styles);
+                return new NormalContent(depth, blockType, RawText.from(removedStyleTypeText), styles);
             }
         }
     }
 
-    private String removeDepth(final int depth, String removedDepthText) {
-        for (int i = 0; i < depth; i++) {
+    private String removeDepth(final Depth depth, String removedDepthText) {
+        for (int i = 0; i < depth.getDepth(); i++) {
             removedDepthText = removedDepthText.replaceFirst(DEPTH_SPLIT_REGEX, "");
         }
         return removedDepthText;

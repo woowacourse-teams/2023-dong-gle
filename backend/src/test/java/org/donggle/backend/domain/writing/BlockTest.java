@@ -36,7 +36,7 @@ class BlockTest {
         final Member savedMember = memberRepository.save(member);
         final Writing writing = new Writing(savedMember, new Title("title"));
         final Writing savedWriting = writingRepository.save(writing);
-        final CodeBlockContent expectedContent = new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("r"), new Language("l"));
+        final CodeBlockContent expectedContent = new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
         final Block block = new Block(savedWriting, expectedContent);
 
         //when

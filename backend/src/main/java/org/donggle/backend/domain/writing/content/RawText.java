@@ -17,8 +17,12 @@ public class RawText {
     @Column(nullable = false)
     private String rawText;
 
-    public RawText(final String rawText) {
+    private RawText(final String rawText) {
         this.rawText = rawText;
+    }
+
+    public static RawText from(final String rawText) {
+        return new RawText(rawText);
     }
 
     @Override

@@ -50,9 +50,9 @@ class MarkDownParserTest {
                 """;
 
         final List<Content> result = List.of(
-                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, new RawText("###안녕"), Collections.emptyList()),
-                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, new RawText("  안녕"), Collections.emptyList()),
-                new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("나는 자바다"), new Language("java"))
+                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, RawText.from("###안녕"), Collections.emptyList()),
+                new NormalContent(Depth.empty(), BlockType.PARAGRAPH, RawText.from("  안녕"), Collections.emptyList()),
+                new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from("나는 자바다"), Language.from("java"))
         );
 
         //when
@@ -89,8 +89,8 @@ class MarkDownParserTest {
         void parseDepth() {
             //given
             final String text = "    - hello world\n        - hubcreator";
-            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("hello world"), List.of());
-            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("hubcreator"), List.of());
+            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
@@ -107,8 +107,8 @@ class MarkDownParserTest {
         void parseDepth2() {
             //given
             final String text = "\t- hello world\n\t\t - hubcreator";
-            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("hello world"), List.of());
-            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("hubcreator"), List.of());
+            final NormalContent expected1 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
@@ -125,10 +125,10 @@ class MarkDownParserTest {
         void parseDepthWithListMixed() {
             //given
             final String text = "- depth1\n\t- depth2\n    \t- depth3\n    \t    - depth4";
-            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("depth1"), List.of());
-            final NormalContent expected2 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, new RawText("depth2"), List.of());
-            final NormalContent expected3 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, new RawText("depth3"), List.of());
-            final NormalContent expected4 = new NormalContent(Depth.from(3), BlockType.UNORDERED_LIST, new RawText("depth4"), List.of());
+            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1"), List.of());
+            final NormalContent expected2 = new NormalContent(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("depth2"), List.of());
+            final NormalContent expected3 = new NormalContent(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("depth3"), List.of());
+            final NormalContent expected4 = new NormalContent(Depth.from(3), BlockType.UNORDERED_LIST, RawText.from("depth4"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);
@@ -147,7 +147,7 @@ class MarkDownParserTest {
         void parseDepthWithListMixed2() {
             //given
             final String text = "- depth1    hel\tlo\n";
-            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, new RawText("depth1    hel\tlo"), List.of());
+            final NormalContent expected1 = new NormalContent(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1    hel\tlo"), List.of());
 
             //when
             final List<Content> result = markDownParser.parse(text);

@@ -8,10 +8,11 @@ type Props = {
 };
 
 const WritingsInCategory = ({ writings }: Props) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const moveToWritingPage = (writingId: number) => {
-    navigate(`/writing/${writingId}`);
+    // TODO: 쿠마의 네비게이션 훅으로 교체 예정
+    // navigate(`/writing/${writingId}`);
   };
 
   return (

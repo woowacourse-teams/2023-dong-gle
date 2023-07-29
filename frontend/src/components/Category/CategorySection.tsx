@@ -1,10 +1,34 @@
-import { useGenerateCategoryTuple } from 'hooks/useGenerateCategoryTuple';
+import Accordion from 'components/@common/Accordion/Accordion';
+import { useCategories } from 'hooks/useCategories';
 import { styled } from 'styled-components';
+import Category from './Category';
+import WritingsInCategory from './WritingsInCategory';
+import { useWritingsInCategory } from 'hooks/useWritingsInCategory';
 
 const CategorySection = () => {
-  const generateCategoryTuple = useGenerateCategoryTuple();
+  const { categories } = useCategories();
+  const { getWritings, writings } = useWritingsInCategory();
 
-  return <S.Section>{/* <Accordion accordionContents={generateCategoryTuple()} /> */}</S.Section>;
+  if (!categories) return null;
+
+  return (
+    <S.Section>
+      <Accordion>
+        {categories.map((category) => {
+          return (
+            <Accordion.Item>
+              <Accordion.Title onClick={() => getWritings(category.id)}>
+                <Category id={category.id} categoryName={category.categoryName} />
+              </Accordion.Title>
+              <Accordion.Panel>
+                {writings && <WritingsInCategory writings={writings} />}
+              </Accordion.Panel>
+            </Accordion.Item>
+          );
+        })}
+      </Accordion>
+    </S.Section>
+  );
 };
 
 export default CategorySection;

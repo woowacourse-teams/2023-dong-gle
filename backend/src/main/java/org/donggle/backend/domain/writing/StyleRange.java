@@ -26,7 +26,7 @@ public class StyleRange {
     }
 
     private void validateIndex(final int startIndex, final int endIndex) {
-        if (startIndex < MIN || endIndex < MIN) {
+        if ((startIndex < MIN || endIndex < MIN) && (startIndex > endIndex)) {
             throw new IllegalArgumentException();
         }
     }

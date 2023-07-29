@@ -32,4 +32,12 @@ public class ImageContent extends Content {
     public String getImageCaptionValue() {
         return imageCaption.getImageCaption();
     }
+
+    @Override
+    public String toString() {
+        return "ImageContent{" +
+                "imageUrl=" + imageUrl +
+                ", imageCaption=" + imageCaption +
+                '}';
+    }
 }

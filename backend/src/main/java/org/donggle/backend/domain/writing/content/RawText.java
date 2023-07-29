@@ -37,4 +37,11 @@ public class RawText {
     public int hashCode() {
         return Objects.hash(rawText);
     }
+
+    @Override
+    public String toString() {
+        return "RawText{" +
+                "rawText='" + rawText + '\'' +
+                '}';
+    }
 }

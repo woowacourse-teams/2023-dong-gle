@@ -35,4 +35,11 @@ public class ImageUrl {
     public int hashCode() {
         return Objects.hash(imageUrl);
     }
+
+    @Override
+    public String toString() {
+        return "ImageUrl{" +
+                "imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

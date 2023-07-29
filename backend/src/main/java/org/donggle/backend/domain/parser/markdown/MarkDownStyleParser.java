@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.parser.markdown;
 
 import org.donggle.backend.domain.writing.Style;
-import org.donggle.backend.domain.writing.StyleIndex;
+import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 
 import java.util.ArrayList;
@@ -33,14 +33,14 @@ public class MarkDownStyleParser {
 
                         final int startIndex = removedStyleTypeText.indexOf(caption, currentIndex);
                         final int endIndex = startIndex + matchedText.length() - 1;
-                        final Style style = new Style(new StyleIndex(startIndex), new StyleIndex(endIndex), styleType);
+                        final Style style = new Style(new StyleRange(startIndex, endIndex), styleType);
                         styles.add(style);
                         currentIndex = startIndex + 1;
                         matchedText = url;
                     }
                     final int startIndex = removedStyleTypeText.indexOf(matchedText, currentIndex);
                     final int endIndex = startIndex + matchedText.length() - 1;
-                    final Style style = new Style(new StyleIndex(startIndex), new StyleIndex(endIndex), styleType);
+                    final Style style = new Style(new StyleRange(startIndex, endIndex), styleType);
                     styles.add(style);
                     currentIndex = startIndex + 1;
                 }

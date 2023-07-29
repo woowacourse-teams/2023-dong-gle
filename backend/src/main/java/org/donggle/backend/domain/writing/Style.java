@@ -1,7 +1,5 @@
 package org.donggle.backend.domain.writing;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,32 +23,27 @@ public class Style extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Embedded
-    @AttributeOverride(name = "index", column = @Column(name = "start_index"))
-    private StyleIndex startIndex;
-    @Embedded
-    @AttributeOverride(name = "index", column = @Column(name = "end_index"))
-    private StyleIndex endIndex;
+    private StyleRange styleRange;
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private StyleType styleType;
 
-    public Style(final StyleIndex startIndex, final StyleIndex endIndex, final StyleType styleType) {
-        this(null, startIndex, endIndex, styleType);
+    public Style(final StyleRange styleRange, final StyleType styleType) {
+        this(null, styleRange, styleType);
     }
 
-    public Style(final Long id, final StyleIndex startIndex, final StyleIndex endIndex, final StyleType styleType) {
+    public Style(final Long id, final StyleRange styleRange, final StyleType styleType) {
         this.id = id;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
+        this.styleRange = styleRange;
         this.styleType = styleType;
     }
 
     public int getStartIndexValue() {
-        return this.startIndex.getIndex();
+        return styleRange.getStartIndex();
     }
 
     public int getEndIndexValue() {
-        return this.endIndex.getIndex();
+        return styleRange.getEndIndex();
     }
 
     @Override
@@ -72,6 +65,10 @@ public class Style extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Style{" + "startIndex=" + startIndex + ", endIndex=" + endIndex + ", styleType=" + styleType + '}';
+        return "Style{" +
+                "id=" + id +
+                ", styleRange=" + styleRange +
+                ", styleType=" + styleType +
+                '}';
     }
 }

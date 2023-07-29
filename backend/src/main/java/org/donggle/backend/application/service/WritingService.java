@@ -60,9 +60,10 @@ public class WritingService {
 
         //TODO : CASCADE 추가
         final List<Content> contents = markDownParser.parse(originalFileText);
-        for (final Content content : contents) {
-            blockRepository.save(new Block(savedWriting, content));
-        }
+        final List<Block> blocks = contents.stream()
+                .map(content -> new Block(savedWriting, content))
+                .toList();
+        blockRepository.saveAll(blocks);
 
         return savedWriting.getId();
     }

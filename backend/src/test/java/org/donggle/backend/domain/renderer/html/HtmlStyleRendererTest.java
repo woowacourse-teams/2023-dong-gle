@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.renderer.html;
 
 import org.donggle.backend.domain.writing.Style;
-import org.donggle.backend.domain.writing.StyleIndex;
+import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ class HtmlStyleRendererTest {
     void renderBold() {
         //given
         String rawText = "안녕하세요 동글입니다.";
-        styles.add(new Style(new StyleIndex(0), new StyleIndex(5), StyleType.BOLD));
+        styles.add(new Style(new StyleRange(0, 5), StyleType.BOLD));
 
         //when
         String result = htmlStyleRenderer.render(rawText, styles);
@@ -42,7 +42,7 @@ class HtmlStyleRendererTest {
     void renderItalic() {
         //given
         String rawText = "안녕하세요 동글입니다.";
-        styles.add(new Style(new StyleIndex(3), new StyleIndex(9), StyleType.ITALIC));
+        styles.add(new Style(new StyleRange(3, 9), StyleType.ITALIC));
 
         //when
         String result = htmlStyleRenderer.render(rawText, styles);
@@ -57,7 +57,7 @@ class HtmlStyleRendererTest {
     void renderCode() {
         //given
         String rawText = "안녕하세요 동글입니다.";
-        styles.add(new Style(new StyleIndex(2), new StyleIndex(5), StyleType.CODE));
+        styles.add(new Style(new StyleRange(2, 5), StyleType.CODE));
 
         //when
         String result = htmlStyleRenderer.render(rawText, styles);
@@ -73,9 +73,9 @@ class HtmlStyleRendererTest {
         //given
         String rawText = "안녕하세요 동글입니다.";
         List<Style> styles = new ArrayList<>();
-        styles.add(new Style(new StyleIndex(0), new StyleIndex(5), StyleType.BOLD));
-        styles.add(new Style(new StyleIndex(3), new StyleIndex(5), StyleType.CODE));
-        styles.add(new Style(new StyleIndex(7), new StyleIndex(9), StyleType.ITALIC));
+        styles.add(new Style(new StyleRange(0, 5), StyleType.BOLD));
+        styles.add(new Style(new StyleRange(3, 5), StyleType.CODE));
+        styles.add(new Style(new StyleRange(7, 9), StyleType.ITALIC));
 
         //when
         String result = htmlStyleRenderer.render(rawText, styles);

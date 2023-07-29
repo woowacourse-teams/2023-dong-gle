@@ -35,4 +35,11 @@ public class ImageCaption {
     public int hashCode() {
         return Objects.hash(imageCaption);
     }
+
+    @Override
+    public String toString() {
+        return "ImageCaption{" +
+                "imageCaption='" + imageCaption + '\'' +
+                '}';
+    }
 }

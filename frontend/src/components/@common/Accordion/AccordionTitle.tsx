@@ -6,29 +6,31 @@ type Props = {
   isOpen?: boolean;
   onClickIcon?: () => void;
   onClick?: () => void;
-} & ComponentPropsWithoutRef<'button'>;
+} & ComponentPropsWithoutRef<'div'>;
 
 const AccordionTitle = ({ isOpen = false, onClickIcon, onClick, children }: Props) => {
   const togglePanel = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     if (onClickIcon) onClickIcon();
+
+    if (onClick) onClick();
   };
 
   return (
-    <S.Button onClick={onClick}>
+    <S.Container>
       <S.IconButton isOpen={isOpen} onClick={togglePanel}>
         <ArrowRightIcon width={8} height={14} />
       </S.IconButton>
       {children}
-    </S.Button>
+    </S.Container>
   );
 };
 
 export default AccordionTitle;
 
 const S = {
-  Button: styled.button`
+  Container: styled.div`
     display: flex;
     align-items: center;
     gap: 0.8rem;

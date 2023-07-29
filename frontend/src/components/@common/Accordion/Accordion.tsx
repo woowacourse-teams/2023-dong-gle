@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { RuleSet, css, styled } from 'styled-components';
 import { TextAlign, Size, Variant } from 'types/components/common';
 import AccordionItem from './AccordionItem';

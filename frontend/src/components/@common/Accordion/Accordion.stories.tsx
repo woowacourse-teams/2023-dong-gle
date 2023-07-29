@@ -54,7 +54,9 @@ export const Variants: Story = {
               {AccordionValues.map((value) => {
                 return (
                   <Accordion.Item key={value.title}>
-                    <Accordion.Title>{value.title}</Accordion.Title>
+                    <Accordion.Title onClick={() => alert('카테고리 페이지로 이동')}>
+                      {value.title}
+                    </Accordion.Title>
                     <Accordion.Panel>{value.panel}</Accordion.Panel>
                   </Accordion.Item>
                 );

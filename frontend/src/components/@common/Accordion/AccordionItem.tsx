@@ -21,7 +21,7 @@ const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
         if (child.type === AccordionTitle) {
           return cloneElement(child as ReactElement, {
             isOpen,
-            onClick: () => isSetOpen(!isOpen),
+            onClickIcon: () => isSetOpen(!isOpen),
           });
         }
 

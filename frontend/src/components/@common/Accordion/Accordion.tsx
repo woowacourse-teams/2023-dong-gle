@@ -5,9 +5,6 @@ import AccordionItem from './AccordionItem';
 import AccordionTitle from './AccordionTitle';
 import AccordionPanel from './AccordionPanel';
 
-export type AccordionTitle = ReactNode;
-export type Panel = ReactNode;
-
 type Props = {
   variant?: Variant;
   size?: Size;

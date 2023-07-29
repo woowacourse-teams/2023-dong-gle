@@ -1,43 +1,79 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
+import { useCategoryName } from 'hooks/useCategoryName';
+import { useEraseCategory } from 'hooks/useEraseCategory';
+import { MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { CategoryResponse } from 'types/apis/category';
 
-type Props = {
-  numberOfWritings: number;
-  onPencilClick?: () => void;
-  onTrashcanClick: () => void;
-} & CategoryResponse;
+const Category = ({ id, categoryName }: CategoryResponse) => {
+  const {
+    name,
+    isRenaming,
+    setIsRenaming,
+    rename,
+    inputRef,
+    changeName,
+    escapeChangeName,
+    requestChangedName,
+  } = useCategoryName(id, categoryName);
+  const { eraseCategory } = useEraseCategory();
 
-const Category = ({ categoryName, numberOfWritings, onPencilClick, onTrashcanClick }: Props) => {
+  // const navigate = useNavigate();
+  const moveToWritingTablePage = () => {
+    // TODO: 쿠마의 네비게이션 훅으로 교체 예정
+    // navigate(`/writings/${id}`);
+  };
+
+  const handlePencilIconClick = (e: MouseEvent<SVGSVGElement>) => {
+    e.stopPropagation();
+
+    setIsRenaming(!isRenaming);
+  };
+
+  const handleTrashcanIconClick = (e: MouseEvent<SVGSVGElement>) => {
+    e.stopPropagation();
+
+    eraseCategory(id);
+  };
+
   return (
-    <S.Container>
-      <S.Text>{categoryName}</S.Text>
-      <S.RightContainer>
-        <S.IconContainer>
-          <PencilIcon onClick={onPencilClick} width={12} height={12} />
-          <DeleteIcon onClick={onTrashcanClick} width={12} height={12} />
-        </S.IconContainer>
-        <S.NumberText>{numberOfWritings}</S.NumberText>
-      </S.RightContainer>
-    </S.Container>
+    <S.CategoryButton onClick={moveToWritingTablePage}>
+      {isRenaming ? (
+        <S.Input
+          type='text'
+          value={rename}
+          ref={inputRef}
+          onChange={changeName}
+          onKeyDown={escapeChangeName}
+          onKeyUp={requestChangedName}
+        />
+      ) : (
+        <S.Text>{name}</S.Text>
+      )}
+      <S.IconContainer>
+        <PencilIcon onClick={handlePencilIconClick} width={12} height={12} />
+        <DeleteIcon onClick={handleTrashcanIconClick} width={12} height={12} />
+      </S.IconContainer>
+    </S.CategoryButton>
   );
 };
 
 export default Category;
 
 const S = {
-  Container: styled.div`
+  CategoryButton: styled.button`
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 22.4rem;
     height: 3.2rem;
     padding: 0.8rem;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1.4rem;
 
     &:hover {
-      & > div > div {
+      & > div {
         display: flex;
         gap: 0.4rem;
       }
@@ -52,10 +88,7 @@ const S = {
     text-overflow: ellipsis;
   `,
 
-  RightContainer: styled.div`
-    display: flex;
-    gap: 0.4rem;
-  `,
+  Input: styled.input``,
 
   IconContainer: styled.div`
     display: none;
@@ -63,12 +96,5 @@ const S = {
     & > svg {
       cursor: pointer;
     }
-  `,
-
-  NumberText: styled.p`
-    font-weight: 300;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   `,
 };

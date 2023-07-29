@@ -1,22 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Category from './Category';
-import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
+import { StoryContainer, StoryItemContainer } from 'styles/storybook';
 
 const meta: Meta<typeof Category> = {
   title: 'Category',
   component: Category,
   args: {
     categoryName: '프로젝트 기록',
-    numberOfWritings: 3,
   },
   argTypes: {
     categoryName: {
       description: '카테고리의 제목입니다.',
       control: { type: 'text' },
-    },
-    numberOfWritings: {
-      description: '카테고리에 있는 글의 개수입니다.',
-      control: { type: 'number' },
     },
   },
 };
@@ -42,12 +37,7 @@ export const LongCategoryName: Story = {
       <StoryContainer>
         {names.map((name) => (
           <StoryItemContainer>
-            <Category
-              categoryName={name}
-              numberOfWritings={0}
-              renameCategory={() => {}}
-              deleteCategory={() => {}}
-            />
+            <Category id={1} categoryName={name} />
           </StoryItemContainer>
         ))}
       </StoryContainer>
@@ -63,12 +53,7 @@ export const LongNumberOfWritings: Story = {
       <StoryContainer>
         {numbers.map((number) => (
           <StoryItemContainer>
-            <Category
-              categoryName='가나다라마바사아자차'
-              numberOfWritings={number}
-              renameCategory={() => {}}
-              deleteCategory={() => {}}
-            />
+            <Category id={1} categoryName='가나다라마바사아자차' />
           </StoryItemContainer>
         ))}
       </StoryContainer>

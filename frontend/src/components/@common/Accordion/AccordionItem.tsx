@@ -25,7 +25,7 @@ const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
         if (child.type === AccordionTitle) {
           return cloneElement(child as ReactElement, {
             isOpen,
-            onClickIcon: togglePanel,
+            onToggleIconClick: togglePanel,
           });
         }
 

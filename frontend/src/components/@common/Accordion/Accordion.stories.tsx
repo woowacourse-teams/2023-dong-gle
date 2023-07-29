@@ -4,18 +4,6 @@ import Accordion from './Accordion';
 import { Size } from 'constants/components/common';
 import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
 
-const ITEMS = [
-  { header: '제목1', body: <p>내용</p> },
-  { header: '제목2', body: <p>내용1 내용2</p> },
-  {
-    header: '제목3',
-    body: [<p key={1}>내용1</p>, <p key={2}>내용2</p>, <p key={3}>내용3</p>],
-  },
-];
-
-const headers = ITEMS.map((item) => item.header);
-const bodies = ITEMS.map((item) => item.body);
-
 const meta = {
   title: 'common/Accordion',
   args: {

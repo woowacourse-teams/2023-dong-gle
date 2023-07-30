@@ -5,7 +5,7 @@ import { PlusCircleIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import { useFileUpload } from 'hooks/useFileUpload';
 
-import { LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
+import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 
 export type PageContextType = {
@@ -66,8 +66,8 @@ const S = {
   `,
 
   Row: styled.div`
-    flex: 1;
     display: flex;
+    height: calc(100% - ${HEADER_STYLE.height});
     gap: ${LAYOUT_STYLE.gap};
   `,
 

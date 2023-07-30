@@ -9,6 +9,9 @@ import org.donggle.backend.application.service.medium.MediumApiService;
 import org.donggle.backend.application.service.medium.dto.request.MediumPublishRequest;
 import org.donggle.backend.application.service.medium.dto.response.MediumPublishResponse;
 import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.application.service.tistory.TistoryApiService;
+import org.donggle.backend.application.service.tistory.request.TistoryPublishRequest;
+import org.donggle.backend.application.service.tistory.response.TistoryPublishWritingResponse;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
@@ -30,6 +33,7 @@ public class PublishService {
     private final BlockRepository blockRepository;
     private final BlogWritingRepository blogWritingRepository;
     private final MediumApiService mediumApiService;
+    private final TistoryApiService tistoryApiService;
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final String blogName = publishRequest.publishTo();
@@ -53,7 +57,15 @@ public class PublishService {
                 blogWritingRepository.save(blogWriting);
             }
             case TISTORY -> {
-                //TODO : TISTORY API 연동
+                final TistoryPublishRequest request = TistoryPublishRequest.builder()
+                        .access_token("tistoryToken")
+                        .blogName("jeoninpyo726")
+                        .title(writing.getTitle())
+                        .content(content)
+                        .build();
+                final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
+                final BlogWriting blogWriting = new BlogWriting(blog, writing, response.tistory().item().getDateTime());
+                blogWritingRepository.save(blogWriting);
             }
         }
     }

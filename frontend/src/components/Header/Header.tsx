@@ -1,5 +1,6 @@
 import { SettingIcon, SidebarLeftIcon, SidebarRightIcon } from 'assets/icons';
 import { styled } from 'styled-components';
+import { HEADER_STYLE } from 'styles/layoutStyle';
 
 type Props = {
   toggleLeftSidebar: () => void;
@@ -37,7 +38,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     margin: 0 1rem;
-    height: 3rem;
+    height: ${HEADER_STYLE.height};
 
     .left {
       display: flex;

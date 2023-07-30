@@ -1,6 +1,10 @@
 import { RuleSet, css } from 'styled-components';
 import { theme } from './theme';
 
+export const HEADER_STYLE = {
+  height: '3rem',
+} as const;
+
 export const LAYOUT_STYLE = {
   padding: '1rem',
   border: `2px solid ${theme.color.gray13}`,

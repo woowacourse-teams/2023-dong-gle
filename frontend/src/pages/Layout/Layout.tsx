@@ -15,8 +15,8 @@ export type PageContextType = {
 };
 
 const Layout = () => {
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
-  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
   const { openFinder } = useFileUpload('.md');
 
   const toggleLeftSidebar = () => {
@@ -83,6 +83,7 @@ const S = {
   Main: styled.main`
     display: flex;
     justify-content: center;
+    width: 100%;
     border: ${LAYOUT_STYLE.border};
     border-radius: 8px;
     overflow-y: auto;

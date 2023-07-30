@@ -11,7 +11,7 @@ import { css, styled } from 'styled-components';
 import { RuleSet } from 'styled-components/dist/types';
 
 // Type
-export const Variant = ['primary', 'text'] as const;
+export const Variant = ['primary', 'text', 'secondary'] as const;
 export type Variant = (typeof Variant)[number];
 
 export const Size = ['small', 'medium', 'large'] as const;
@@ -84,6 +84,22 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
 
         &:focus {
           box-shadow: 0 0 0 3px ${theme.color.gray4};
+        }
+      `}
+    `,
+    /* TODO: secondary를 primary로 바꾸고, primary는 다른 이름으로 변경 */
+    secondary: css`
+      ${({ theme }) => css`
+        color: ${theme.color.gray1};
+        background-color: ${theme.color.primary};
+        outline: 1px solid ${theme.color.primary};
+
+        &:hover {
+          background-color: ${theme.color.primaryHover};
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 3px ${theme.color.primary};
         }
       `}
     `,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
@@ -8,16 +8,20 @@ import { useFileUpload } from 'hooks/useFileUpload';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 import { usePageNavigate } from 'hooks/usePageNavigate';
+import PublishingSection from 'components/PublishingSection/PublishingSection';
 
 export type PageContextType = {
-  isLeftSidebarOpen: boolean;
-  isRightSidebarOpen: boolean;
+  isLeftSidebarOpen?: boolean;
+  isRightSidebarOpen?: boolean;
+  setActiveWritingId?: Dispatch<SetStateAction<number>>;
 };
 
 const Layout = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
+  const [activeWritingId, setActiveWritingId] = useState<number>(-1);
   const { openFinder } = useFileUpload('.md');
+  const isWritingViewerActive = activeWritingId > 0;
 
   const toggleLeftSidebar = () => {
     setIsLeftSidebarOpen(!isLeftSidebarOpen);
@@ -28,12 +32,15 @@ const Layout = () => {
   };
 
   const { goWritingTablePage } = usePageNavigate();
-
   return (
     <S.Container>
-      <Header toggleLeftSidebar={toggleLeftSidebar} toggleRightSidebar={toggleRightSidebar} />
+      <Header
+        toggleLeftSidebar={toggleLeftSidebar}
+        toggleRightSidebar={toggleRightSidebar}
+        isWritingViewerActive={isWritingViewerActive}
+      />
       <S.Row>
-        <S.SidebarSection isLeftSidebarOpen={isLeftSidebarOpen}>
+        <S.LeftSidebarSection isLeftSidebarOpen={isLeftSidebarOpen}>
           <Button
             size={'large'}
             icon={<PlusCircleIcon />}
@@ -44,11 +51,23 @@ const Layout = () => {
             Add Post
           </Button>
           <Button onClick={() => goWritingTablePage(1)}>ㅋㅋ</Button>
-        </S.SidebarSection>
-        {/** 사이드바 컴포넌트 완성되면 대체 */}
+        </S.LeftSidebarSection>
         <S.Main>
-          <Outlet context={{ isLeftSidebarOpen, isRightSidebarOpen } satisfies PageContextType} />
+          <Outlet
+            context={
+              {
+                isLeftSidebarOpen,
+                isRightSidebarOpen,
+                setActiveWritingId,
+              } satisfies PageContextType
+            }
+          />
         </S.Main>
+        {isWritingViewerActive && (
+          <S.RightSidebarSection isRightSidebarOpen={isRightSidebarOpen}>
+            <PublishingSection writingId={activeWritingId} isPublished={false} />
+          </S.RightSidebarSection>
+        )}
       </S.Row>
     </S.Container>
   );
@@ -75,7 +94,7 @@ const S = {
     gap: ${LAYOUT_STYLE.gap};
   `,
 
-  SidebarSection: styled.section<{ isLeftSidebarOpen: boolean }>`
+  LeftSidebarSection: styled.section<{ isLeftSidebarOpen: boolean }>`
     ${sidebarStyle}
     display: ${({ isLeftSidebarOpen }) => !isLeftSidebarOpen && 'none'};
   `,
@@ -87,5 +106,10 @@ const S = {
     border: ${LAYOUT_STYLE.border};
     border-radius: 8px;
     overflow-y: auto;
+  `,
+
+  RightSidebarSection: styled.section<Pick<PageContextType, 'isRightSidebarOpen'>>`
+    ${sidebarStyle}
+    display: ${({ isRightSidebarOpen }) => !isRightSidebarOpen && 'none'};
   `,
 };

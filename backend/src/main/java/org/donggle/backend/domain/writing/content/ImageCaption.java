@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing.content;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageCaption {
+    @Column(nullable = false)
     private String imageCaption;
 
     public ImageCaption(final String imageCaption) {
@@ -32,5 +34,12 @@ public class ImageCaption {
     @Override
     public int hashCode() {
         return Objects.hash(imageCaption);
+    }
+
+    @Override
+    public String toString() {
+        return "ImageCaption{" +
+                "imageCaption='" + imageCaption + '\'' +
+                '}';
     }
 }

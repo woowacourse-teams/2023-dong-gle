@@ -1,11 +1,13 @@
 package org.donggle.backend.domain.parser.markdown;
 
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class MarkDownStyleParser {
@@ -31,14 +33,14 @@ public class MarkDownStyleParser {
 
                         final int startIndex = removedStyleTypeText.indexOf(caption, currentIndex);
                         final int endIndex = startIndex + matchedText.length() - 1;
-                        final Style style = new Style(startIndex, endIndex, styleType);
+                        final Style style = new Style(new StyleRange(startIndex, endIndex), styleType);
                         styles.add(style);
                         currentIndex = startIndex + 1;
                         matchedText = url;
                     }
                     final int startIndex = removedStyleTypeText.indexOf(matchedText, currentIndex);
                     final int endIndex = startIndex + matchedText.length() - 1;
-                    final Style style = new Style(startIndex, endIndex, styleType);
+                    final Style style = new Style(new StyleRange(startIndex, endIndex), styleType);
                     styles.add(style);
                     currentIndex = startIndex + 1;
                 }
@@ -87,13 +89,12 @@ public class MarkDownStyleParser {
 
     private void replaceAndAppend(final Matcher matcher, final StringBuilder textBuilder, final StyleType styleType) {
         String matchedText;
-        switch (styleType) {
-            case LINK -> {
-                final String caption = matcher.group(CAPTION_GROUP_INDEX);
-                final String url = matcher.group(URL_GROUP_INDEX);
-                matchedText = caption + url;
-            }
-            default -> matchedText = matcher.group(INNER_GROUP_INDEX);
+        if (Objects.requireNonNull(styleType) == StyleType.LINK) {
+            final String caption = matcher.group(CAPTION_GROUP_INDEX);
+            final String url = matcher.group(URL_GROUP_INDEX);
+            matchedText = caption + url;
+        } else {
+            matchedText = matcher.group(INNER_GROUP_INDEX);
         }
 
         if (!matchedText.isEmpty()) {

@@ -20,8 +20,8 @@ public class HtmlStyleRenderer {
     private void createTags(final List<Style> styles, final Map<Integer, List<String>> startTags, final Map<Integer, List<String>> endTags) {
         for (final Style style : styles) {
             final HtmlStyleType htmlStyleType = HtmlStyleType.findByStyleType(style.getStyleType());
-            final int startIndex = style.getStartIndex();
-            final int endIndex = style.getEndIndex();
+            final int startIndex = style.getStartIndexValue();
+            final int endIndex = style.getEndIndexValue();
 
             createStyleTag(startTags, htmlStyleType.getStartTag(), startIndex);
             createStyleTag(endTags, htmlStyleType.getEndTag(), endIndex);

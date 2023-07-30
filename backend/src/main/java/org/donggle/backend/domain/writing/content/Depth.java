@@ -11,12 +11,22 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageUrl {
-    @Column(nullable = false)
-    private String imageUrl;
+public class Depth {
+    public static final int INITIAL_VALUE = 0;
 
-    public ImageUrl(final String imageUrl) {
-        this.imageUrl = imageUrl;
+    @Column(nullable = false)
+    private int depth;
+
+    private Depth(final int depth) {
+        this.depth = depth;
+    }
+
+    public static Depth empty() {
+        return new Depth(INITIAL_VALUE);
+    }
+
+    public static Depth from(final int depth) {
+        return new Depth(depth);
     }
 
     @Override
@@ -27,19 +37,19 @@ public class ImageUrl {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ImageUrl imageUrl1 = (ImageUrl) o;
-        return Objects.equals(imageUrl, imageUrl1.imageUrl);
+        final Depth depth1 = (Depth) o;
+        return depth == depth1.depth;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imageUrl);
+        return Objects.hash(depth);
     }
 
     @Override
     public String toString() {
-        return "ImageUrl{" +
-                "imageUrl='" + imageUrl + '\'' +
+        return "Depth{" +
+                "depth=" + depth +
                 '}';
     }
 }

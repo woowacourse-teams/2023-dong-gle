@@ -8,10 +8,9 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@MappedSuperclass
 @Getter
+@MappedSuperclass
 public abstract class BaseEntity {
-
     @NotNull
     @Column(updatable = false)
     private LocalDateTime createdAt;

@@ -12,8 +12,6 @@ import org.donggle.backend.domain.writing.BlockType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageContent extends Content {
-    private static final int DEFAULT_DEPTH = 0;
-
     @NotNull
     @Embedded
     private ImageUrl imageUrl;
@@ -22,7 +20,7 @@ public class ImageContent extends Content {
     private ImageCaption imageCaption;
 
     public ImageContent(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
-        super(DEFAULT_DEPTH, blockType);
+        super(Depth.empty(), blockType);
         this.imageUrl = imageUrl;
         this.imageCaption = imageCaption;
     }
@@ -33,5 +31,13 @@ public class ImageContent extends Content {
 
     public String getImageCaptionValue() {
         return imageCaption.getImageCaption();
+    }
+
+    @Override
+    public String toString() {
+        return "ImageContent{" +
+                "imageUrl=" + imageUrl +
+                ", imageCaption=" + imageCaption +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,12 +11,12 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageUrl {
-    @Column(nullable = false)
-    private String imageUrl;
+public class MemberName {
+    @Column(length = 20, nullable = false)
+    private String name;
 
-    public ImageUrl(final String imageUrl) {
-        this.imageUrl = imageUrl;
+    public MemberName(final String name) {
+        this.name = name;
     }
 
     @Override
@@ -27,19 +27,19 @@ public class ImageUrl {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ImageUrl imageUrl1 = (ImageUrl) o;
-        return Objects.equals(imageUrl, imageUrl1.imageUrl);
+        final MemberName that = (MemberName) o;
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imageUrl);
+        return Objects.hash(name);
     }
 
     @Override
     public String toString() {
-        return "ImageUrl{" +
-                "imageUrl='" + imageUrl + '\'' +
+        return "MemberName{" +
+                "name='" + name + '\'' +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing.content;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
 import lombok.AccessLevel;
@@ -13,10 +14,15 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RawText {
     @Lob
+    @Column(nullable = false)
     private String rawText;
 
-    public RawText(final String rawText) {
+    private RawText(final String rawText) {
         this.rawText = rawText;
+    }
+
+    public static RawText from(final String rawText) {
+        return new RawText(rawText);
     }
 
     @Override
@@ -34,5 +40,12 @@ public class RawText {
     @Override
     public int hashCode() {
         return Objects.hash(rawText);
+    }
+
+    @Override
+    public String toString() {
+        return "RawText{" +
+                "rawText='" + rawText + '\'' +
+                '}';
     }
 }

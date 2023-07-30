@@ -12,7 +12,7 @@ const WritingPage = () => {
   // TODO: getWritingProperties() 실행
 
   return (
-    <S.Container>
+    <>
       <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
         <WritingViewer writingId={Number(writingId)} />
       </S.Article>
@@ -20,25 +20,15 @@ const WritingPage = () => {
         <PublishingSection writingId={Number(writingId)} isPublished={false} />
       </S.SidebarSection>
       {/** 사이드바 컴포넌트 완성되면 대체 */}
-    </S.Container>
+    </>
   );
 };
 
 export default WritingPage;
 
 const S = {
-  Container: styled.div`
-    display: flex;
-    gap: ${LAYOUT_STYLE.gap};
-    height: 100%;
-  `,
-
   Article: styled.article<PageContextType>`
-    ${({ isLeftSidebarOpen, isRightSidebarOpen }) =>
-      genMainPageWidth(isLeftSidebarOpen, isRightSidebarOpen)};
-    flex: 1;
-    border: ${LAYOUT_STYLE.border};
-    border-radius: 8px;
+    width: 90%;
 
     background-color: ${({ theme }) => theme.color.gray1};
   `,

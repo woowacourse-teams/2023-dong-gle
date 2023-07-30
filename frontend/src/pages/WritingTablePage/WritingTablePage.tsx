@@ -16,30 +16,18 @@ const WritingTablePage = () => {
   });
 
   return (
-    <S.Container>
-      <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
-        <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-        <WritingTable writings={data?.writings ?? []} />
-      </S.Article>
-    </S.Container>
+    <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
+      <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
+      <WritingTable writings={data?.writings ?? []} />
+    </S.Article>
   );
 };
 
 export default WritingTablePage;
 
 const S = {
-  Container: styled.div`
-    display: flex;
-    gap: ${LAYOUT_STYLE.gap};
-    height: 100%;
-  `,
-
   Article: styled.article<PageContextType>`
-    ${({ isLeftSidebarOpen, isRightSidebarOpen }) =>
-      genMainPageWidth(isLeftSidebarOpen, isRightSidebarOpen)};
-    flex: 1;
-    border: ${LAYOUT_STYLE.border};
-    border-radius: 8px;
+    width: 90%;
     padding: 8rem 4rem;
 
     background-color: ${({ theme }) => theme.color.gray1};

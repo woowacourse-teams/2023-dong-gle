@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import { ThemeProvider } from 'styled-components';
+import { withRouter } from 'storybook-addon-react-router-v6';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { handlers } from '../src/mocks/handlers';
 
@@ -35,4 +36,5 @@ export const decorators = [
       <Story />
     </ThemeProvider>
   ),
+  withRouter,
 ];

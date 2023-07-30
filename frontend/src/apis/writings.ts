@@ -26,3 +26,7 @@ export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
       'Content-Type': 'application/json',
     },
   });
+
+// 카테고리 글 상세 목록 조회 : GET
+export const getCategoryIdWritingList = (categoryId: number) =>
+  http.get(`${writingURL}?categoryId=${categoryId}`);

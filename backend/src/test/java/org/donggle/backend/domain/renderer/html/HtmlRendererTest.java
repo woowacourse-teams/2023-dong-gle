@@ -5,7 +5,9 @@ import org.donggle.backend.domain.writing.Block;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
+import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.RawText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +52,7 @@ class HtmlRendererTest {
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.HEADING6, "heading6", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.BLOCKQUOTE, "blockquote", new ArrayList<>())));
         blocks.add(new Block(new Writing(member, "title"), new NormalContent(0, BlockType.PARAGRAPH, "paragraph", new ArrayList<>())));
-        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "public void(){}", "java")));
+        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("public void(){}"), new Language("java"))));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -162,7 +164,7 @@ class HtmlRendererTest {
     @DisplayName("CodeBlock 렌더링")
     void renderCodeBlock() {
         //given
-        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(0, BlockType.CODE_BLOCK, "public void(){}", "java")));
+        blocks.add(new Block(new Writing(member, "title"), new CodeBlockContent(BlockType.CODE_BLOCK, new RawText("public void(){}"), new Language("java"))));
 
         //when
         final String result = htmlRenderer.render(blocks);

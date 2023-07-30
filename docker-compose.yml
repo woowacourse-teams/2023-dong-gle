@@ -1,14 +1,20 @@
 version: "3"
 services:
   frontend:
-    image: ghcr.io/echo724/dong-gle-frontend-dev
+    image: ${DOCKER_USERNAME}/dong-gle-frontend
     expose:
       - 3000
 
   backend:
-    image: ghcr.io/echo724/dong-gle-backend-dev
+    image: ${DOCKER_USERNAME}/dong-gle-backend
     expose:
       - 8080
+    environment:
+      - SPRING_PROFILES_ACTIVE
+      - DB_URL
+      - DB_USERNAME
+      - DB_PASSWORD
+      - MEDIUM_TOKEN
 
   nginx:
     container_name: nginx

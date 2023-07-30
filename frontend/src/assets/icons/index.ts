@@ -6,3 +6,4 @@ export { ReactComponent as StatsIcon } from './stats.svg';
 export { ReactComponent as CheckSymbol } from './check-symbol.svg';
 export { ReactComponent as TistoryLogoIcon } from './tistory-logo.svg';
 export { ReactComponent as MediumLogoIcon } from './medium-logo.svg';
+export { ReactComponent as CloseRounded } from './close-rounded.svg';

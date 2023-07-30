@@ -18,9 +18,8 @@ public enum BlockType {
     UNORDERED_LIST("^-{1}\\ "),
     ORDERED_LIST("^[1-9][0-9]{0,4}\\.\\ "),
     CODE_BLOCK("^```([a-zA-Z]*)\\n([\\s\\S]*?)\\n```$"),
+    IMAGE("\\!\\[(.*)\\]\\((.*)\\)"),
     PARAGRAPH("");
-    //TODO image type regex 넣기
-    //    IMAGE(""),
 
     private final Pattern pattern;
 

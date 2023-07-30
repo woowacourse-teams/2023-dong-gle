@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs: 
-  be-build:
+  build:
     runs-on: ubuntu-latest
     steps:
     ## jdk setting
@@ -35,25 +35,20 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-
 
-    ## create application-dev.properties
-    - name: make application-dev.yml
-      run: |
-        cd ./backend/src/main/resources
-        touch ./application-dev.yml
-        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
-      shell: bash
-
     ## gradle build
+    - name: Test with Gradle
+      run: |
+        cd ./backend
+        ./gradlew test
+    
     - name: Build with Gradle
       run: |
         cd ./backend
-        chmod +x ./gradlew
         ./gradlew build -x test
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
-        registry: ${{ secrets.DOCKER_REPO }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -64,23 +59,12 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: ./backend
-        file: ./backend/Dockerfile-dev
+        file: ./backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-dev:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend:latest
+        platforms: linux/arm64
     
   deploy:
-    runs-on: [self-hosted,dev]
-    needs: be-build
-    steps:
-    - name: change permission
-      run: |
-        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
-
-    ## deploy to production
-    - name: Deploy to prod
-      working-directory: /home/ubuntu/actions-runner/_work/2023-dong-gle/2023-dong-gle
-      run: |
-        sudo docker login ${{ secrets.DOCKER_REPO }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker rm -f $(sudo docker -qa)
-        sudo docker compose -f docker-compose-dev.yml pull
-        sudo docker compose -f docker-compose-dev.yml up -d
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

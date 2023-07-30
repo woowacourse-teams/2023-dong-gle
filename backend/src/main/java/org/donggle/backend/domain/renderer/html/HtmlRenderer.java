@@ -50,7 +50,7 @@ public class HtmlRenderer {
                     htmlText = renderNormalContent((NormalContent) content);
             case ORDERED_LIST, UNORDERED_LIST -> subContent.add((NormalContent) content);
             case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlockContent) content);
-            //TODO: IMAGE
+            case IMAGE -> htmlText = renderImage((ImageContent) content);
         }
         return htmlText;
     }
@@ -69,8 +69,8 @@ public class HtmlRenderer {
 
     private String renderCodeBlock(final CodeBlockContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String language = content.getLanguage();
-        final String rawText = content.getRawText();
+        final String language = content.getLanguageValue();
+        final String rawText = content.getRawTextValue();
 
         final String startTag = htmlType.getStartTag()
                 .replace("${language}", language);
@@ -137,8 +137,8 @@ public class HtmlRenderer {
 
     private String renderImage(final ImageContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String caption = content.getCaption();
-        final String url = content.getUrl();
+        final String caption = content.getImageCaptionValue();
+        final String url = content.getImageUrlValue();
 
         final String startTag = htmlType.getStartTag()
                 .replace("caption", caption)

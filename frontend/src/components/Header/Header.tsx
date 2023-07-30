@@ -10,23 +10,17 @@ type Props = {
 const Header = ({ toggleLeftSidebar, toggleRightSidebar }: Props) => {
   return (
     <S.Container>
-      <div className='left'>
+      <S.LeftIconsBox>
         <SettingIcon width='2.4rem' height='2.4rem' className='icon' />
-        <SidebarLeftIcon
-          width='2.4rem'
-          height='2.4rem'
-          className='icon'
-          onClick={toggleLeftSidebar}
-        />
-      </div>
-      <div className='right'>
-        <SidebarRightIcon
-          width='2.4rem'
-          height='2.4rem'
-          className='icon'
-          onClick={toggleRightSidebar}
-        />
-      </div>
+        <button onClick={toggleLeftSidebar}>
+          <SidebarLeftIcon width='2.4rem' height='2.4rem' className='icon' />
+        </button>
+      </S.LeftIconsBox>
+      <S.RightIconsBox>
+        <button onClick={toggleRightSidebar}>
+          <SidebarRightIcon width='2.4rem' height='2.4rem' className='icon' />
+        </button>
+      </S.RightIconsBox>
     </S.Container>
   );
 };
@@ -37,16 +31,19 @@ const S = {
   Container: styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 0 1rem;
     height: ${HEADER_STYLE.height};
-
-    .left {
-      display: flex;
-      gap: 0.8rem;
-    }
 
     .icon {
       cursor: pointer;
     }
   `,
+
+  LeftIconsBox: styled.div`
+    display: flex;
+    gap: 0.8rem;
+  `,
+
+  RightIconsBox: styled.div``,
 };

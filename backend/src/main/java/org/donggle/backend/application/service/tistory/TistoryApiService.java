@@ -61,15 +61,8 @@ public class TistoryApiService {
     }
 
     private void validateResponse(final TistoryResponse response) {
-        if (response instanceof TistoryPublishStatusResponse) {
-            if (((TistoryPublishStatusResponse) response).tistory().status() != OK) {
-                throw new IllegalArgumentException("블로그로 발행이 올바르게 되지 않았습니다.");
-            }
-        }
-        if (response instanceof TistoryPublishWritingResponse) {
-            if (((TistoryPublishWritingResponse) response).tistory().status() != OK) {
-                throw new IllegalArgumentException("블로그로 발행이 올바르게 되지 않았습니다.");
-            }
+        if (response.getStatus() != OK) {
+            throw new IllegalArgumentException("블로그로 발행이 올바르게 되지 않았습니다.");
         }
     }
 

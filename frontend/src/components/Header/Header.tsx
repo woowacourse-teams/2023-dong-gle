@@ -5,9 +5,10 @@ import { HEADER_STYLE } from 'styles/layoutStyle';
 type Props = {
   toggleLeftSidebar: () => void;
   toggleRightSidebar: () => void;
+  isWritingViewerActive: boolean;
 };
 
-const Header = ({ toggleLeftSidebar, toggleRightSidebar }: Props) => {
+const Header = ({ toggleLeftSidebar, toggleRightSidebar, isWritingViewerActive }: Props) => {
   return (
     <S.Container>
       <S.LeftIconsBox>
@@ -17,9 +18,11 @@ const Header = ({ toggleLeftSidebar, toggleRightSidebar }: Props) => {
         </button>
       </S.LeftIconsBox>
       <S.RightIconsBox>
-        <button onClick={toggleRightSidebar}>
-          <SidebarRightIcon width='2.4rem' height='2.4rem' className='icon' />
-        </button>
+        {isWritingViewerActive && (
+          <button onClick={toggleRightSidebar}>
+            <SidebarRightIcon width='2.4rem' height='2.4rem' className='icon' />
+          </button>
+        )}
       </S.RightIconsBox>
     </S.Container>
   );

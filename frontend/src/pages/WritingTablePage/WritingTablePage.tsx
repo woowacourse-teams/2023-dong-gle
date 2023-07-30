@@ -4,7 +4,7 @@ import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { PageContextType, usePageContext } from 'pages/Layout/Layout';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { LAYOUT_STYLE, genMainPageWidth, sidebarStyle } from 'styles/layoutStyle';
+import { sidebarStyle } from 'styles/layoutStyle';
 import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
 const WritingTablePage = () => {

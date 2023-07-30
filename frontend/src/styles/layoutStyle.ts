@@ -22,27 +22,3 @@ export const sidebarStyle = css`
   padding: 2rem;
   flex: 0 0 ${SIDEBAR_STYLE.width};
 `;
-
-export const genMainPageWidth = (
-  isLeftSidebarOpen: boolean,
-  isRightSidebarOpen: boolean,
-): RuleSet<object> => {
-  if (isLeftSidebarOpen === false && isRightSidebarOpen === false)
-    return css`
-      max-width: calc(100vw - (${LAYOUT_STYLE.padding}) * 2);
-    `;
-  if (
-    (isLeftSidebarOpen === false && isRightSidebarOpen === true) ||
-    (isLeftSidebarOpen === true && isRightSidebarOpen === false)
-  )
-    return css`
-      max-width: calc(
-        100vw - (${LAYOUT_STYLE.padding}) * 2 - (${SIDEBAR_STYLE.width}) - (${LAYOUT_STYLE.gap})
-      );
-    `;
-  return css`
-    max-width: calc(
-      100vw - (${SIDEBAR_STYLE.width} + ${LAYOUT_STYLE.padding} + ${LAYOUT_STYLE.gap}) * 2
-    );
-  `;
-};

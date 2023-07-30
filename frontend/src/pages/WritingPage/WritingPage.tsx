@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { RuleSet, css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import WritingViewer from 'components/WritingViewer/WritingViewer';
-import { LAYOUT_STYLE, SIDEBAR_STYLE, genMainPageWidth, sidebarStyle } from 'styles/layoutStyle';
+import { sidebarStyle } from 'styles/layoutStyle';
 import { PageContextType, usePageContext } from 'pages/Layout/Layout';
 
 const WritingPage = () => {

@@ -7,6 +7,7 @@ import { useFileUpload } from 'hooks/useFileUpload';
 
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 
 export type PageContextType = {
   isLeftSidebarOpen: boolean;
@@ -26,6 +27,8 @@ const Layout = () => {
     setIsRightSidebarOpen(!isRightSidebarOpen);
   };
 
+  const { goWritingTablePage } = usePageNavigate();
+
   return (
     <S.Container>
       <Header toggleLeftSidebar={toggleLeftSidebar} toggleRightSidebar={toggleRightSidebar} />
@@ -40,6 +43,7 @@ const Layout = () => {
           >
             Add Post
           </Button>
+          <Button onClick={() => goWritingTablePage(1)}>ㅋㅋ</Button>
         </S.SidebarSection>
         {/** 사이드바 컴포넌트 완성되면 대체 */}
         <S.Main>
@@ -77,6 +81,10 @@ const S = {
   `,
 
   Main: styled.main`
-    flex: 1;
+    display: flex;
+    justify-content: center;
+    border: ${LAYOUT_STYLE.border};
+    border-radius: 8px;
+    overflow-y: auto;
   `,
 };

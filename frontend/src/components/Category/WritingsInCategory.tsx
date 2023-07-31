@@ -1,4 +1,5 @@
 import { WritingIcon } from 'assets/icons';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { WritingInCategory } from 'types/apis/category';
@@ -8,18 +9,13 @@ type Props = {
 };
 
 const WritingsInCategory = ({ writings }: Props) => {
-  // const navigate = useNavigate();
-
-  const moveToWritingPage = (writingId: number) => {
-    // TODO: 쿠마의 네비게이션 훅으로 교체 예정
-    // navigate(`/writing/${writingId}`);
-  };
+  const { goWritingPage } = usePageNavigate();
 
   return (
     <S.List>
       {writings.map((writing) => (
         <S.Item>
-          <S.Button onClick={() => moveToWritingPage(writing.id)}>
+          <S.Button onClick={() => goWritingPage(writing.id)}>
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />
             </S.IconWrapper>

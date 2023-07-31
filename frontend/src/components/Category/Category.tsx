@@ -1,8 +1,8 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
 import { useCategoryName } from 'hooks/useCategoryName';
 import { useEraseCategory } from 'hooks/useEraseCategory';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { MouseEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { CategoryResponse } from 'types/apis/category';
 
@@ -18,12 +18,7 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
     requestChangedName,
   } = useCategoryName(id, categoryName);
   const { eraseCategory } = useEraseCategory();
-
-  // const navigate = useNavigate();
-  const moveToWritingTablePage = () => {
-    // TODO: 쿠마의 네비게이션 훅으로 교체 예정
-    // navigate(`/writings/${id}`);
-  };
+  const { goWritingTablePage } = usePageNavigate();
 
   const handlePencilIconClick = (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
@@ -38,7 +33,7 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
   };
 
   return (
-    <S.CategoryButton onClick={moveToWritingTablePage}>
+    <S.CategoryButton onClick={() => goWritingTablePage(id)}>
       {isRenaming ? (
         <S.Input
           type='text'

@@ -19,11 +19,9 @@ const WritingPage = () => {
   // TODO: getWritingProperties() 실행
 
   return (
-    <>
-      <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
-        <WritingViewer writingId={Number(writingId)} />
-      </S.Article>
-    </>
+    <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
+      <WritingViewer writingId={Number(writingId)} />
+    </S.Article>
   );
 };
 

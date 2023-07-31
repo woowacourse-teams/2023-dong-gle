@@ -58,8 +58,12 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
         <S.Text>{name}</S.Text>
       )}
       <S.IconContainer>
-        <PencilIcon onClick={handlePencilIconClick} width={12} height={12} />
-        <DeleteIcon onClick={handleTrashcanIconClick} width={12} height={12} />
+        <button>
+          <PencilIcon onClick={handlePencilIconClick} width={12} height={12} />
+        </button>
+        <button>
+          <DeleteIcon onClick={handleTrashcanIconClick} width={12} height={12} />
+        </button>
       </S.IconContainer>
     </S.CategoryButton>
   );
@@ -79,16 +83,19 @@ const S = {
     font-size: 1.4rem;
 
     &:hover {
-      & > div {
-        display: flex;
-        gap: 0.4rem;
+      div {
+        display: inline-flex;
+        gap: 0.8rem;
       }
     }
   `,
 
   Text: styled.p`
-    font-weight: 700;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
 
+    font-weight: 700;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -99,7 +106,7 @@ const S = {
   IconContainer: styled.div`
     display: none;
 
-    & > svg {
+    & > button {
       cursor: pointer;
     }
   `,

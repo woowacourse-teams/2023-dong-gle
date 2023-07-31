@@ -44,19 +44,3 @@ export const LongCategoryName: Story = {
     );
   },
 };
-
-export const LongNumberOfWritings: Story = {
-  render: () => {
-    const numbers = [1, 100, 10000, 1000000, 100000000, 10000000000, 100000000000000000000];
-
-    return (
-      <StoryContainer>
-        {numbers.map((number) => (
-          <StoryItemContainer>
-            <Category id={1} categoryName='가나다라마바사아자차' />
-          </StoryItemContainer>
-        ))}
-      </StoryContainer>
-    );
-  },
-};

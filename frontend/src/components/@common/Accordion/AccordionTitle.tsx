@@ -25,7 +25,7 @@ const AccordionTitle = ({
   };
 
   return (
-    <S.Container onClick={() => onTitleClick}>
+    <S.Container onClick={onTitleClick}>
       <S.IconButton $isOpen={isOpen} onClick={togglePanel}>
         <ArrowRightIcon width={8} height={14} />
       </S.IconButton>

@@ -11,10 +11,10 @@ import AccordionTitle from './AccordionTitle';
 import AccordionPanel from './AccordionPanel';
 
 const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
-  const [isOpen, isSetOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const togglePanel = () => {
-    isSetOpen(!isOpen);
+    setIsOpen(!isOpen);
   };
 
   return (

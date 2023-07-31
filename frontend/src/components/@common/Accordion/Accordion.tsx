@@ -23,28 +23,19 @@ Accordion.Item = AccordionItem;
 Accordion.Title = AccordionTitle;
 Accordion.Panel = AccordionPanel;
 
-const generateAccordionSize = (size: Required<Props>['size']): RuleSet<object> => {
-  const styles: Record<typeof size, ReturnType<typeof generateAccordionSize>> = {
+const genAccordionSize = (size: Required<Props>['size']): RuleSet<object> => {
+  const styles: Record<typeof size, ReturnType<typeof genAccordionSize>> = {
     small: css`
       width: 12rem;
-
-      * {
-        font-size: 1.2rem;
-      }
+      font-size: 1.2rem;
     `,
     medium: css`
       width: 24rem;
-
-      * {
-        font-size: 1.6rem;
-      }
+      font-size: 1.6rem;
     `,
     large: css`
       width: 36rem;
-
-      * {
-        font-size: 2rem;
-      }
+      font-size: 2rem;
     `,
   };
 
@@ -53,7 +44,7 @@ const generateAccordionSize = (size: Required<Props>['size']): RuleSet<object> =
 
 const S = {
   List: styled.ul<Pick<Props, 'size'>>`
-    ${({ size = 'medium' }) => generateAccordionSize(size)};
+    ${({ size = 'medium' }) => genAccordionSize(size)};
 
     display: flex;
     flex-direction: column;

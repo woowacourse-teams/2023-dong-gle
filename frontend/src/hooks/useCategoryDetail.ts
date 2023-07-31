@@ -3,13 +3,11 @@ import { useGetQuery } from './@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useWritingsInCategory = () => {
+export const useCategoryDetail = () => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
   const fetcher = useCallback(() => {
-    return categoryId !== null
-      ? getWritingsInCategory(categoryId)
-      : Promise.reject('No Category ID');
+    return categoryId ? getWritingsInCategory(categoryId) : Promise.reject('No Category ID');
   }, [categoryId]);
 
   const { data, getData } = useGetQuery<GetCategoryDetailsResponse>({
@@ -24,5 +22,5 @@ export const useWritingsInCategory = () => {
     setCategoryId(categoryId);
   };
 
-  return { getWritings, writings: data?.writings };
+  return { getWritings, categoryId: data?.id, writings: data?.writings };
 };

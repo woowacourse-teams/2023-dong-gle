@@ -1,14 +1,13 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { WritingInCategory } from 'types/apis/category';
+import { Writings } from 'types/apis/category';
 
 type Props = {
-  writings: WritingInCategory[];
+  writings: Writings[];
 };
 
-const WritingsInCategory = ({ writings }: Props) => {
+const Writings = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
 
   return (
@@ -27,7 +26,7 @@ const WritingsInCategory = ({ writings }: Props) => {
   );
 };
 
-export default WritingsInCategory;
+export default Writings;
 
 const S = {
   List: styled.ul`

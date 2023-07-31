@@ -2,11 +2,19 @@ export const categories = {
   categories: [
     {
       id: 1,
-      categoryName: '',
+      categoryName: '테스트',
     },
     {
       id: 2,
       categoryName: '우테코',
+    },
+    {
+      id: 3,
+      categoryName: '동글',
+    },
+    {
+      id: 4,
+      categoryName: '레벨 3 프로젝트 화이팅',
     },
   ],
 };

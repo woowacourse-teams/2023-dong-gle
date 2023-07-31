@@ -11,13 +11,13 @@ export type GetCategoriesResponse = {
   categories: CategoryResponse[];
 };
 
-export type WritingInCategory = {
+export type Writings = {
   id: number;
   title: string;
 };
 
 export type GetCategoryDetailsResponse = {
-  writings: WritingInCategory[];
+  writings: Writings[];
 } & CategoryResponse;
 
 export type PatchCategory = {

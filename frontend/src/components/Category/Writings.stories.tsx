@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import WritingsInCategory from './WritingsInCategory';
-import { StoryContainer, StoryItemContainer, StoryItemTitle } from 'styles/storybook';
+import Writings from './Writings';
 
-const meta: Meta<typeof WritingsInCategory> = {
-  title: 'WritingsInCategory',
-  component: WritingsInCategory,
+const meta: Meta<typeof Writings> = {
+  title: 'Writings',
+  component: Writings,
   args: {
     writings: [
       { id: 1, title: '동글' },

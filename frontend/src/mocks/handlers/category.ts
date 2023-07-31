@@ -22,9 +22,9 @@ export const categoryHandlers = [
   rest.get(`${categoryURL}/:categoryId`, (req, res, ctx) => {
     const categoryId = Number(req.params.categoryId);
 
-    if (categoryId !== 200) return res(ctx.delay(300), ctx.status(404));
+    if (categoryId !== 1) return res(ctx.delay(300), ctx.status(404));
 
-    return res(ctx.delay(300), ctx.status(200), ctx.json(writingsInCategory));
+    return res(ctx.json(writingsInCategory), ctx.delay(300), ctx.status(200));
   }),
 
   // 카테고리 이름 수정

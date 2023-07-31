@@ -1,19 +1,31 @@
-import Accordion from 'components/@common/Accordion/Accordion';
+// import Accordion from 'components/@common/Accordion/Accordion';
 import { useCategories } from 'hooks/useCategories';
 import { styled } from 'styled-components';
 import Category from './Category';
-import WritingsInCategory from './WritingsInCategory';
-import { useWritingsInCategory } from 'hooks/useWritingsInCategory';
+import WritingsInCategory from './Writings';
+import { useCategoryDetail } from 'hooks/useCategoryDetail';
+import Button from 'components/@common/Button/Button';
 
 const CategorySection = () => {
   const { categories } = useCategories();
-  const { getWritings, writings } = useWritingsInCategory();
+  const { categoryId, writings, getWritings } = useCategoryDetail();
 
   if (!categories) return null;
 
   return (
     <S.Section>
-      <Accordion>
+      {categories.map((category) => {
+        return (
+          <>
+            <Category id={category.id} categoryName={category.categoryName} />
+            <Button onClick={() => getWritings(category.id)}>글 목록 조회</Button>
+            {writings && categoryId === category.id ? (
+              <WritingsInCategory writings={writings} />
+            ) : null}
+          </>
+        );
+      })}
+      {/* <Accordion>
         {categories.map((category) => {
           return (
             <Accordion.Item>
@@ -26,7 +38,7 @@ const CategorySection = () => {
             </Accordion.Item>
           );
         })}
-      </Accordion>
+      </Accordion> */}
     </S.Section>
   );
 };

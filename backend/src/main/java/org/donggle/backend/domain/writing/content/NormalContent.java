@@ -2,7 +2,7 @@ package org.donggle.backend.domain.writing.content;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -18,17 +18,20 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NormalContent extends Content {
-    @Lob
     @NotNull
-    private String rawText;
-    @OneToMany(mappedBy = "normalContent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Style> styles = new ArrayList<>();
+    private RawText rawText;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "normal_content_id", updatable = false, nullable = false)
+    private List<Style> styles = new ArrayList<>();
 
-    public NormalContent(final int depth, final BlockType blockType, final String rawText, final List<Style> styles) {
+    public NormalContent(final Depth depth, final BlockType blockType, final RawText rawText, final List<Style> styles) {
         super(depth, blockType);
         this.rawText = rawText;
-        styles.forEach(style -> style.setNormalContent(this));
-        this.styles.addAll(styles);
+        this.styles = styles;
+    }
+
+    public String getRawTextValue() {
+        return this.rawText.getRawText();
     }
 
     @Override

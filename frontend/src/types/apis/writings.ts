@@ -23,3 +23,21 @@ export type PublishWritingArgs = {
   writingId: number;
   body: PublishWritingRequest;
 };
+
+export type PublishedDetail = {
+  blogName: Blog;
+  publishedAt: Date;
+};
+
+export type Writing = {
+  id: number;
+  title: string;
+  createdAt: Date;
+  publishedDetails: PublishedDetail[];
+};
+
+export type GetCategoryIdWritingListResponse = {
+  id: number;
+  categoryName: string;
+  writings: Writing[];
+};

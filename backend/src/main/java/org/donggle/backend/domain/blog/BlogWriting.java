@@ -10,14 +10,16 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.writing.Writing;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BlogWriting {
+public class BlogWriting extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,7 +37,24 @@ public class BlogWriting {
         this.publishedAt = publishedAt;
     }
 
-    public String getBlogName() {
+    public String getBlogTypeValue() {
         return blog.getBlogType().name();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final BlogWriting that = (BlogWriting) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

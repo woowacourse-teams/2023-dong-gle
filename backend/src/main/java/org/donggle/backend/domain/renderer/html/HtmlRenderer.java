@@ -50,15 +50,15 @@ public class HtmlRenderer {
                     htmlText = renderNormalContent((NormalContent) content);
             case ORDERED_LIST, UNORDERED_LIST -> subContent.add((NormalContent) content);
             case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlockContent) content);
-            //TODO: IMAGE
+            case IMAGE -> htmlText = renderImage((ImageContent) content);
         }
         return htmlText;
     }
 
     private String renderNormalContent(final NormalContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String depth = renderDepth(content.getDepth());
-        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        final String depth = renderDepth(content.getDepthValue());
+        final String rawText = htmlStyleRenderer.render(content.getRawTextValue(), content.getStyles());
 
         return htmlType.getStartTag() + depth + rawText + htmlType.getEndTag();
     }
@@ -69,8 +69,8 @@ public class HtmlRenderer {
 
     private String renderCodeBlock(final CodeBlockContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String language = content.getLanguage();
-        final String rawText = content.getRawText();
+        final String language = content.getLanguageValue();
+        final String rawText = content.getRawTextValue();
 
         final String startTag = htmlType.getStartTag()
                 .replace("${language}", language);
@@ -107,15 +107,15 @@ public class HtmlRenderer {
     }
 
     private String renderLine(final NormalContent content, final NormalContent nextContent) {
-        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        final String rawText = htmlStyleRenderer.render(content.getRawTextValue(), content.getStyles());
         final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag();
 
-        if (content.getDepth() > nextContent.getDepth()) {
+        if (content.getDepthValue() > nextContent.getDepthValue()) {
             final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
             return line + htmlType.getEndTag();
         }
 
-        if (content.getDepth() == nextContent.getDepth()) {
+        if (content.getDepthValue() == nextContent.getDepthValue()) {
             if (content.getBlockType().equals(nextContent.getBlockType())) {
                 return line;
             }
@@ -130,15 +130,15 @@ public class HtmlRenderer {
 
     private void addEndHtmlType(final NormalContent content, final StringBuilder result) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String rawText = htmlStyleRenderer.render(content.getRawText(), content.getStyles());
+        final String rawText = htmlStyleRenderer.render(content.getRawTextValue(), content.getStyles());
         final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
         result.append(line);
     }
 
     private String renderImage(final ImageContent content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
-        final String caption = content.getCaption();
-        final String url = content.getUrl();
+        final String caption = content.getImageCaptionValue();
+        final String url = content.getImageUrlValue();
 
         final String startTag = htmlType.getStartTag()
                 .replace("caption", caption)

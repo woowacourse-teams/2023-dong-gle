@@ -2,6 +2,7 @@ package org.donggle.backend.domain.parser;
 
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,16 +27,16 @@ class MarkDownStyleParserTest {
         //given
         final String input = "안`녕하**세요` 여**러분";
         final String originalText = "안녕하세요 여러분";
-        final Style codeStyle = new Style(1, 4, StyleType.CODE);
-        final Style boldStyle = new Style(3, 6, StyleType.BOLD);
+        final Style codeStyle = new Style(new StyleRange(1, 4), StyleType.CODE);
+        final Style boldStyle = new Style(new StyleRange(3, 6), StyleType.BOLD);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
 
         //then
         assertAll(
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(codeStyle),
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(boldStyle));
+                () -> assertThat(result.get(1)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(codeStyle),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(boldStyle));
     }
 
     @Test
@@ -44,16 +45,16 @@ class MarkDownStyleParserTest {
         //given
         final String input = "**안녕하**세요 **안녕하**세요";
         final String originalText = "안녕하세요 안녕하세요";
-        final Style codeStyle = new Style(0, 2, StyleType.BOLD);
-        final Style boldStyle = new Style(6, 8, StyleType.BOLD);
+        final Style codeStyle = new Style(new StyleRange(0, 2), StyleType.BOLD);
+        final Style boldStyle = new Style(new StyleRange(6, 8), StyleType.BOLD);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
 
         //then
         assertAll(
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(codeStyle),
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(boldStyle));
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(codeStyle),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(boldStyle));
     }
 
     @Test
@@ -68,5 +69,38 @@ class MarkDownStyleParserTest {
 
         //then
         assertThat(execute).isEqualTo(result);
+    }
+
+    @Test
+    @DisplayName("링크 스타일을 파싱하는 테스트")
+    void linkParser() {
+        //given
+        final String input = "[네이버](www.naver.com)";
+        final String expected = "네이버www.naver.com";
+
+        //when
+        final String result = markDownStyleParser.removeStyles(input);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("링크 스타일을 저장하는 테스트")
+    void linkStyleSave() {
+        //given
+        final String input = "[네이버](www)";
+        final String originalText = "네이버www";
+        final Style caption = new Style(new StyleRange(0, 2), StyleType.LINK);
+        final Style url = new Style(new StyleRange(3, 5), StyleType.LINK);
+
+        //when
+        final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
+
+        //then
+        assertAll(
+                () -> assertThat(result.get(0)).isEqualTo(caption),
+                () -> assertThat(result.get(1)).isEqualTo(url)
+        );
     }
 }

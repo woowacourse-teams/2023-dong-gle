@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.writing.content;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,16 +12,25 @@ import org.donggle.backend.domain.writing.BlockType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeBlockContent extends Content {
-    @Lob
     @NotNull
-    private String rawText;
+    @Embedded
+    private RawText rawText;
     @NotNull
-    private String language;
+    @Embedded
+    private Language language;
 
-    public CodeBlockContent(final int depth, final BlockType blockType, final String rawText, final String language) {
-        super(depth, blockType);
+    public CodeBlockContent(final BlockType blockType, final RawText rawText, final Language language) {
+        super(Depth.empty(), blockType);
         this.rawText = rawText;
         this.language = language;
+    }
+
+    public String getRawTextValue() {
+        return rawText.getRawText();
+    }
+
+    public String getLanguageValue() {
+        return language.getLanguage();
     }
 
     @Override

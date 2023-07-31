@@ -4,15 +4,15 @@ import { ArrowRightIcon } from 'assets/icons';
 
 type Props = {
   isOpen?: boolean;
-  onToggleAccordion?: () => void;
+  onToggleIconClick?: () => void;
   onTitleClick?: () => void;
 } & ComponentPropsWithoutRef<'div'>;
 
-const AccordionTitle = ({ isOpen = false, onToggleAccordion, onTitleClick, children }: Props) => {
+const AccordionTitle = ({ isOpen = false, onToggleIconClick, onTitleClick, children }: Props) => {
   const togglePanel = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    if (onToggleAccordion) onToggleAccordion();
+    if (onToggleIconClick) onToggleIconClick();
   };
 
   return (

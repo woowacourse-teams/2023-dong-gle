@@ -59,7 +59,7 @@ class MarkDownParserTest {
         final List<Content> parse = markDownParser.parse(text);
 
         //then
-        assertThat(parse).usingRecursiveComparison().isEqualTo(result);
+        assertThat(parse).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(result);
     }
 
     @Test

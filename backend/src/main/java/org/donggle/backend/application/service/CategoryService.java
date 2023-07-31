@@ -11,8 +11,12 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.ui.response.CategoriesResponse;
+import org.donggle.backend.ui.response.CategoryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -60,5 +64,14 @@ public class CategoryService {
         if (category.isBasic()) {
             throw new InvalidBasicCategoryException();
         }
+    }
+
+    public CategoriesResponse findAll(final Long memberId) {
+        //TODO: member checking
+        final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
+        final List<CategoryResponse> categoryResponses = categories.stream()
+                .map(category -> new CategoryResponse(category.getId(), category.getCategoryNameValue()))
+                .toList();
+        return new CategoriesResponse(categoryResponses);
     }
 }

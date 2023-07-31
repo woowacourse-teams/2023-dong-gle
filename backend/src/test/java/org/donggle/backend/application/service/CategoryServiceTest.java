@@ -6,11 +6,15 @@ import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
+import org.donggle.backend.ui.response.CategoriesResponse;
+import org.donggle.backend.ui.response.CategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -78,5 +82,27 @@ class CategoryServiceTest {
 
         //then
         assertThat(modifyCategory.getCategoryName()).isEqualTo(new CategoryName("수정된 카테고리"));
+    }
+
+    @Test
+    @DisplayName("카테고리 목록 조회 테스트")
+    void findAll() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+        final Long thirdId = categoryService.addCategory(1L, new CategoryAddRequest("세 번째 카테고리"));
+
+        //when
+        final CategoriesResponse categoriesResponse = categoryService.findAll(1L);
+        final List<CategoryResponse> categories = categoriesResponse.categories();
+
+        //then
+        assertAll(
+                () -> assertThat(categories).hasSize(3),
+                () -> assertThat(categories).containsExactly(
+                        new CategoryResponse(1L, "기본"),
+                        new CategoryResponse(secondId, "두 번째 카테고리"),
+                        new CategoryResponse(thirdId, "세 번째 카테고리")
+                )
+        );
     }
 }

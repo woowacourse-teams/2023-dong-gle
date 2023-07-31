@@ -62,6 +62,10 @@ public class Category {
         return this.categoryName.equals(BASIC_CATEGORY_NAME);
     }
 
+    public String getCategoryNameValue() {
+        return categoryName.getName();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
+import org.donggle.backend.ui.response.CategoriesResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,5 +40,11 @@ public class CategoryController {
     public ResponseEntity<Void> categoryRemove(@PathVariable final Long categoryId) {
         categoryService.removeCategory(1L, categoryId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<CategoriesResponse> categoryList() {
+        final CategoriesResponse response = categoryService.findAll(1L);
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Writings from './Writings';
+import WritingList from './WritingList';
 
-const meta: Meta<typeof Writings> = {
-  title: 'Writings',
-  component: Writings,
+const meta: Meta<typeof WritingList> = {
+  title: 'WritingList',
+  component: WritingList,
   args: {
-    writings: [
+    writingList: [
       { id: 1, title: '동글' },
       { id: 2, title: '테트리스 중독' },
       {
@@ -16,7 +16,7 @@ const meta: Meta<typeof Writings> = {
     ],
   },
   argTypes: {
-    writings: {
+    writingList: {
       description: '글 목록 데이터입니다.',
     },
   },

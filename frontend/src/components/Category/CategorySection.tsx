@@ -2,7 +2,7 @@
 import { useCategories } from 'hooks/useCategories';
 import { styled } from 'styled-components';
 import Category from './Category';
-import WritingsInCategory from './Writings';
+import WritingsInCategory from './WritingList';
 import { useCategoryDetail } from 'hooks/useCategoryDetail';
 import Button from 'components/@common/Button/Button';
 
@@ -20,7 +20,7 @@ const CategorySection = () => {
             <Category id={category.id} categoryName={category.categoryName} />
             <Button onClick={() => getWritings(category.id)}>글 목록 조회</Button>
             {writings && categoryId === category.id ? (
-              <WritingsInCategory writings={writings} />
+              <WritingsInCategory writingList={writings} />
             ) : null}
           </>
         );

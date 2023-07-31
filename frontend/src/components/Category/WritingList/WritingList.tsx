@@ -13,7 +13,7 @@ const WritingList = ({ writingList }: Props) => {
   return (
     <S.List>
       {writingList.map((writing) => (
-        <S.Item>
+        <S.Item key={writing.id}>
           <S.Button onClick={() => goWritingPage(writing.id)}>
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />

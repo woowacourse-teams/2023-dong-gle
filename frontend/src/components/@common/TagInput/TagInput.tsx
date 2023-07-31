@@ -1,12 +1,25 @@
 import { styled } from 'styled-components';
 import { useTagInput } from './useTagInput';
-import Tag from '../Tag/Tag';
+import Tag from 'components/@common/Tag/Tag';
+import { useEffect } from 'react';
 
-const TagInput = () => {
+type Props = {
+  onChangeTags: (tags: string[]) => void;
+};
+
+const TagInput = ({ onChangeTags }: Props) => {
   const { inputValue, tags, addTag, removeLastTag, removeTag, onInputValueChange } = useTagInput();
 
+  useEffect(() => {
+    onChangeTags(tags);
+  }, [tags]);
+
   const TagsList = () => {
-    return tags.map((tag) => <Tag onClick={removeTag(tag)}>{tag}</Tag>);
+    return tags.map((tag) => (
+      <Tag key={tag} onClick={removeTag(tag)}>
+        {tag}
+      </Tag>
+    ));
   };
 
   return (

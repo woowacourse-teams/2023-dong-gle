@@ -1,4 +1,4 @@
-import { Blog } from 'types/domain';
+import { Blog, PublishingPropertyData } from 'types/domain';
 
 export type AddWritingRequest = FormData;
 
@@ -17,7 +17,7 @@ export type GetWritingPropertiesResponse = {
 
 export type PublishWritingRequest = {
   publishTo: Blog;
-};
+} & PublishingPropertyData;
 
 export type PublishWritingArgs = {
   writingId: number;

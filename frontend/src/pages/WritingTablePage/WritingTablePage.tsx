@@ -1,7 +1,7 @@
 import { getCategoryIdWritingList } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
-import { PageContextType, usePageContext } from 'pages/Layout/Layout';
+import { PageContext, usePageContext } from 'pages/Layout/Layout';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
@@ -26,7 +26,7 @@ const WritingTablePage = () => {
 export default WritingTablePage;
 
 const S = {
-  Article: styled.article<PageContextType>`
+  Article: styled.article<PageContext>`
     width: 90%;
     padding: 8rem 4rem;
 

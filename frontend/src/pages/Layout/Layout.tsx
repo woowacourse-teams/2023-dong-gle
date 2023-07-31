@@ -10,7 +10,7 @@ import Header from 'components/Header/Header';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 
-export type PageContextType = {
+export type PageContext = {
   isLeftSidebarOpen?: boolean;
   isRightSidebarOpen?: boolean;
   setActiveWritingId?: Dispatch<SetStateAction<number | null>>;
@@ -59,7 +59,7 @@ const Layout = () => {
                 isLeftSidebarOpen,
                 isRightSidebarOpen,
                 setActiveWritingId,
-              } satisfies PageContextType
+              } satisfies PageContext
             }
           />
         </S.Main>
@@ -76,7 +76,7 @@ const Layout = () => {
 export default Layout;
 
 export const usePageContext = () => {
-  return useOutletContext<PageContextType>();
+  return useOutletContext<PageContext>();
 };
 
 const S = {
@@ -108,7 +108,7 @@ const S = {
     overflow-y: auto;
   `,
 
-  RightSidebarSection: styled.section<Pick<PageContextType, 'isRightSidebarOpen'>>`
+  RightSidebarSection: styled.section<Pick<PageContext, 'isRightSidebarOpen'>>`
     ${sidebarStyle}
     display: ${({ isRightSidebarOpen }) => !isRightSidebarOpen && 'none'};
   `,

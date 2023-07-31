@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import WritingViewer from 'components/WritingViewer/WritingViewer';
-import { PageContextType, usePageContext } from 'pages/Layout/Layout';
+import { PageContext, usePageContext } from 'pages/Layout/Layout';
 import { useEffect } from 'react';
 
 const WritingPage = () => {
@@ -28,7 +28,7 @@ const WritingPage = () => {
 export default WritingPage;
 
 const S = {
-  Article: styled.article<PageContextType>`
+  Article: styled.article<PageContext>`
     width: 90%;
 
     background-color: ${({ theme }) => theme.color.gray1};

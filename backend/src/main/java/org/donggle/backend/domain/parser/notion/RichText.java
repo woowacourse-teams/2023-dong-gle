@@ -2,6 +2,7 @@ package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 
 import java.util.ArrayList;
@@ -46,17 +47,17 @@ public record RichText(String plainText, String href, Annotations annotations) {
         final int end = offset + plainText.length() - 1;
         final List<Style> styles = new ArrayList<>();
         if (annotations.bold()) {
-            styles.add(new Style(offset, end, StyleType.BOLD));
+            styles.add(new Style(new StyleRange(offset, end), StyleType.BOLD));
         }
         if (annotations.italic()) {
-            styles.add(new Style(offset, end, StyleType.ITALIC));
+            styles.add(new Style(new StyleRange(offset, end), StyleType.ITALIC));
         }
         if (annotations.code()) {
-            styles.add(new Style(offset, end, StyleType.CODE));
+            styles.add(new Style(new StyleRange(offset, end), StyleType.CODE));
         }
         if (!Objects.equals(href, "null")) {
-            styles.add(new Style(offset, plainText.length() - 1, StyleType.LINK));
-            styles.add(new Style(plainText.length(), href.length() - 1, StyleType.LINK));
+            styles.add(new Style(new StyleRange(offset, plainText.length() - 1), StyleType.LINK));
+            styles.add(new Style(new StyleRange(plainText.length(), href.length() - 1), StyleType.LINK));
         }
         return styles;
     }

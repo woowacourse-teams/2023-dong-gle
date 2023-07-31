@@ -35,7 +35,7 @@ public class NotionApiService {
     private final String notionToken;
     private final WebClient webClient;
 
-    public NotionApiService(@Value("${notion_token_temp}") final String notionToken) {
+    public NotionApiService(@Value("${notion_token}") final String notionToken) {
         this.notionToken = notionToken;
         this.webClient = WebClient.create(NOTION_URL);
     }

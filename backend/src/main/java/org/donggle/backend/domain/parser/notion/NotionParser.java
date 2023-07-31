@@ -4,6 +4,7 @@ import org.donggle.backend.application.service.notion.NotionBlockNode;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.Depth;
 import org.donggle.backend.domain.writing.content.ImageCaption;
 import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.ImageUrl;
@@ -21,27 +22,27 @@ public class NotionParser {
     private static final Map<NotionBlockType, Function<NotionBlockNode, Optional<Content>>> NOTION_BLOCK_TYPE_MAP = new HashMap<>();
 
     static {
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalContent(notionBlockNode, BookmarkParser.from(notionBlockNode.getBlockProperties()), BlockType.PARAGRAPH));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalContent(notionBlockNode, CalloutParser.from(notionBlockNode.getBlockProperties()), BlockType.BLOCKQUOTE));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlockContent(CodeBlockParser.from(notionBlockNode.getBlockProperties())));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_1, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode.getBlockProperties()), BlockType.HEADING1));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_2, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode.getBlockProperties()), BlockType.HEADING2));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_3, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode.getBlockProperties()), BlockType.HEADING3));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BULLETED_LIST_ITEM, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.UNORDERED_LIST));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.NUMBERED_LIST_ITEM, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.ORDERED_LIST));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.PARAGRAPH, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.PARAGRAPH));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.QUOTE, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.BLOCKQUOTE));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.PARAGRAPH));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode.getBlockProperties()), BlockType.PARAGRAPH));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageContent(ImageParser.from(notionBlockNode.getBlockProperties())));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalContent(notionBlockNode, BookmarkParser.from(notionBlockNode), BlockType.PARAGRAPH));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalContent(notionBlockNode, CalloutParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlockContent(CodeBlockParser.from(notionBlockNode)));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_1, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING1));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_2, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING2));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_3, notionBlockNode -> createNormalContent(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING3));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BULLETED_LIST_ITEM, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.UNORDERED_LIST));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.NUMBERED_LIST_ITEM, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.ORDERED_LIST));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.PARAGRAPH, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.QUOTE, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageContent(ImageParser.from(notionBlockNode)));
     }
 
     private static Optional<Content> createNormalContent(final NotionBlockNode notionBlockNode, final NotionNormalBlockParser blockParser, final BlockType blockType) {
-        return Optional.of(new NormalContent(notionBlockNode.depth(), blockType, blockParser.parseRawText(), blockParser.parseStyles()));
+        return Optional.of(new NormalContent(Depth.from(notionBlockNode.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
     private static Optional<Content> createCodeBlockContent(final CodeBlockParser blockParser) {
-        return Optional.of(new CodeBlockContent(BlockType.CODE_BLOCK, new RawText(blockParser.parseRawText()), new Language(blockParser.language())));
+        return Optional.of(new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
     }
 
     private static Optional<Content> createImageContent(final ImageParser blockParser) {

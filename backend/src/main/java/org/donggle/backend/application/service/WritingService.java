@@ -57,7 +57,7 @@ public class WritingService {
 
         final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
         // TODO : authentication 후 member 객체 가져오도록 수정
-        Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
         final Member savedMember = memberRepository.save(member);
         final Writing writing = new Writing(savedMember, new Title(findFileName(originalFilename)));
         final Writing savedWriting = writingRepository.save(writing);
@@ -72,16 +72,22 @@ public class WritingService {
         return savedWriting.getId();
     }
 
+    private String findFileName(final String originalFilename) {
+        final int endIndex = Objects.requireNonNull(originalFilename).lastIndexOf(MD_FORMAT);
+        return originalFilename.substring(0, endIndex);
+    }
+
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
         // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member member = memberRepository.save(new Member("동그리"));
+        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member savedMember = memberRepository.save(member);
 
         final String blockId = request.blockId();
         final NotionParser notionParser = new NotionParser();
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = new Writing(member, title);
+        final Writing writing = new Writing(savedMember, new Title(title));
 
         final Writing savedWriting = writingRepository.save(writing);
 
@@ -93,10 +99,6 @@ public class WritingService {
         blockRepository.saveAll(blocks);
 
         return writing.getId();
-    }
-    private String findFileName(final String originalFilename) {
-        final int endIndex = Objects.requireNonNull(originalFilename).lastIndexOf(MD_FORMAT);
-        return originalFilename.substring(0, endIndex);
     }
 
     public WritingResponse findWriting(final Long memberId, final Long writingId) {

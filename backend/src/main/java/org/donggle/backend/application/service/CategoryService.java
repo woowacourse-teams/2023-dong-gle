@@ -46,6 +46,16 @@ public class CategoryService {
         findCategory.changeName(new CategoryName(request.categoryName()));
     }
 
+    @Transactional
+    public void removeCategory(final Long memberId, final Long categoryId) {
+        //TODO: member checking
+        final Category findCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        validateBasicCategory(findCategory);
+        //TODO: 카테고리 삭제 시 카테고리에 포함된 글들 기본 카테고리로 이동
+        categoryRepository.deleteById(categoryId);
+    }
+
     private void validateBasicCategory(final Category category) {
         if (category.isBasic()) {
             throw new InvalidBasicCategoryException();

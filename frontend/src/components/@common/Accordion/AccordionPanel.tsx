@@ -2,10 +2,10 @@ import { ComponentPropsWithoutRef } from 'react';
 import { styled } from 'styled-components';
 
 type Props = {
-  isOpen?: boolean;
+  isOpen: boolean;
 } & ComponentPropsWithoutRef<'div'>;
 
-const AccordionPanel = ({ isOpen = false, children }: Props) => {
+const AccordionPanel = ({ isOpen = false, children }: Partial<Props>) => {
   if (!isOpen) return null;
 
   return <S.Wrapper>{children}</S.Wrapper>;

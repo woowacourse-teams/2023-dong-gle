@@ -3,8 +3,8 @@ import { styled } from 'styled-components';
 import { ArrowRightIcon } from 'assets/icons';
 
 type Props = {
-  isOpen?: boolean;
-  onToggleIconClick?: () => void;
+  isOpen: boolean;
+  onToggleIconClick: () => void;
   onTitleClick?: () => void;
   onIconClick?: () => void;
 } & ComponentPropsWithoutRef<'div'>;
@@ -15,7 +15,7 @@ const AccordionTitle = ({
   onIconClick,
   onTitleClick,
   children,
-}: Props) => {
+}: Partial<Props>) => {
   const togglePanel = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
@@ -26,7 +26,7 @@ const AccordionTitle = ({
 
   return (
     <S.Container onClick={() => onTitleClick}>
-      <S.IconButton isOpen={isOpen} onClick={togglePanel}>
+      <S.IconButton $isOpen={isOpen} onClick={togglePanel}>
         <ArrowRightIcon width={8} height={14} />
       </S.IconButton>
       {children}
@@ -46,7 +46,7 @@ const S = {
     border-radius: 4px;
   `,
 
-  IconButton: styled.button<Record<'isOpen', boolean>>`
+  IconButton: styled.button<Record<'$isOpen', boolean>>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,7 +60,7 @@ const S = {
     }
 
     & > svg {
-      rotate: ${({ isOpen }) => isOpen && '90deg'};
+      rotate: ${({ $isOpen }) => $isOpen && '90deg'};
       transition: rotate 0.2s;
     }
   `,

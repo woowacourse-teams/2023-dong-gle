@@ -6,10 +6,10 @@ import AccordionTitle from './AccordionTitle';
 import AccordionPanel from './AccordionPanel';
 
 type Props = {
-  size?: Size;
+  size: Size;
 } & ComponentPropsWithoutRef<'ul'>;
 
-const Accordion = ({ size = 'medium', children, ...rest }: Props) => {
+const Accordion = ({ size = 'medium', children, ...rest }: Partial<Props>) => {
   return (
     <S.List size={size} {...rest}>
       {children}

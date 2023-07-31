@@ -1,25 +1,17 @@
 import { ComponentPropsWithoutRef } from 'react';
 import { RuleSet, css, styled } from 'styled-components';
-import { TextAlign, Size, Variant } from 'types/components/common';
+import { Size } from 'types/components/common';
 import AccordionItem from './AccordionItem';
 import AccordionTitle from './AccordionTitle';
 import AccordionPanel from './AccordionPanel';
 
 type Props = {
-  variant?: Variant;
   size?: Size;
-  textAlign?: TextAlign;
 } & ComponentPropsWithoutRef<'ul'>;
 
-const Accordion = ({
-  variant = 'primary',
-  size = 'medium',
-  textAlign = 'start',
-  children,
-  ...rest
-}: Props) => {
+const Accordion = ({ size = 'medium', children, ...rest }: Props) => {
   return (
-    <S.List variant={variant} size={size} textAlign={textAlign} {...rest}>
+    <S.List size={size} {...rest}>
       {children}
     </S.List>
   );
@@ -31,46 +23,28 @@ Accordion.Item = AccordionItem;
 Accordion.Title = AccordionTitle;
 Accordion.Panel = AccordionPanel;
 
-const generateVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> => {
-  const styles: Record<typeof variant, ReturnType<typeof generateVariantStyle>> = {
-    primary: css`
-      ${({ theme }) => css`
-        & > li > button {
-          color: ${theme.color.gray10};
-          background-color: ${theme.color.gray1};
-        }
-
-        & > li > button:hover {
-          background-color: ${theme.color.gray3};
-        }
-      `}
-    `,
-    dark: css`
-      ${({ theme }) => css`
-        & > li > button {
-          color: ${theme.color.gray1};
-          background-color: ${theme.color.gray10};
-        }
-
-        & > li > button:hover {
-          background-color: ${theme.color.gray8};
-        }
-      `}
-    `,
-  };
-  return styles[variant];
-};
-
 const generateAccordionSize = (size: Required<Props>['size']): RuleSet<object> => {
   const styles: Record<typeof size, ReturnType<typeof generateAccordionSize>> = {
     small: css`
       width: 12rem;
+
+      * {
+        font-size: 1.2rem;
+      }
     `,
     medium: css`
       width: 24rem;
+
+      * {
+        font-size: 1.6rem;
+      }
     `,
     large: css`
       width: 36rem;
+
+      * {
+        font-size: 2rem;
+      }
     `,
   };
 
@@ -78,16 +52,11 @@ const generateAccordionSize = (size: Required<Props>['size']): RuleSet<object> =
 };
 
 const S = {
-  List: styled.ul<Pick<Props, 'variant' | 'size' | 'textAlign'>>`
+  List: styled.ul<Pick<Props, 'size'>>`
     ${({ size = 'medium' }) => generateAccordionSize(size)};
-    ${({ variant = 'primary' }) => generateVariantStyle(variant)};
 
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-
-    & * {
-      text-align: ${({ textAlign }) => textAlign};
-    }
   `,
 };

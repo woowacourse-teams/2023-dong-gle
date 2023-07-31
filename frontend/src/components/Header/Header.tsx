@@ -12,15 +12,15 @@ const Header = ({ toggleLeftSidebar, toggleRightSidebar, isWritingViewerActive }
   return (
     <S.Container>
       <S.LeftIconsBox>
-        <SettingIcon width='2.4rem' height='2.4rem' className='icon' />
+        <SettingIcon width='2.4rem' height='2.4rem' />
         <button onClick={toggleLeftSidebar}>
-          <SidebarLeftIcon width='2.4rem' height='2.4rem' className='icon' />
+          <SidebarLeftIcon width='2.4rem' height='2.4rem' />
         </button>
       </S.LeftIconsBox>
       <S.RightIconsBox>
         {isWritingViewerActive && (
           <button onClick={toggleRightSidebar}>
-            <SidebarRightIcon width='2.4rem' height='2.4rem' className='icon' />
+            <SidebarRightIcon width='2.4rem' height='2.4rem' />
           </button>
         )}
       </S.RightIconsBox>
@@ -37,10 +37,6 @@ const S = {
     align-items: center;
     margin: 0 1rem;
     height: ${HEADER_STYLE.height};
-
-    .icon {
-      cursor: pointer;
-    }
   `,
 
   LeftIconsBox: styled.div`

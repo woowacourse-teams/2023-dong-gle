@@ -44,7 +44,7 @@ public class NotionApiService {
         return new NotionBlockNode(retrieveBlock(parentBlockId), -1);
     }
 
-    public JsonNode retrieveBlock(final String parentBlockId) {
+    private JsonNode retrieveBlock(final String parentBlockId) {
         return retrieveData(parentBlockId, BLOCK_URI);
     }
 
@@ -99,14 +99,14 @@ public class NotionApiService {
     }
 
     private void processChildrenBlocks(final List<JsonNode> childrenBlocks, final NotionBlockNode notionBlockNode, final Deque<NotionBlockNode> notionBlockNodeDeque) {
-        for (int i = childrenBlocks.size() - 1; i >= 0; i--) {
+        final int lastIndex = childrenBlocks.size() - 1;
+        for (int i = lastIndex; i >= 0; i--) {
             final JsonNode childBlock = childrenBlocks.get(i);
             if (notionBlockNode.getBlockType() == NotionBlockType.COLUMN || notionBlockNode.getBlockType() == NotionBlockType.COLUMN_LIST) {
                 notionBlockNodeDeque.addFirst(new NotionBlockNode(childBlock, 0));
                 continue;
             }
             notionBlockNodeDeque.addFirst(new NotionBlockNode(childBlock, notionBlockNode.depth() + 1));
-
         }
     }
 }

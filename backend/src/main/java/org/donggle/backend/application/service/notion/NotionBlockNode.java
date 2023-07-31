@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.donggle.backend.domain.parser.notion.NotionBlockType;
 
 public record NotionBlockNode(JsonNode node, int depth) {
-
     public boolean hasChildren() {
         return this.node.get("has_children").asBoolean();
     }

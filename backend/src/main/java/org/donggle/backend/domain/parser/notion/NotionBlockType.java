@@ -39,6 +39,6 @@ public enum NotionBlockType {
         return Arrays.stream(NotionBlockType.values())
                 .filter(blockType -> blockType.name().toLowerCase().equals(type))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 블록 타입입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(type + "은 지원하지 않는 블록 타입입니다."));
     }
 }

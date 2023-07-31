@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useCategories } from './useCategories';
-import { GetCategoryDetailResponse, Writing } from 'types/apis/category';
+import { GetCategoryDetailResponse } from 'types/apis/category';
+
+export type Writing = {
+  id: number;
+  title: string;
+};
 
 export const useCategoryDetails = () => {
   const { categories } = useCategories();

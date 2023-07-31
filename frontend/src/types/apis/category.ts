@@ -1,3 +1,5 @@
+import { Writing } from 'components/Category/CategorySection/useCategoryDetails';
+
 export type AddCategoriesRequest = {
   categoryName: string;
 };
@@ -11,13 +13,8 @@ export type GetCategoriesResponse = {
   categories: CategoryResponse[];
 };
 
-export type Writing = {
-  id: number;
-  title: string;
-};
-
-export type GetCategoryDetailsResponse = {
-  writings: Writing[];
+export type GetCategoryDetailResponse = {
+  writings: Writing[] | null;
 } & CategoryResponse;
 
 export type PatchCategory = {

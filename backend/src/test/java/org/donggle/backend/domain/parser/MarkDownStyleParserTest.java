@@ -35,8 +35,8 @@ class MarkDownStyleParserTest {
 
         //then
         assertAll(
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(codeStyle),
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(boldStyle));
+                () -> assertThat(result.get(1)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(codeStyle),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(boldStyle));
     }
 
     @Test
@@ -53,8 +53,8 @@ class MarkDownStyleParserTest {
 
         //then
         assertAll(
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(codeStyle),
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(boldStyle));
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(codeStyle),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(boldStyle));
     }
 
     @Test
@@ -92,7 +92,7 @@ class MarkDownStyleParserTest {
         final String input = "[네이버](www)";
         final String originalText = "네이버www";
         final Style caption = new Style(new StyleRange(0, 2), StyleType.LINK);
-        final Style url = new Style(new StyleRange(3,5), StyleType.LINK);
+        final Style url = new Style(new StyleRange(3, 5), StyleType.LINK);
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);

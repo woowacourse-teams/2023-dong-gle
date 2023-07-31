@@ -3,6 +3,7 @@ package org.donggle.backend.ui;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.application.service.WritingService;
+import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
@@ -29,6 +30,12 @@ public class WritingController {
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> writingAdd(final MultipartFile file) throws IOException {
         final Long writingId = writingService.uploadMarkDownFile(1L, file);
+        return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
+    }
+
+    @PostMapping("/notion")
+    public ResponseEntity<Void> writingAdd(@RequestBody final NotionUploadRequest request) {
+        final Long writingId = writingService.uploadNotionPage(1L, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 

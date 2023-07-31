@@ -21,6 +21,7 @@ jobs:
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
         echo "MEDIUM_TOKEN=${{ secrets.medium_token }}" >> .env
         echo "SPRING_PROFILES_ACTIVE=${{ secrets.PROFILE }}" >> .env
+        echo "NOTION_TOKEN"=${{ secrets.NOTION_TOKEN }} >> .env
     ## deploy to production
     - name: Deploy to prod
       run: |

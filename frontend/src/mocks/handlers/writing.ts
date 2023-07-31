@@ -1,7 +1,8 @@
 import { rest } from 'msw';
 import { writingURL } from 'constants/apis/url';
 import { writingContentMock } from 'mocks/writingContentMock';
-import { GetWritingResponse } from 'types/apis/writings';
+import { GetCategoryIdWritingListResponse, GetWritingResponse } from 'types/apis/writings';
+import { getWritingTableMock } from 'mocks/writingTableMock';
 
 export const writingHandlers = [
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
@@ -35,5 +36,16 @@ export const writingHandlers = [
     if (!blog.includes(publishTo) || typeof id !== 'number') return res(ctx.status(404));
 
     return res(ctx.delay(3000), ctx.status(200));
+  }),
+
+  // 카테고리 글 상세 목록 조회: GET
+  rest.get(`${writingURL}`, (req, res, ctx) => {
+    const categoryId = Number(req.url.searchParams.get('categoryId'));
+
+    return res(
+      ctx.json<GetCategoryIdWritingListResponse>(getWritingTableMock(categoryId)),
+      // ctx.delay(1000),
+      ctx.status(200),
+    );
   }),
 ];

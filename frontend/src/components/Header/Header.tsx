@@ -3,23 +3,23 @@ import { styled } from 'styled-components';
 import { HEADER_STYLE } from 'styles/layoutStyle';
 
 type Props = {
-  toggleLeftSidebar: () => void;
-  toggleRightSidebar: () => void;
+  onClickLeftSidebar: () => void;
+  onClickRightSidebar: () => void;
   isWritingViewerActive: boolean;
 };
 
-const Header = ({ toggleLeftSidebar, toggleRightSidebar, isWritingViewerActive }: Props) => {
+const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive }: Props) => {
   return (
     <S.Container>
       <S.LeftIconsBox>
         <SettingIcon width='2.4rem' height='2.4rem' />
-        <button onClick={toggleLeftSidebar}>
+        <button onClick={onClickLeftSidebar}>
           <SidebarLeftIcon width='2.4rem' height='2.4rem' />
         </button>
       </S.LeftIconsBox>
       <S.RightIconsBox>
         {isWritingViewerActive && (
-          <button onClick={toggleRightSidebar}>
+          <button onClick={onClickRightSidebar}>
             <SidebarRightIcon width='2.4rem' height='2.4rem' />
           </button>
         )}

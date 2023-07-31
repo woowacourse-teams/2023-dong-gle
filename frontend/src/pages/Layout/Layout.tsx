@@ -35,8 +35,8 @@ const Layout = () => {
   return (
     <S.Container>
       <Header
-        toggleLeftSidebar={toggleLeftSidebar}
-        toggleRightSidebar={toggleRightSidebar}
+        onClickLeftSidebar={toggleLeftSidebar}
+        onClickRightSidebar={toggleRightSidebar}
         isWritingViewerActive={isWritingViewerActive}
       />
       <S.Row>

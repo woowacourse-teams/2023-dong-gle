@@ -6,13 +6,22 @@ type Props = {
   isOpen?: boolean;
   onToggleIconClick?: () => void;
   onTitleClick?: () => void;
+  onIconClick?: () => void;
 } & ComponentPropsWithoutRef<'div'>;
 
-const AccordionTitle = ({ isOpen = false, onToggleIconClick, onTitleClick, children }: Props) => {
+const AccordionTitle = ({
+  isOpen = false,
+  onToggleIconClick,
+  onIconClick,
+  onTitleClick,
+  children,
+}: Props) => {
   const togglePanel = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     if (onToggleIconClick) onToggleIconClick();
+
+    if (onIconClick) onIconClick();
   };
 
   return (

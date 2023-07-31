@@ -9,7 +9,6 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
@@ -59,11 +58,7 @@ public class InitData implements CommandLineRunner {
                     new Password("1234")
             ));
 
-            final Category savedCategory = categoryRepository.save(new Category(
-                    new CategoryName("기본"),
-                    null,
-                    savedMember
-            ));
+            final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
 
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));

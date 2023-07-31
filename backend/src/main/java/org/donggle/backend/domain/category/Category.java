@@ -21,6 +21,8 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
+    private static final CategoryName BASIC_CATEGORY_NAME = new CategoryName("기본");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,14 +36,30 @@ public class Category {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
+    private Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;
     }
 
+    public static Category basic(final Member member) {
+        return new Category(BASIC_CATEGORY_NAME, null, member);
+    }
+
+    public static Category of(final CategoryName categoryName, final Category nextCategory, final Member member) {
+        return new Category(categoryName, nextCategory, member);
+    }
+
     public void updateNext(final Category nextCategory) {
         this.nextCategory = nextCategory;
+    }
+
+    public void changeName(final CategoryName categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public boolean isBasic() {
+        return this.categoryName.equals(BASIC_CATEGORY_NAME);
     }
 
     @Override

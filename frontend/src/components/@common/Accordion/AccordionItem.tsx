@@ -13,6 +13,10 @@ import AccordionPanel from './AccordionPanel';
 const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
   const [isOpen, isSetOpen] = useState(false);
 
+  const togglePanel = () => {
+    isSetOpen(!isOpen);
+  };
+
   return (
     <S.Item>
       {Children.map(children, (child) => {
@@ -21,7 +25,7 @@ const AccordionItem = ({ children }: ComponentPropsWithoutRef<'li'>) => {
         if (child.type === AccordionTitle) {
           return cloneElement(child as ReactElement, {
             isOpen,
-            onClickIcon: () => isSetOpen(!isOpen),
+            onClickIcon: togglePanel,
           });
         }
 

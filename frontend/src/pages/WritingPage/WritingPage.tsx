@@ -16,8 +16,6 @@ const WritingPage = () => {
     return () => clearActiveWritingId();
   }, []);
 
-  // TODO: getWritingProperties() 실행
-
   return (
     <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
       <WritingViewer writingId={Number(writingId)} />

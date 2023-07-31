@@ -12,3 +12,5 @@ export { ReactComponent as CloseRounded } from './close-rounded.svg';
 export { ReactComponent as SidebarLeftIcon } from './sidebar-left.svg';
 export { ReactComponent as SidebarRightIcon } from './sidebar-right.svg';
 export { ReactComponent as SettingIcon } from './setting.svg';
+export { ReactComponent as InfoIcon } from './info.svg';
+export { ReactComponent as PublishingIcon } from './publishing.svg';

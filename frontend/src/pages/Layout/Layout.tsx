@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, MutableRefObject, RefObject, SetStateAction, useRef, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
@@ -13,15 +13,15 @@ import PublishingSection from 'components/PublishingSection/PublishingSection';
 export type PageContextType = {
   isLeftSidebarOpen?: boolean;
   isRightSidebarOpen?: boolean;
-  setActiveWritingId?: Dispatch<SetStateAction<number>>;
+  setActiveWritingId?: Dispatch<SetStateAction<number | null>>;
 };
 
 const Layout = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
-  const [activeWritingId, setActiveWritingId] = useState<number>(-1);
+  const [activeWritingId, setActiveWritingId] = useState<number | null>(null);
   const { openFinder } = useFileUpload('.md');
-  const isWritingViewerActive = activeWritingId > 0;
+  const isWritingViewerActive = activeWritingId !== null;
 
   const toggleLeftSidebar = () => {
     setIsLeftSidebarOpen(!isLeftSidebarOpen);

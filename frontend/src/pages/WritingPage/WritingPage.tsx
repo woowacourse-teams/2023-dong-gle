@@ -10,7 +10,7 @@ const WritingPage = () => {
 
   useEffect(() => {
     const clearActiveWritingId = () => {
-      setActiveWritingId?.(-1);
+      setActiveWritingId?.(null);
     };
     setActiveWritingId?.(writingId);
     return () => clearActiveWritingId();

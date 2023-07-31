@@ -1,29 +1,40 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
-import { useCategoryName } from 'hooks/useCategoryName';
 import { useEraseCategory } from 'hooks/useEraseCategory';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { MouseEvent } from 'react';
+import { KeyboardEvent, MouseEvent, useState } from 'react';
 import { styled } from 'styled-components';
 import { CategoryResponse } from 'types/apis/category';
+import useCategoryInput from './useCategoryInput';
+import { usePatchCategory } from 'hooks/usePatchCategory';
 
 const Category = ({ id, categoryName }: CategoryResponse) => {
+  const [name, setName] = useState(categoryName);
   const {
-    name,
-    isRenaming,
-    setIsRenaming,
-    rename,
+    value,
+    resetValue,
     inputRef,
-    changeName,
-    escapeChangeName,
-    requestChangedName,
-  } = useCategoryName(id, categoryName);
+    handleOnChange,
+    escapeInput: escapeRename,
+    isOpenInput,
+    setIsOpenInput,
+  } = useCategoryInput('');
+  const { renameCategory } = usePatchCategory();
   const { eraseCategory } = useEraseCategory();
   const { goWritingTablePage } = usePageNavigate();
+
+  const requestChangedName = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+
+    renameCategory(id, value);
+    setIsOpenInput(() => false);
+    setName(() => value);
+    resetValue();
+  };
 
   const handlePencilIconClick = (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
 
-    setIsRenaming(!isRenaming);
+    setIsOpenInput(true);
   };
 
   const handleTrashcanIconClick = (e: MouseEvent<SVGSVGElement>) => {
@@ -34,13 +45,13 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
 
   return (
     <S.CategoryButton onClick={() => goWritingTablePage(id)}>
-      {isRenaming ? (
+      {isOpenInput ? (
         <S.Input
           type='text'
-          value={rename}
+          value={value}
           ref={inputRef}
-          onChange={changeName}
-          onKeyDown={escapeChangeName}
+          onChange={handleOnChange}
+          onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
         />
       ) : (

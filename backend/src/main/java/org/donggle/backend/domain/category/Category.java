@@ -40,6 +40,10 @@ public class Category {
         this.member = member;
     }
 
+    public void updateNext(final Category nextCategory) {
+        this.nextCategory = nextCategory;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -1,5 +1,5 @@
 import { patchCategory } from 'apis/category';
-import useMutation from './@common/useMutation';
+import useMutation from '../../../hooks/@common/useMutation';
 
 export const usePatchCategory = () => {
   const { mutateQuery } = useMutation({

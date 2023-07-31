@@ -1,11 +1,11 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
-import { useEraseCategory } from 'hooks/useEraseCategory';
+import { useEraseCategory } from 'components/Category/Category/useEraseCategory';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { KeyboardEvent, MouseEvent, useState } from 'react';
 import { styled } from 'styled-components';
 import { CategoryResponse } from 'types/apis/category';
-import useCategoryInput from './useCategoryInput';
-import { usePatchCategory } from 'hooks/usePatchCategory';
+import useCategoryInput from '../useCategoryInput';
+import { usePatchCategory } from 'components/Category/Category/usePatchCategory';
 
 const Category = ({ id, categoryName }: CategoryResponse) => {
   const [name, setName] = useState(categoryName);

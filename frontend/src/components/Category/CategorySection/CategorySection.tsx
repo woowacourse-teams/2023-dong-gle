@@ -1,14 +1,14 @@
 import Accordion from 'components/@common/Accordion/Accordion';
-import { useCategories } from 'hooks/useCategories';
+import { useCategories } from 'components/Category/CategorySection/useCategories';
 import { styled } from 'styled-components';
-import Category from './Category';
-import { useCategoryDetail } from 'hooks/useCategoryDetail';
+import { useCategoryDetail } from 'components/Category/CategorySection/useCategoryDetail';
 import Button from 'components/@common/Button/Button';
 import { PlusCircleIcon } from 'assets/icons';
 import { KeyboardEvent } from 'react';
-import WritingList from './WritingList';
-import useCategoryInput from './useCategoryInput';
 import { useAddCategory } from './useAddCategory';
+import useCategoryInput from '../useCategoryInput';
+import Category from '../Category/Category';
+import WritingList from '../WritingList/WritingList';
 
 // TODO
 // [카테고리,글목록] 튜플 빌드 훅 작성

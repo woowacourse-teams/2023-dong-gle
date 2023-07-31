@@ -1,5 +1,5 @@
 import { GetCategoryDetailsResponse } from 'types/apis/category';
-import { useGetQuery } from './@common/useGetQuery';
+import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
 import { useCallback, useEffect, useState } from 'react';
 

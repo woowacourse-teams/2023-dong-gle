@@ -1,5 +1,5 @@
 import { GetCategoriesResponse } from 'types/apis/category';
-import { useGetQuery } from './@common/useGetQuery';
+import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getCategories } from 'apis/category';
 
 export const useCategories = () => {

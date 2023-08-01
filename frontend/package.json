@@ -5,7 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.dev.js",
+    "build:prod": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.dev.js",
     "start": "cross-env NODE_ENV=development webpack serve --config webpack.dev.js",
     "start:mocking": "cross-env MOCKING_ENV=true yarn start",
     "storybook": "storybook dev -p 6006",

@@ -3,6 +3,7 @@ package org.donggle.backend.application.service;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
+import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.notion.NotionApiService;
@@ -11,6 +12,7 @@ import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
@@ -41,11 +43,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class WritingService {
     private static final String MD_FORMAT = ".md";
-    private final NotionApiService notionApiService;
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;
     private final BlogWritingRepository blogWritingRepository;
+    private final MemberCredentialsRepository memberCredentialsRepository;
 
     @Transactional
     public Long uploadMarkDownFile(final Long memberId, final MultipartFile file) throws IOException {
@@ -79,15 +81,17 @@ public class WritingService {
 
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
         // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
-        final Member savedMember = memberRepository.save(member);
+        // TODO : MemberCredential에서 값 못찾을 경우 예외던지기
+        final Member member = memberRepository.findById(memberId).orElseThrow();
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
+        final NotionApiService notionApiService = new NotionApiService(memberCredentials.getNotionToken());
 
         final String blockId = request.blockId();
         final NotionParser notionParser = new NotionParser();
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = new Writing(savedMember, new Title(title));
+        final Writing writing = new Writing(member, new Title(title));
 
         final Writing savedWriting = writingRepository.save(writing);
 

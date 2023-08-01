@@ -22,14 +22,14 @@ const WritingPropertySection = ({ writingId }: Props) => {
     fetcher: () => getWritingProperties(writingId),
   });
 
-  if (!writingInfo) return <></>;
+  if (!writingInfo) return null;
 
   return (
     <S.WritingPropertySection>
-      <S.SectionHeader>Writing Info</S.SectionHeader>
+      <S.SectionTitle>Writing Info</S.SectionTitle>
       <S.InfoList>
         <S.Info>
-          <S.InfoHeader>PROPERTIES</S.InfoHeader>
+          <S.InfoTitle>PROPERTIES</S.InfoTitle>
           <S.InfoContent>
             <S.PropertyRow>
               <S.PropertyName>
@@ -43,7 +43,7 @@ const WritingPropertySection = ({ writingId }: Props) => {
           </S.InfoContent>
         </S.Info>
         <S.Info>
-          <S.InfoHeader>PUBLISHED</S.InfoHeader>
+          <S.InfoTitle>PUBLISHED</S.InfoTitle>
           <S.InfoContent>
             {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }) => {
               return (
@@ -88,7 +88,7 @@ const S = {
     flex-direction: column;
     gap: 2rem;
   `,
-  SectionHeader: styled.h1`
+  SectionTitle: styled.h1`
     display: flex;
     gap: 1.5rem;
     font-size: 1.5rem;
@@ -103,7 +103,7 @@ const S = {
   Info: styled.div`
     color: ${({ theme }) => theme.color.gray7};
   `,
-  InfoHeader: styled.h2`
+  InfoTitle: styled.h2`
     font-size: 1.3rem;
     font-weight: 600;
     line-height: 1.3rem;

@@ -13,13 +13,15 @@ permissions:
 
 jobs:
   build:
-    
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: move to frontend path
         run: |
           cd ./frontend
+      - name: Create .env.development variable
+        run: touch .env.development
+          echo "BASE_URL=${{secrets.BASE_URL_DEVELOPMENT}}" >> .env.development
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -37,7 +39,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend:latest
           platforms: linux/arm64
-    
+
   deploy:
     needs: build
     uses: ./.github/workflows/deploy.yml

@@ -1,10 +1,15 @@
 import { rest } from 'msw';
 import { writingURL } from 'constants/apis/url';
 import { writingContentMock } from 'mocks/writingContentMock';
-import { GetCategoryIdWritingListResponse, GetWritingResponse } from 'types/apis/writings';
+import {
+  GetCategoryIdWritingListResponse,
+  GetWritingPropertiesResponse,
+  GetWritingResponse,
+} from 'types/apis/writings';
 import { getWritingTableMock } from 'mocks/writingTableMock';
 
 export const writingHandlers = [
+  // 글 조회: GET
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
 
@@ -16,6 +21,34 @@ export const writingHandlers = [
           id: writingId,
           title: '테스트 글 제목',
           content: writingContentMock,
+        }),
+      );
+    }
+    return res(ctx.delay(300), ctx.status(404));
+  }),
+
+  // 글 정보: GET
+  rest.get(`${writingURL}/:writingId/properties`, (req, res, ctx) => {
+    const writingId = Number(req.params.writingId);
+
+    if (writingId === 200) {
+      return res(
+        ctx.delay(300),
+        ctx.status(200),
+        ctx.json<GetWritingPropertiesResponse>({
+          createdAt: new Date('2023-07-11T06:55:46.922Z'),
+          publishedDetails: [
+            {
+              blogName: 'MEDIUM',
+              publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+              tags: ['개발', '네트워크', '서버'],
+            },
+            {
+              blogName: 'TISTORY',
+              publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+              tags: ['프로그래밍', 'CS'],
+            },
+          ],
         }),
       );
     }

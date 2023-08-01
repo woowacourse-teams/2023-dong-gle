@@ -46,8 +46,8 @@ public class Category {
         return new Category(BASIC_CATEGORY_NAME, null, member);
     }
 
-    public static Category of(final CategoryName categoryName, final Category nextCategory, final Member member) {
-        return new Category(categoryName, nextCategory, member);
+    public static Category of(final CategoryName categoryName, final Member member) {
+        return new Category(categoryName, null, member);
     }
 
     public boolean isBasic() {

@@ -23,20 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class CategoryService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
 
-    @Transactional
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final Category category = Category.of(
                 new CategoryName(request.categoryName()),
-                null,
                 findMember
         );
         final Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId)
@@ -46,6 +44,7 @@ public class CategoryService {
         return savedCategory.getId();
     }
 
+    @Transactional(readOnly = true)
     public CategoriesResponse findAll(final Long memberId) {
         //TODO: member checking
         final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
@@ -55,6 +54,7 @@ public class CategoryService {
         return new CategoriesResponse(categoryResponses);
     }
 
+    @Transactional(readOnly = true)
     public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
         //TODO: member checking
         final Category findCategory = categoryRepository.findById(categoryId)
@@ -66,7 +66,6 @@ public class CategoryService {
         return new CategoryWritingsResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingSimpleResponses);
     }
 
-    @Transactional
     public void modifyCategory(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
         final Category findCategory = categoryRepository.findById(categoryId)
@@ -75,7 +74,6 @@ public class CategoryService {
         findCategory.changeName(new CategoryName(request.categoryName()));
     }
 
-    @Transactional
     public void removeCategory(final Long memberId, final Long categoryId) {
         //TODO: member checking
         final Category findCategory = categoryRepository.findById(categoryId)

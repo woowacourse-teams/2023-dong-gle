@@ -6,8 +6,8 @@ import org.donggle.backend.application.service.WritingService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
-import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.application.service.request.WritingTitleRequest;
+import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
@@ -64,7 +64,7 @@ public class WritingController {
 
     @GetMapping
     public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(@RequestParam final Long categoryId) {
-        final WritingListWithCategoryResponse response = writingService.findWritingList(1L, categoryId);
+        final WritingListWithCategoryResponse response = writingService.findWritingListByCategoryId(1L, categoryId);
         return ResponseEntity.ok(response);
     }
 

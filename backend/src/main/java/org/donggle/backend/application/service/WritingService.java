@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class WritingService {
     private static final String MD_FORMAT = ".md";
@@ -56,7 +56,6 @@ public class WritingService {
     private final BlogWritingRepository blogWritingRepository;
     private final CategoryRepository categoryRepository;
 
-    @Transactional
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
@@ -112,7 +111,6 @@ public class WritingService {
         return writing.getId();
     }
 
-    @Transactional
     public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {
         // TODO : authentication 후 member 객체 가져오도록 수정
         final Member findMember = memberRepository.findById(memberId)
@@ -124,6 +122,7 @@ public class WritingService {
         findWriting.updateTitle(new Title(request.title()));
     }
 
+    @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
@@ -135,6 +134,7 @@ public class WritingService {
         return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
     }
 
+    @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
@@ -143,7 +143,8 @@ public class WritingService {
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
     }
 
-    public WritingListWithCategoryResponse findWritingList(final Long memberId, final Long categoryId) {
+    @Transactional(readOnly = true)
+    public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());

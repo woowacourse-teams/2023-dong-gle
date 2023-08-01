@@ -8,7 +8,7 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
-import org.donggle.backend.ui.response.CategoriesResponse;
+import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -97,8 +97,8 @@ class CategoryServiceTest {
         final Long thirdId = categoryService.addCategory(1L, new CategoryAddRequest("세 번째 카테고리"));
 
         //when
-        final CategoriesResponse categoriesResponse = categoryService.findAll(1L);
-        final List<CategoryResponse> categories = categoriesResponse.categories();
+        final CategoryListResponse categoryListResponse = categoryService.findAll(1L);
+        final List<CategoryResponse> categories = categoryListResponse.categories();
 
         //then
         assertAll(

@@ -13,7 +13,7 @@ import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
-import org.donggle.backend.ui.response.CategoriesResponse;
+import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.donggle.backend.ui.response.WritingSimpleResponse;
@@ -31,8 +31,7 @@ public class CategoryService {
     private final WritingRepository writingRepository;
 
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
-        final Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final Member findMember = findMember(memberId);
         final Category category = Category.of(
                 new CategoryName(request.categoryName()),
                 findMember
@@ -45,20 +44,19 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public CategoriesResponse findAll(final Long memberId) {
+    public CategoryListResponse findAll(final Long memberId) {
         //TODO: member checking
         final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
         final List<CategoryResponse> categoryResponses = categories.stream()
                 .map(category -> new CategoryResponse(category.getId(), category.getCategoryNameValue()))
                 .toList();
-        return new CategoriesResponse(categoryResponses);
+        return new CategoryListResponse(categoryResponses);
     }
 
     @Transactional(readOnly = true)
     public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
         //TODO: member checking
-        final Category findCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
         final List<WritingSimpleResponse> writingSimpleResponses = findWritings.stream()
                 .map(writing -> new WritingSimpleResponse(writing.getId(), writing.getTitleValue()))
@@ -68,16 +66,14 @@ public class CategoryService {
 
     public void modifyCategory(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
-        final Category findCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        final Category findCategory = findCategory(categoryId);
         validateBasicCategory(findCategory);
         findCategory.changeName(new CategoryName(request.categoryName()));
     }
 
     public void removeCategory(final Long memberId, final Long categoryId) {
         //TODO: member checking
-        final Category findCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        final Category findCategory = findCategory(categoryId);
         validateBasicCategory(findCategory);
 
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
@@ -107,6 +103,16 @@ public class CategoryService {
 
     private Category findPreCategoryByCategoryId(final Long categoryId) {
         return categoryRepository.findPreCategoryByCategoryId(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
+
+    private Category findCategory(final Long categoryId) {
+        return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 }

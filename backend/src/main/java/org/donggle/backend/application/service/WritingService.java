@@ -13,10 +13,7 @@ import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingTitleRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.parser.notion.NotionParser;
@@ -57,6 +54,7 @@ public class WritingService {
     private final CategoryRepository categoryRepository;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
+        //TODO: member checking
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
             throw new InvalidFileFormatException();
@@ -64,11 +62,9 @@ public class WritingService {
         final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
 
         final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
-        // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
-        final Member savedMember = memberRepository.save(member);
+        final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
-        final Writing writing = new Writing(savedMember, new Title(findFileName(originalFilename)), findCategory);
+        final Writing writing = new Writing(findMember, new Title(findFileName(originalFilename)), findCategory);
         final Writing savedWriting = writingRepository.save(writing);
 
         final List<Content> contents = markDownParser.parse(originalFileText);
@@ -87,9 +83,8 @@ public class WritingService {
     }
 
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
-        // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
-        final Member savedMember = memberRepository.save(member);
+        //TODO: member checking
+        final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
 
         final String blockId = request.blockId();
@@ -97,7 +92,7 @@ public class WritingService {
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = new Writing(savedMember, new Title(title), findCategory);
+        final Writing writing = new Writing(findMember, new Title(title), findCategory);
 
         final Writing savedWriting = writingRepository.save(writing);
 
@@ -112,20 +107,16 @@ public class WritingService {
     }
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {
-        // TODO : authentication 후 member 객체 가져오도록 수정
-        final Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
-        final Writing findWriting = writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
-
+        //TODO: member checking
+        final Member findMember = findMember(memberId);
+        final Writing findWriting = findWriting(writingId);
         findWriting.updateTitle(new Title(request.title()));
     }
 
     @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
+        //TODO: member checking
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
-        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
 
@@ -136,10 +127,9 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
-        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
+        //TODO: member checking
         final Writing writing = findWriting(writingId);
         final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
-
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
     }
 
@@ -178,5 +168,10 @@ public class WritingService {
     private Writing findWriting(final Long writingId) {
         return writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

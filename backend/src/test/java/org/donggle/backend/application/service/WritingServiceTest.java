@@ -5,6 +5,7 @@ import org.donggle.backend.application.service.request.WritingTitleRequest;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
+import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -35,5 +37,19 @@ class WritingServiceTest {
         final Writing result = writingRepository.findById(1L)
                 .orElseThrow(() -> new WritingNotFoundException(1L));
         assertThat(result.getTitle()).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("카테고리에 해당하는 글의 목록 조회 테스트")
+    void findWritingListByCategoryId() {
+        //given
+        //when
+        final WritingListWithCategoryResponse response = writingService.findWritingListByCategoryId(1L, 1L);
+
+        //then
+        assertAll(
+                () -> assertThat(response.writings()).hasSize(1),
+                () -> assertThat(response.categoryName()).isEqualTo("기본")
+        );
     }
 }

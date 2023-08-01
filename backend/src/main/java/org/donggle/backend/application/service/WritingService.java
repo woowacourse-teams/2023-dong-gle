@@ -30,12 +30,15 @@ import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,12 +110,7 @@ public class WritingService {
         return writing.getId();
     }
 
-    private Category findCategory(final Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
-    }
-
-    public WritingDetailResponse findWriting(final Long memberId, final Long writingId) {
+    public WritingResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
@@ -120,25 +118,50 @@ public class WritingService {
 
         final String content = htmlRenderer.render(blocks);
 
-        return new WritingDetailResponse(writing.getId(), writing.getTitleValue(), content);
-    }
-
-    private Writing findWriting(final Long writingId) {
-        return writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
     }
 
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
-        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(writingId);
-        final List<PublishedDetailResponse> publishedTos = blogWritings.stream()
-                .map(blogWriting -> new PublishedDetailResponse(
-                        blogWriting.getBlogTypeValue(),
-                        blogWriting.getPublishedAt())
-                )
-                .toList();
+        final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
 
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
+    }
+
+    public WritingListWithCategoryResponse findWritingList(final Long memberId, final Long categoryId) {
+        //TODO: member checking
+        final Category findCategory = findCategory(categoryId);
+        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final List<WritingDetailResponse> writingDetailResponses = new ArrayList<>();
+        for (final Writing findWriting : findWritings) {
+            final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(findWriting.getId());
+            writingDetailResponses.add(new WritingDetailResponse(
+                    findWriting.getId(),
+                    findWriting.getTitleValue(),
+                    findWriting.getCreatedAt(),
+                    publishedTos
+            ));
+        }
+        return new WritingListWithCategoryResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingDetailResponses);
+    }
+
+    private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
+        return blogWritings.stream()
+                .map(blogWriting -> new PublishedDetailResponse(
+                        blogWriting.getBlogTypeValue(),
+                        blogWriting.getPublishedAt()))
+                .toList();
+    }
+
+    private Category findCategory(final Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+
+    private Writing findWriting(final Long writingId) {
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 }

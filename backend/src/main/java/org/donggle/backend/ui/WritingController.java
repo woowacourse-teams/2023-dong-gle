@@ -6,8 +6,9 @@ import org.donggle.backend.application.service.WritingService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
-import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -40,14 +42,20 @@ public class WritingController {
     }
 
     @GetMapping("/{writingId}")
-    public ResponseEntity<WritingDetailResponse> writingDetails(@PathVariable final Long writingId) {
-        final WritingDetailResponse response = writingService.findWriting(1L, writingId);
+    public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
+        final WritingResponse response = writingService.findWriting(1L, writingId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{writingId}/properties")
     public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(@PathVariable final Long writingId) {
         final WritingPropertiesResponse response = writingService.findWritingProperties(1L, writingId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(@RequestParam final Long categoryId) {
+        final WritingListWithCategoryResponse response = writingService.findWritingList(1L, categoryId);
         return ResponseEntity.ok(response);
     }
 

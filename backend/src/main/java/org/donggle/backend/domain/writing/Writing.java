@@ -36,6 +36,10 @@ public class Writing extends BaseEntity {
         this.title = title;
     }
 
+    public void updateTitle(final Title title) {
+        this.title = title;
+    }
+
     public String getTitleValue() {
         return this.title.getTitle();
     }

@@ -8,6 +8,7 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.notion.NotionApiService;
 import org.donggle.backend.application.service.notion.NotionBlockNode;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
+import org.donggle.backend.application.service.request.WritingTitleRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
@@ -23,6 +24,7 @@ import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Content;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
@@ -99,6 +101,18 @@ public class WritingService {
         blockRepository.saveAll(blocks);
 
         return writing.getId();
+    }
+
+    @Transactional
+    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {
+        // TODO : authentication 후 member 객체 가져오도록 수정
+        final Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        final Writing findWriting = writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+
+        findWriting.updateTitle(new Title(request.title()));
     }
 
     public WritingResponse findWriting(final Long memberId, final Long writingId) {

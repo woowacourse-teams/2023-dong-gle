@@ -1,6 +1,6 @@
 package org.donggle.backend.ui.response;
 
-public record WritingResponse(
+public record WritingDetailResponse(
         Long id,
         String title,
         String content

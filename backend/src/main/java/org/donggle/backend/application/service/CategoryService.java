@@ -9,11 +9,14 @@ import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.CategoriesResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
+import org.donggle.backend.ui.response.CategoryWritingsResponse;
+import org.donggle.backend.ui.response.WritingSimpleResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +55,17 @@ public class CategoryService {
         return new CategoriesResponse(categoryResponses);
     }
 
+    public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
+        //TODO: member checking
+        final Category findCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final List<WritingSimpleResponse> writingSimpleResponses = findWritings.stream()
+                .map(writing -> new WritingSimpleResponse(writing.getId(), writing.getTitleValue()))
+                .toList();
+        return new CategoryWritingsResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingSimpleResponses);
+    }
+
     @Transactional
     public void modifyCategory(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
@@ -69,15 +83,17 @@ public class CategoryService {
         validateBasicCategory(findCategory);
 
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
-        writingRepository.findAllByCategoryId(categoryId)
+        writingRepository.findAllByCategoryId(findCategory.getId())
                 .forEach(writing -> writing.changeCategory(basicCategory));
 
-        final Category preCategory = findPreCategoryByCategoryId(categoryId);
-        preCategory.changeNextCategory(findCategory.getNextCategory());
+        final Category nextCategory = findCategory.getNextCategory();
+        final Category preCategory = findPreCategoryByCategoryId(findCategory.getId());
+        findCategory.changeNextCategory(null);
+        categoryRepository.flush();
+        preCategory.changeNextCategory(nextCategory);
+        categoryRepository.delete(findCategory);
 
         //TODO: 글 순서 추가 후 글 순서 변경 로직 추가
-
-        categoryRepository.deleteById(categoryId);
     }
 
     private void validateBasicCategory(final Category category) {

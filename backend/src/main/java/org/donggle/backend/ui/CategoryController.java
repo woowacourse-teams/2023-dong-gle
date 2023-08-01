@@ -5,6 +5,7 @@ import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.ui.response.CategoriesResponse;
+import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,12 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<CategoriesResponse> categoryList() {
         final CategoriesResponse response = categoryService.findAll(1L);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryWritingsResponse> categoryWritingList(@PathVariable final Long categoryId) {
+        CategoryWritingsResponse response = categoryService.findAllWritings(1L, categoryId);
         return ResponseEntity.ok(response);
     }
 }

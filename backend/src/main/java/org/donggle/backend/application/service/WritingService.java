@@ -29,8 +29,8 @@ import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
+import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
-import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,7 +112,7 @@ public class WritingService {
                 .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
-    public WritingResponse findWriting(final Long memberId, final Long writingId) {
+    public WritingDetailResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
@@ -120,7 +120,7 @@ public class WritingService {
 
         final String content = htmlRenderer.render(blocks);
 
-        return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
+        return new WritingDetailResponse(writing.getId(), writing.getTitleValue(), content);
     }
 
     private Writing findWriting(final Long writingId) {

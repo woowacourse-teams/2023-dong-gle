@@ -10,6 +10,7 @@ import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.ui.response.CategoriesResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
+import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,23 @@ class CategoryServiceTest {
                 () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
                 () -> assertThat(categories.get(0).getNextCategory()).isNull(),
                 () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0))
+        );
+    }
+
+    @Test
+    @DisplayName("카테고리 글 목록 조회 테스트")
+    void findAllWritingsById() {
+        //given
+        //when
+        final CategoryWritingsResponse response = categoryService.findAllWritings(1L, 1L);
+        Writing findWriting = writingRepository.findById(1L).get();
+
+        //then
+        assertAll(
+                () -> assertThat(response.writings()).hasSize(1),
+                () -> assertThat(response.categoryName()).isEqualTo("기본"),
+                () -> assertThat(response.writings().get(0).id()).isEqualTo(findWriting.getId()),
+                () -> assertThat(response.writings().get(0).title()).isEqualTo(findWriting.getTitleValue())
         );
     }
 }

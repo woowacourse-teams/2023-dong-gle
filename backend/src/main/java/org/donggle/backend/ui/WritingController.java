@@ -6,8 +6,8 @@ import org.donggle.backend.application.service.WritingService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
-import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +40,8 @@ public class WritingController {
     }
 
     @GetMapping("/{writingId}")
-    public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
-        final WritingResponse response = writingService.findWriting(1L, writingId);
+    public ResponseEntity<WritingDetailResponse> writingDetails(@PathVariable final Long writingId) {
+        final WritingDetailResponse response = writingService.findWriting(1L, writingId);
         return ResponseEntity.ok(response);
     }
 

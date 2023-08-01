@@ -8,7 +8,7 @@ import { useFileUpload } from 'hooks/useFileUpload';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import PublishingSection from 'components/PublishingSection/PublishingSection';
+import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
 
 export type PageContext = {
   isLeftSidebarOpen?: boolean;
@@ -65,7 +65,7 @@ const Layout = () => {
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection isRightSidebarOpen={isRightSidebarOpen}>
-            <PublishingSection writingId={activeWritingId} isPublished={false} />
+            <WritingSideBar writingId={activeWritingId} />
           </S.RightSidebarSection>
         )}
       </S.Row>

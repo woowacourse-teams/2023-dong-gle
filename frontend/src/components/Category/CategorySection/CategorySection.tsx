@@ -1,42 +1,50 @@
 import Accordion from 'components/@common/Accordion/Accordion';
-import { useCategories } from 'components/Category/CategorySection/useCategories';
 import { styled } from 'styled-components';
-import { useCategoryDetail } from 'components/Category/CategorySection/useCategoryDetail';
+import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
 import Button from 'components/@common/Button/Button';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEvent } from 'react';
-import { useAddCategory } from './useAddCategory';
+import { KeyboardEvent, useState } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
-
-// TODO
-// [카테고리,글목록] 튜플 빌드 훅 작성
-// 토글 off시 데이터 지우기
+import { useCategoryDetails } from './useCategoryDetails';
+import { useCategoryMutation } from '../useCategoryMutation';
 
 const CategorySection = () => {
-  const { categories } = useCategories();
-  const { categoryId, writings, getWritings } = useCategoryDetail();
-  const { addCategory } = useAddCategory();
+  const { addCategory } = useCategoryMutation();
+  const { categoryId, writings, getWritings } = useCategoryWritings();
+  const { categoryDetails, getCategories } = useCategoryDetails(categoryId, writings);
   const {
     value,
-    resetValue,
     inputRef,
     handleOnChange,
     escapeInput: escapeAddCategory,
     isOpenInput,
     setIsOpenInput,
+    closeInput,
   } = useCategoryInput('');
+  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
-  const requestAddCategory = (e: KeyboardEvent<HTMLInputElement>) => {
+  const requestAddCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
 
-    addCategory(value);
-    setIsOpenInput(false);
-    resetValue();
+    closeInput();
+    await addCategory({ categoryName: value });
+    await getCategories();
   };
 
-  if (!categories) return null;
+  const toggleItem = (categoryId: number) => {
+    if (!openItems[categoryId]) {
+      getWritings(categoryId);
+    }
+
+    setOpenItems((prevOpenItems) => ({
+      ...prevOpenItems,
+      [categoryId]: !prevOpenItems[categoryId],
+    }));
+  };
+
+  if (!categoryDetails) return null;
 
   return (
     <S.Section>
@@ -47,6 +55,7 @@ const CategorySection = () => {
             type='text'
             value={value}
             ref={inputRef}
+            onBlur={closeInput}
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}
@@ -58,14 +67,17 @@ const CategorySection = () => {
         )}
       </S.Header>
       <Accordion>
-        {categories.map((category) => {
+        {categoryDetails.map((categoryDetail) => {
+          console.log(categoryDetail);
           return (
-            <Accordion.Item>
-              <Accordion.Title onIconClick={() => getWritings(category.id)}>
-                <Category id={category.id} categoryName={category.categoryName} />
+            <Accordion.Item key={categoryDetail.id}>
+              <Accordion.Title onIconClick={() => toggleItem(categoryDetail.id)}>
+                <Category id={categoryDetail.id} categoryName={categoryDetail.categoryName} />
               </Accordion.Title>
               <Accordion.Panel>
-                {writings && categoryId === category.id && <WritingList writingList={writings} />}
+                {categoryId === categoryDetail.id && categoryDetail.writings && (
+                  <WritingList writingList={categoryDetail.writings} />
+                )}
               </Accordion.Panel>
             </Accordion.Item>
           );

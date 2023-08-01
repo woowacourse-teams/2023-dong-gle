@@ -1,7 +1,7 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
-import { Writing } from '../CategorySection/useCategoryDetails';
+import { Writing } from 'types/components/category';
 
 type Props = {
   writingList: Writing[];

@@ -2,30 +2,44 @@ import { getCategories } from 'apis/category';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { useEffect, useState } from 'react';
 import { GetCategoriesResponse, GetCategoryDetailResponse } from 'types/apis/category';
-
-export type Writing = {
-  id: number;
-  title: string;
-};
+import { Writing } from 'types/components/category';
 
 export const useCategoryDetails = (categoryId: number | null, writings: Writing[] | null) => {
-  const { data } = useGetQuery<GetCategoriesResponse>({
+  const { data, getData } = useGetQuery<GetCategoriesResponse>({
     fetcher: getCategories,
   });
 
   const [categoryDetails, setCategoryDetails] = useState<GetCategoryDetailResponse[] | null>(null);
 
   useEffect(() => {
-    setCategoryDetails(() => {
-      return data
-        ? data.categories.map((category) => {
-            return {
+    if (!data) return;
+
+    const initCategoryDetails = () => {
+      return data.categories.map((category) => {
+        return {
+          id: category.id,
+          categoryName: category.categoryName,
+          writings: null,
+        };
+      });
+    };
+
+    const updateAddedCategory = (prevDetails: GetCategoryDetailResponse[]) => {
+      return data.categories.map((category) => {
+        const prevDetail = prevDetails.find((detail) => detail.id === category.id);
+
+        return prevDetail
+          ? prevDetail
+          : {
               id: category.id,
               categoryName: category.categoryName,
               writings: null,
             };
-          })
-        : null;
+      });
+    };
+
+    setCategoryDetails((prevDetails) => {
+      return prevDetails ? updateAddedCategory(prevDetails) : initCategoryDetails();
     });
   }, [data]);
 
@@ -40,10 +54,12 @@ export const useCategoryDetails = (categoryId: number | null, writings: Writing[
       });
     };
 
-    if (writings && categoryId) {
+    if (categoryId && writings) {
       updateCategoryDetails(categoryId, writings);
+
+      console.log(categoryDetails);
     }
   }, [writings]);
 
-  return { categoryDetails };
+  return { categoryDetails, getCategories: getData };
 };

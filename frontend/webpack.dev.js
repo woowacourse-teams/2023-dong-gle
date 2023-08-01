@@ -13,7 +13,7 @@ module.exports = merge(common, {
     open: true,
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({ path: './.env.development' }),
     new webpack.DefinePlugin({
       PRODUCT_ENV: JSON.stringify(process.env.NODE_ENV),
       MOCKING_ENV: JSON.stringify(process.env.MOCKING_ENV),

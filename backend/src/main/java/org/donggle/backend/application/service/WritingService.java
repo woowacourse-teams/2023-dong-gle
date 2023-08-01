@@ -10,7 +10,7 @@ import org.donggle.backend.application.service.notion.NotionApiService;
 import org.donggle.backend.application.service.notion.NotionBlockNode;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
-import org.donggle.backend.application.service.request.WritingTitleRequest;
+import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
@@ -124,7 +124,7 @@ public class WritingService {
         }
     }
 
-    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {
+    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingModifyRequest request) {
         //TODO: member checking
         final Member findMember = findMember(memberId);
         final Writing findWriting = findWriting(writingId);
@@ -167,6 +167,50 @@ public class WritingService {
             ));
         }
         return new WritingListWithCategoryResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingDetailResponses);
+    }
+
+    public void modifyWritingOrder(final Long memberId, final Long writingId, final WritingModifyRequest request) {
+        //TODO: member checking
+        final Long nextWritingId = request.nextWritingId();
+        final Long targetCategoryId = request.targetCategoryId();
+
+        final Writing source = findWriting(writingId);
+        deleteSourceOrder(source);
+        addSourceOrder(nextWritingId, source);
+
+        changeSourceCategory(targetCategoryId, source);
+    }
+
+    private void deleteSourceOrder(final Writing source) {
+        final Writing sourceNext = source.getNextWriting();
+        source.changeNextWriting(null);
+
+        if (writingRepository.countByNextWritingId(source.getId()) != 0) {
+            final Writing sourcePre = writingRepository.findPreWritingByWritingId(source.getId())
+                    .orElseThrow(() -> new WritingNotFoundException(source.getId()));
+            sourcePre.changeNextWriting(sourceNext);
+        }
+    }
+
+    private void addSourceOrder(final Long nextWritingId, final Writing source) {
+        if (writingRepository.countByNextWritingId(source.getId()) != 0) {
+            final Writing targetPre = writingRepository.findPreWritingByWritingId(nextWritingId)
+                    .orElseThrow(() -> new WritingNotFoundException(nextWritingId));
+            targetPre.changeNextWriting(source);
+        }
+        if (nextWritingId != -1) {
+            final Writing targetNext = findWriting(nextWritingId);
+            source.changeNextWriting(targetNext);
+        }
+    }
+
+    private void changeSourceCategory(final Long targetCategoryId, final Writing source) {
+        final Category targetCategory = findCategory(targetCategoryId);
+        final Category sourceCategory = source.getCategory();
+
+        if (!targetCategory.equals(sourceCategory)) {
+            source.changeCategory(targetCategory);
+        }
     }
 
     private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {

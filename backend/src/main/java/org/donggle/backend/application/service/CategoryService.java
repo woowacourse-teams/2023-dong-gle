@@ -20,7 +20,10 @@ import org.donggle.backend.ui.response.WritingSimpleResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -58,10 +61,34 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
-        final List<WritingSimpleResponse> writingSimpleResponses = findWritings.stream()
+        List<Writing> sortedWriting = sortedWriting(findWritings);
+
+        final List<WritingSimpleResponse> writingSimpleResponses = sortedWriting.stream()
                 .map(writing -> new WritingSimpleResponse(writing.getId(), writing.getTitleValue()))
                 .toList();
         return new CategoryWritingsResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingSimpleResponses);
+    }
+
+    private List<Writing> sortedWriting(final List<Writing> findWritings) {
+        List<Writing> copy = new ArrayList<>(findWritings);
+        final List<Writing> nextWritings = findWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
+
+        final Map<Writing, Writing> aoq = new LinkedHashMap<>();
+        for (final Writing findWriting : findWritings) {
+            aoq.put(findWriting, findWriting.getNextWriting());
+        }
+        copy.removeAll(nextWritings);
+        Writing firstWriting = copy.get(0); // 처음꺼 찾음
+
+        final List<Writing> sortedWriting = new ArrayList<>();
+        sortedWriting.add(firstWriting);
+        while (firstWriting.getNextWriting() != null) {
+            firstWriting = aoq.get(firstWriting);
+            sortedWriting.add(firstWriting);
+        }
+        return sortedWriting;
     }
 
     public void modifyCategory(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {

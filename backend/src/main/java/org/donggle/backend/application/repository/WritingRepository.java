@@ -13,9 +13,14 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     Long countByCategoryId(Long id);
 
+    Long countByNextWritingId(Long nextWritingId);
+
     @Query("select w from Writing w " +
             "where w.category.id = :categoryId and " +
             "w.nextWriting is null")
     Optional<Writing> findLastWritingByCategoryId(@Param("categoryId") final Long categoryId);
 
+    @Query("select w from Writing w " +
+            "where w.nextWriting.id = :writingId")
+    Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
 }

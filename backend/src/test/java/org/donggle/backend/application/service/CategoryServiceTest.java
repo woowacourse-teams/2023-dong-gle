@@ -1,10 +1,12 @@
 package org.donggle.backend.application.service;
 
 import org.donggle.backend.application.repository.CategoryRepository;
+import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.ui.response.CategoriesResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
@@ -27,6 +29,8 @@ class CategoryServiceTest {
     private CategoryService categoryService;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private WritingRepository writingRepository;
 
     @Test
     @DisplayName("기본 카테고리 조회 테스트")
@@ -35,7 +39,7 @@ class CategoryServiceTest {
         final Category basicCategory = categoryRepository.findById(1L).get();
 
         //when
-        final Category lastCategory = categoryRepository.findLastByMemberId(1L).get();
+        final Category lastCategory = categoryRepository.findLastCategoryByMemberId(1L).get();
 
         //then
         assertThat(basicCategory).isEqualTo(lastCategory);
@@ -50,7 +54,7 @@ class CategoryServiceTest {
 
         final Category basicCategory = categoryRepository.findById(1L).get();
         final Category savedCategory = categoryRepository.findById(savedCategoryId).get();
-        final Category expectedSavedCategory = categoryRepository.findLastByMemberId(1L).get();
+        final Category expectedSavedCategory = categoryRepository.findLastCategoryByMemberId(1L).get();
 
         //then
         assertAll(
@@ -103,6 +107,33 @@ class CategoryServiceTest {
                         new CategoryResponse(secondId, "두 번째 카테고리"),
                         new CategoryResponse(thirdId, "세 번째 카테고리")
                 )
+        );
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 테스트")
+    void removeCategory() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+        final Category secondCategory = categoryRepository.findById(secondId).get();
+        writingRepository.findById(1L).get()
+                .changeCategory(secondCategory);
+
+        //when
+        categoryService.removeCategory(1L, secondId);
+        final List<Category> categories = categoryRepository.findAllByMemberId(1L);
+
+        categoryRepository.flush();
+        writingRepository.flush();
+
+        final Writing writing = writingRepository.findById(1L).get();
+
+        //then
+        assertAll(
+                () -> assertThat(categories).hasSize(1),
+                () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
+                () -> assertThat(categories.get(0).getNextCategory()).isNull(),
+                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0))
         );
     }
 }

@@ -3,6 +3,7 @@ package org.donggle.backend.application.service;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
@@ -24,6 +25,7 @@ import java.util.List;
 public class CategoryService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final WritingRepository writingRepository;
 
     @Transactional
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
@@ -34,11 +36,20 @@ public class CategoryService {
                 null,
                 findMember
         );
-        final Category lastCategory = categoryRepository.findLastByMemberId(memberId)
+        final Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId)
                 .orElseThrow(IllegalStateException::new);
         final Category savedCategory = categoryRepository.save(category);
-        lastCategory.updateNext(savedCategory);
+        lastCategory.changeNextCategory(savedCategory);
         return savedCategory.getId();
+    }
+
+    public CategoriesResponse findAll(final Long memberId) {
+        //TODO: member checking
+        final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
+        final List<CategoryResponse> categoryResponses = categories.stream()
+                .map(category -> new CategoryResponse(category.getId(), category.getCategoryNameValue()))
+                .toList();
+        return new CategoriesResponse(categoryResponses);
     }
 
     @Transactional
@@ -56,7 +67,16 @@ public class CategoryService {
         final Category findCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
         validateBasicCategory(findCategory);
-        //TODO: 카테고리 삭제 시 카테고리에 포함된 글들 기본 카테고리로 이동
+
+        final Category basicCategory = findBasicCategoryByMemberId(memberId);
+        writingRepository.findAllByCategoryId(categoryId)
+                .forEach(writing -> writing.changeCategory(basicCategory));
+
+        final Category preCategory = findPreCategoryByCategoryId(categoryId);
+        preCategory.changeNextCategory(findCategory.getNextCategory());
+
+        //TODO: 글 순서 추가 후 글 순서 변경 로직 추가
+
         categoryRepository.deleteById(categoryId);
     }
 
@@ -66,12 +86,13 @@ public class CategoryService {
         }
     }
 
-    public CategoriesResponse findAll(final Long memberId) {
-        //TODO: member checking
-        final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
-        final List<CategoryResponse> categoryResponses = categories.stream()
-                .map(category -> new CategoryResponse(category.getId(), category.getCategoryNameValue()))
-                .toList();
-        return new CategoriesResponse(categoryResponses);
+    private Category findBasicCategoryByMemberId(final Long memberId) {
+        return categoryRepository.findFirstByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    private Category findPreCategoryByCategoryId(final Long categoryId) {
+        return categoryRepository.findPreCategoryByCategoryId(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 }

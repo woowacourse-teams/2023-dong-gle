@@ -45,6 +45,10 @@ public class Writing extends BaseEntity {
         return this.title.getTitle();
     }
 
+    public void changeCategory(final Category category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -11,9 +11,14 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select c from Category c " +
             "where c.member.id = :memberId and " +
-            "c.nextCategory is null"
-    )
-    Optional<Category> findLastByMemberId(@Param("memberId") final Long memberId);
+            "c.nextCategory is null")
+    Optional<Category> findLastCategoryByMemberId(@Param("memberId") final Long memberId);
 
     List<Category> findAllByMemberId(final Long memberId);
+
+    Optional<Category> findFirstByMemberId(final Long memberId);
+
+    @Query("select c from Category c " +
+            "where c.nextCategory.id = :categoryId")
+    Optional<Category> findPreCategoryByCategoryId(@Param("categoryId") final Long categoryId);
 }

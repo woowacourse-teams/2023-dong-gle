@@ -50,20 +50,20 @@ public class Category {
         return new Category(categoryName, nextCategory, member);
     }
 
-    public void updateNext(final Category nextCategory) {
-        this.nextCategory = nextCategory;
-    }
-
-    public void changeName(final CategoryName categoryName) {
-        this.categoryName = categoryName;
-    }
-
     public boolean isBasic() {
         return this.categoryName.equals(BASIC_CATEGORY_NAME);
     }
 
     public String getCategoryNameValue() {
         return categoryName.getName();
+    }
+
+    public void changeName(final CategoryName categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public void changeNextCategory(final Category nextCategory) {
+        this.nextCategory = nextCategory;
     }
 
     @Override

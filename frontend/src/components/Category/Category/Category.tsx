@@ -14,7 +14,6 @@ const Category = ({ id, categoryName }: Props) => {
   const [name, setName] = useState(categoryName);
   const {
     value,
-    resetValue,
     inputRef,
     handleOnChange,
     escapeInput: escapeRename,
@@ -28,15 +27,14 @@ const Category = ({ id, categoryName }: Props) => {
   const requestChangedName = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
 
+    setName(value);
+    closeInput();
     await patchCategory({
       categoryId: id,
       body: {
         categoryName: value,
       },
     });
-    setIsOpenInput(false);
-    setName(value);
-    resetValue();
   };
 
   const openRenamingInput = (e: MouseEvent<SVGSVGElement>) => {
@@ -52,7 +50,7 @@ const Category = ({ id, categoryName }: Props) => {
   };
 
   return (
-    <S.CategoryButton $isOpenInput={isOpenInput} onClick={() => goWritingTablePage(id)}>
+    <S.Container>
       {isOpenInput ? (
         <S.Input
           type='text'
@@ -65,7 +63,9 @@ const Category = ({ id, categoryName }: Props) => {
         />
       ) : (
         <>
-          <S.Text>{name}</S.Text>
+          <S.CategoryButton onClick={() => goWritingTablePage(id)}>
+            <S.Text>{name}</S.Text>
+          </S.CategoryButton>
           <S.IconContainer>
             <button>
               <PencilIcon onClick={openRenamingInput} width={12} height={12} />
@@ -76,14 +76,14 @@ const Category = ({ id, categoryName }: Props) => {
           </S.IconContainer>
         </>
       )}
-    </S.CategoryButton>
+    </S.Container>
   );
 };
 
 export default Category;
 
 const S = {
-  CategoryButton: styled.button<Record<'$isOpenInput', boolean>>`
+  Container: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -93,8 +93,6 @@ const S = {
     border-radius: 8px;
     font-size: 1.4rem;
 
-    cursor: ${({ $isOpenInput }) => ($isOpenInput ? 'default' : 'cursor')};
-
     &:hover {
       div {
         display: inline-flex;
@@ -103,11 +101,13 @@ const S = {
     }
   `,
 
-  Text: styled.p`
+  CategoryButton: styled.button`
     flex: 1;
     min-width: 0;
     text-align: left;
+  `,
 
+  Text: styled.p`
     font-weight: 700;
     overflow: hidden;
     white-space: nowrap;

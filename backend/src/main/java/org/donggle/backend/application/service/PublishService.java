@@ -52,23 +52,23 @@ public class PublishService {
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
 
-
+        final BlogWriting blogWriting;
         switch (blog.getBlogType()) {
             case MEDIUM -> {
                 final MediumApiService mediumApiService = new MediumApiService();
                 final MediumPublishRequest request = buildMediumRequest(member, publishRequest, writing, content);
                 final MediumPublishResponse response = mediumApiService.publishContent(request);
-                final BlogWriting blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
-                blogWritingRepository.save(blogWriting);
+                blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
             }
             case TISTORY -> {
                 final TistoryApiService tistoryApiService = new TistoryApiService();
                 final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
                 final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
-                final BlogWriting blogWriting = new BlogWriting(blog, writing, response.tistory().item().getDateTime());
-                blogWritingRepository.save(blogWriting);
+                blogWriting = new BlogWriting(blog, writing, response.tistory().item().getDateTime());
             }
+            default -> throw new IllegalArgumentException("호환하지 않는 블로그 입니다.");
         }
+        blogWritingRepository.save(blogWriting);
     }
 
     private TistoryPublishRequest buildTistoryRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
@@ -80,6 +80,7 @@ public class PublishService {
         return TistoryPublishRequest.builder()
                 .access_token(tistoryToken)
                 .blogName(tistoryBlogName)
+                .output("json")
                 .title(writing.getTitleValue())
                 .content(content)
                 .tag(String.join(",", publishRequest.tags()))

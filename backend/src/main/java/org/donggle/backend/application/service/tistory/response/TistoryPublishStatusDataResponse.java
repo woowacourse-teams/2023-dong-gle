@@ -4,6 +4,5 @@ public record TistoryPublishStatusDataResponse(
         int status,
         Long postId,
         String url
-
 ) {
 }

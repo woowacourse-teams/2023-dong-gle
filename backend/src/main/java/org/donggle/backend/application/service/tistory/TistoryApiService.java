@@ -22,6 +22,7 @@ public class TistoryApiService {
     private static final int BAD_REQUEST = 400;
     private static final int UNAUTHORIZED = 401;
     private static final int FORBIDDEN = 403;
+
     private final WebClient webClient;
 
     public TistoryApiService() {

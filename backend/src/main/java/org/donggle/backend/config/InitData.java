@@ -3,10 +3,12 @@ package org.donggle.backend.config;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogRepository;
+import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
@@ -46,6 +48,7 @@ public class InitData implements CommandLineRunner {
         private final MemberRepository memberRepository;
         private final WritingRepository writingRepository;
         private final BlockRepository blockRepository;
+        private final CategoryRepository categoryRepository;
 
         @Transactional
         public void init() {
@@ -55,12 +58,15 @@ public class InitData implements CommandLineRunner {
                     new Password("1234")
             ));
 
+            final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
+
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
-            Writing savedWriting = writingRepository.save(new Writing(
+            final Writing savedWriting = writingRepository.save(new Writing(
                     savedMember,
-                    new Title("테스트 글")
+                    new Title("테스트 글"),
+                    savedCategory
             ));
 
             blockRepository.save(new Block(

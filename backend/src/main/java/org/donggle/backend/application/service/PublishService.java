@@ -40,8 +40,6 @@ public class PublishService {
     private final BlogWritingRepository blogWritingRepository;
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
-    private final MediumApiService mediumApiService = new MediumApiService();
-    private final TistoryApiService tistoryApiService = new TistoryApiService();
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final String blogName = publishRequest.publishTo();
@@ -57,12 +55,14 @@ public class PublishService {
 
         switch (blog.getBlogType()) {
             case MEDIUM -> {
+                final MediumApiService mediumApiService = new MediumApiService();
                 final MediumPublishRequest request = buildMediumRequest(member, publishRequest, writing, content);
                 final MediumPublishResponse response = mediumApiService.publishContent(request);
                 final BlogWriting blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
                 blogWritingRepository.save(blogWriting);
             }
             case TISTORY -> {
+                final TistoryApiService tistoryApiService = new TistoryApiService();
                 final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
                 final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
                 final BlogWriting blogWriting = new BlogWriting(blog, writing, response.tistory().item().getDateTime());

@@ -15,11 +15,15 @@ const useCategoryInput = (initialValue: string) => {
 
   const resetValue = () => setValue('');
 
+  const closeInput = () => {
+    setIsOpenInput(false);
+    resetValue();
+  };
+
   const escapeInput = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Escape') return;
 
-    setIsOpenInput(false);
-    resetValue();
+    closeInput();
   };
 
   return {
@@ -30,6 +34,7 @@ const useCategoryInput = (initialValue: string) => {
     escapeInput,
     isOpenInput,
     setIsOpenInput,
+    closeInput,
   };
 };
 

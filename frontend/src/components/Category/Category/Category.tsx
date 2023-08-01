@@ -1,10 +1,9 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
-import { useEraseCategory } from 'components/Category/Category/useEraseCategory';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { KeyboardEvent, MouseEvent, useState } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
-import { usePatchCategory } from 'components/Category/Category/usePatchCategory';
+import { useCategoryMutation } from '../useCategoryMutation';
 
 type Props = {
   id: number;
@@ -21,15 +20,20 @@ const Category = ({ id, categoryName }: Props) => {
     escapeInput: escapeRename,
     isOpenInput,
     setIsOpenInput,
+    closeInput,
   } = useCategoryInput('');
-  const { renameCategory } = usePatchCategory();
-  const { eraseCategory } = useEraseCategory();
+  const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
 
-  const requestChangedName = (e: KeyboardEvent<HTMLInputElement>) => {
+  const requestChangedName = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
 
-    renameCategory(id, value);
+    await patchCategory({
+      categoryId: id,
+      body: {
+        categoryName: value,
+      },
+    });
     setIsOpenInput(false);
     setName(value);
     resetValue();
@@ -41,10 +45,10 @@ const Category = ({ id, categoryName }: Props) => {
     setIsOpenInput(true);
   };
 
-  const deleteCategory = (e: MouseEvent<SVGSVGElement>) => {
+  const deleteCategoryClick = async (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
 
-    eraseCategory(id);
+    await deleteCategory(id);
   };
 
   return (
@@ -54,6 +58,7 @@ const Category = ({ id, categoryName }: Props) => {
           type='text'
           value={value}
           ref={inputRef}
+          onBlur={closeInput}
           onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
@@ -66,7 +71,7 @@ const Category = ({ id, categoryName }: Props) => {
               <PencilIcon onClick={openRenamingInput} width={12} height={12} />
             </button>
             <button>
-              <DeleteIcon onClick={deleteCategory} width={12} height={12} />
+              <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
             </button>
           </S.IconContainer>
         </>

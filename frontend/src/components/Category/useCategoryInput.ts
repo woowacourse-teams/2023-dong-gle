@@ -9,7 +9,7 @@ const useCategoryInput = (initialValue: string) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, []);
+  }, [isOpenInput]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 

@@ -3,11 +3,15 @@ import { useEraseCategory } from 'components/Category/Category/useEraseCategory'
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { KeyboardEvent, MouseEvent, useState } from 'react';
 import { styled } from 'styled-components';
-import { CategoryResponse } from 'types/apis/category';
 import useCategoryInput from '../useCategoryInput';
 import { usePatchCategory } from 'components/Category/Category/usePatchCategory';
 
-const Category = ({ id, categoryName }: CategoryResponse) => {
+type Props = {
+  id: number;
+  categoryName: string;
+};
+
+const Category = ({ id, categoryName }: Props) => {
   const [name, setName] = useState(categoryName);
   const {
     value,
@@ -26,25 +30,25 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
     if (e.key !== 'Enter') return;
 
     renameCategory(id, value);
-    setIsOpenInput(() => false);
-    setName(() => value);
+    setIsOpenInput(false);
+    setName(value);
     resetValue();
   };
 
-  const handlePencilIconClick = (e: MouseEvent<SVGSVGElement>) => {
+  const openRenamingInput = (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
 
     setIsOpenInput(true);
   };
 
-  const handleTrashcanIconClick = (e: MouseEvent<SVGSVGElement>) => {
+  const deleteCategory = (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
 
     eraseCategory(id);
   };
 
   return (
-    <S.CategoryButton onClick={() => goWritingTablePage(id)}>
+    <S.CategoryButton $isOpenInput={isOpenInput} onClick={() => goWritingTablePage(id)}>
       {isOpenInput ? (
         <S.Input
           type='text'
@@ -55,16 +59,18 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
           onKeyUp={requestChangedName}
         />
       ) : (
-        <S.Text>{name}</S.Text>
+        <>
+          <S.Text>{name}</S.Text>
+          <S.IconContainer>
+            <button>
+              <PencilIcon onClick={openRenamingInput} width={12} height={12} />
+            </button>
+            <button>
+              <DeleteIcon onClick={deleteCategory} width={12} height={12} />
+            </button>
+          </S.IconContainer>
+        </>
       )}
-      <S.IconContainer>
-        <button>
-          <PencilIcon onClick={handlePencilIconClick} width={12} height={12} />
-        </button>
-        <button>
-          <DeleteIcon onClick={handleTrashcanIconClick} width={12} height={12} />
-        </button>
-      </S.IconContainer>
     </S.CategoryButton>
   );
 };
@@ -72,7 +78,7 @@ const Category = ({ id, categoryName }: CategoryResponse) => {
 export default Category;
 
 const S = {
-  CategoryButton: styled.button`
+  CategoryButton: styled.button<Record<'$isOpenInput', boolean>>`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -81,6 +87,8 @@ const S = {
     padding: 0.8rem;
     border-radius: 8px;
     font-size: 1.4rem;
+
+    cursor: ${({ $isOpenInput }) => ($isOpenInput ? 'default' : 'cursor')};
 
     &:hover {
       div {
@@ -105,9 +113,5 @@ const S = {
 
   IconContainer: styled.div`
     display: none;
-
-    & > button {
-      cursor: pointer;
-    }
   `,
 };

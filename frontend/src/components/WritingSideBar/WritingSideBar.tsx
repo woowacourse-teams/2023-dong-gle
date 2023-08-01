@@ -5,27 +5,25 @@ import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
 
-export const TAB_KEYS = {
-  WritingProperty: 1,
-  Publishing: 2,
-  PublishingProperty: 3,
-};
+export enum TabKeys {
+  WritingProperty = 'WritingProperty',
+  Publishing = 'Publishing',
+  PublishingProperty = 'PublishingProperty',
+}
 
 type Props = { writingId: number };
 
 const WritingSideBar = ({ writingId }: Props) => {
-  const { currentTab, changeCurrentTab } = useCurrentTab(TAB_KEYS.WritingProperty);
+  const { currentTab, changeCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
 
   const menus = [
     {
-      key: TAB_KEYS.WritingProperty,
-      name: 'WritingProperty',
+      key: TabKeys.WritingProperty,
       label: <InfoIcon width={24} height={24} />,
       content: <></>, // TODO: 글 정보 탭 구현
     },
     {
-      key: TAB_KEYS.Publishing,
-      name: 'Publishing',
+      key: TabKeys.Publishing,
       label: <PublishingIcon width={24} height={24} />,
       content: (
         <PublishingSection
@@ -36,8 +34,7 @@ const WritingSideBar = ({ writingId }: Props) => {
       ),
     },
     {
-      key: TAB_KEYS.PublishingProperty,
-      name: 'PublishingProperty',
+      key: TabKeys.PublishingProperty,
       label: 'PublishingProperty',
       content: <PublishingPropertySection changeCurrentTab={changeCurrentTab} />,
     },
@@ -47,17 +44,17 @@ const WritingSideBar = ({ writingId }: Props) => {
     <S.SidebarSection>
       <S.MenuTabList>
         {menus
-          .filter((menu) => menu.key !== TAB_KEYS.PublishingProperty)
+          .filter((menu) => menu.key !== TabKeys.PublishingProperty)
           .map((menu) => (
             <S.Tab>
               <S.Input
                 type='radio'
                 name='tab'
-                id={menu.name}
+                id={menu.key}
                 checked={currentTab === menu.key}
                 onClick={() => changeCurrentTab(menu.key)}
               />
-              <S.Label htmlFor={menu.name}>{menu.label}</S.Label>
+              <S.Label htmlFor={menu.key}>{menu.label}</S.Label>
             </S.Tab>
           ))}
       </S.MenuTabList>

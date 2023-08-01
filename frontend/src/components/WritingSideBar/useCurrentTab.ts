@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-export const useCurrentTab = (defaultTabKey: number) => {
+export const useCurrentTab = <TabKey>(defaultTabKey: TabKey) => {
   const [currentTab, setCurrentTab] = useState(defaultTabKey);
 
-  const changeCurrentTab = (tabKey: number) => {
+  const changeCurrentTab = (tabKey: TabKey) => {
     setCurrentTab(tabKey);
   };
 

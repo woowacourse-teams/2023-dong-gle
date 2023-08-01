@@ -14,3 +14,4 @@ export { ReactComponent as SidebarRightIcon } from './sidebar-right.svg';
 export { ReactComponent as SettingIcon } from './setting.svg';
 export { ReactComponent as InfoIcon } from './info.svg';
 export { ReactComponent as PublishingIcon } from './publishing.svg';
+export { ReactComponent as ArrowRightIcon } from './arrow-right.svg';

@@ -5,9 +5,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.dev.js",
-    "start": "webpack serve --config webpack.dev.js",
-    "start:mocking": "yarn start && --env MOCKING",
+    "build:prod": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.dev.js",
+    "start": "cross-env NODE_ENV=development webpack serve --config webpack.dev.js",
+    "start:mocking": "cross-env MOCKING_ENV=true yarn start",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest --maxWorkers=50%"
@@ -40,6 +41,8 @@
     "@types/styled-components": "5.1.26",
     "@typescript-eslint/eslint-plugin": "5.61.0",
     "@typescript-eslint/parser": "5.61.0",
+    "cross-env": "^7.0.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "8.44.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-import-resolver-typescript": "3.5.5",

@@ -9,3 +9,7 @@ export { ReactComponent as LeftArrowHeadIcon } from './left-arrow-head.svg';
 export { ReactComponent as TistoryLogoIcon } from './tistory-logo.svg';
 export { ReactComponent as MediumLogoIcon } from './medium-logo.svg';
 export { ReactComponent as CloseRounded } from './close-rounded.svg';
+export { ReactComponent as SidebarLeftIcon } from './sidebar-left.svg';
+export { ReactComponent as SidebarRightIcon } from './sidebar-right.svg';
+export { ReactComponent as SettingIcon } from './setting.svg';
+export { ReactComponent as ArrowRightIcon } from './arrow-right.svg';

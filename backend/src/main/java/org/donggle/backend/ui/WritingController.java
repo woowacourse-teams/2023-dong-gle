@@ -7,11 +7,13 @@ import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
+import org.donggle.backend.application.service.request.WritingTitleRequest;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +47,13 @@ public class WritingController {
     public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
         final WritingResponse response = writingService.findWriting(1L, writingId);
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{writingId}")
+    public ResponseEntity<Void> writingTitleModify(@PathVariable final Long writingId,
+                                                   @RequestBody final WritingTitleRequest request) {
+        writingService.modifyWritingTitle(1L, writingId, request);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{writingId}/properties")

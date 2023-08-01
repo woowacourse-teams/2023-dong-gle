@@ -64,11 +64,14 @@ public class WritingService {
         final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
-        final Writing writing = new Writing(findMember, new Title(findFileName(originalFilename)), findCategory);
-        final Writing savedWriting = writingRepository.save(writing);
+        final Writing writing = Writing.lastOf(
+                findMember,
+                new Title(findFileName(originalFilename)),
+                findCategory
+        );
+        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<Content> contents = markDownParser.parse(originalFileText);
-        //TODO : CASCADE 추가
         final List<Block> blocks = contents.stream()
                 .map(content -> new Block(savedWriting, content))
                 .toList();
@@ -92,9 +95,12 @@ public class WritingService {
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = new Writing(findMember, new Title(title), findCategory);
-
-        final Writing savedWriting = writingRepository.save(writing);
+        final Writing writing = Writing.lastOf(
+                findMember,
+                new Title(findFileName(title)),
+                findCategory
+        );
+        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode);
         final List<Content> contents = notionParser.parseBody(bodyBlockNodes);
@@ -104,6 +110,18 @@ public class WritingService {
         blockRepository.saveAll(blocks);
 
         return writing.getId();
+    }
+
+    private Writing saveAndGetWriting(final Category findCategory, final Writing writing) {
+        if (writingRepository.countByCategoryId(findCategory.getId()) != 0) {
+            final Writing lastWriting = writingRepository.findLastWritingByCategoryId(findCategory.getId())
+                    .orElseThrow(IllegalStateException::new);
+            final Writing savedWriting = writingRepository.save(writing);
+            lastWriting.changeNextWriting(savedWriting);
+            return savedWriting;
+        } else {
+            return writingRepository.save(writing);
+        }
     }
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {

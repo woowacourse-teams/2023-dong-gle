@@ -3,6 +3,7 @@ package org.donggle.backend.ui;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.application.service.WritingService;
+import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -28,8 +28,8 @@ public class WritingController {
     private final PublishService publishService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> writingAdd(final MultipartFile file) throws IOException {
-        final Long writingId = writingService.uploadMarkDownFile(1L, file);
+    public ResponseEntity<Void> writingAdd(final MarkdownUploadRequest request) throws IOException {
+        final Long writingId = writingService.uploadMarkDownFile(1L, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 

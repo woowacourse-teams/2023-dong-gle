@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.member.Member;
 
@@ -30,10 +31,14 @@ public class Writing extends BaseEntity {
     @NotNull
     @Embedded
     private Title title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    public Writing(final Member member, final Title title) {
+    public Writing(final Member member, final Title title, final Category category) {
         this.member = member;
         this.title = title;
+        this.category = category;
     }
 
     public String getTitleValue() {

@@ -65,7 +65,8 @@ public class InitData implements CommandLineRunner {
 
             final Writing savedWriting = writingRepository.save(new Writing(
                     savedMember,
-                    new Title("테스트 글")
+                    new Title("테스트 글"),
+                    savedCategory
             ));
 
             blockRepository.save(new Block(

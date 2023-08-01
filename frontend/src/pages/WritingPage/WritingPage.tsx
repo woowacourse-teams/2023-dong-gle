@@ -18,7 +18,7 @@ const WritingPage = () => {
 
   return (
     <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
-      <WritingViewer writingId={Number(writingId)} />
+      <WritingViewer writingId={writingId} />
     </S.Article>
   );
 };

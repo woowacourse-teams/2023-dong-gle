@@ -50,7 +50,7 @@ const CategorySection = () => {
   return (
     <S.Section>
       <S.Header>
-        <p>카테고리</p>
+        <S.Title>Folders</S.Title>
         {isInputOpen ? (
           <S.Input
             type='text'
@@ -99,6 +99,8 @@ const S = {
     font-size: 1.2rem;
     font-weight: 400;
   `,
+
+  Title: styled.h1``,
 
   Input: styled.input``,
 };

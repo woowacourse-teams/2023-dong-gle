@@ -21,6 +21,7 @@ jobs:
           cd ./frontend
       - name: Create .env.development variable
         run: |
+          cd ./frontend
           touch .env.development
           echo "BASE_URL=${{secrets.BASE_URL_DEVELOPMENT}}" >> .env.development
       - name: Login to Docker Hub

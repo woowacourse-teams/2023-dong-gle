@@ -14,15 +14,14 @@ services:
       - DB_URL
       - DB_USERNAME
       - DB_PASSWORD
-      - MEDIUM_TOKEN
-      - NOTION_TOKEN
 
   nginx:
     container_name: nginx
     image: nginx:latest
     restart: always
     volumes:
-      - ./conf/:/etc/nginx/conf.d
+      - /home/ubuntu/certs/:/etc/nginx/certs/
+      - ./conf-${PROFILE}/:/etc/nginx/conf.d/
     ports:
       - 80:80
       - 443:443

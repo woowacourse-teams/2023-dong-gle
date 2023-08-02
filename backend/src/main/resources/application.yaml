@@ -15,5 +15,3 @@ spring:
   h2:
     console:
       enabled: true
-medium_token: medium_token
-notion_token: notion_token

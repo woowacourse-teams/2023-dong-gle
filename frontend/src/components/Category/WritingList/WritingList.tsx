@@ -11,7 +11,7 @@ const WritingList = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
 
   return (
-    <S.List>
+    <ul>
       {writings.map((writing) => (
         <S.Item key={writing.id}>
           <S.Button onClick={() => goWritingPage(writing.id)}>
@@ -22,28 +22,29 @@ const WritingList = ({ writings }: Props) => {
           </S.Button>
         </S.Item>
       ))}
-    </S.List>
+    </ul>
   );
 };
 
 export default WritingList;
 
 const S = {
-  List: styled.ul`
-    width: 22rem;
-  `,
-
   Item: styled.li`
     width: 100%;
-    height: 3.2rem;
-    padding: 0.8rem;
-    border-radius: 8px;
   `,
 
   Button: styled.button`
     display: flex;
+    align-items: center;
     gap: 0.8rem;
     width: 100%;
+    height: 3.6rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray5};
+    }
   `,
 
   IconWrapper: styled.div`
@@ -51,8 +52,9 @@ const S = {
   `,
 
   Text: styled.p`
+    color: ${({ theme }) => theme.color.gray9};
     font-size: 1.4rem;
-    font-weight: 500;
+    font-weight: 400;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

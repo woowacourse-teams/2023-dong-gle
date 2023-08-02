@@ -48,6 +48,7 @@ const S = {
 
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 0.4rem;
+    width: 100%;
   `,
 };

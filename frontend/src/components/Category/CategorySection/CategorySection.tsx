@@ -60,11 +60,12 @@ const CategorySection = () => {
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}
+            placeholder='New category name'
           />
         ) : (
-          <Button variant='text' size='small' onClick={() => setIsInputOpen(true)}>
+          <S.Button onClick={() => setIsInputOpen(true)}>
             <PlusCircleIcon width={12} height={12} />
-          </Button>
+          </S.Button>
         )}
       </S.Header>
       <Accordion>
@@ -96,11 +97,38 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 2.8rem;
     font-size: 1.2rem;
     font-weight: 400;
+    padding-right: 0.8rem;
   `,
 
-  Title: styled.h1``,
+  Button: styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2.4rem;
+    border-radius: 8px;
 
-  Input: styled.input``,
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray5};
+    }
+  `,
+
+  Title: styled.h1`
+    color: ${({ theme }) => theme.color.gray7};
+  `,
+
+  Input: styled.input`
+    border: none;
+    outline: none;
+    color: ${({ theme }) => theme.color.gray10};
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    &::placeholder {
+      font-weight: 300;
+    }
+  `,
 };

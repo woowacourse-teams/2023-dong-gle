@@ -62,7 +62,7 @@ const WritingSideBar = ({ writingId }: Props) => {
                 name='tab'
                 id={menu.key}
                 checked={currentTab === menu.key}
-                onClick={() => changeCurrentTab(menu.key)}
+                onChange={() => changeCurrentTab(menu.key)}
               />
               <S.Label htmlFor={menu.key}>{menu.label}</S.Label>
             </S.Tab>

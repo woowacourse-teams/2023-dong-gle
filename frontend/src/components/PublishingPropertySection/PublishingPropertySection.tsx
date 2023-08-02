@@ -17,7 +17,7 @@ const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: P
   const { setTags, publishWritingToBlog } = usePublishingPropertySection();
 
   return (
-    <S.PublishingPropertySection blog={publishTo}>
+    <S.PublishingPropertySection $blog={publishTo}>
       <S.SectionHeader>
         <button onClick={() => changeCurrentTab(TabKeys.Publishing)}>
           <LeftArrowHeadIcon width={14} height={14} />
@@ -49,19 +49,19 @@ const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: P
 export default PublishingPropertySection;
 
 const S = {
-  PublishingPropertySection: styled.section<{ blog: Blog }>`
+  PublishingPropertySection: styled.section<{ $blog: Blog }>`
     display: flex;
     flex-direction: column;
     gap: 2rem;
     animation: ${slide} 0.5s;
 
-    ${({ theme, blog }) => css`
+    ${({ theme, $blog }) => css`
       & > button {
-        outline-color: ${theme.color[blog.toLowerCase()]};
-        background-color: ${theme.color[blog.toLowerCase()]};
+        outline-color: ${theme.color[$blog.toLowerCase()]};
+        background-color: ${theme.color[$blog.toLowerCase()]};
 
         &:hover {
-          background-color: ${theme.color[blog.toLowerCase()]};
+          background-color: ${theme.color[$blog.toLowerCase()]};
         }
       }
     `};

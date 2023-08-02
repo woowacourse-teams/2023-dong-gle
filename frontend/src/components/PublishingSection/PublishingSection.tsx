@@ -5,14 +5,14 @@ import Button from 'components/@common/Button/Button';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 
 type Props = {
-  changePublishTo: (blog: Blog) => void;
-  changeCurrentTab: (tabKey: TabKeys) => void;
+  onBlogButtonClick: (blog: Blog) => void;
+  onTabClick: (tabKey: TabKeys) => void;
 };
 
-const PublishingSection = ({ changeCurrentTab, changePublishTo }: Props) => {
+const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
   const openPublishingPropertySection = (blog: Blog) => {
-    changePublishTo(blog);
-    changeCurrentTab(TabKeys.PublishingProperty);
+    onBlogButtonClick(blog);
+    onTabClick(TabKeys.PublishingProperty);
   };
 
   return (

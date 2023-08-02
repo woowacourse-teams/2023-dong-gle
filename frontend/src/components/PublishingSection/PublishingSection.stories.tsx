@@ -11,10 +11,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  render: ({ changeCurrentTab, changePublishTo }) => {
+  render: ({ onBlogButtonClick, onTabClick }) => {
     return (
       <StoryContainer>
-        <PublishingSection changeCurrentTab={changeCurrentTab} changePublishTo={changePublishTo} />
+        <PublishingSection onTabClick={onTabClick} onBlogButtonClick={onBlogButtonClick} />
       </StoryContainer>
     );
   },

@@ -34,7 +34,7 @@ const WritingSideBar = ({ writingId }: Props) => {
       key: TabKeys.Publishing,
       label: <PublishingIcon width={24} height={24} />,
       content: (
-        <PublishingSection changeCurrentTab={changeCurrentTab} changePublishTo={changePublishTo} />
+        <PublishingSection onTabClick={changeCurrentTab} onBlogButtonClick={changePublishTo} />
       ),
     },
     {

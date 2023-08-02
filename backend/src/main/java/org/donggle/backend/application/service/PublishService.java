@@ -40,6 +40,9 @@ public class PublishService {
     private final BlogWritingRepository blogWritingRepository;
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
+    private final MediumApiService mediumApiService = new MediumApiService();
+    private final TistoryApiService tistoryApiService = new TistoryApiService();
+
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final String blogName = publishRequest.publishTo();
@@ -52,23 +55,24 @@ public class PublishService {
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
 
-        final BlogWriting blogWriting;
-        switch (blog.getBlogType()) {
-            case MEDIUM -> {
-                final MediumApiService mediumApiService = new MediumApiService();
-                final MediumPublishRequest request = buildMediumRequest(member, publishRequest, writing, content);
-                final MediumPublishResponse response = mediumApiService.publishContent(request);
-                blogWriting = new BlogWriting(blog, writing, response.data().getPublishedAt());
-            }
-            case TISTORY -> {
-                final TistoryApiService tistoryApiService = new TistoryApiService();
-                final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
-                final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
-                blogWriting = new BlogWriting(blog, writing, response.tistory().item().getDateTime());
-            }
-            default -> throw new IllegalArgumentException("호환하지 않는 블로그 입니다.");
-        }
+        final BlogWriting blogWriting = switch (blog.getBlogType()) {
+            case MEDIUM -> createBlogWritingAfterMediumPublish(publishRequest, member, blog, writing, content);
+            case TISTORY -> createBlogWritingAfterTistoryPublish(publishRequest, member, blog, writing, content);
+        };
+
         blogWritingRepository.save(blogWriting);
+    }
+
+    private BlogWriting createBlogWritingAfterMediumPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
+        final MediumPublishRequest request = buildMediumRequest(member, publishRequest, writing, content);
+        final MediumPublishResponse response = mediumApiService.publishContent(request);
+        return new BlogWriting(blog, writing, response.data().getPublishedAt());
+    }
+
+    private BlogWriting createBlogWritingAfterTistoryPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
+        final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
+        final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
+        return new BlogWriting(blog, writing, response.tistory().item().getDateTime());
     }
 
     private TistoryPublishRequest buildTistoryRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {

@@ -6,7 +6,7 @@ const meta: Meta<typeof WritingSideBar> = {
   title: 'publishing/WritingSideBar',
   component: WritingSideBar,
   args: {
-    writingId: 1,
+    writingId: 200,
   },
   argTypes: {
     writingId: {

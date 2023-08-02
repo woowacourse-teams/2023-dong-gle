@@ -15,26 +15,23 @@ export const useCategoryDetails = (categoryId: number | null, writings: Writing[
     if (!data) return;
 
     const initCategoryDetails = () => {
-      return data.categories.map((category) => {
-        return {
-          id: category.id,
-          categoryName: category.categoryName,
-          writings: null,
-        };
-      });
+      return data.categories.map((category) => ({
+        id: category.id,
+        categoryName: category.categoryName,
+        writings: null,
+      }));
     };
 
     const updateAddedCategory = (prevDetails: GetCategoryDetailResponse[]) => {
       return data.categories.map((category) => {
         const prevDetail = prevDetails.find((detail) => detail.id === category.id);
+        const addedCategory = {
+          id: category.id,
+          categoryName: category.categoryName,
+          writings: null,
+        };
 
-        return prevDetail
-          ? prevDetail
-          : {
-              id: category.id,
-              categoryName: category.categoryName,
-              writings: null,
-            };
+        return prevDetail ? prevDetail : addedCategory;
       });
     };
 
@@ -54,11 +51,7 @@ export const useCategoryDetails = (categoryId: number | null, writings: Writing[
       });
     };
 
-    if (categoryId && writings) {
-      updateCategoryDetails(categoryId, writings);
-
-      console.log(categoryDetails);
-    }
+    if (categoryId && writings) updateCategoryDetails(categoryId, writings);
   }, [writings]);
 
   return { categoryDetails, getCategories: getData };

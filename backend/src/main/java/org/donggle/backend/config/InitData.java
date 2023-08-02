@@ -63,7 +63,7 @@ public class InitData implements CommandLineRunner {
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
-            final Writing savedWriting = writingRepository.save(new Writing(
+            final Writing savedWriting = writingRepository.save(Writing.lastOf(
                     savedMember,
                     new Title("테스트 글"),
                     savedCategory

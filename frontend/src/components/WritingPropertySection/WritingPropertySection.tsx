@@ -119,20 +119,22 @@ const S = {
   PropertyRow: styled.div`
     display: flex;
     align-items: center;
-    height: 2.3rem;
   `,
   PropertyName: styled.div`
     display: flex;
     align-items: center;
+    align-self: flex-start;
     flex-shrink: 0;
     gap: 0.4rem;
     width: 9.5rem;
+    height: 2.3rem;
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
   `,
   PropertyValue: styled.div`
     display: flex;
+    flex-wrap: wrap;
     gap: 0.2rem;
   `,
   Spacer: styled.div`

@@ -1,6 +1,6 @@
-import { CloseRounded } from 'assets/icons';
-import { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { styled } from 'styled-components';
+import { CloseIcon } from 'assets/icons';
 
 type Props = {
   removable?: boolean;
@@ -10,7 +10,7 @@ const Tag = ({ removable = true, children, ...rest }: Props) => {
   return (
     <S.Tag {...rest}>
       #{children}
-      {removable && <CloseRounded width={14} height={14} />}
+      {removable && <CloseIcon width={14} height={14} />}
     </S.Tag>
   );
 };

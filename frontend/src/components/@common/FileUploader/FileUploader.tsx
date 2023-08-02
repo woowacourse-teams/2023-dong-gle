@@ -2,6 +2,7 @@ import { InputHTMLAttributes, useEffect } from 'react';
 import { css, styled } from 'styled-components';
 import { useFileUpload } from 'hooks/useFileUpload';
 import { useFileDragAndDrop } from 'hooks/@common/useFileDragAndDrop';
+import { ImportIcon } from 'assets/icons';
 
 type Props = {
   accept?: InputHTMLAttributes<HTMLInputElement>['accept'];
@@ -21,7 +22,8 @@ const FileUploader = ({ accept = '*', width = '30rem', height = '10rem', onFileS
   return (
     <button ref={dragRef} onClick={openFinder}>
       <S.Description $isDragging={isDragging} $width={width} $height={height}>
-        Drag & Drop으로 첨부해보세요.
+        <ImportIcon />
+        드래그하거나 클릭해서 업로드
       </S.Description>
     </button>
   );
@@ -32,8 +34,10 @@ export default FileUploader;
 const S = {
   Description: styled.div<{ $isDragging: boolean; $width: string; $height: string }>`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
     ${({ $width, $height }) => {
       return css`
         width: ${$width};

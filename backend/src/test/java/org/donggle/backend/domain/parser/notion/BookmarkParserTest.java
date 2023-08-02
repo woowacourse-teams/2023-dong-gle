@@ -3,6 +3,7 @@ package org.donggle.backend.domain.parser.notion;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +28,11 @@ class BookmarkParserTest {
         //then
         final String expectedRawText = "testcaptiona.com";
         final List<Style> expectedStyles = List.of(new Style(new StyleRange(0, 10), StyleType.LINK), new Style(new StyleRange(11, 15), StyleType.LINK));
-
-        assertThat(rawText).isEqualTo(expectedRawText);
-        assertThat(styles).usingRecursiveComparison()
-                .ignoringFields("createdAt", "updatedAt")
-                .isEqualTo(expectedStyles);
+        Assertions.assertAll(
+                () -> assertThat(rawText).isEqualTo(expectedRawText),
+                () -> assertThat(styles).usingRecursiveComparison()
+                        .ignoringFields("createdAt", "updatedAt")
+                        .isEqualTo(expectedStyles)
+        );
     }
 }

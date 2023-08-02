@@ -314,7 +314,6 @@ public class NotionBlockJsonBuilder {
                 "color": "default"
             }
             """;
-
     private static final String CALL_OUT_JSON_BODY = """
               {
                 "rich_text": [

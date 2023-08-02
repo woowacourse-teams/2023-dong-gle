@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.parser.notion;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +21,9 @@ class ImageParserTest {
 
         //then
         final String expected = "caption";
-        assertThat(caption).isEqualTo(expected);
-        assertThat(imageParser.url()).isEqualTo("a.com");
-
+        Assertions.assertAll(
+                () -> assertThat(caption).isEqualTo(expected),
+                () -> assertThat(imageParser.url()).isEqualTo("a.com")
+        );
     }
-
 }

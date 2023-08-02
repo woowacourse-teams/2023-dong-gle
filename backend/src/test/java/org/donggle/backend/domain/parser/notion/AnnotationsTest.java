@@ -2,9 +2,10 @@ package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotationsTest {
     private static final JsonNode TEST_JSON_NODE = JsonNodeFactory.instance.objectNode()
@@ -23,7 +24,7 @@ class AnnotationsTest {
         final Annotations annotations = Annotations.from(TEST_JSON_NODE);
         //then
         final Annotations expected = new Annotations(true, true, true, true, true, "default");
-        Assertions.assertThat(annotations).isEqualTo(expected);
+        assertThat(annotations).isEqualTo(expected);
     }
 
     @Test
@@ -33,9 +34,9 @@ class AnnotationsTest {
         //when
         final Annotations result = Annotations.empty();
         final Annotations expected = new Annotations(false, false, false, false, false, "default");
-        
+
         //then
-        Assertions.assertThat(result).isEqualTo(expected);
+        assertThat(result).isEqualTo(expected);
 
     }
 }

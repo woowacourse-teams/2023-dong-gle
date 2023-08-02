@@ -69,8 +69,10 @@ class RichTextTest {
     @DisplayName("리치텍스트를 파싱하는 테스트")
     void parseRichTexts() {
         //given
+
         //when
         final List<RichText> richText = RichText.parseRichTexts(jsonNode, "rich_text");
+        
         //then
         final List<RichText> expected = List.of(new RichText(
                 "dfsdf",

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CodeBlockParserTest {
     @Test
@@ -13,16 +14,18 @@ class CodeBlockParserTest {
     void parseRawText() {
         //given
         final CodeBlockParser codeBlockParser = new CodeBlockParser(List.of(
-                new RichText("void parseRawText()", "null", Annotations.empty())
-        ), "java");
+                new RichText("void parseRawText()", "null", Annotations.empty())),
+                "java"
+        );
         //when
         final String rawText = codeBlockParser.parseRawText();
         final String language = codeBlockParser.language();
 
         //then
         final String expected = "void parseRawText()";
-        assertThat(rawText).isEqualTo(expected);
-        assertThat(language).isEqualTo("java");
+        assertAll(
+                () -> assertThat(rawText).isEqualTo(expected),
+                () -> assertThat(language).isEqualTo("java")
+        );
     }
-
 }

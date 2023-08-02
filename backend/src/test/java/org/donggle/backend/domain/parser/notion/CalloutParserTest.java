@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CalloutParserTest {
-
     @Test
     @DisplayName("NotionBlockNode로부터 CalloutParser를 생성한다.")
     void from() {
@@ -33,14 +33,16 @@ class CalloutParserTest {
         final CalloutParser calloutParser = new CalloutParser(List.of(
                 new RichText("callout", "null", Annotations.empty())
         ), "💡");
+
         //when
         final String rawText = calloutParser.parseRawText();
         final List<Style> styles = calloutParser.parseStyles();
+
         //then
         final String expected = "💡 callout";
-        assertThat(rawText).isEqualTo(expected);
-        assertThat(styles.isEmpty()).isTrue();
-
+        assertAll(
+                () -> assertThat(rawText).isEqualTo(expected),
+                () -> assertThat(styles.isEmpty()).isTrue()
+        );
     }
-
 }

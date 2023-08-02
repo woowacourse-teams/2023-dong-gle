@@ -15,6 +15,7 @@ import org.donggle.backend.domain.writing.content.ImageUrl;
 import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalContent;
 import org.donggle.backend.domain.writing.content.RawText;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +32,10 @@ class NotionParserTest {
         final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
         final NotionParser notionParser = new NotionParser();
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+
         //when
         final Content contents = notionParser.parseBody(notionBlockNodes).get(0);
+
         //then
         final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNode);
         final String rawText = blockParser.parseRawText();
@@ -112,15 +115,17 @@ class NotionParserTest {
                 new Style(new StyleRange(0, 6), StyleType.LINK)
         ));
 
-        assertThat(contents)
-                .usingRecursiveComparison()
-                .ignoringFields("id", "createdAt", "updatedAt", "styles")
-                .isEqualTo(expected);
         final NormalContent normalContent = (NormalContent) contents;
         final List<Style> styles = normalContent.getStyles();
-        assertThat(styles).usingRecursiveComparison()
-                .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(expected.getStyles());
+        Assertions.assertAll(
+                () -> assertThat(normalContent)
+                        .usingRecursiveComparison()
+                        .ignoringFields("id", "createdAt", "updatedAt", "styles")
+                        .isEqualTo(expected),
+                () -> assertThat(styles)
+                        .usingRecursiveComparison()
+                        .ignoringFields("id", "createdAt", "updatedAt")
+                        .isEqualTo(expected.getStyles())
+        );
     }
-
 }

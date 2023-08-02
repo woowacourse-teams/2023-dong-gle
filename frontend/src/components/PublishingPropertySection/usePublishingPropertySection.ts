@@ -1,18 +1,25 @@
 import { publishWriting } from 'apis/writings';
+import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import useMutation from 'hooks/@common/useMutation';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useState } from 'react';
 import { PublishWritingArgs } from 'types/apis/writings';
 import { Blog, PublishingPropertyData } from 'types/domain';
+
+type Args = {
+  changeCurrentTab: (tabKey: TabKeys) => void;
+};
 
 type PublishWritingToBlogArgs = {
   writingId: number;
   publishTo: Blog;
 };
 
-export const usePublishingPropertySection = () => {
+export const usePublishingPropertySection = ({ changeCurrentTab }: Args) => {
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishingPropertyData>({ tags: [] });
-  const { mutateQuery } = useMutation<PublishWritingArgs, null>({
+  const { mutateQuery, isLoading } = useMutation<PublishWritingArgs, null>({
     fetcher: publishWriting,
+    onSuccess: () => changeCurrentTab(TabKeys.WritingProperty),
   });
 
   const publishWritingToBlog = async ({ writingId, publishTo }: PublishWritingToBlogArgs) => {
@@ -28,5 +35,5 @@ export const usePublishingPropertySection = () => {
     setPropertyFormInfo((prev) => ({ ...prev, tags }));
   };
 
-  return { setTags, publishWritingToBlog };
+  return { isLoading, setTags, publishWritingToBlog };
 };

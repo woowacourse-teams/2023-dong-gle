@@ -1,6 +1,6 @@
 package org.donggle.backend.domain.parser.notion;
 
-import org.donggle.backend.application.service.notion.NotionBlockNode;
+import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.CodeBlockContent;
 import org.donggle.backend.domain.writing.content.Content;

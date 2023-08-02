@@ -7,11 +7,11 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.application.service.notion.NotionApiService;
-import org.donggle.backend.application.service.notion.NotionBlockNode;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.application.service.vendor.notion.NotionApiService;
+import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
@@ -93,17 +93,18 @@ public class WritingService {
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
-        final NotionApiService notionApiService = new NotionApiService(memberCredentials.getNotionToken());
+        final String notionToken = memberCredentials.getNotionToken();
+        final NotionApiService notionApiService = new NotionApiService();
 
         final String blockId = request.blockId();
         final NotionParser notionParser = new NotionParser();
 
-        final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId);
+        final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
         final String title = notionParser.parseTitle(parentBlockNode);
         final Writing writing = Writing.lastOf(findMember, new Title(findFileName(title)), findCategory);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
-        final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode);
+        final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
         final List<Content> contents = notionParser.parseBody(bodyBlockNodes);
         final List<Block> blocks = contents.stream()
                 .map(content -> new Block(savedWriting, content))
@@ -241,7 +242,10 @@ public class WritingService {
     private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
         return blogWritings.stream()
-                .map(PublishedDetailResponse::of)
+                .map(blogWriting -> new PublishedDetailResponse(
+                        blogWriting.getBlogTypeValue(),
+                        blogWriting.getPublishedAt(),
+                        blogWriting.getTags()))
                 .toList();
     }
 

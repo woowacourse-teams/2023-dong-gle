@@ -7,6 +7,10 @@ const GlobalStyle = createGlobalStyle`
 	html {
 		font-size: 10px;
 	}
+
+	* {
+		font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+	}
 `;
 
 export default GlobalStyle;

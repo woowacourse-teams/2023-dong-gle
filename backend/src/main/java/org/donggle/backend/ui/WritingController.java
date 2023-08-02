@@ -6,7 +6,7 @@ import org.donggle.backend.application.service.WritingService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
-import org.donggle.backend.application.service.request.WritingTitleRequest;
+import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
@@ -50,9 +50,15 @@ public class WritingController {
     }
 
     @PatchMapping("/{writingId}")
-    public ResponseEntity<Void> writingTitleModify(@PathVariable final Long writingId,
-                                                   @RequestBody final WritingTitleRequest request) {
-        writingService.modifyWritingTitle(1L, writingId, request);
+    public ResponseEntity<Void> writingModify(@PathVariable final Long writingId,
+                                              @RequestBody final WritingModifyRequest request) {
+        if (request.title() != null) {
+            writingService.modifyWritingTitle(1L, writingId, request);
+        } else if (request.nextWritingId() != null && request.targetCategoryId() != null) {
+            writingService.modifyWritingOrder(1L, writingId, request);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -69,7 +75,8 @@ public class WritingController {
     }
 
     @PostMapping("/{writingId}/publish")
-    public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId, @RequestBody final PublishRequest request) {
+    public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId,
+                                               @RequestBody final PublishRequest request) {
         publishService.publishWriting(1L, writingId, request);
         return ResponseEntity.ok().build();
     }

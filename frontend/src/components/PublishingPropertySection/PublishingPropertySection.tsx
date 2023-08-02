@@ -1,19 +1,36 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
+import Spinner from 'components/@common/Spinner/Spinner';
 import { LeftArrowHeadIcon, TagIcon } from 'assets/icons';
 import { slide } from 'styles/animation';
+import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
+import { usePublishingPropertySection } from './usePublishingPropertySection';
+import type { Blog } from 'types/domain';
 
 type Props = {
-  changeTab: (index: number) => () => void;
+  writingId: number;
+  publishTo: Blog;
+  selectCurrentTab: (tabKey: TabKeys) => void;
 };
 
-const PublishingPropertySection = ({ changeTab }: Props) => {
+const PublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: Props) => {
+  const { isLoading, setTags, publishWritingToBlog } = usePublishingPropertySection({
+    selectCurrentTab,
+  });
+
+  if (isLoading)
+    return (
+      <S.LoadingWrapper>
+        글을 발행하고 있어요
+        <Spinner />
+      </S.LoadingWrapper>
+    );
+
   return (
-    <S.PublishingPropertySection>
+    <S.PublishingPropertySection $blog={publishTo}>
       <S.SectionHeader>
-        {/* TODO: changeTab에 index 상수화 */}
-        <button onClick={changeTab(1)}>
+        <button onClick={() => selectCurrentTab(TabKeys.Publishing)}>
           <LeftArrowHeadIcon width={14} height={14} />
         </button>
         Publishing Properties
@@ -25,11 +42,15 @@ const PublishingPropertySection = ({ changeTab }: Props) => {
             Tags
           </S.PropertyName>
           <div>
-            <TagInput />
+            <TagInput onChangeTags={setTags} />
           </div>
         </S.PropertyRow>
       </S.Properties>
-      <Button block variant='secondary'>
+      <Button
+        block
+        variant='secondary'
+        onClick={() => publishWritingToBlog({ writingId, publishTo })}
+      >
         Publish
       </Button>
     </S.PublishingPropertySection>
@@ -39,11 +60,22 @@ const PublishingPropertySection = ({ changeTab }: Props) => {
 export default PublishingPropertySection;
 
 const S = {
-  PublishingPropertySection: styled.section`
+  PublishingPropertySection: styled.section<{ $blog: Blog }>`
     display: flex;
     flex-direction: column;
     gap: 2rem;
     animation: ${slide} 0.5s;
+
+    ${({ theme, $blog }) => css`
+      & > button {
+        outline-color: ${theme.color[$blog.toLowerCase()]};
+        background-color: ${theme.color[$blog.toLowerCase()]};
+
+        &:hover {
+          background-color: ${theme.color[$blog.toLowerCase()]};
+        }
+      }
+    `};
   `,
   SectionHeader: styled.h1`
     display: flex;
@@ -53,7 +85,7 @@ const S = {
     line-height: 1.5rem;
   `,
   Properties: styled.div`
-    padding-left: 0.9rem;
+    padding: 0 0 1rem 0.9rem;
   `,
   PropertyRow: styled.div`
     display: flex;
@@ -64,9 +96,17 @@ const S = {
     align-items: center;
     flex-shrink: 0;
     width: 9.5rem;
-    height: 100%;
+    height: 2.3rem;
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
+  `,
+  LoadingWrapper: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    font-size: 1.3rem;
   `,
 };

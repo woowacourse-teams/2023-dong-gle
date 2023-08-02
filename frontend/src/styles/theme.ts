@@ -2,6 +2,9 @@ const color = {
   primary: '#405178',
   primaryHover: '#2e3b57',
 
+  tistory: '#FF5A4A',
+  medium: '#000000',
+
   gray1: '#ffffff',
   gray2: '#fafafa',
   gray3: '#f5f5f5',

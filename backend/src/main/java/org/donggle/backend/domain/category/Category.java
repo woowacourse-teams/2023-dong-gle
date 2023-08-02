@@ -66,6 +66,10 @@ public class Category {
         this.nextCategory = nextCategory;
     }
 
+    public void changeNextCategoryNull() {
+        this.nextCategory = null;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

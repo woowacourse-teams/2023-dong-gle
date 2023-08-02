@@ -4,6 +4,9 @@ import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
+import { useState } from 'react';
+import { Blog } from 'types/domain';
+import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -14,61 +17,66 @@ export enum TabKeys {
 type Props = { writingId: number };
 
 const WritingSideBar = ({ writingId }: Props) => {
-  const { currentTab, changeCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
+  const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
+  const [publishTo, setPublishTo] = useState<Blog | null>(null);
+
+  const selectPublishTo = (blog: Blog) => {
+    setPublishTo(blog);
+  };
 
   const menus = [
     {
       key: TabKeys.WritingProperty,
       label: <InfoIcon width={24} height={24} />,
-      content: <></>, // TODO: 글 정보 탭 구현
+      content: <WritingPropertySection writingId={writingId} />,
     },
     {
       key: TabKeys.Publishing,
       label: <PublishingIcon width={24} height={24} />,
       content: (
-        <PublishingSection
-          changeCurrentTab={changeCurrentTab}
-          writingId={Number(writingId)}
-          isPublished={false}
-        />
+        <PublishingSection onTabClick={selectCurrentTab} onBlogButtonClick={selectPublishTo} />
       ),
     },
     {
       key: TabKeys.PublishingProperty,
       label: 'PublishingProperty',
-      content: <PublishingPropertySection changeCurrentTab={changeCurrentTab} />,
+      content: publishTo && (
+        <PublishingPropertySection
+          writingId={writingId}
+          publishTo={publishTo}
+          selectCurrentTab={selectCurrentTab}
+        />
+      ),
     },
   ];
 
   return (
-    <S.SidebarSection>
+    <S.SidebarContainer>
       <S.MenuTabList>
         {menus
           .filter((menu) => menu.key !== TabKeys.PublishingProperty)
           .map((menu) => (
-            <S.Tab>
+            <S.Tab key={menu.key}>
               <S.Input
                 type='radio'
                 name='tab'
                 id={menu.key}
                 checked={currentTab === menu.key}
-                onClick={() => changeCurrentTab(menu.key)}
+                onChange={() => selectCurrentTab(menu.key)}
               />
               <S.Label htmlFor={menu.key}>{menu.label}</S.Label>
             </S.Tab>
           ))}
       </S.MenuTabList>
       {menus.find((menu) => menu.key === currentTab)?.content}
-    </S.SidebarSection>
+    </S.SidebarContainer>
   );
 };
 
 export default WritingSideBar;
 
 const S = {
-  SidebarSection: styled.section`
-    ${sidebarStyle}
-
+  SidebarContainer: styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;

@@ -56,12 +56,12 @@ export const writingHandlers = [
   }),
 
   // 글 생성(글 업로드): POST
-  rest.post('/writings/file', async (_, res, ctx) => {
+  rest.post(`${writingURL}/file`, async (_, res, ctx) => {
     return res(ctx.status(201), ctx.set('Location', `/writings/200`));
   }),
 
   // 글 블로그로 발행: POST
-  rest.post('/writings/:writingId/publish', async (req, res, ctx) => {
+  rest.post(`${writingURL}/:writingId/publish`, async (req, res, ctx) => {
     const blog = ['MEDIUM', 'TISTORY'];
     const id = Number(req.params.writingId);
     const { publishTo } = await req.json();

@@ -1,7 +1,7 @@
 package org.donggle.backend.application.service;
 
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.application.service.request.WritingTitleRequest;
+import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
@@ -27,7 +27,7 @@ class WritingServiceTest {
     @DisplayName("글 제목 수정 테스트")
     void modifyWritingTitle() {
         //given
-        final WritingTitleRequest request = new WritingTitleRequest("글 제목 수정 API 테스트");
+        final WritingModifyRequest request = new WritingModifyRequest("글 제목 수정 API 테스트", null, null);
         final Title expected = new Title("글 제목 수정 API 테스트");
 
         //when

@@ -9,7 +9,7 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
-import org.donggle.backend.application.service.request.WritingTitleRequest;
+import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.application.service.vendor.notion.NotionApiService;
 import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.donggle.backend.domain.blog.BlogWriting;
@@ -40,7 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -48,6 +50,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class WritingService {
     private static final String MD_FORMAT = ".md";
+    private static final int LAST_WRITING_FLAG = -1;
+
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;
@@ -66,11 +70,10 @@ public class WritingService {
         final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
-        final Writing writing = new Writing(findMember, new Title(findFileName(originalFilename)), findCategory);
-        final Writing savedWriting = writingRepository.save(writing);
+        final Writing writing = Writing.lastOf(findMember, new Title(findFileName(originalFilename)), findCategory);
+        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<Content> contents = markDownParser.parse(originalFileText);
-        //TODO : CASCADE 추가
         final List<Block> blocks = contents.stream()
                 .map(content -> new Block(savedWriting, content))
                 .toList();
@@ -82,16 +85,6 @@ public class WritingService {
     private String findFileName(final String originalFilename) {
         final int endIndex = Objects.requireNonNull(originalFilename).lastIndexOf(MD_FORMAT);
         return originalFilename.substring(0, endIndex);
-    }
-
-    private Category findCategory(final Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
-    }
-
-    private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
@@ -108,9 +101,8 @@ public class WritingService {
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = new Writing(findMember, new Title(title), findCategory);
-
-        final Writing savedWriting = writingRepository.save(writing);
+        final Writing writing = Writing.lastOf(findMember, new Title(findFileName(title)), findCategory);
+        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
         final List<Content> contents = notionParser.parseBody(bodyBlockNodes);
@@ -122,16 +114,24 @@ public class WritingService {
         return writing.getId();
     }
 
-    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingTitleRequest request) {
-        //TODO: member checking
-        final Member findMember = findMember(memberId);
-        final Writing findWriting = findWriting(writingId);
-        findWriting.updateTitle(new Title(request.title()));
+    private Writing saveAndGetWriting(final Category findCategory, final Writing writing) {
+        if (isNotEmptyCategory(findCategory)) {
+            final Writing lastWriting = findLastWritingInCategory(findCategory.getId());
+            final Writing savedWriting = writingRepository.save(writing);
+            lastWriting.changeNextWriting(savedWriting);
+            return savedWriting;
+        }
+        return writingRepository.save(writing);
     }
 
-    private Writing findWriting(final Long writingId) {
-        return writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    private boolean isNotEmptyCategory(final Category category) {
+        return writingRepository.countByCategoryId(category.getId()) != 0;
+    }
+
+    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingModifyRequest request) {
+        //TODO: member checking
+        final Writing findWriting = findWriting(writingId);
+        findWriting.updateTitle(new Title(request.title()));
     }
 
     @Transactional(readOnly = true)
@@ -141,10 +141,8 @@ public class WritingService {
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
-
         final String content = htmlRenderer.render(blocks);
-
-        return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
+        return WritingResponse.of(writing, content);
     }
 
     @Transactional(readOnly = true)
@@ -152,7 +150,93 @@ public class WritingService {
         //TODO: member checking
         final Writing writing = findWriting(writingId);
         final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
-        return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
+        return WritingPropertiesResponse.of(writing, publishedTos);
+    }
+
+    @Transactional(readOnly = true)
+    public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
+        //TODO: member checking
+        final Category findCategory = findCategory(categoryId);
+        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final Writing firstWriting = findFirstWriting(findWritings);
+        final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
+        final List<WritingDetailResponse> writingDetailResponses = sortedWriting.stream()
+                .map(writing -> WritingDetailResponse.of(writing, convertToPublishedDetailResponses(writing.getId())))
+                .toList();
+        return WritingListWithCategoryResponse.of(findCategory, writingDetailResponses);
+    }
+
+    private Writing findFirstWriting(final List<Writing> findWritings) {
+        final List<Writing> copy = new ArrayList<>(findWritings);
+        final List<Writing> nextWritings = findWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
+        copy.removeAll(nextWritings);
+        return copy.get(0);
+    }
+
+    private List<Writing> sortWriting(final List<Writing> writings, Writing targetWriting) {
+        final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
+        for (final Writing writing : writings) {
+            writingMap.put(writing, writing.getNextWriting());
+        }
+        final List<Writing> sortedWritings = new ArrayList<>();
+        sortedWritings.add(targetWriting);
+        while (Objects.nonNull(targetWriting.getNextWriting())) {
+            targetWriting = writingMap.get(targetWriting);
+            sortedWritings.add(targetWriting);
+        }
+        return sortedWritings;
+    }
+
+    public void modifyWritingOrder(final Long memberId, final Long writingId, final WritingModifyRequest request) {
+        //TODO: member checking
+        final Long nextWritingId = request.nextWritingId();
+        final Long targetCategoryId = request.targetCategoryId();
+
+        final Writing source = findWriting(writingId);
+        deleteWritingOrder(source);
+        addWritingOrder(targetCategoryId, nextWritingId, source);
+
+        changeCategory(targetCategoryId, source);
+    }
+
+    private void deleteWritingOrder(final Writing writing) {
+        final Writing nextWriting = writing.getNextWriting();
+        writing.changeNextWritingNull();
+
+        if (isNotFirstWriting(writing.getId())) {
+            final Writing preWriting = findPreWriting(writing.getId());
+            preWriting.changeNextWriting(nextWriting);
+        }
+    }
+
+    private void addWritingOrder(final Long categoryId, final Long nextWritingId, final Writing writing) {
+        if (isNotFirstWriting(nextWritingId)) {
+            final Writing preWriting;
+            if (nextWritingId == LAST_WRITING_FLAG) {
+                preWriting = findLastWritingInCategory(categoryId);
+            } else {
+                preWriting = findPreWriting(nextWritingId);
+            }
+            preWriting.changeNextWriting(writing);
+        }
+        if (nextWritingId != LAST_WRITING_FLAG) {
+            final Writing nextWriting = findWriting(nextWritingId);
+            writing.changeNextWriting(nextWriting);
+        }
+    }
+
+    private boolean isNotFirstWriting(final Long writingId) {
+        return writingRepository.countByNextWritingId(writingId) != 0;
+    }
+
+    private void changeCategory(final Long categoryId, final Writing writing) {
+        final Category sourceCategory = writing.getCategory();
+        final Category targetCategory = findCategory(categoryId);
+        if (!targetCategory.equals(sourceCategory)) {
+            writing.changeCategory(targetCategory);
+        }
     }
 
     private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
@@ -165,21 +249,28 @@ public class WritingService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
-        //TODO: member checking
-        final Category findCategory = findCategory(categoryId);
-        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
-        final List<WritingDetailResponse> writingDetailResponses = new ArrayList<>();
-        for (final Writing findWriting : findWritings) {
-            final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(findWriting.getId());
-            writingDetailResponses.add(new WritingDetailResponse(
-                    findWriting.getId(),
-                    findWriting.getTitleValue(),
-                    findWriting.getCreatedAt(),
-                    publishedTos
-            ));
-        }
-        return new WritingListWithCategoryResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingDetailResponses);
+    private Category findCategory(final Long writingId) {
+        return categoryRepository.findById(writingId)
+                .orElseThrow(() -> new CategoryNotFoundException(writingId));
+    }
+
+    private Writing findLastWritingInCategory(final Long categoryId) {
+        return writingRepository.findLastWritingByCategoryId(categoryId)
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    private Writing findWriting(final Long writingId) {
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
+    private Writing findPreWriting(final Long writingId) {
+        return writingRepository.findPreWritingByWritingId(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

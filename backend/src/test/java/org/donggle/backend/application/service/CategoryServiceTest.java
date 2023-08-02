@@ -70,7 +70,7 @@ class CategoryServiceTest {
         //given
         //when
         //then
-        assertThatThrownBy(() -> categoryService.modifyCategory(1L, 1L, new CategoryModifyRequest("기본22222")))
+        assertThatThrownBy(() -> categoryService.modifyCategoryName(1L, 1L, new CategoryModifyRequest("기본22222", null)))
                 .isInstanceOf(InvalidBasicCategoryException.class);
     }
 
@@ -81,7 +81,7 @@ class CategoryServiceTest {
         final Long savedCategoryId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
 
         //when
-        categoryService.modifyCategory(1L, savedCategoryId, new CategoryModifyRequest("수정된 카테고리"));
+        categoryService.modifyCategoryName(1L, savedCategoryId, new CategoryModifyRequest("수정된 카테고리", null));
         categoryRepository.flush();
         final Category modifyCategory = categoryRepository.findById(savedCategoryId).get();
 
@@ -152,6 +152,28 @@ class CategoryServiceTest {
                 () -> assertThat(response.categoryName()).isEqualTo("기본"),
                 () -> assertThat(response.writings().get(0).id()).isEqualTo(findWriting.getId()),
                 () -> assertThat(response.writings().get(0).title()).isEqualTo(findWriting.getTitleValue())
+        );
+    }
+
+    @Test
+    @DisplayName("카테고리 순서 수정 테스트")
+    void modifyCategoryOrder() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+        final Long thirdId = categoryService.addCategory(1L, new CategoryAddRequest("세 번째 카테고리"));
+
+        //when
+        categoryService.modifyCategoryOrder(1L, thirdId, new CategoryModifyRequest(null, secondId));
+
+        //then
+        CategoryListResponse response = categoryService.findAll(1L);
+        assertAll(
+                () -> assertThat(response.categories()).hasSize(3),
+                () -> assertThat(response.categories()).containsExactly(
+                        new CategoryResponse(1L, "기본"),
+                        new CategoryResponse(thirdId, "세 번째 카테고리"),
+                        new CategoryResponse(secondId, "두 번째 카테고리")
+                )
         );
     }
 }

@@ -39,7 +39,7 @@ class BlockTest {
         final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
         final Member savedMember = memberRepository.save(member);
         Category basicCategory = categoryRepository.findById(1L).get();
-        final Writing writing = new Writing(savedMember, new Title("title"), basicCategory);
+        final Writing writing = Writing.lastOf(savedMember, new Title("title"), basicCategory);
         final Writing savedWriting = writingRepository.save(writing);
         final CodeBlockContent expectedContent = new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
         final Block block = new Block(savedWriting, expectedContent);

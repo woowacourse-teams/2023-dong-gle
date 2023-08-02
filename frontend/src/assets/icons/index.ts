@@ -15,3 +15,6 @@ export { ReactComponent as SettingIcon } from './setting.svg';
 export { ReactComponent as InfoIcon } from './info.svg';
 export { ReactComponent as PublishingIcon } from './publishing.svg';
 export { ReactComponent as ArrowRightIcon } from './arrow-right.svg';
+export { ReactComponent as DeleteIcon } from './delete.svg';
+export { ReactComponent as PencilIcon } from './pencil.svg';
+export { ReactComponent as WritingIcon } from './writing.svg';

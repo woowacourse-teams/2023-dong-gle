@@ -1,4 +1,4 @@
-name: Run Docker Compose
+name: Run Docker Compose Production
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: [self-hosted,dev]
+    runs-on: [self-hosted,prod]
     steps:
     - uses: actions/checkout@v3
     - name: create .env
@@ -17,10 +17,10 @@ jobs:
         touch .env
         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
         echo "DB_URL=${{ secrets.DB_URL }}" >> .env
-        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME_PROD }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_PROD }}" >> .env
         echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
-        echo "PROFILE=${{ secrets.DEV_PROFILE }}" >> .env
+        echo "PROFILE"=${{ secrets.PROD_PROFILE }} >> .env
     ## deploy to production
     - name: Deploy to prod
       run: |

@@ -52,7 +52,6 @@ public class WritingService {
     private static final String MD_FORMAT = ".md";
     private static final int LAST_WRITING_FLAG = -1;
 
-    private final NotionApiService notionApiService;
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;

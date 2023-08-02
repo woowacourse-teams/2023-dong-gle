@@ -50,8 +50,8 @@ public class WritingController {
     }
 
     @PatchMapping("/{writingId}")
-    public ResponseEntity<Void> writingTitleModify(@PathVariable final Long writingId,
-                                                   @RequestBody final WritingModifyRequest request) {
+    public ResponseEntity<Void> writingModify(@PathVariable final Long writingId,
+                                              @RequestBody final WritingModifyRequest request) {
         if (request.title() != null) {
             writingService.modifyWritingTitle(1L, writingId, request);
         } else if (request.nextWritingId() != null && request.targetCategoryId() != null) {

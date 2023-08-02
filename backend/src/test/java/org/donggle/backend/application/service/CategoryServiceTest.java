@@ -70,7 +70,7 @@ class CategoryServiceTest {
         //given
         //when
         //then
-        assertThatThrownBy(() -> categoryService.modifyCategory(1L, 1L, new CategoryModifyRequest("기본22222")))
+        assertThatThrownBy(() -> categoryService.modifyCategoryName(1L, 1L, new CategoryModifyRequest("기본22222")))
                 .isInstanceOf(InvalidBasicCategoryException.class);
     }
 
@@ -81,7 +81,7 @@ class CategoryServiceTest {
         final Long savedCategoryId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
 
         //when
-        categoryService.modifyCategory(1L, savedCategoryId, new CategoryModifyRequest("수정된 카테고리"));
+        categoryService.modifyCategoryName(1L, savedCategoryId, new CategoryModifyRequest("수정된 카테고리"));
         categoryRepository.flush();
         final Category modifyCategory = categoryRepository.findById(savedCategoryId).get();
 

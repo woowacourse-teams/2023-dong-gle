@@ -33,7 +33,7 @@ public class CategoryController {
     @PatchMapping("/{categoryId}")
     public ResponseEntity<Void> categoryModify(@PathVariable final Long categoryId,
                                                @RequestBody final CategoryModifyRequest request) {
-        categoryService.modifyCategory(1L, categoryId, request);
+        categoryService.modifyCategoryName(1L, categoryId, request);
         return ResponseEntity.noContent().build();
     }
 

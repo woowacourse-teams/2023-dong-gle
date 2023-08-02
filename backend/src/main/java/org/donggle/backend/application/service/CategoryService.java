@@ -34,13 +34,10 @@ public class CategoryService {
     private final WritingRepository writingRepository;
 
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
+        //TODO: member checking
         final Member findMember = findMember(memberId);
-        final Category category = Category.of(
-                new CategoryName(request.categoryName()),
-                findMember
-        );
-        final Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId)
-                .orElseThrow(IllegalStateException::new);
+        final Category category = Category.of(new CategoryName(request.categoryName()), findMember);
+        final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
         lastCategory.changeNextCategory(savedCategory);
         return savedCategory.getId();
@@ -51,9 +48,9 @@ public class CategoryService {
         //TODO: member checking
         final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
         final List<CategoryResponse> categoryResponses = categories.stream()
-                .map(category -> new CategoryResponse(category.getId(), category.getCategoryNameValue()))
+                .map(CategoryResponse::of)
                 .toList();
-        return new CategoryListResponse(categoryResponses);
+        return CategoryListResponse.from(categoryResponses);
     }
 
     @Transactional(readOnly = true)
@@ -61,37 +58,38 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
-        List<Writing> sortedWriting = sortedWriting(findWritings);
-
+        final Writing firstWriting = findFirstWriting(findWritings);
+        final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
         final List<WritingSimpleResponse> writingSimpleResponses = sortedWriting.stream()
-                .map(writing -> new WritingSimpleResponse(writing.getId(), writing.getTitleValue()))
+                .map(WritingSimpleResponse::from)
                 .toList();
-        return new CategoryWritingsResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingSimpleResponses);
+        return CategoryWritingsResponse.of(findCategory, writingSimpleResponses);
     }
 
-    private List<Writing> sortedWriting(final List<Writing> findWritings) {
-        List<Writing> copy = new ArrayList<>(findWritings);
+    private Writing findFirstWriting(final List<Writing> findWritings) {
+        final List<Writing> copy = new ArrayList<>(findWritings);
         final List<Writing> nextWritings = findWritings.stream()
                 .map(Writing::getNextWriting)
                 .toList();
-
-        final Map<Writing, Writing> aoq = new LinkedHashMap<>();
-        for (final Writing findWriting : findWritings) {
-            aoq.put(findWriting, findWriting.getNextWriting());
-        }
         copy.removeAll(nextWritings);
-        Writing firstWriting = copy.get(0); // 처음꺼 찾음
+        return copy.get(0);
+    }
 
+    private List<Writing> sortWriting(final List<Writing> findWritings, Writing targetWriting) {
+        final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
+        for (final Writing findWriting : findWritings) {
+            writingMap.put(findWriting, findWriting.getNextWriting());
+        }
         final List<Writing> sortedWriting = new ArrayList<>();
-        sortedWriting.add(firstWriting);
-        while (firstWriting.getNextWriting() != null) {
-            firstWriting = aoq.get(firstWriting);
-            sortedWriting.add(firstWriting);
+        sortedWriting.add(targetWriting);
+        while (targetWriting.getNextWriting() != null) {
+            targetWriting = writingMap.get(targetWriting);
+            sortedWriting.add(targetWriting);
         }
         return sortedWriting;
     }
 
-    public void modifyCategory(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
+    public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         validateBasicCategory(findCategory);
@@ -102,25 +100,37 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         validateBasicCategory(findCategory);
+        transferToBasicCategory(memberId, findCategory);
+        deleteCategory(findCategory);
+    }
 
+    private void transferToBasicCategory(final Long memberId, final Category findCategory) {
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
-        writingRepository.findAllByCategoryId(findCategory.getId())
-                .forEach(writing -> writing.changeCategory(basicCategory));
+        final List<Writing> writings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final Writing firstWritingInCategory = findFirstWriting(writings);
+        final Writing lastWriting = findLastWritingInCategory(findCategory);
+        lastWriting.changeNextWriting(firstWritingInCategory);
+        writings.forEach(writing -> writing.changeCategory(basicCategory));
+    }
 
+    private void deleteCategory(final Category findCategory) {
         final Category nextCategory = findCategory.getNextCategory();
         final Category preCategory = findPreCategoryByCategoryId(findCategory.getId());
         findCategory.changeNextCategory(null);
         categoryRepository.flush();
         preCategory.changeNextCategory(nextCategory);
         categoryRepository.delete(findCategory);
-
-        //TODO: 글 순서 추가 후 글 순서 변경 로직 추가
     }
 
     private void validateBasicCategory(final Category category) {
         if (category.isBasic()) {
             throw new InvalidBasicCategoryException();
         }
+    }
+
+    private Category findLastCategoryByMemberId(final Long memberId) {
+        return categoryRepository.findLastCategoryByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
     }
 
     private Category findBasicCategoryByMemberId(final Long memberId) {
@@ -131,6 +141,11 @@ public class CategoryService {
     private Category findPreCategoryByCategoryId(final Long categoryId) {
         return categoryRepository.findPreCategoryByCategoryId(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+    }
+
+    private Writing findLastWritingInCategory(final Category findCategory) {
+        return writingRepository.findLastWritingByCategoryId(findCategory.getId())
+                .orElseThrow(IllegalStateException::new);
     }
 
     private Member findMember(final Long memberId) {

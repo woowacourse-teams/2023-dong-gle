@@ -2,21 +2,21 @@ import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 const useCategoryInput = (initialValue: string) => {
   const [value, setValue] = useState(initialValue);
-  const [isOpenInput, setIsOpenInput] = useState(false);
+  const [isInputOpen, setIsInputOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isOpenInput]);
+  }, [isInputOpen]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 
   const resetValue = () => setValue('');
 
   const closeInput = () => {
-    setIsOpenInput(false);
+    setIsInputOpen(false);
     resetValue();
   };
 
@@ -32,8 +32,8 @@ const useCategoryInput = (initialValue: string) => {
     inputRef,
     handleOnChange,
     escapeInput,
-    isOpenInput,
-    setIsOpenInput,
+    isInputOpen,
+    setIsInputOpen,
     closeInput,
   };
 };

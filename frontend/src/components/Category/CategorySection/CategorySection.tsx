@@ -21,8 +21,8 @@ const CategorySection = () => {
     inputRef,
     handleOnChange,
     escapeInput: escapeAddCategory,
-    isOpenInput,
-    setIsOpenInput,
+    isInputOpen,
+    setIsInputOpen,
     closeInput,
   } = useCategoryInput('');
 
@@ -51,7 +51,7 @@ const CategorySection = () => {
     <S.Section>
       <S.Header>
         <p>카테고리</p>
-        {isOpenInput ? (
+        {isInputOpen ? (
           <S.Input
             type='text'
             value={value}
@@ -62,7 +62,7 @@ const CategorySection = () => {
             onKeyUp={requestAddCategory}
           />
         ) : (
-          <Button variant='text' size='small' onClick={() => setIsOpenInput(true)}>
+          <Button variant='text' size='small' onClick={() => setIsInputOpen(true)}>
             <PlusCircleIcon width={12} height={12} />
           </Button>
         )}

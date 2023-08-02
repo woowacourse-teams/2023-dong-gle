@@ -17,8 +17,8 @@ const Category = ({ id, categoryName }: Props) => {
     inputRef,
     handleOnChange,
     escapeInput: escapeRename,
-    isOpenInput,
-    setIsOpenInput,
+    isInputOpen,
+    setIsInputOpen,
     closeInput,
   } = useCategoryInput('');
   const { patchCategory, deleteCategory } = useCategoryMutation();
@@ -40,7 +40,7 @@ const Category = ({ id, categoryName }: Props) => {
   const openRenamingInput = (e: MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
 
-    setIsOpenInput(true);
+    setIsInputOpen(true);
   };
 
   const deleteCategoryClick = async (e: MouseEvent<SVGSVGElement>) => {
@@ -51,7 +51,7 @@ const Category = ({ id, categoryName }: Props) => {
 
   return (
     <S.Container>
-      {isOpenInput ? (
+      {isInputOpen ? (
         <S.Input
           type='text'
           value={value}

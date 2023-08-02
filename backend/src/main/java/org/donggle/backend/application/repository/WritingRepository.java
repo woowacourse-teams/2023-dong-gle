@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface WritingRepository extends JpaRepository<Writing, Long> {
     List<Writing> findAllByCategoryId(final Long categoryId);
 
-    Long countByCategoryId(Long id);
+    int countByCategoryId(Long id);
 
-    Long countByNextWritingId(Long nextWritingId);
+    int countByNextWritingId(Long nextWritingId);
 
     @Query("select w from Writing w " +
             "where w.category.id = :categoryId and " +

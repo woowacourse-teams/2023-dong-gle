@@ -29,6 +29,8 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class CategoryService {
+    private static final int LAST_WRITING_FLAG = -1;
+
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
@@ -47,10 +49,25 @@ public class CategoryService {
     public CategoryListResponse findAll(final Long memberId) {
         //TODO: member checking
         final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
-        final List<CategoryResponse> categoryResponses = categories.stream()
+        final List<Category> sortedCategories = sortCategory(categories, findBasicCategoryByMemberId(memberId));
+        final List<CategoryResponse> categoryResponses = sortedCategories.stream()
                 .map(CategoryResponse::of)
                 .toList();
         return CategoryListResponse.from(categoryResponses);
+    }
+
+    private List<Category> sortCategory(final List<Category> categories, Category targetCategory) {
+        final Map<Category, Category> categoryMap = new LinkedHashMap<>();
+        for (final Category category : categories) {
+            categoryMap.put(category, category.getNextCategory());
+        }
+        final List<Category> sortedCategories = new ArrayList<>();
+        sortedCategories.add(targetCategory);
+        while (targetCategory.getNextCategory() != null) {
+            targetCategory = categoryMap.get(targetCategory);
+            sortedCategories.add(targetCategory);
+        }
+        return sortedCategories;
     }
 
     @Transactional(readOnly = true)
@@ -115,11 +132,40 @@ public class CategoryService {
 
     private void deleteCategory(final Category findCategory) {
         final Category nextCategory = findCategory.getNextCategory();
-        final Category preCategory = findPreCategoryByCategoryId(findCategory.getId());
+        final Category preCategory = findPreCategory(findCategory.getId());
         findCategory.changeNextCategory(null);
         categoryRepository.flush();
         preCategory.changeNextCategory(nextCategory);
         categoryRepository.delete(findCategory);
+    }
+
+    public void modifyCategoryOrder(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
+        final Long nextCategoryId = request.nextCategoryId();
+        final Category source = findCategory(categoryId);
+        validateBasicCategory(source);
+        deleteCategoryOrder(source);
+        addCategoryOrder(nextCategoryId, source, memberId);
+    }
+
+    private void deleteCategoryOrder(final Category category) {
+        final Category nextCategory = category.getNextCategory();
+        category.changeNextCategory(null);
+        final Category preCategory = findPreCategory(category.getId());
+        preCategory.changeNextCategory(nextCategory);
+    }
+
+    private void addCategoryOrder(final Long nextCategoryId, final Category category, final Long memberId) {
+        final Category preCategory;
+        if (nextCategoryId == LAST_WRITING_FLAG) {
+            preCategory = findLastCategoryByMemberId(memberId);
+        } else {
+            preCategory = findPreCategory(nextCategoryId);
+        }
+        preCategory.changeNextCategory(category);
+        if (nextCategoryId != LAST_WRITING_FLAG) {
+            final Category nextCategory = findCategory(nextCategoryId);
+            category.changeNextCategory(nextCategory);
+        }
     }
 
     private void validateBasicCategory(final Category category) {
@@ -138,7 +184,7 @@ public class CategoryService {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    private Category findPreCategoryByCategoryId(final Long categoryId) {
+    private Category findPreCategory(final Long categoryId) {
         return categoryRepository.findPreCategoryByCategoryId(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }

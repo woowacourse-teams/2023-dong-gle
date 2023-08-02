@@ -168,18 +168,18 @@ public class WritingService {
         return copy.get(0);
     }
 
-    private List<Writing> sortWriting(final List<Writing> findWritings, Writing targetWriting) {
+    private List<Writing> sortWriting(final List<Writing> writings, Writing targetWriting) {
         final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
-        for (final Writing findWriting : findWritings) {
-            writingMap.put(findWriting, findWriting.getNextWriting());
+        for (final Writing writing : writings) {
+            writingMap.put(writing, writing.getNextWriting());
         }
-        final List<Writing> sortedWriting = new ArrayList<>();
-        sortedWriting.add(targetWriting);
+        final List<Writing> sortedWritings = new ArrayList<>();
+        sortedWritings.add(targetWriting);
         while (targetWriting.getNextWriting() != null) {
             targetWriting = writingMap.get(targetWriting);
-            sortedWriting.add(targetWriting);
+            sortedWritings.add(targetWriting);
         }
-        return sortedWriting;
+        return sortedWritings;
     }
 
     public void modifyWritingOrder(final Long memberId, final Long writingId, final WritingModifyRequest request) {
@@ -188,35 +188,35 @@ public class WritingService {
         final Long targetCategoryId = request.targetCategoryId();
 
         final Writing source = findWriting(writingId);
-        deleteSourceOrder(source);
-        addSourceOrder(targetCategoryId, nextWritingId, source);
+        deleteWritingOrder(source);
+        addWritingOrder(targetCategoryId, nextWritingId, source);
 
-        changeSourceCategory(targetCategoryId, source);
+        changeCategory(targetCategoryId, source);
     }
 
-    private void deleteSourceOrder(final Writing source) {
-        final Writing sourceNext = source.getNextWriting();
-        source.changeNextWriting(null);
+    private void deleteWritingOrder(final Writing writing) {
+        final Writing nextWriting = writing.getNextWriting();
+        writing.changeNextWriting(null);
 
-        if (isNotFirstWriting(source.getId())) {
-            final Writing sourcePre = findPreWriting(source.getId());
-            sourcePre.changeNextWriting(sourceNext);
+        if (isNotFirstWriting(writing.getId())) {
+            final Writing preWriting = findPreWriting(writing.getId());
+            preWriting.changeNextWriting(nextWriting);
         }
     }
 
-    private void addSourceOrder(final Long targetCategoryId, final Long nextWritingId, final Writing source) {
+    private void addWritingOrder(final Long categoryId, final Long nextWritingId, final Writing writing) {
         if (isNotFirstWriting(nextWritingId)) {
-            final Writing targetPre;
+            final Writing preWriting;
             if (nextWritingId == LAST_WRITING_FLAG) {
-                targetPre = findLastWritingInCategory(targetCategoryId);
+                preWriting = findLastWritingInCategory(categoryId);
             } else {
-                targetPre = findPreWriting(nextWritingId);
+                preWriting = findPreWriting(nextWritingId);
             }
-            targetPre.changeNextWriting(source);
+            preWriting.changeNextWriting(writing);
         }
         if (nextWritingId != LAST_WRITING_FLAG) {
-            final Writing targetNext = findWriting(nextWritingId);
-            source.changeNextWriting(targetNext);
+            final Writing nextWriting = findWriting(nextWritingId);
+            writing.changeNextWriting(nextWriting);
         }
     }
 
@@ -224,12 +224,11 @@ public class WritingService {
         return writingRepository.countByNextWritingId(writingId) != 0;
     }
 
-    private void changeSourceCategory(final Long targetCategoryId, final Writing source) {
-        final Category targetCategory = findCategory(targetCategoryId);
-        final Category sourceCategory = source.getCategory();
-
+    private void changeCategory(final Long categoryId, final Writing writing) {
+        final Category sourceCategory = writing.getCategory();
+        final Category targetCategory = findCategory(categoryId);
         if (!targetCategory.equals(sourceCategory)) {
-            source.changeCategory(targetCategory);
+            writing.changeCategory(targetCategory);
         }
     }
 

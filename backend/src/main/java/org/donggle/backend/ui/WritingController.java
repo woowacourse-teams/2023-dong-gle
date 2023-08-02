@@ -56,6 +56,8 @@ public class WritingController {
             writingService.modifyWritingTitle(1L, writingId, request);
         } else if (request.nextWritingId() != null && request.targetCategoryId() != null) {
             writingService.modifyWritingOrder(1L, writingId, request);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.noContent().build();
     }

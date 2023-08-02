@@ -37,6 +37,8 @@ public class CategoryController {
             categoryService.modifyCategoryName(1L, categoryId, request);
         } else if (request.nextCategoryId() != null) {
             categoryService.modifyCategoryOrder(1L, categoryId, request);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.noContent().build();
     }

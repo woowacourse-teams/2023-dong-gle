@@ -175,7 +175,7 @@ public class WritingService {
         }
         final List<Writing> sortedWritings = new ArrayList<>();
         sortedWritings.add(targetWriting);
-        while (targetWriting.getNextWriting() != null) {
+        while (Objects.nonNull(targetWriting.getNextWriting())) {
             targetWriting = writingMap.get(targetWriting);
             sortedWritings.add(targetWriting);
         }
@@ -196,7 +196,7 @@ public class WritingService {
 
     private void deleteWritingOrder(final Writing writing) {
         final Writing nextWriting = writing.getNextWriting();
-        writing.changeNextWriting(null);
+        writing.changeNextWritingNull();
 
         if (isNotFirstWriting(writing.getId())) {
             final Writing preWriting = findPreWriting(writing.getId());

@@ -70,6 +70,10 @@ public class Writing extends BaseEntity {
         this.nextWriting = nextWriting;
     }
 
+    public void changeNextWritingNull() {
+        this.nextWriting = null;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

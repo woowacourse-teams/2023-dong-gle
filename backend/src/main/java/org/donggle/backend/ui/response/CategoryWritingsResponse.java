@@ -10,7 +10,8 @@ public record CategoryWritingsResponse(
         List<WritingSimpleResponse> writings
 ) {
     public static CategoryWritingsResponse of(final Category findCategory,
-                                              final List<WritingSimpleResponse> writingSimpleResponses) {
+                                              final List<WritingSimpleResponse> writingSimpleResponses
+    ) {
         return new CategoryWritingsResponse(
                 findCategory.getId(),
                 findCategory.getCategoryNameValue(),

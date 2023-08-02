@@ -24,12 +24,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CategoryService {
     private static final int LAST_WRITING_FLAG = -1;
+    private static final int FIRST_WRITING_INDEX = 0;
 
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
@@ -63,7 +65,7 @@ public class CategoryService {
         }
         final List<Category> sortedCategories = new ArrayList<>();
         sortedCategories.add(targetCategory);
-        while (targetCategory.getNextCategory() != null) {
+        while (Objects.nonNull(targetCategory.getNextCategory())) {
             targetCategory = categoryMap.get(targetCategory);
             sortedCategories.add(targetCategory);
         }
@@ -89,7 +91,7 @@ public class CategoryService {
                 .map(Writing::getNextWriting)
                 .toList();
         copy.removeAll(nextWritings);
-        return copy.get(0);
+        return copy.get(FIRST_WRITING_INDEX);
     }
 
     private List<Writing> sortWriting(final List<Writing> findWritings, Writing targetWriting) {
@@ -99,7 +101,7 @@ public class CategoryService {
         }
         final List<Writing> sortedWriting = new ArrayList<>();
         sortedWriting.add(targetWriting);
-        while (targetWriting.getNextWriting() != null) {
+        while (Objects.nonNull(targetWriting.getNextWriting())) {
             targetWriting = writingMap.get(targetWriting);
             sortedWriting.add(targetWriting);
         }
@@ -133,7 +135,7 @@ public class CategoryService {
     private void deleteCategory(final Category findCategory) {
         final Category nextCategory = findCategory.getNextCategory();
         final Category preCategory = findPreCategory(findCategory.getId());
-        findCategory.changeNextCategory(null);
+        findCategory.changeNextCategoryNull();
         categoryRepository.flush();
         preCategory.changeNextCategory(nextCategory);
         categoryRepository.delete(findCategory);
@@ -149,7 +151,7 @@ public class CategoryService {
 
     private void deleteCategoryOrder(final Category category) {
         final Category nextCategory = category.getNextCategory();
-        category.changeNextCategory(null);
+        category.changeNextCategoryNull();
         final Category preCategory = findPreCategory(category.getId());
         preCategory.changeNextCategory(nextCategory);
     }

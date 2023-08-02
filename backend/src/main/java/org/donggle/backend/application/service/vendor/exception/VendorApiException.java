@@ -30,4 +30,3 @@ public abstract class VendorApiException extends RuntimeException {
         return Mono.error(new VendorApiInternalServerError(platformName));
     }
 }
-

@@ -22,7 +22,7 @@ public record TistoryPublishWritingDataResponse(
         String trackbacks,
         String date,
         @JsonDeserialize(using = TistoryTagsDeserializer.class)
-        TistoryTags tags
+        TistoryTagsResponse tags
 ) {
     public LocalDateTime getDateTime() {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

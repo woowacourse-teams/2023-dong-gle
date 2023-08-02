@@ -32,7 +32,7 @@ public class BlogWriting extends BaseEntity {
     @JoinColumn(name = "writing_id")
     private Writing writing;
     private LocalDateTime publishedAt;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     private List<String> tags;
 
     public BlogWriting(final Blog blog, final Writing writing, final LocalDateTime publishedAt, final List<String> tags) {
@@ -42,24 +42,20 @@ public class BlogWriting extends BaseEntity {
         this.tags = tags;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String getBlogTypeValue() {
+        return blog.getBlogType().name();
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         final BlogWriting that = (BlogWriting) o;
         return Objects.equals(id, that.id);
     }
 
-    public String getBlogTypeValue() {
-        return blog.getBlogType().name();
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

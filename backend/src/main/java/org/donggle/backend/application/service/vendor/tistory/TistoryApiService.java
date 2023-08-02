@@ -16,10 +16,6 @@ public class TistoryApiService {
     public static final String PLATFORM_NAME = "Tistory";
     private static final String TISTORY_URL = "https://www.tistory.com/apis";
     private static final int OK = 200;
-    private static final int BAD_REQUEST = 400;
-    private static final int UNAUTHORIZED = 401;
-    private static final int FORBIDDEN = 403;
-
     private final WebClient webClient;
 
     public TistoryApiService() {

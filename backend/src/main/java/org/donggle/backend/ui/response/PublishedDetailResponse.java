@@ -11,6 +11,6 @@ public record PublishedDetailResponse(
         List<String> tags
 ) {
     public static PublishedDetailResponse of(final BlogWriting blogWriting) {
-        return new PublishedDetailResponse(blogWriting.getBlogTypeValue(), blogWriting.getPublishedAt());
+        return new PublishedDetailResponse(blogWriting.getBlogTypeValue(), blogWriting.getPublishedAt(), blogWriting.getTags());
     }
 }

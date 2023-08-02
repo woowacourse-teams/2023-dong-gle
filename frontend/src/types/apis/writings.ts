@@ -10,9 +10,7 @@ export type GetWritingResponse = {
 
 export type GetWritingPropertiesResponse = {
   createdAt: Date;
-  isPublished: boolean;
-  publishedAt: Date;
-  publishedTo: Blog;
+  publishedDetails: PublishedDetail[];
 };
 
 export type PublishWritingRequest = {
@@ -27,13 +25,14 @@ export type PublishWritingArgs = {
 export type PublishedDetail = {
   blogName: Blog;
   publishedAt: Date;
+  tags: string[];
 };
 
 export type Writing = {
   id: number;
   title: string;
   createdAt: Date;
-  publishedDetails: PublishedDetail[];
+  publishedDetails: Omit<PublishedDetail, 'tags'>[];
 };
 
 export type GetCategoryIdWritingListResponse = {

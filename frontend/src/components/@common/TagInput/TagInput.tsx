@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { useTagInput } from './useTagInput';
-import Tag from '../Tag/Tag';
+import Tag from 'components/@common/Tag/Tag';
 
 const TagInput = () => {
   const { inputValue, tags, addTag, removeLastTag, removeTag, onInputValueChange } = useTagInput();

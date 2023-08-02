@@ -7,7 +7,7 @@ import { Router } from 'routes/Router';
 import GlobalStyle from 'styles/GlobalStyle';
 import { theme } from 'styles/theme';
 
-if (process.env.NODE_ENV === 'development') {
+if (MOCKING_ENV === 'true') {
   worker.start({
     onUnhandledRequest: 'bypass',
   });

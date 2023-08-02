@@ -11,8 +11,10 @@ import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
 
 const CategorySection = () => {
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
   const { addCategory } = useCategoryMutation();
-  const { categoryId, writings, getWritings } = useCategoryWritings();
+  const writings = useCategoryWritings(categoryId);
   const { categoryDetails, getCategories } = useCategoryDetails(categoryId, writings);
   const {
     value,
@@ -23,7 +25,6 @@ const CategorySection = () => {
     setIsOpenInput,
     closeInput,
   } = useCategoryInput('');
-  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
   const requestAddCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
@@ -35,7 +36,7 @@ const CategorySection = () => {
 
   const toggleItem = (categoryId: number) => {
     if (!openItems[categoryId]) {
-      getWritings(categoryId);
+      setCategoryId(categoryId);
     }
 
     setOpenItems((prevOpenItems) => ({
@@ -68,16 +69,13 @@ const CategorySection = () => {
       </S.Header>
       <Accordion>
         {categoryDetails.map((categoryDetail) => {
-          console.log(categoryDetail);
           return (
             <Accordion.Item key={categoryDetail.id}>
               <Accordion.Title onIconClick={() => toggleItem(categoryDetail.id)}>
                 <Category id={categoryDetail.id} categoryName={categoryDetail.categoryName} />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryId === categoryDetail.id && categoryDetail.writings && (
-                  <WritingList writingList={categoryDetail.writings} />
-                )}
+                {categoryDetail.writings && <WritingList writingList={categoryDetail.writings} />}
               </Accordion.Panel>
             </Accordion.Item>
           );

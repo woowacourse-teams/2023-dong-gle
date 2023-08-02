@@ -1,14 +1,12 @@
 import { GetCategoryDetailResponse } from 'types/apis/category';
 import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-export const useCategoryWritings = () => {
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-
+export const useCategoryWritings = (categoryId: number | null) => {
   const { data, getData } = useGetQuery<GetCategoryDetailResponse>({
     fetcher: () => {
-      return categoryId ? getWritingsInCategory(categoryId) : Promise.reject('No Category ID');
+      return getWritingsInCategory(categoryId);
     },
   });
 
@@ -16,13 +14,5 @@ export const useCategoryWritings = () => {
     getData();
   }, [categoryId]);
 
-  const getWritings = (categoryId: number) => {
-    setCategoryId(categoryId);
-  };
-
-  return {
-    getWritings,
-    categoryId: data ? data.id : null,
-    writings: data ? data.writings : null,
-  };
+  return data ? data.writings : null;
 };

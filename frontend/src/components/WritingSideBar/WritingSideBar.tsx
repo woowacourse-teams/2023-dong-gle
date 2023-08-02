@@ -6,6 +6,7 @@ import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useState } from 'react';
 import { Blog } from 'types/domain';
+import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -27,7 +28,7 @@ const WritingSideBar = ({ writingId }: Props) => {
     {
       key: TabKeys.WritingProperty,
       label: <InfoIcon width={24} height={24} />,
-      content: <></>, // TODO: 글 정보 탭 구현
+      content: <WritingPropertySection writingId={writingId} />,
     },
     {
       key: TabKeys.Publishing,
@@ -50,7 +51,7 @@ const WritingSideBar = ({ writingId }: Props) => {
   ];
 
   return (
-    <S.SidebarSection>
+    <S.SidebarContainer>
       <S.MenuTabList>
         {menus
           .filter((menu) => menu.key !== TabKeys.PublishingProperty)
@@ -68,16 +69,14 @@ const WritingSideBar = ({ writingId }: Props) => {
           ))}
       </S.MenuTabList>
       {menus.find((menu) => menu.key === currentTab)?.content}
-    </S.SidebarSection>
+    </S.SidebarContainer>
   );
 };
 
 export default WritingSideBar;
 
 const S = {
-  SidebarSection: styled.section`
-    ${sidebarStyle}
-
+  SidebarContainer: styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;

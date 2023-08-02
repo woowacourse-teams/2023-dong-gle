@@ -1,4 +1,3 @@
-export type Writing = {
-  id: number;
-  title: string;
-};
+import { GetWritingResponse } from 'types/apis/writings';
+
+export type CategoryWriting = Omit<GetWritingResponse, 'content'>;

@@ -3,16 +3,14 @@ import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
 import { useEffect } from 'react';
 
-export const useCategoryWritings = (categoryId: number | null) => {
+export const useCategoryWritings = (selectedCategoryId: number | null) => {
   const { data, getData } = useGetQuery<GetCategoryDetailResponse>({
-    fetcher: () => {
-      return getWritingsInCategory(categoryId);
-    },
+    fetcher: () => getWritingsInCategory(selectedCategoryId),
   });
 
   useEffect(() => {
     getData();
-  }, [categoryId]);
+  }, [selectedCategoryId]);
 
   return data ? data.writings : null;
 };

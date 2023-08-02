@@ -2,9 +2,12 @@ import { getCategories } from 'apis/category';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { useEffect, useState } from 'react';
 import { GetCategoriesResponse, GetCategoryDetailResponse } from 'types/apis/category';
-import { Writing } from 'types/components/category';
+import { CategoryWriting } from 'types/components/category';
 
-export const useCategoryDetails = (categoryId: number | null, writings: Writing[] | null) => {
+export const useCategoryDetails = (
+  selectedCategoryId: number | null,
+  writings: CategoryWriting[] | null,
+) => {
   const { data, getData } = useGetQuery<GetCategoriesResponse>({
     fetcher: getCategories,
   });
@@ -41,17 +44,17 @@ export const useCategoryDetails = (categoryId: number | null, writings: Writing[
   }, [data]);
 
   useEffect(() => {
-    const updateCategoryDetails = (categoryId: number, writings: Writing[]) => {
+    const updateCategoryDetails = (selectedCategoryId: number, writings: CategoryWriting[]) => {
       setCategoryDetails((prevDetails: GetCategoryDetailResponse[] | null) => {
         return prevDetails
           ? prevDetails.map((detail) =>
-              detail.id === categoryId ? { ...detail, writings } : { ...detail },
+              detail.id === selectedCategoryId ? { ...detail, writings } : { ...detail },
             )
           : null;
       });
     };
 
-    if (categoryId && writings) updateCategoryDetails(categoryId, writings);
+    if (selectedCategoryId && writings) updateCategoryDetails(selectedCategoryId, writings);
   }, [writings]);
 
   return { categoryDetails, getCategories: getData };

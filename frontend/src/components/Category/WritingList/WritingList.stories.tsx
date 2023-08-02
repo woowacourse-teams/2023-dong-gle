@@ -5,7 +5,7 @@ const meta: Meta<typeof WritingList> = {
   title: 'WritingList',
   component: WritingList,
   args: {
-    writingList: [
+    writings: [
       { id: 1, title: '동글' },
       { id: 2, title: '테트리스 중독' },
       {
@@ -16,7 +16,7 @@ const meta: Meta<typeof WritingList> = {
     ],
   },
   argTypes: {
-    writingList: {
+    writings: {
       description: '글 목록 데이터입니다.',
     },
   },

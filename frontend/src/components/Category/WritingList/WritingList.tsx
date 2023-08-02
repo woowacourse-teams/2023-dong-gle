@@ -1,18 +1,18 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
-import { Writing } from 'types/components/category';
+import { CategoryWriting } from 'types/components/category';
 
 type Props = {
-  writingList: Writing[];
+  writings: CategoryWriting[];
 };
 
-const WritingList = ({ writingList }: Props) => {
+const WritingList = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
 
   return (
     <S.List>
-      {writingList.map((writing) => (
+      {writings.map((writing) => (
         <S.Item key={writing.id}>
           <S.Button onClick={() => goWritingPage(writing.id)}>
             <S.IconWrapper>

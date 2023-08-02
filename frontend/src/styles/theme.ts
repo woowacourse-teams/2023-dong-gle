@@ -5,6 +5,9 @@ const color = {
   tistory: '#FF5A4A',
   medium: '#000000',
 
+  red1: '#F6EEEE',
+  red9: '#E61920',
+
   gray1: '#ffffff',
   gray2: '#fafafa',
   gray3: '#f5f5f5',

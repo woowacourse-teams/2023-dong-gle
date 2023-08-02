@@ -26,12 +26,12 @@ class HtmlStyleRendererTest {
     @DisplayName("Bold 스타일 렌더링")
     void renderBold() {
         //given
-        String rawText = "안녕하세요 동글입니다.";
+        final String rawText = "안녕하세요 동글입니다.";
         styles.add(new Style(new StyleRange(0, 5), StyleType.BOLD));
 
         //when
-        String result = htmlStyleRenderer.render(rawText, styles);
-        String expected = "<strong>안녕하세요 </strong>동글입니다.";
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "<strong>안녕하세요 </strong>동글입니다.";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -41,12 +41,12 @@ class HtmlStyleRendererTest {
     @DisplayName("Italic 스타일 렌더링")
     void renderItalic() {
         //given
-        String rawText = "안녕하세요 동글입니다.";
+        final String rawText = "안녕하세요 동글입니다.";
         styles.add(new Style(new StyleRange(3, 9), StyleType.ITALIC));
 
         //when
-        String result = htmlStyleRenderer.render(rawText, styles);
-        String expected = "안녕하<em>세요 동글입니</em>다.";
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "안녕하<em>세요 동글입니</em>다.";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -56,12 +56,12 @@ class HtmlStyleRendererTest {
     @DisplayName("Code 스타일 렌더링")
     void renderCode() {
         //given
-        String rawText = "안녕하세요 동글입니다.";
+        final String rawText = "안녕하세요 동글입니다.";
         styles.add(new Style(new StyleRange(2, 5), StyleType.CODE));
 
         //when
-        String result = htmlStyleRenderer.render(rawText, styles);
-        String expected = "안녕<code>하세요 </code>동글입니다.";
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "안녕<code>하세요 </code>동글입니다.";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -71,15 +71,32 @@ class HtmlStyleRendererTest {
     @DisplayName("스타일 렌더링")
     void renderStyle() {
         //given
-        String rawText = "안녕하세요 동글입니다.";
-        List<Style> styles = new ArrayList<>();
+        final String rawText = "안녕하세요 동글입니다.";
+        final List<Style> styles = new ArrayList<>();
         styles.add(new Style(new StyleRange(0, 5), StyleType.BOLD));
         styles.add(new Style(new StyleRange(3, 5), StyleType.CODE));
         styles.add(new Style(new StyleRange(7, 9), StyleType.ITALIC));
 
         //when
-        String result = htmlStyleRenderer.render(rawText, styles);
-        String expected = "<strong>안녕하<code>세요 </strong></code>동<em>글입니</em>다.";
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "<strong>안녕하<code>세요 </strong></code>동<em>글입니</em>다.";
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("링크 스타일 렌더링")
+    void renderLink() {
+        //given
+        final String rawText = "link.com캡션";
+        final List<Style> styles = new ArrayList<>();
+        styles.add(new Style(new StyleRange(0, 7), StyleType.LINK));
+        styles.add(new Style(new StyleRange(8, 9), StyleType.LINK));
+
+        //when
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "<a href=\"link.com\">캡션</a>";
 
         //then
         assertThat(result).isEqualTo(expected);

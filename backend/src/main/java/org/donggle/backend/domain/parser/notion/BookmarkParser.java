@@ -19,7 +19,7 @@ public record BookmarkParser(List<RichText> caption, String url) implements Noti
     @Override
     public String parseRawText() {
         final String captionText = concatCaptionTexts();
-        return captionText + url;
+        return url + captionText;
     }
 
     private String concatCaptionTexts() {
@@ -39,8 +39,8 @@ public record BookmarkParser(List<RichText> caption, String url) implements Noti
         final String concatenatedCaption = concatCaptionTexts();
         final int concatenatedLength = concatenatedCaption.length();
         return List.of(
-                new Style(new StyleRange(0, concatenatedLength - 1), StyleType.LINK),
-                new Style(new StyleRange(concatenatedLength, concatenatedLength + urlLength - 1), StyleType.LINK)
+                new Style(new StyleRange(0, urlLength - 1), StyleType.LINK),
+                new Style(new StyleRange(urlLength, concatenatedLength + urlLength - 1), StyleType.LINK)
         );
     }
 }

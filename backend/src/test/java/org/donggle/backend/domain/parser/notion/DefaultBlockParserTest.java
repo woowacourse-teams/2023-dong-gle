@@ -40,4 +40,35 @@ class DefaultBlockParserTest {
                         .isEqualTo(expected)
         );
     }
+
+    @Test
+    @DisplayName("DefaultBlockParser로부터 RawText와 Styles를 파싱한다. - 링크가 중간에 있는 경우")
+    void parseLink() {
+        //given
+        final DefaultBlockParser defaultBlockParser = new DefaultBlockParser(List.of(
+                new RichText("hello", "null", new Annotations(true, false, false, false, false, "default")),
+                new RichText(" ", "null", Annotations.empty()),
+                new RichText("world", "href", new Annotations(false, true, false, false, true, "default"))
+        ));
+
+        //when
+        final String rawText = defaultBlockParser.parseRawText();
+        final List<Style> styles = defaultBlockParser.parseStyles();
+
+        //then
+        final String expectedRawText = "hello hrefworld";
+        final List<Style> expected = List.of(
+                new Style(new StyleRange(0, 4), StyleType.BOLD),
+                new Style(new StyleRange(6, 9), StyleType.LINK),
+                new Style(new StyleRange(10, 14), StyleType.LINK),
+                new Style(new StyleRange(10, 14), StyleType.ITALIC),
+                new Style(new StyleRange(10, 14), StyleType.CODE)
+        );
+        Assertions.assertAll(
+                () -> assertThat(rawText).isEqualTo(expectedRawText),
+                () -> assertThat(styles).usingRecursiveComparison()
+                        .ignoringFields("createdAt", "updatedAt")
+                        .isEqualTo(expected)
+        );
+    }
 }

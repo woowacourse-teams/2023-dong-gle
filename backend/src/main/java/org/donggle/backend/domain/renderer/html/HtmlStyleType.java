@@ -7,7 +7,9 @@ import org.donggle.backend.domain.writing.StyleType;
 public enum HtmlStyleType {
     BOLD("<strong>", "</strong>"),
     ITALIC("<em>", "</em>"),
-    CODE("<code>", "</code>");
+    CODE("<code>", "</code>"),
+    LINK("<a href=\"", "\">"),
+    CAPTION("", "</a>");
 
     private final String startTag;
     private final String endTag;
@@ -17,7 +19,7 @@ public enum HtmlStyleType {
         this.endTag = endTag;
     }
 
-    public static HtmlStyleType findByStyleType(StyleType styleType) {
+    public static HtmlStyleType findByStyleType(final StyleType styleType) {
         return HtmlStyleType.valueOf(styleType.name());
     }
 }

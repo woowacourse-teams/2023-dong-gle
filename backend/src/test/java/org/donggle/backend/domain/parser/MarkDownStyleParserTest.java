@@ -76,7 +76,7 @@ class MarkDownStyleParserTest {
     void linkParser() {
         //given
         final String input = "[네이버](www.naver.com)";
-        final String expected = "네이버www.naver.com";
+        final String expected = "www.naver.com네이버";
 
         //when
         final String result = markDownStyleParser.removeStyles(input);
@@ -90,7 +90,7 @@ class MarkDownStyleParserTest {
     void linkStyleSave() {
         //given
         final String input = "[네이버](www)";
-        final String originalText = "네이버www";
+        final String originalText = "www네이버";
         final Style caption = new Style(new StyleRange(0, 2), StyleType.LINK);
         final Style url = new Style(new StyleRange(3, 5), StyleType.LINK);
 

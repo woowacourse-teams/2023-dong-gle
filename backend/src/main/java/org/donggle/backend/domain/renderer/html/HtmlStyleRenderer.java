@@ -1,6 +1,7 @@
 package org.donggle.backend.domain.renderer.html;
 
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,8 +19,20 @@ public class HtmlStyleRenderer {
     }
 
     private void createTags(final List<Style> styles, final Map<Integer, List<String>> startTags, final Map<Integer, List<String>> endTags) {
+        boolean isPrevLink = false;
         for (final Style style : styles) {
-            final HtmlStyleType htmlStyleType = HtmlStyleType.findByStyleType(style.getStyleType());
+            final HtmlStyleType htmlStyleType;
+            if (style.getStyleType() == StyleType.LINK) {
+                if (isPrevLink) {
+                    htmlStyleType = HtmlStyleType.CAPTION;
+                    isPrevLink = false;
+                } else {
+                    htmlStyleType = HtmlStyleType.LINK;
+                    isPrevLink = true;
+                }
+            } else {
+                htmlStyleType = HtmlStyleType.findByStyleType(style.getStyleType());
+            }
             final int startIndex = style.getStartIndexValue();
             final int endIndex = style.getEndIndexValue();
 

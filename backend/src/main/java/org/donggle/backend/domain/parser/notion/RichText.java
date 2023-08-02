@@ -38,14 +38,22 @@ public record RichText(String plainText, String href, Annotations annotations) {
         final List<Style> styles = new ArrayList<>();
         for (final RichText richText : richTexts) {
             styles.addAll(richText.buildStyles(offset));
+            if (!Objects.equals(richText.href, "null")) {
+                offset += richText.href.length();
+            }
             offset += richText.plainText().length();
         }
         return styles;
     }
-
-    private List<Style> buildStyles(final int offset) {
-        final int end = offset + plainText.length() - 1;
+    
+    private List<Style> buildStyles(int offset) {
         final List<Style> styles = new ArrayList<>();
+        if (!Objects.equals(href, "null")) {
+            styles.add(new Style(new StyleRange(offset, offset + href.length() - 1), StyleType.LINK));
+            offset += href.length();
+            styles.add(new Style(new StyleRange(offset, offset + plainText.length() - 1), StyleType.LINK));
+        }
+        final int end = offset + plainText.length() - 1;
         if (annotations.bold()) {
             styles.add(new Style(new StyleRange(offset, end), StyleType.BOLD));
         }
@@ -55,16 +63,17 @@ public record RichText(String plainText, String href, Annotations annotations) {
         if (annotations.code()) {
             styles.add(new Style(new StyleRange(offset, end), StyleType.CODE));
         }
-        if (!Objects.equals(href, "null")) {
-            styles.add(new Style(new StyleRange(offset, plainText.length() - 1), StyleType.LINK));
-            styles.add(new Style(new StyleRange(plainText.length(), href.length() - 1), StyleType.LINK));
-        }
         return styles;
     }
 
     public static String collectRawText(final List<RichText> richTexts) {
-        return richTexts.stream()
-                .map(RichText::plainText)
-                .reduce("", (a, b) -> a + b);
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final RichText richText : richTexts) {
+            if (!Objects.equals(richText.href, "null")) {
+                stringBuilder.append(richText.href);
+            }
+            stringBuilder.append(richText.plainText());
+        }
+        return stringBuilder.toString();
     }
 }

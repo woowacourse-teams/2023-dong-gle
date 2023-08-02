@@ -3,14 +3,14 @@ import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
 import { LeftArrowHeadIcon, TagIcon } from 'assets/icons';
 import { slide } from 'styles/animation';
-import { TAB_KEYS } from 'components/WritingSideBar/WritingSideBar';
+import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import { usePublishingPropertySection } from './usePublishingPropertySection';
 import type { Blog } from 'types/domain';
 
 type Props = {
   writingId: number;
   publishTo: Blog;
-  changeCurrentTab: (key: number) => void;
+  changeCurrentTab: (tabKey: TabKeys) => void;
 };
 
 const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: Props) => {
@@ -19,7 +19,7 @@ const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: P
   return (
     <S.PublishingPropertySection blog={publishTo}>
       <S.SectionHeader>
-        <button onClick={() => changeCurrentTab(TAB_KEYS.Publishing)}>
+        <button onClick={() => changeCurrentTab(TabKeys.Publishing)}>
           <LeftArrowHeadIcon width={14} height={14} />
         </button>
         Publishing Properties

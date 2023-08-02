@@ -2,17 +2,17 @@ import { styled } from 'styled-components';
 import { BLOG_LIST } from 'constants/blog';
 import type { Blog } from 'types/domain';
 import Button from 'components/@common/Button/Button';
-import { TAB_KEYS } from 'components/WritingSideBar/WritingSideBar';
+import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 
 type Props = {
   changePublishTo: (blog: Blog) => void;
-  changeCurrentTab: (key: number) => void;
+  changeCurrentTab: (tabKey: TabKeys) => void;
 };
 
 const PublishingSection = ({ changeCurrentTab, changePublishTo }: Props) => {
   const openPublishingPropertySection = (blog: Blog) => {
     changePublishTo(blog);
-    changeCurrentTab(TAB_KEYS.PublishingProperty);
+    changeCurrentTab(TabKeys.PublishingProperty);
   };
 
   return (

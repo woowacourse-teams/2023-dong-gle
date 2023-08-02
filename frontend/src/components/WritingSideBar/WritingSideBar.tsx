@@ -4,6 +4,8 @@ import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
+import { useState } from 'react';
+import { Blog } from 'types/domain';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -15,6 +17,11 @@ type Props = { writingId: number };
 
 const WritingSideBar = ({ writingId }: Props) => {
   const { currentTab, changeCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
+  const [publishTo, setPublishTo] = useState<Blog | null>(null);
+
+  const changePublishTo = (blog: Blog) => {
+    setPublishTo(blog);
+  };
 
   const menus = [
     {
@@ -26,17 +33,19 @@ const WritingSideBar = ({ writingId }: Props) => {
       key: TabKeys.Publishing,
       label: <PublishingIcon width={24} height={24} />,
       content: (
-        <PublishingSection
-          changeCurrentTab={changeCurrentTab}
-          writingId={Number(writingId)}
-          isPublished={false}
-        />
+        <PublishingSection changeCurrentTab={changeCurrentTab} changePublishTo={changePublishTo} />
       ),
     },
     {
       key: TabKeys.PublishingProperty,
       label: 'PublishingProperty',
-      content: <PublishingPropertySection changeCurrentTab={changeCurrentTab} />,
+      content: publishTo && (
+        <PublishingPropertySection
+          writingId={writingId}
+          publishTo={publishTo}
+          changeCurrentTab={changeCurrentTab}
+        />
+      ),
     },
   ];
 
@@ -46,7 +55,7 @@ const WritingSideBar = ({ writingId }: Props) => {
         {menus
           .filter((menu) => menu.key !== TabKeys.PublishingProperty)
           .map((menu) => (
-            <S.Tab>
+            <S.Tab key={menu.key}>
               <S.Input
                 type='radio'
                 name='tab'

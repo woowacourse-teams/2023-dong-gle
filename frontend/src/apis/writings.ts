@@ -33,12 +33,7 @@ export const getWritingProperties = (writingId: number) =>
 
 // 글 발행하기: POST
 export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
-  http.post(`${writingURL}/${writingId}/publish`, {
-    body: JSON.stringify(body),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  http.post(`${writingURL}/${writingId}/publish`, { json: body });
 
 // 카테고리 글 상세 목록 조회 : GET
 export const getCategoryIdWritingList = (categoryId: number) =>

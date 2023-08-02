@@ -6,9 +6,7 @@ import org.donggle.backend.application.service.notion.exception.NotionInvalidReq
 import org.donggle.backend.application.service.notion.exception.NotionNotFoundException;
 import org.donggle.backend.application.service.notion.exception.NotionUnAuthorizedException;
 import org.donggle.backend.domain.parser.notion.NotionBlockType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +16,6 @@ import java.util.Deque;
 import java.util.List;
 
 
-@Component
 public class NotionApiService {
     public static final String CHILD_BLOCK_URI = "/blocks/{blockId}/children";
     public static final String BLOCK_URI = "/blocks/{blockId}";
@@ -32,10 +29,10 @@ public class NotionApiService {
     public static final int NOT_FOUND = 404;
     private static final String NOTION_URL = "https://api.notion.com/v1";
 
-    private final String notionToken;
     private final WebClient webClient;
+    private final String notionToken;
 
-    public NotionApiService(@Value("${notion_token}") final String notionToken) {
+    public NotionApiService(final String notionToken) {
         this.notionToken = notionToken;
         this.webClient = WebClient.create(NOTION_URL);
     }

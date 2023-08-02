@@ -11,12 +11,12 @@ import type { Blog } from 'types/domain';
 type Props = {
   writingId: number;
   publishTo: Blog;
-  changeCurrentTab: (tabKey: TabKeys) => void;
+  selectCurrentTab: (tabKey: TabKeys) => void;
 };
 
-const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: Props) => {
+const PublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: Props) => {
   const { isLoading, setTags, publishWritingToBlog } = usePublishingPropertySection({
-    changeCurrentTab,
+    selectCurrentTab,
   });
 
   if (isLoading)
@@ -30,7 +30,7 @@ const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: P
   return (
     <S.PublishingPropertySection $blog={publishTo}>
       <S.SectionHeader>
-        <button onClick={() => changeCurrentTab(TabKeys.Publishing)}>
+        <button onClick={() => selectCurrentTab(TabKeys.Publishing)}>
           <LeftArrowHeadIcon width={14} height={14} />
         </button>
         Publishing Properties

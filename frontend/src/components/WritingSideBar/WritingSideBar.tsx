@@ -17,10 +17,10 @@ export enum TabKeys {
 type Props = { writingId: number };
 
 const WritingSideBar = ({ writingId }: Props) => {
-  const { currentTab, changeCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
+  const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
 
-  const changePublishTo = (blog: Blog) => {
+  const selectPublishTo = (blog: Blog) => {
     setPublishTo(blog);
   };
 
@@ -34,7 +34,7 @@ const WritingSideBar = ({ writingId }: Props) => {
       key: TabKeys.Publishing,
       label: <PublishingIcon width={24} height={24} />,
       content: (
-        <PublishingSection onTabClick={changeCurrentTab} onBlogButtonClick={changePublishTo} />
+        <PublishingSection onTabClick={selectCurrentTab} onBlogButtonClick={selectPublishTo} />
       ),
     },
     {
@@ -44,7 +44,7 @@ const WritingSideBar = ({ writingId }: Props) => {
         <PublishingPropertySection
           writingId={writingId}
           publishTo={publishTo}
-          changeCurrentTab={changeCurrentTab}
+          selectCurrentTab={selectCurrentTab}
         />
       ),
     },
@@ -62,7 +62,7 @@ const WritingSideBar = ({ writingId }: Props) => {
                 name='tab'
                 id={menu.key}
                 checked={currentTab === menu.key}
-                onChange={() => changeCurrentTab(menu.key)}
+                onChange={() => selectCurrentTab(menu.key)}
               />
               <S.Label htmlFor={menu.key}>{menu.label}</S.Label>
             </S.Tab>

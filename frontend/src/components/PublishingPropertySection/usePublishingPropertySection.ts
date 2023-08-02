@@ -7,7 +7,7 @@ import { PublishWritingArgs } from 'types/apis/writings';
 import { Blog, PublishingPropertyData } from 'types/domain';
 
 type Args = {
-  changeCurrentTab: (tabKey: TabKeys) => void;
+  selectCurrentTab: (tabKey: TabKeys) => void;
 };
 
 type PublishWritingToBlogArgs = {
@@ -15,11 +15,11 @@ type PublishWritingToBlogArgs = {
   publishTo: Blog;
 };
 
-export const usePublishingPropertySection = ({ changeCurrentTab }: Args) => {
+export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishingPropertyData>({ tags: [] });
   const { mutateQuery, isLoading } = useMutation<PublishWritingArgs, null>({
     fetcher: publishWriting,
-    onSuccess: () => changeCurrentTab(TabKeys.WritingProperty),
+    onSuccess: () => selectCurrentTab(TabKeys.WritingProperty),
   });
 
   const publishWritingToBlog = async ({ writingId, publishTo }: PublishWritingToBlogArgs) => {

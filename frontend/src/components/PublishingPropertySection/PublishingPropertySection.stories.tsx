@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   render: () => (
     <StoryContainer>
-      <PublishingPropertySection writingId={1} publishTo={'MEDIUM'} changeCurrentTab={() => {}} />
+      <PublishingPropertySection writingId={1} publishTo={'MEDIUM'} selectCurrentTab={() => {}} />
     </StoryContainer>
   ),
 };

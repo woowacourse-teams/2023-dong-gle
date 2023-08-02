@@ -101,4 +101,23 @@ class HtmlStyleRendererTest {
         //then
         assertThat(result).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("빈 캡션 링크 테스트")
+    void renderEmptyCaptionLink() {
+        //given
+        final String rawText = "link.com";
+        final List<Style> styles = new ArrayList<>();
+        styles.add(new Style(new StyleRange(0, 0), StyleType.LINK));
+        styles.add(new Style(new StyleRange(0, 7), StyleType.LINK));
+
+        //when
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "<a href=\"link.com\"></a>";
+
+
+        //then
+        assertThat(result).isEqualTo(expected);
+
+    }
 }

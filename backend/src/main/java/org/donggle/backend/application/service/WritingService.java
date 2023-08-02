@@ -84,6 +84,16 @@ public class WritingService {
         return originalFilename.substring(0, endIndex);
     }
 
+    private Category findCategory(final Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
+
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
         // TODO : authentication 후 member 객체 가져오도록 수정
         // TODO : MemberCredential에서 값 못찾을 경우 예외던지기
@@ -118,6 +128,11 @@ public class WritingService {
         findWriting.updateTitle(new Title(request.title()));
     }
 
+    private Writing findWriting(final Long writingId) {
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
     @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         //TODO: member checking
@@ -139,6 +154,16 @@ public class WritingService {
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
     }
 
+    private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
+        return blogWritings.stream()
+                .map(blogWriting -> new PublishedDetailResponse(
+                        blogWriting.getBlogTypeValue(),
+                        blogWriting.getPublishedAt(),
+                        blogWriting.getTags()))
+                .toList();
+    }
+
     @Transactional(readOnly = true)
     public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         //TODO: member checking
@@ -155,29 +180,5 @@ public class WritingService {
             ));
         }
         return new WritingListWithCategoryResponse(findCategory.getId(), findCategory.getCategoryNameValue(), writingDetailResponses);
-    }
-
-    private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
-        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
-        return blogWritings.stream()
-                .map(blogWriting -> new PublishedDetailResponse(
-                        blogWriting.getBlogTypeValue(),
-                        blogWriting.getPublishedAt()))
-                .toList();
-    }
-
-    private Category findCategory(final Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
-    }
-
-    private Writing findWriting(final Long writingId) {
-        return writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
-    }
-
-    private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

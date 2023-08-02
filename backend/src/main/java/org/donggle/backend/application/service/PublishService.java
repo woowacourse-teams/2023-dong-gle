@@ -66,13 +66,26 @@ public class PublishService {
     private BlogWriting createBlogWritingAfterMediumPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
         final MediumPublishRequest request = buildMediumRequest(member, publishRequest, writing, content);
         final MediumPublishResponse response = mediumApiService.publishContent(request);
-        return new BlogWriting(blog, writing, response.data().getPublishedAt());
+        return new BlogWriting(blog, writing, response.getDateTime(), response.getTags());
+    }
+
+    private MediumPublishRequest buildMediumRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
+        final String mediumToken = memberCredentials.getMediumToken();
+        final MediumRequestBody body = MediumRequestBody.builder()
+                .title(writing.getTitleValue())
+                .content(content)
+                .contentFormat("html")
+                .tags(publishRequest.tags())
+                .build();
+        final MediumRequestHeader header = new MediumRequestHeader(mediumToken);
+        return new MediumPublishRequest(header, body);
     }
 
     private BlogWriting createBlogWritingAfterTistoryPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
         final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
         final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
-        return new BlogWriting(blog, writing, response.tistory().item().getDateTime());
+        return new BlogWriting(blog, writing, response.getDateTime(), response.getTags());
     }
 
     private TistoryPublishRequest buildTistoryRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
@@ -89,18 +102,5 @@ public class PublishService {
                 .content(content)
                 .tag(String.join(",", publishRequest.tags()))
                 .build();
-    }
-
-    private MediumPublishRequest buildMediumRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
-        final String mediumToken = memberCredentials.getMediumToken();
-        final MediumRequestBody body = MediumRequestBody.builder()
-                .title(writing.getTitleValue())
-                .content(content)
-                .contentFormat("html")
-                .tags(publishRequest.tags())
-                .build();
-        final MediumRequestHeader header = new MediumRequestHeader(mediumToken);
-        return new MediumPublishRequest(header, body);
     }
 }

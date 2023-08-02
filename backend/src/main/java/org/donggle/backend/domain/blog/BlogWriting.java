@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.blog;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.writing.Writing;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,15 +32,19 @@ public class BlogWriting extends BaseEntity {
     @JoinColumn(name = "writing_id")
     private Writing writing;
     private LocalDateTime publishedAt;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> tags;
 
-    public BlogWriting(final Blog blog, final Writing writing, final LocalDateTime publishedAt) {
+    public BlogWriting(final Blog blog, final Writing writing, final LocalDateTime publishedAt, final List<String> tags) {
         this.blog = blog;
         this.writing = writing;
         this.publishedAt = publishedAt;
+        this.tags = tags;
     }
 
-    public String getBlogTypeValue() {
-        return blog.getBlogType().name();
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
@@ -53,8 +59,7 @@ public class BlogWriting extends BaseEntity {
         return Objects.equals(id, that.id);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String getBlogTypeValue() {
+        return blog.getBlogType().name();
     }
 }

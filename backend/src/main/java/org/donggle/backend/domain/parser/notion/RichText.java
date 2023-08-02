@@ -21,7 +21,7 @@ public record RichText(String plainText, String href, Annotations annotations) {
                 .toList();
     }
 
-    public static RichText from(final JsonNode richTextNode) {
+    private static RichText from(final JsonNode richTextNode) {
         final String richTextType = richTextNode.get("type").asText();
         if (Objects.requireNonNull(richTextType).equals("text")) {
             final String plainText = richTextNode.get("plain_text").asText();
@@ -43,7 +43,7 @@ public record RichText(String plainText, String href, Annotations annotations) {
         return styles;
     }
 
-    public List<Style> buildStyles(final int offset) {
+    private List<Style> buildStyles(final int offset) {
         final int end = offset + plainText.length() - 1;
         final List<Style> styles = new ArrayList<>();
         if (annotations.bold()) {

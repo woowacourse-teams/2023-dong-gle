@@ -26,10 +26,10 @@ export const useTagInput = () => {
       const tagsCopy = [...tags];
       const poppedTag = tagsCopy.pop();
 
-      if (typeof poppedTag === 'string') {
-        setTags(tagsCopy);
-        setInputValue(poppedTag);
-      }
+      if (!poppedTag) return;
+
+      setTags(tagsCopy);
+      setInputValue(poppedTag);
     }
   };
 

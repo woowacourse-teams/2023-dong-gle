@@ -1,8 +1,10 @@
 package org.donggle.backend.domain.writing;
 
 import org.donggle.backend.application.repository.BlockRepository;
+import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
@@ -27,6 +29,8 @@ class BlockTest {
     private WritingRepository writingRepository;
     @Autowired
     private BlockRepository blockRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Test
     @DisplayName("block과 content save 테스트")
@@ -34,7 +38,8 @@ class BlockTest {
         //given
         final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
         final Member savedMember = memberRepository.save(member);
-        final Writing writing = new Writing(savedMember, new Title("title"));
+        Category basicCategory = categoryRepository.findById(1L).get();
+        final Writing writing = new Writing(savedMember, new Title("title"), basicCategory);
         final Writing savedWriting = writingRepository.save(writing);
         final CodeBlockContent expectedContent = new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
         final Block block = new Block(savedWriting, expectedContent);

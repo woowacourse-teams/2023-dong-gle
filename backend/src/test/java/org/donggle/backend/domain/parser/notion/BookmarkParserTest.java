@@ -26,8 +26,10 @@ class BookmarkParserTest {
         final List<Style> styles = bookmarkParser.parseStyles();
 
         //then
-        final String expectedRawText = "testcaptiona.com";
-        final List<Style> expectedStyles = List.of(new Style(new StyleRange(0, 10), StyleType.LINK), new Style(new StyleRange(11, 15), StyleType.LINK));
+        final String expectedRawText = "a.comtestcaption";
+        final List<Style> expectedStyles = List.of(
+                new Style(new StyleRange(0, 4), StyleType.LINK)
+                , new Style(new StyleRange(5, 15), StyleType.LINK));
         Assertions.assertAll(
                 () -> assertThat(rawText).isEqualTo(expectedRawText),
                 () -> assertThat(styles).usingRecursiveComparison()

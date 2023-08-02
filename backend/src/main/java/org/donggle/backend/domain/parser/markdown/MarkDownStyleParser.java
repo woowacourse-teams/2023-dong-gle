@@ -88,11 +88,11 @@ public class MarkDownStyleParser {
     }
 
     private void replaceAndAppend(final Matcher matcher, final StringBuilder textBuilder, final StyleType styleType) {
-        String matchedText;
+        final String matchedText;
         if (Objects.requireNonNull(styleType) == StyleType.LINK) {
             final String caption = matcher.group(CAPTION_GROUP_INDEX);
             final String url = matcher.group(URL_GROUP_INDEX);
-            matchedText = caption + url;
+            matchedText = url + caption;
         } else {
             matchedText = matcher.group(INNER_GROUP_INDEX);
         }

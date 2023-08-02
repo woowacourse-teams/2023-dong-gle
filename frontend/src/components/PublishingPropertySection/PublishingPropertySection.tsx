@@ -1,6 +1,7 @@
 import { css, styled } from 'styled-components';
 import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
+import Spinner from 'components/@common/Spinner/Spinner';
 import { LeftArrowHeadIcon, TagIcon } from 'assets/icons';
 import { slide } from 'styles/animation';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
@@ -14,7 +15,17 @@ type Props = {
 };
 
 const PublishingPropertySection = ({ writingId, publishTo, changeCurrentTab }: Props) => {
-  const { setTags, publishWritingToBlog } = usePublishingPropertySection();
+  const { isLoading, setTags, publishWritingToBlog } = usePublishingPropertySection({
+    changeCurrentTab,
+  });
+
+  if (isLoading)
+    return (
+      <S.LoadingWrapper>
+        글을 발행하고 있어요
+        <Spinner />
+      </S.LoadingWrapper>
+    );
 
   return (
     <S.PublishingPropertySection $blog={publishTo}>
@@ -89,5 +100,13 @@ const S = {
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
+  `,
+  LoadingWrapper: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    font-size: 1.3rem;
   `,
 };

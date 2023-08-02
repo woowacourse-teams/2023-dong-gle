@@ -11,14 +11,12 @@ import org.donggle.backend.application.service.tistory.response.TistoryPublishWr
 import org.donggle.backend.application.service.tistory.response.TistoryResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@Component
 public class TistoryApiService {
-    public static final String TISTORY_URL = "https://www.tistory.com/apis";
-    public static final int OK = 200;
+    private static final String TISTORY_URL = "https://www.tistory.com/apis";
+    private static final int OK = 200;
     private static final int BAD_REQUEST = 400;
     private static final int UNAUTHORIZED = 401;
     private static final int FORBIDDEN = 403;

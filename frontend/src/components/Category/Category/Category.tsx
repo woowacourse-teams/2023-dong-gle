@@ -60,6 +60,7 @@ const Category = ({ id, categoryName }: Props) => {
           onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
+          placeholder='Change category name'
         />
       ) : (
         <>
@@ -67,12 +68,12 @@ const Category = ({ id, categoryName }: Props) => {
             <S.Text>{name}</S.Text>
           </S.CategoryButton>
           <S.IconContainer>
-            <button>
+            <S.Button>
               <PencilIcon onClick={openRenamingInput} width={12} height={12} />
-            </button>
-            <button>
+            </S.Button>
+            <S.Button>
               <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
-            </button>
+            </S.Button>
           </S.IconContainer>
         </>
       )}
@@ -87,7 +88,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 22.4rem;
+    width: 100%;
     height: 3.2rem;
     padding: 0.8rem;
     border-radius: 8px;
@@ -108,15 +109,39 @@ const S = {
   `,
 
   Text: styled.p`
-    font-weight: 700;
+    color: ${({ theme }) => theme.color.gray10};
+    font-weight: 600;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   `,
 
-  Input: styled.input``,
+  Input: styled.input`
+    border: none;
+    outline: none;
+    color: ${({ theme }) => theme.color.gray10};
+    font-size: 1.3rem;
+    font-weight: 600;
+
+    &::placeholder {
+      font-weight: 300;
+    }
+  `,
 
   IconContainer: styled.div`
     display: none;
+  `,
+
+  Button: styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2.4rem;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray5};
+    }
   `,
 };

@@ -40,9 +40,7 @@ const S = {
   Container: styled.div`
     display: flex;
     align-items: center;
-    gap: 0.8rem;
     width: 100%;
-    padding: 1.2rem;
     border-radius: 4px;
   `,
 

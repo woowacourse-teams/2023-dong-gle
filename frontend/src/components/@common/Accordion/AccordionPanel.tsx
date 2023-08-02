@@ -18,6 +18,6 @@ const S = {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0.8rem 1.2rem 0 4rem;
+    padding-left: 2rem;
   `,
 };

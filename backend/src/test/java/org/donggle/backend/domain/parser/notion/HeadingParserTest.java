@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.application.service.notion.NotionBlockNode;
+import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,10 @@
 package org.donggle.backend.application.service.tistory;
 
 import org.assertj.core.api.Assertions;
-import org.donggle.backend.application.service.tistory.request.TistoryPublishPropertyRequest;
-import org.donggle.backend.application.service.tistory.request.TistoryPublishRequest;
-import org.donggle.backend.application.service.tistory.response.TistoryPublishWritingResponse;
+import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
+import org.donggle.backend.application.service.vendor.tistory.dto.request.TistoryPublishPropertyRequest;
+import org.donggle.backend.application.service.vendor.tistory.dto.request.TistoryPublishRequest;
+import org.donggle.backend.application.service.vendor.tistory.dto.response.TistoryPublishWritingResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

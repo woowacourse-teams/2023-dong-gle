@@ -122,6 +122,7 @@ const S = {
 
   Title: styled.h1`
     color: ${({ theme }) => theme.color.gray7};
+    cursor: default;
   `,
 
   Input: styled.input`

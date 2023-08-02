@@ -76,7 +76,11 @@ const CategorySection = () => {
                 <Category id={categoryDetail.id} categoryName={categoryDetail.categoryName} />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryDetail.writings && <WritingList writings={categoryDetail.writings} />}
+                {categoryDetail.writings ? (
+                  <WritingList writings={categoryDetail.writings} />
+                ) : (
+                  <S.NoWritingsText>No Writings inside</S.NoWritingsText>
+                )}
               </Accordion.Panel>
             </Accordion.Item>
           );
@@ -130,5 +134,13 @@ const S = {
     &::placeholder {
       font-weight: 300;
     }
+  `,
+
+  NoWritingsText: styled.p`
+    padding: 0.8rem;
+    color: ${({ theme }) => theme.color.gray6};
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: default;
   `,
 };

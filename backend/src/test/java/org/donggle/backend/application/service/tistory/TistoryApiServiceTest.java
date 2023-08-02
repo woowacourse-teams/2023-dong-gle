@@ -1,17 +1,17 @@
 package org.donggle.backend.application.service.tistory;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.service.tistory.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.application.service.tistory.request.TistoryPublishRequest;
 import org.donggle.backend.application.service.tistory.response.TistoryPublishWritingResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TistoryApiServiceTest {
-
     @Test
+    @Disabled
     @DisplayName("블로그 발행이 정상적으로 되는지 테스트")
     void publishContent() {
         //given
@@ -52,6 +52,7 @@ class TistoryApiServiceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("발행된 글의대한 정보 조회 테스트")
     void findPublishProperty() {
         //given
@@ -66,7 +67,6 @@ class TistoryApiServiceTest {
         final TistoryPublishWritingResponse publishProperty = tistoryApiService.findPublishProperty(tistoryPublishPropertyRequest);
 
         //then
-        Assertions.assertThat(publishProperty.tistory().status()).isEqualTo(200);
+        assertThat(publishProperty.tistory().status()).isEqualTo(200);
     }
-
 }

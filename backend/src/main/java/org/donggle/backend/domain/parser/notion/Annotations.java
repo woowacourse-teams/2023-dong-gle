@@ -21,6 +21,6 @@ public record Annotations(
     }
 
     public static Annotations empty() {
-        return new Annotations(false, false, false, false, false, "");
+        return new Annotations(false, false, false, false, false, "default");
     }
 }

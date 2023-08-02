@@ -1,4 +1,4 @@
-import { Blog } from 'types/domain';
+import { Blog, PublishingPropertyData } from 'types/domain';
 
 export type AddWritingRequest = FormData;
 
@@ -10,14 +10,12 @@ export type GetWritingResponse = {
 
 export type GetWritingPropertiesResponse = {
   createdAt: Date;
-  isPublished: boolean;
-  publishedAt: Date;
-  publishedTo: Blog;
+  publishedDetails: PublishedDetail[];
 };
 
 export type PublishWritingRequest = {
   publishTo: Blog;
-};
+} & PublishingPropertyData;
 
 export type PublishWritingArgs = {
   writingId: number;
@@ -27,13 +25,14 @@ export type PublishWritingArgs = {
 export type PublishedDetail = {
   blogName: Blog;
   publishedAt: Date;
+  tags: string[];
 };
 
 export type Writing = {
   id: number;
   title: string;
   createdAt: Date;
-  publishedDetails: PublishedDetail[];
+  publishedDetails: Omit<PublishedDetail, 'tags'>[];
 };
 
 export type GetCategoryIdWritingListResponse = {

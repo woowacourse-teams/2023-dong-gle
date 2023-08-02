@@ -37,6 +37,11 @@ public class Member extends BaseEntity {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -46,10 +51,5 @@ public class Member extends BaseEntity {
         }
         final Member member = (Member) o;
         return Objects.equals(id, member.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
+import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.notion.NotionApiService;
@@ -14,6 +15,7 @@ import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
 import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.parser.notion.NotionParser;
@@ -55,6 +57,7 @@ public class WritingService {
     private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;
     private final BlogWritingRepository blogWritingRepository;
+    private final MemberCredentialsRepository memberCredentialsRepository;
     private final CategoryRepository categoryRepository;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
@@ -86,9 +89,12 @@ public class WritingService {
     }
 
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
-        //TODO: member checking
+        // TODO : authentication 후 member 객체 가져오도록 수정
+        // TODO : MemberCredential에서 값 못찾을 경우 예외던지기
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
+        final NotionApiService notionApiService = new NotionApiService(memberCredentials.getNotionToken());
 
         final String blockId = request.blockId();
         final NotionParser notionParser = new NotionParser();
@@ -132,6 +138,7 @@ public class WritingService {
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         //TODO: member checking
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
+        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Writing writing = findWriting(writingId);
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = htmlRenderer.render(blocks);

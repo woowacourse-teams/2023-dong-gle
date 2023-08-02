@@ -1,4 +1,6 @@
 package org.donggle.backend.application.service.request;
 
-public record PublishRequest(String publishTo) {
+import java.util.List;
+
+public record PublishRequest(String publishTo, List<String> tags) {
 }

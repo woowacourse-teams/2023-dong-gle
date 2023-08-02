@@ -1,25 +1,35 @@
 import { styled } from 'styled-components';
-import BlogPublishButtonItem from 'components/BlogPublishButtonItem/BlogPublishButtonItem';
 import { BLOG_LIST } from 'constants/blog';
+import type { Blog } from 'types/domain';
+import Button from 'components/@common/Button/Button';
+import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 
 type Props = {
-  writingId: number;
-  isPublished: boolean;
+  onBlogButtonClick: (blog: Blog) => void;
+  onTabClick: (tabKey: TabKeys) => void;
 };
 
-const PublishingSection = ({ writingId, isPublished }: Props) => {
+const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
+  const openPublishingPropertySection = (blog: Blog) => {
+    onBlogButtonClick(blog);
+    onTabClick(TabKeys.PublishingProperty);
+  };
+
   return (
     <S.PublishingSection>
       <S.PublishingTitle>Publish</S.PublishingTitle>
       <S.BlogPublishButtonList>
         {Object.values(BLOG_LIST).map((name) => {
           return (
-            <BlogPublishButtonItem
+            <Button
               key={name}
-              name={name}
-              writingId={writingId}
-              isPublished={isPublished}
-            />
+              size='medium'
+              block
+              align='left'
+              onClick={() => openPublishingPropertySection(name)}
+            >
+              {name}
+            </Button>
           );
         })}
       </S.BlogPublishButtonList>
@@ -37,9 +47,9 @@ const S = {
   `,
 
   PublishingTitle: styled.h1`
-    font-size: 2.4rem;
-    font-weight: 70rem;
-    line-height: 1.8rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.5rem;
   `,
 
   BlogPublishButtonList: styled.ul`

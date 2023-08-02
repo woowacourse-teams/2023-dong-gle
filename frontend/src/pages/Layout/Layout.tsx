@@ -41,7 +41,7 @@ const Layout = () => {
         isWritingViewerActive={isWritingViewerActive}
       />
       <S.Row>
-        <S.LeftSidebarSection isLeftSidebarOpen={isLeftSidebarOpen}>
+        <S.LeftSidebarSection $isLeftSidebarOpen={isLeftSidebarOpen}>
           <Button
             size={'large'}
             icon={<PlusCircleIcon />}
@@ -66,7 +66,7 @@ const Layout = () => {
           />
         </S.Main>
         {isWritingViewerActive && (
-          <S.RightSidebarSection isRightSidebarOpen={isRightSidebarOpen}>
+          <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>
             <WritingSideBar writingId={activeWritingId} />
           </S.RightSidebarSection>
         )}
@@ -96,9 +96,9 @@ const S = {
     gap: ${LAYOUT_STYLE.gap};
   `,
 
-  LeftSidebarSection: styled.section<{ isLeftSidebarOpen: boolean }>`
+  LeftSidebarSection: styled.section<{ $isLeftSidebarOpen: boolean }>`
     ${sidebarStyle}
-    display: ${({ isLeftSidebarOpen }) => !isLeftSidebarOpen && 'none'};
+    display: ${({ $isLeftSidebarOpen }) => !$isLeftSidebarOpen && 'none'};
   `,
 
   Main: styled.main`
@@ -110,8 +110,8 @@ const S = {
     overflow-y: auto;
   `,
 
-  RightSidebarSection: styled.section<Pick<PageContext, 'isRightSidebarOpen'>>`
+  RightSidebarSection: styled.section<{ $isRightSidebarOpen: boolean }>`
     ${sidebarStyle}
-    display: ${({ isRightSidebarOpen }) => !isRightSidebarOpen && 'none'};
+    display: ${({ $isRightSidebarOpen }) => !$isRightSidebarOpen && 'none'};
   `,
 };

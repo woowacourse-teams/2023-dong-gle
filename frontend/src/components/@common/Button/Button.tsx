@@ -42,7 +42,7 @@ const Button = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   return (
-    <S.Button ref={ref} variant={variant} size={size} block={block} align={align} {...rest}>
+    <S.Button ref={ref} $variant={variant} $size={size} $block={block} $align={align} {...rest}>
       <S.IconTextContainer>
         {Boolean(icon) && <S.IconWrapper size={size}>{icon}</S.IconWrapper>}
         <p>{children}</p>
@@ -157,13 +157,13 @@ const genAlignStyle = (align: Required<Props>['align']): RuleSet<object> => {
 };
 
 const S = {
-  Button: styled.button<Props>`
-    ${({ size = 'medium' }) => genSizeStyle(size)};
-    ${({ variant = 'primary' }) => genVariantStyle(variant)};
-    ${({ align = 'center' }) => genAlignStyle(align)};
+  Button: styled.button<{ $variant: Variant; $size: Size; $block: boolean; $align: Align }>`
+    ${({ $size = 'medium' }) => genSizeStyle($size)};
+    ${({ $variant = 'primary' }) => genVariantStyle($variant)};
+    ${({ $align = 'center' }) => genAlignStyle($align)};
 
     display: flex;
-    width: ${({ block }) => block && '100%'};
+    width: ${({ $block }) => $block && '100%'};
     border: none;
     border-radius: 4px;
 

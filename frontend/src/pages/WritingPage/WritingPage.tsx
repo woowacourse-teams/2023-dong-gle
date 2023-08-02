@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 const WritingPage = () => {
   const writingId = Number(useParams()['writingId']);
-  const { isLeftSidebarOpen, isRightSidebarOpen, setActiveWritingId } = usePageContext();
+  const { setActiveWritingId } = usePageContext();
 
   useEffect(() => {
     const clearActiveWritingId = () => {
@@ -17,7 +17,7 @@ const WritingPage = () => {
   }, []);
 
   return (
-    <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
+    <S.Article>
       <WritingViewer writingId={writingId} />
     </S.Article>
   );
@@ -26,7 +26,7 @@ const WritingPage = () => {
 export default WritingPage;
 
 const S = {
-  Article: styled.article<PageContext>`
+  Article: styled.article`
     width: 90%;
 
     background-color: ${({ theme }) => theme.color.gray1};

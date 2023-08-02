@@ -9,14 +9,13 @@ import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
 const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
-  const { isLeftSidebarOpen, isRightSidebarOpen } = usePageContext();
 
   const { data } = useGetQuery<GetCategoryIdWritingListResponse>({
     fetcher: () => getCategoryIdWritingList(categoryId),
   });
 
   return (
-    <S.Article isLeftSidebarOpen={isLeftSidebarOpen} isRightSidebarOpen={isRightSidebarOpen}>
+    <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
       <WritingTable writings={data?.writings ?? []} />
     </S.Article>
@@ -26,7 +25,7 @@ const WritingTablePage = () => {
 export default WritingTablePage;
 
 const S = {
-  Article: styled.article<PageContext>`
+  Article: styled.article`
     width: 90%;
     padding: 8rem 4rem;
 

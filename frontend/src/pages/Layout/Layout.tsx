@@ -44,7 +44,7 @@ const Layout = () => {
         <S.LeftSidebarSection $isLeftSidebarOpen={isLeftSidebarOpen}>
           <Button
             size={'large'}
-            icon={<PlusCircleIcon />}
+            icon={<PlusCircleIcon width={22} height={22} />}
             block={true}
             align='left'
             onClick={openFinder}

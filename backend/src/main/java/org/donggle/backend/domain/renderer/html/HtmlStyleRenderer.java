@@ -20,10 +20,22 @@ public class HtmlStyleRenderer {
 
     private void createTags(final List<Style> styles, final Map<Integer, List<String>> startTags, final Map<Integer, List<String>> endTags) {
         boolean isPrevLink = false;
+        boolean isEmptyCaptionLink = false;
         for (final Style style : styles) {
+            final int startIndex = style.getStartIndexValue();
+            final int endIndex = style.getEndIndexValue();
+
+            if (startIndex == endIndex) {
+                isEmptyCaptionLink = true;
+                continue;
+            }
+
             final HtmlStyleType htmlStyleType;
             if (style.getStyleType() == StyleType.LINK) {
-                if (isPrevLink) {
+                if (isEmptyCaptionLink) {
+                    htmlStyleType = HtmlStyleType.EMPTY_CAPTION_LINK;
+                    isEmptyCaptionLink = false;
+                } else if (isPrevLink) {
                     htmlStyleType = HtmlStyleType.CAPTION;
                     isPrevLink = false;
                 } else {
@@ -33,8 +45,6 @@ public class HtmlStyleRenderer {
             } else {
                 htmlStyleType = HtmlStyleType.findByStyleType(style.getStyleType());
             }
-            final int startIndex = style.getStartIndexValue();
-            final int endIndex = style.getEndIndexValue();
 
             createStyleTag(startTags, htmlStyleType.getStartTag(), startIndex);
             createStyleTag(endTags, htmlStyleType.getEndTag(), endIndex);

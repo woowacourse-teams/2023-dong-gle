@@ -101,7 +101,7 @@ public class WritingService {
 
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
         final String title = notionParser.parseTitle(parentBlockNode);
-        final Writing writing = Writing.lastOf(findMember, new Title(findFileName(title)), findCategory);
+        final Writing writing = Writing.lastOf(findMember, new Title(title), findCategory);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);

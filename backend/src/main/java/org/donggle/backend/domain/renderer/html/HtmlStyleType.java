@@ -9,7 +9,8 @@ public enum HtmlStyleType {
     ITALIC("<em>", "</em>"),
     CODE("<code>", "</code>"),
     LINK("<a href=\"", "\">"),
-    CAPTION("", "</a>");
+    CAPTION("", "</a>"),
+    EMPTY_CAPTION_LINK("<a href=\"", "\"></a>");
 
     private final String startTag;
     private final String endTag;

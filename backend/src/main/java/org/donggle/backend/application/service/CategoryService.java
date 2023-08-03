@@ -129,11 +129,13 @@ public class CategoryService {
 
     private void transferToBasicCategory(final Long memberId, final Category findCategory) {
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
-        final List<Writing> writings = writingRepository.findAllByCategoryId(findCategory.getId());
-        final Writing firstWritingInCategory = findFirstWriting(writings);
-        final Writing lastWriting = findLastWritingInCategory(findCategory);
-        lastWriting.changeNextWriting(firstWritingInCategory);
-        writings.forEach(writing -> writing.changeCategory(basicCategory));
+        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        if (!findWritings.isEmpty()) {
+            final Writing firstWritingInCategory = findFirstWriting(findWritings);
+            final Writing lastWriting = findLastWritingInCategory(findCategory);
+            lastWriting.changeNextWriting(firstWritingInCategory);
+            findWritings.forEach(writing -> writing.changeCategory(basicCategory));
+        }
     }
 
     private void deleteCategory(final Category findCategory) {

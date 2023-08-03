@@ -29,7 +29,7 @@ const Input = (
   return (
     <S.InputContainer>
       {labelText && (
-        <S.Label id={inputId} $required={rest.required} $variant={variant}>
+        <S.Label htmlFor={inputId} $required={rest.required} $variant={variant}>
           {labelText}
         </S.Label>
       )}
@@ -60,6 +60,7 @@ const genVariantStyle = (
 
         &:focus {
           border: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
+          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray8};
         }
       `}
     `,
@@ -71,7 +72,7 @@ const genVariantStyle = (
 
         &:focus {
           background-color: ${theme.color.gray1};
-          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
+          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray8};
         }
       `}
     `,
@@ -79,6 +80,10 @@ const genVariantStyle = (
       ${({ theme }) => css`
         border: 1px solid ${theme.color.gray1};
         outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray1};
+
+        &:focus {
+          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray8};
+        }
       `}
     `,
     underlined: css`

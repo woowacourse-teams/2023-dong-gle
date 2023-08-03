@@ -62,7 +62,10 @@ const CategorySection = () => {
         {categoryDetails.map((categoryDetail, index) => {
           return (
             <Accordion.Item key={categoryDetail.id}>
-              <Accordion.Title onIconClick={() => setSelectedCategoryId(categoryDetail.id)}>
+              <Accordion.Title 
+                onIconClick={() => setSelectedCategoryId(categoryDetail.id)}
+                aria-label={`${categoryDetail.categoryName} 폴더 왼쪽 사이드바에서 열기`}
+              >
                 <Category
                   id={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}

@@ -45,16 +45,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
     }),
-  ],
-  devServer: {
-    hot: true,
-    open: true,
-  },
-  plugins: [
     new webpack.DefinePlugin({
       PRODUCT_ENV: JSON.stringify(process.env.NODE_ENV),
       MOCKING_ENV: JSON.stringify(process.env.MOCKING_ENV),
     }),
   ],
+  devServer: {
+    hot: true,
+    open: true,
+  },
   devtool: 'source-map',
 };

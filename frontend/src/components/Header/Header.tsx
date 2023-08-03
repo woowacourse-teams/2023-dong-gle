@@ -19,7 +19,7 @@ const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive
       </S.LeftIconsBox>
       <S.RightIconsBox>
         {isWritingViewerActive && (
-          <button onClick={onClickRightSidebar}>
+          <button onClick={onClickRightSidebar} aria-label='오른쪽 사이드바 토글'>
             <SidebarRightIcon width='2.4rem' height='2.4rem' />
           </button>
         )}

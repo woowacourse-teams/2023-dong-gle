@@ -57,16 +57,12 @@ const S = {
   `,
   Backdrop: styled.div`
     position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     background: ${({ theme }) => theme.color.modalBackdrop};
   `,
   Content: styled.dialog`
     position: fixed;
-    top: 50%;
-    left: 50%;
+    inset: 50% auto auto 50%;
     display: flex;
     justify-content: center;
     min-width: 20vw;
@@ -80,7 +76,6 @@ const S = {
   `,
   CloseButton: styled.button`
     position: absolute;
-    right: 2.5rem;
-    top: 2.5rem;
+    inset: 2.5rem 2.5rem auto auto;
   `,
 };

@@ -20,7 +20,7 @@ export const useFileUploadModal = ({ closeModal }: Args) => {
     AddWritingRequest,
     null
   >({
-    fetcher: (body) => addWriting(body),
+    fetcher: addWriting,
     onSuccess: (data) => onFileUploadSuccess(data.headers),
   });
 

@@ -63,7 +63,7 @@ const WritingSideBar = ({ writingId }: Props) => {
         {menus
           .filter((menu) => menu.key !== TabKeys.PublishingProperty)
           .map((menu) => (
-            <S.Tab key={menu.key}>
+            <S.Tab key={menu.key} role='tab'>
               <S.Button
                 $checked={currentTab === menu.key}
                 onClick={() => selectCurrentTab(menu.key)}

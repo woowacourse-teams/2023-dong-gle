@@ -1,7 +1,6 @@
 package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.application.service.WritingService;
@@ -46,13 +45,13 @@ public class WritingController {
     }
 
     @GetMapping("/{writingId}")
-    public ResponseEntity<WritingResponse> writingDetails(@NotNull(message = "글 ID가 없습니다.") @PathVariable final Long writingId) {
+    public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
         final WritingResponse response = writingService.findWriting(1L, writingId);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{writingId}")
-    public ResponseEntity<Void> writingModify(@NotNull(message = "글 ID가 없습니다.") @PathVariable final Long writingId,
+    public ResponseEntity<Void> writingModify(@PathVariable final Long writingId,
                                               @RequestBody final WritingModifyRequest request) {
         if (request.title() != null) {
             writingService.modifyWritingTitle(1L, writingId, request);
@@ -65,19 +64,19 @@ public class WritingController {
     }
 
     @GetMapping("/{writingId}/properties")
-    public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(@NotNull(message = "글 ID가 없습니다.") @PathVariable final Long writingId) {
+    public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(@PathVariable final Long writingId) {
         final WritingPropertiesResponse response = writingService.findWritingProperties(1L, writingId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(@NotNull(message = "카테고리 ID가 없습니다.") @RequestParam final Long categoryId) {
+    public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(@RequestParam final Long categoryId) {
         final WritingListWithCategoryResponse response = writingService.findWritingListByCategoryId(1L, categoryId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{writingId}/publish")
-    public ResponseEntity<Void> writingPublish(@NotNull(message = "글 ID가 없습니다.") @PathVariable final Long writingId,
+    public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId,
                                                @Valid @RequestBody final PublishRequest request) {
         publishService.publishWriting(1L, writingId, request);
         return ResponseEntity.ok().build();

@@ -4,7 +4,12 @@ import { AddCategoriesRequest, PatchCategoryArgs } from 'types/apis/category';
 
 // POST: 카테고리 추가
 export const addCategory = (body: AddCategoriesRequest) =>
-  http.post(categoryURL, { body: JSON.stringify(body) });
+  http.post(categoryURL, {
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
 // GET: 카테고리 목록 조회
 export const getCategories = () => http.get(categoryURL);
@@ -17,6 +22,9 @@ export const getWritingsInCategory = (categoryId: number | null) =>
 export const patchCategory = ({ categoryId, body }: PatchCategoryArgs) =>
   http.patch(`${categoryURL}/${categoryId}`, {
     body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 
 // DELETE: 카테고리 삭제

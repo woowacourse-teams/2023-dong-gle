@@ -42,7 +42,7 @@ const WritingPropertySection = ({ writingId }: Props) => {
             </S.PropertyRow>
           </S.InfoContent>
         </S.Info>
-        {writingInfo.publishedDetails.length !== 0 && (
+        {Boolean(writingInfo.publishedDetails.length) && (
           <S.Info>
             <S.InfoTitle>PUBLISHED</S.InfoTitle>
             <S.InfoContent>

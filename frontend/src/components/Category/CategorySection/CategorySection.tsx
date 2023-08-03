@@ -115,7 +115,7 @@ const S = {
   `,
 
   Title: styled.h1`
-    color: ${({ theme }) => theme.color.gray7};
+    color: ${({ theme }) => theme.color.gray8};
     cursor: default;
   `,
 

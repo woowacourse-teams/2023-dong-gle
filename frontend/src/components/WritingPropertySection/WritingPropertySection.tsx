@@ -106,6 +106,7 @@ const S = {
     color: ${({ theme }) => theme.color.gray7};
   `,
   InfoTitle: styled.h2`
+    color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
     line-height: 1.3rem;

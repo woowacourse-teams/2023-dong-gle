@@ -63,7 +63,7 @@ const S = {
     font-size: 1.4rem;
 
     th {
-      color: ${({ theme }) => theme.color.gray7};
+      color: ${({ theme }) => theme.color.gray8};
     }
 
     td {

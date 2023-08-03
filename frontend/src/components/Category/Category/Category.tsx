@@ -8,9 +8,11 @@ import { useCategoryMutation } from '../useCategoryMutation';
 type Props = {
   id: number;
   categoryName: string;
+  getCategories: () => Promise<void>;
+  isDefaultCategory: boolean;
 };
 
-const Category = ({ id, categoryName }: Props) => {
+const Category = ({ id, categoryName, getCategories, isDefaultCategory }: Props) => {
   const [name, setName] = useState(categoryName);
   const {
     value,
@@ -35,6 +37,7 @@ const Category = ({ id, categoryName }: Props) => {
         categoryName: value,
       },
     });
+    await getCategories();
   };
 
   const openRenamingInput = (e: MouseEvent<SVGSVGElement>) => {
@@ -47,6 +50,7 @@ const Category = ({ id, categoryName }: Props) => {
     e.stopPropagation();
 
     await deleteCategory(id);
+    await getCategories();
   };
 
   return (
@@ -67,14 +71,16 @@ const Category = ({ id, categoryName }: Props) => {
           <S.CategoryButton onClick={() => goWritingTablePage(id)}>
             <S.Text>{name}</S.Text>
           </S.CategoryButton>
-          <S.IconContainer>
-            <S.Button>
-              <PencilIcon onClick={openRenamingInput} width={12} height={12} />
-            </S.Button>
-            <S.Button>
-              <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
-            </S.Button>
-          </S.IconContainer>
+          {!isDefaultCategory && (
+            <S.IconContainer>
+              <S.Button>
+                <PencilIcon onClick={openRenamingInput} width={12} height={12} />
+              </S.Button>
+              <S.Button>
+                <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
+              </S.Button>
+            </S.IconContainer>
+          )}
         </>
       )}
     </S.Container>

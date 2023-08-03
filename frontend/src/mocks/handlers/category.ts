@@ -22,7 +22,7 @@ export const categoryHandlers = [
   rest.get(`${categoryURL}/:categoryId`, (req, res, ctx) => {
     const categoryId = Number(req.params.categoryId);
 
-    if (categoryId !== 1 && categoryId !== 3) return res(ctx.delay(300), ctx.status(404));
+    if (categoryId !== 1 && categoryId !== 3) return res(ctx.delay(300), ctx.status(500));
 
     if (categoryId === 1) return res(ctx.json(writingsInCategory), ctx.delay(300), ctx.status(200));
 
@@ -48,11 +48,7 @@ export const categoryHandlers = [
   }),
 
   // 카테고리 삭제
-  rest.delete(`${categoryURL}/:categoryId`, (req, res, ctx) => {
-    const categoryId = Number(req.params.categoryId);
-
-    if (categoryId !== 200) return res(ctx.delay(300), ctx.status(404));
-
+  rest.delete(`${categoryURL}/:categoryId`, (_, res, ctx) => {
     return res(ctx.delay(300), ctx.status(204));
   }),
 ];

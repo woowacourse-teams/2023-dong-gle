@@ -1,7 +1,6 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
 import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
-import Button from 'components/@common/Button/Button';
 import { PlusCircleIcon } from 'assets/icons';
 import { KeyboardEvent, useState } from 'react';
 import useCategoryInput from '../useCategoryInput';
@@ -11,7 +10,7 @@ import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
 
 const CategorySection = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(0);
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
   const { addCategory } = useCategoryMutation();
   const writings = useCategoryWritings(selectedCategoryId);
@@ -69,14 +68,19 @@ const CategorySection = () => {
         )}
       </S.Header>
       <Accordion>
-        {categoryDetails.map((categoryDetail) => {
+        {categoryDetails.map((categoryDetail, index) => {
           return (
             <Accordion.Item key={categoryDetail.id}>
               <Accordion.Title onIconClick={() => toggleItem(categoryDetail.id)}>
-                <Category id={categoryDetail.id} categoryName={categoryDetail.categoryName} />
+                <Category
+                  id={categoryDetail.id}
+                  categoryName={categoryDetail.categoryName}
+                  getCategories={getCategories}
+                  isDefaultCategory={index === 0}
+                />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryDetail.writings ? (
+                {categoryDetail && categoryDetail.writings ? (
                   <WritingList writings={categoryDetail.writings} />
                 ) : (
                   <S.NoWritingsText>No Writings inside</S.NoWritingsText>

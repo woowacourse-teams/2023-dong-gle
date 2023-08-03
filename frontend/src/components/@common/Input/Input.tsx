@@ -55,11 +55,11 @@ const genVariantStyle = (
   const styles: Record<typeof variant, ReturnType<typeof genVariantStyle>> = {
     outline: css`
       ${({ theme }) => css`
-        border: 1px solid ${isError ? theme.color.red9 : theme.color.gray6};
+        border: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
         outline: 1px solid ${theme.color.gray1};
 
         &:focus {
-          border: 1px solid ${isError ? theme.color.red9 : theme.color.gray6};
+          border: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
         }
       `}
     `,
@@ -71,20 +71,20 @@ const genVariantStyle = (
 
         &:focus {
           background-color: ${theme.color.gray1};
-          outline: 1px solid ${isError ? theme.color.red9 : theme.color.gray6};
+          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
         }
       `}
     `,
     unstyled: css`
       ${({ theme }) => css`
         border: 1px solid ${theme.color.gray1};
-        outline: 1px solid ${isError ? theme.color.red9 : theme.color.gray1};
+        outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray1};
       `}
     `,
     underlined: css`
       ${({ theme }) => css`
         border: 1px solid ${theme.color.gray1};
-        border-bottom: 1px solid ${isError ? theme.color.red9 : theme.color.gray6};
+        border-bottom: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
         border-radius: 0;
         outline: 1px solid ${theme.color.gray1};
       `}
@@ -127,7 +127,7 @@ const S = {
         &::after {
           content: '*';
           margin-left: 0.2rem;
-          color: ${theme.color.red9};
+          color: ${theme.color.red6};
         }
       `};
   `,
@@ -143,7 +143,7 @@ const S = {
     ${({ $variant, $isError }) => genVariantStyle($variant, $isError)};
   `,
   SupportingText: styled.p<{ $isError: boolean | undefined }>`
-    color: ${({ $isError, theme }) => ($isError ? theme.color.red9 : theme.color.gray7)};
+    color: ${({ $isError, theme }) => ($isError ? theme.color.red6 : theme.color.gray7)};
   `,
   Underline: styled.div`
     position: absolute;

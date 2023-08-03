@@ -11,7 +11,6 @@ import { useCategoryMutation } from '../useCategoryMutation';
 
 const CategorySection = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
   const { addCategory } = useCategoryMutation();
   const writings = useCategoryWritings(selectedCategoryId);
   const { categoryDetails, getCategories } = useCategoryDetails(selectedCategoryId, writings);
@@ -31,17 +30,6 @@ const CategorySection = () => {
     closeInput();
     await addCategory({ categoryName: value });
     await getCategories();
-  };
-
-  const toggleItem = (selectedCategoryId: number) => {
-    if (!openItems[selectedCategoryId]) {
-      setSelectedCategoryId(selectedCategoryId);
-    }
-
-    setOpenItems((prevOpenItems) => ({
-      ...prevOpenItems,
-      [selectedCategoryId]: !prevOpenItems[selectedCategoryId],
-    }));
   };
 
   if (!categoryDetails) return null;
@@ -71,7 +59,7 @@ const CategorySection = () => {
         {categoryDetails.map((categoryDetail, index) => {
           return (
             <Accordion.Item key={categoryDetail.id}>
-              <Accordion.Title onIconClick={() => toggleItem(categoryDetail.id)}>
+              <Accordion.Title onIconClick={() => setSelectedCategoryId(selectedCategoryId)}>
                 <Category
                   id={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
@@ -80,7 +68,7 @@ const CategorySection = () => {
                 />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryDetail && categoryDetail.writings ? (
+                {categoryDetail.writings ? (
                   <WritingList writings={categoryDetail.writings} />
                 ) : (
                   <S.NoWritingsText>No Writings inside</S.NoWritingsText>

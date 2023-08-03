@@ -2,7 +2,7 @@ import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
 import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEvent, useState } from 'react';
+import { KeyboardEventHandler, useState } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
@@ -24,7 +24,7 @@ const CategorySection = () => {
     closeInput,
   } = useCategoryInput('');
 
-  const requestAddCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
+  const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
     closeInput();
@@ -59,7 +59,7 @@ const CategorySection = () => {
         {categoryDetails.map((categoryDetail, index) => {
           return (
             <Accordion.Item key={categoryDetail.id}>
-              <Accordion.Title onIconClick={() => setSelectedCategoryId(selectedCategoryId)}>
+              <Accordion.Title onIconClick={() => setSelectedCategoryId(categoryDetail.id)}>
                 <Category
                   id={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
@@ -68,11 +68,7 @@ const CategorySection = () => {
                 />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryDetail.writings ? (
-                  <WritingList writings={categoryDetail.writings} />
-                ) : (
-                  <S.NoWritingsText>No Writings inside</S.NoWritingsText>
-                )}
+                {categoryDetail.writings && <WritingList writings={categoryDetail.writings} />}
               </Accordion.Panel>
             </Accordion.Item>
           );
@@ -127,13 +123,5 @@ const S = {
     &::placeholder {
       font-weight: 300;
     }
-  `,
-
-  NoWritingsText: styled.p`
-    padding: 0.8rem;
-    color: ${({ theme }) => theme.color.gray6};
-    font-size: 1.4rem;
-    font-weight: 500;
-    cursor: default;
   `,
 };

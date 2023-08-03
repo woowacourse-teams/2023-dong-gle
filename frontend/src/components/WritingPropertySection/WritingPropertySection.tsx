@@ -136,6 +136,7 @@ const S = {
     font-weight: 600;
   `,
   PropertyValue: styled.div`
+    color: ${({ theme }) => theme.color.gray10};
     display: flex;
     flex-wrap: wrap;
     gap: 0.2rem;

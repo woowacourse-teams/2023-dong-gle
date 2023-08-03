@@ -142,7 +142,7 @@ const S = {
       border: none solid #eee;
       border-radius: 4px;
       background-color: ${({ theme }) => theme.color.gray4};
-      color: #eb5756;
+      color: #d71919;
     }
 
     pre > code {

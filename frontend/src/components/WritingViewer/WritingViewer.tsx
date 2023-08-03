@@ -30,7 +30,7 @@ const WritingViewer = ({ writingId }: Props) => {
   if (isLoading) {
     return (
       <S.LoadingContainer>
-        <Spinner size={120} />
+        <Spinner size={60} thickness={4} />
         <h1>글을 불러오는 중입니다 ...</h1>
       </S.LoadingContainer>
     );
@@ -65,7 +65,7 @@ const S = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4rem;
+    gap: 2rem;
     max-width: 100%;
     height: 100%;
   `,

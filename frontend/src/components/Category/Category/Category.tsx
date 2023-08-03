@@ -1,6 +1,6 @@
 import { DeleteIcon, PencilIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { KeyboardEvent, MouseEvent, useState } from 'react';
+import { KeyboardEventHandler, MouseEventHandler, useState } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
@@ -8,11 +8,11 @@ import { useCategoryMutation } from '../useCategoryMutation';
 type Props = {
   id: number;
   categoryName: string;
-  getCategories: () => Promise<void>;
   isDefaultCategory: boolean;
+  getCategories: () => Promise<void>;
 };
 
-const Category = ({ id, categoryName, getCategories, isDefaultCategory }: Props) => {
+const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props) => {
   const [name, setName] = useState(categoryName);
   const {
     value,
@@ -26,7 +26,7 @@ const Category = ({ id, categoryName, getCategories, isDefaultCategory }: Props)
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
 
-  const requestChangedName = async (e: KeyboardEvent<HTMLInputElement>) => {
+  const requestChangedName: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
     setName(value);
@@ -40,13 +40,13 @@ const Category = ({ id, categoryName, getCategories, isDefaultCategory }: Props)
     await getCategories();
   };
 
-  const openRenamingInput = (e: MouseEvent<SVGSVGElement>) => {
+  const openRenamingInput: MouseEventHandler<SVGSVGElement> = (e) => {
     e.stopPropagation();
 
     setIsInputOpen(true);
   };
 
-  const deleteCategoryClick = async (e: MouseEvent<SVGSVGElement>) => {
+  const deleteCategoryClick: MouseEventHandler<SVGSVGElement> = async (e) => {
     e.stopPropagation();
 
     await deleteCategory(id);

@@ -134,7 +134,8 @@ class CategoryServiceTest {
                 () -> assertThat(categories).hasSize(1),
                 () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
                 () -> assertThat(categories.get(0).getNextCategory()).isNull(),
-                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0))
+                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0)),
+                () -> assertThat(writing.getNextWriting()).isNull()
         );
     }
 

@@ -79,10 +79,10 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
           </S.CategoryButton>
           {!isDefaultCategory && (
             <S.IconContainer>
-              <S.Button>
+              <S.Button aria-label={`${name} 카테고리 이름 수정`}>
                 <PencilIcon onClick={openRenamingInput} width={12} height={12} />
               </S.Button>
-              <S.Button>
+              <S.Button aria-label={`${name} 카테고리 삭제`}>
                 <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
               </S.Button>
             </S.IconContainer>

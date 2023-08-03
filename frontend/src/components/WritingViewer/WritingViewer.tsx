@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
@@ -10,6 +10,7 @@ import { GetWritingResponse } from 'types/apis/writings';
 type Props = { writingId: number };
 
 const WritingViewer = ({ writingId }: Props) => {
+  const myRef = useRef<HTMLHeadingElement>(null);
   const { data, isLoading, getData } = useGetQuery<GetWritingResponse>({
     fetcher: () => getWriting(writingId),
     // onSuccess: () => hljs.highlightAll(),
@@ -20,6 +21,7 @@ const WritingViewer = ({ writingId }: Props) => {
       await getData();
     };
     refetch();
+    myRef.current?.focus();
   }, [writingId]);
 
   useEffect(() => {
@@ -31,10 +33,13 @@ const WritingViewer = ({ writingId }: Props) => {
   return (
     <S.WritingViewerContainer>
       <S.TitleWrapper>
-        <S.Title>{data?.title}</S.Title>
+        <S.Title ref={myRef} tabIndex={0}>
+          {data?.title}
+        </S.Title>
       </S.TitleWrapper>
       <Divider />
       <S.ContentWrapper
+        tabIndex={0}
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(data?.content ?? '글 내용이 없습니다'),
         }}

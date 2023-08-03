@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { ComponentPropsWithoutRef } from 'react';
 import { createPortal } from 'react-dom';
 import { styled } from 'styled-components';
@@ -10,6 +10,8 @@ type Props = {
 } & ComponentPropsWithoutRef<'dialog'>;
 
 const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
+  const myRef = useRef<HTMLDialogElement>(null);
+
   const onKeyDownEscape = useCallback(
     (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -22,6 +24,7 @@ const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
     if (isOpen) {
       window.addEventListener('keydown', onKeyDownEscape);
       document.body.style.overflow = 'hidden';
+      myRef.current?.focus();
     }
 
     return () => {
@@ -35,7 +38,7 @@ const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
       {isOpen && (
         <>
           <S.Backdrop onClick={closeModal} />
-          <S.Content {...rest}>
+          <S.Content ref={myRef} aria-modal={isOpen} {...rest}>
             <S.CloseButton type='button' onClick={closeModal}>
               <CloseIcon width={24} height={24} />
             </S.CloseButton>

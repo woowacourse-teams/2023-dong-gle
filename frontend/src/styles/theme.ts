@@ -5,6 +5,8 @@ const color = {
   tistory: '#FF5A4A',
   medium: '#000000',
 
+  modalBackdrop: '#00000059',
+
   red1: '#fff1f0',
   red2: '#ffccc7',
   red3: '#ffa39e',

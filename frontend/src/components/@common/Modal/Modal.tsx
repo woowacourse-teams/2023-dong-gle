@@ -61,7 +61,7 @@ const S = {
     right: 0;
     bottom: 0;
     left: 0;
-    background: #00000059;
+    background: ${({ theme }) => theme.color.modalBackdrop};
   `,
   Content: styled.dialog`
     position: fixed;

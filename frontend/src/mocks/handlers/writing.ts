@@ -57,7 +57,12 @@ export const writingHandlers = [
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/file`, async (_, res, ctx) => {
-    return res(ctx.status(201), ctx.set('Location', `/writings/200`));
+    return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
+  }),
+
+  // 글 생성(글 업로드): POST
+  rest.post(`${writingURL}/notion`, async (_, res, ctx) => {
+    return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
   }),
 
   // 글 블로그로 발행: POST

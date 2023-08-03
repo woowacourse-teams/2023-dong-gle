@@ -146,6 +146,10 @@ const S = {
 
     ${({ $size }) => genSizeStyle($size)};
     ${({ $variant, $isError }) => genVariantStyle($variant, $isError)};
+
+    &::placeholder {
+      color: ${({ theme }) => theme.color.gray6};
+    }
   `,
   SupportingText: styled.p<{ $isError: boolean | undefined }>`
     color: ${({ $isError, theme }) => ($isError ? theme.color.red6 : theme.color.gray7)};

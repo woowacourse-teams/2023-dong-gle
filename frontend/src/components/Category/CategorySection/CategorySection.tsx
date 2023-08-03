@@ -9,6 +9,7 @@ import WritingList from '../WritingList/WritingList';
 import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
+import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
@@ -22,14 +23,16 @@ const CategorySection = () => {
     escapeInput: escapeAddCategory,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
   } = useCategoryInput('');
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    closeInput();
-    await addCategory({ categoryName: value });
+    if (!isValidCategoryName(value)) return alert('카테고리의 이름은 1~30자 사이만 가능해요'); // 에러 처리 고도화 필요
+
+    resetInput();
+    await addCategory({ categoryName: value.trim() });
     await getCategories();
   };
 
@@ -47,7 +50,7 @@ const CategorySection = () => {
             placeholder='Add category ...'
             value={value}
             ref={inputRef}
-            onBlur={closeInput}
+            onBlur={resetInput}
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}

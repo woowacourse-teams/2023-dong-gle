@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
+import { isValidCategoryName } from '../isValidCategoryName';
 
 type Props = {
   id: number;
@@ -22,7 +23,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
     escapeInput: escapeRename,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
   } = useCategoryInput('');
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
@@ -30,12 +31,14 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
+    if (!isValidCategoryName(value)) return alert('카테고리의 이름은 1~30자 사이만 가능해요'); // 에러 처리 고도화 필요
+
     setName(value);
-    closeInput();
+    resetInput();
     await patchCategory({
       categoryId: id,
       body: {
-        categoryName: value,
+        categoryName: value.trim(),
       },
     });
     await getCategories();
@@ -64,7 +67,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
           placeholder='Change category name ...'
           value={value}
           ref={inputRef}
-          onBlur={closeInput}
+          onBlur={resetInput}
           onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}

@@ -13,28 +13,25 @@ const useCategoryInput = (initialValue: string) => {
 
   const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => setValue(e.target.value);
 
-  const resetValue = () => setValue('');
-
-  const closeInput = () => {
+  const resetInput = () => {
     setIsInputOpen(false);
-    resetValue();
+    setValue('');
   };
 
   const escapeInput: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Escape') return;
 
-    closeInput();
+    resetInput();
   };
 
   return {
     value,
-    resetValue,
     inputRef,
     handleOnChange,
     escapeInput,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
   };
 };
 

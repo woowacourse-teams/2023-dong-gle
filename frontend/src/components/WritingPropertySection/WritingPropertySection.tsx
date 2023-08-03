@@ -42,39 +42,41 @@ const WritingPropertySection = ({ writingId }: Props) => {
             </S.PropertyRow>
           </S.InfoContent>
         </S.Info>
-        <S.Info>
-          <S.InfoTitle>PUBLISHED</S.InfoTitle>
-          <S.InfoContent>
-            {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }) => {
-              return (
-                <Fragment key={blogName}>
-                  <S.PropertyRow>
-                    <S.PropertyName>
-                      {blogIcon[blogName]} {blogName}
-                    </S.PropertyName>
-                    <S.PropertyValue>
-                      {dateFormatter(publishedAt, 'YYYY/MM/DD HH:MM')}
-                    </S.PropertyValue>
-                  </S.PropertyRow>
-                  <S.PropertyRow>
-                    <S.PropertyName>
-                      <TagIcon width={12} height={12} />
-                      Tags
-                    </S.PropertyName>
-                    <S.PropertyValue>
-                      {tags.map((tag) => (
-                        <Tag key={tag} removable={false}>
-                          {tag}
-                        </Tag>
-                      ))}
-                    </S.PropertyValue>
-                  </S.PropertyRow>
-                  <S.Spacer />
-                </Fragment>
-              );
-            })}
-          </S.InfoContent>
-        </S.Info>
+        {Boolean(writingInfo.publishedDetails.length) && (
+          <S.Info>
+            <S.InfoTitle>PUBLISHED</S.InfoTitle>
+            <S.InfoContent>
+              {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }) => {
+                return (
+                  <Fragment key={blogName}>
+                    <S.PropertyRow>
+                      <S.PropertyName>
+                        {blogIcon[blogName]} {blogName}
+                      </S.PropertyName>
+                      <S.PropertyValue>
+                        {dateFormatter(publishedAt, 'YYYY/MM/DD HH:MM')}
+                      </S.PropertyValue>
+                    </S.PropertyRow>
+                    <S.PropertyRow>
+                      <S.PropertyName>
+                        <TagIcon width={12} height={12} />
+                        Tags
+                      </S.PropertyName>
+                      <S.PropertyValue>
+                        {tags.map((tag) => (
+                          <Tag key={tag} removable={false}>
+                            {tag}
+                          </Tag>
+                        ))}
+                      </S.PropertyValue>
+                    </S.PropertyRow>
+                    <S.Spacer />
+                  </Fragment>
+                );
+              })}
+            </S.InfoContent>
+          </S.Info>
+        )}
       </S.InfoList>
     </S.WritingPropertySection>
   );

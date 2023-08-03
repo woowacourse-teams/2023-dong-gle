@@ -33,7 +33,7 @@ export const useFileUploadModal = ({ closeModal }: Args) => {
   const uploadOnServer = async (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
-    selectedFile.append('categoryId', new Blob([JSON.stringify(1)], { type: 'application/json' }));
+    selectedFile.append('categoryId', JSON.stringify(1));
 
     await uploadFile(selectedFile);
   };

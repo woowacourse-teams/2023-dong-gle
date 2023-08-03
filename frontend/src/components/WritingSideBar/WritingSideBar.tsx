@@ -17,6 +17,12 @@ export enum TabKeys {
 
 type Props = { writingId: number };
 
+const ariaLabelFromTabKeys = {
+  [TabKeys.WritingProperty]: '글 정보',
+  [TabKeys.Publishing]: '발행 하기',
+  [TabKeys.PublishingProperty]: '발행 정보',
+};
+
 const WritingSideBar = ({ writingId }: Props) => {
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
@@ -61,6 +67,7 @@ const WritingSideBar = ({ writingId }: Props) => {
               <S.Button
                 $checked={currentTab === menu.key}
                 onClick={() => selectCurrentTab(menu.key)}
+                aria-label={ariaLabelFromTabKeys[menu.key]}
               >
                 {menu.label}
               </S.Button>

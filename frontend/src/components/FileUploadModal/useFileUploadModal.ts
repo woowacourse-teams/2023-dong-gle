@@ -12,7 +12,7 @@ type Args = {
 export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
   const { goWritingPage } = usePageNavigate();
-  const addedCategoryId = categoryId ?? 1;
+  const selectedCategoryId = categoryId ?? 1;
 
   const { mutateQuery: uploadNotion, isLoading: isNotionUploadLoading } = useMutation({
     fetcher: addNotionWriting,
@@ -35,7 +35,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const uploadOnServer = async (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
-    selectedFile.append('categoryId', JSON.stringify(addedCategoryId));
+    selectedFile.append('categoryId', JSON.stringify(selectedCategoryId));
 
     await uploadFile(selectedFile);
   };
@@ -53,7 +53,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
     await uploadNotion({
       blockId: blockId,
-      categoryId: addedCategoryId,
+      categoryId: selectedCategoryId,
     });
   };
 

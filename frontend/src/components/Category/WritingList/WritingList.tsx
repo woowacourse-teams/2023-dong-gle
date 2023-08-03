@@ -10,6 +10,8 @@ type Props = {
 const WritingList = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
 
+  if (writings.length === 0) return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
+
   return (
     <ul>
       {writings.map((writing) => (
@@ -58,5 +60,13 @@ const S = {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  `,
+
+  NoWritingsText: styled.p`
+    padding: 0.8rem;
+    color: ${({ theme }) => theme.color.gray6};
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: default;
   `,
 };

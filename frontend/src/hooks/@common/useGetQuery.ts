@@ -5,6 +5,7 @@ type UseGetQueryArgs<ResponseData> = {
   onSuccess?: (data: ResponseData) => void;
   onError?: (error?: Error) => void;
   onSettled?: () => void;
+  enabled?: boolean;
 };
 
 export const useGetQuery = <ResponseData>({
@@ -12,6 +13,7 @@ export const useGetQuery = <ResponseData>({
   onSuccess,
   onError,
   onSettled,
+  enabled = true,
 }: UseGetQueryArgs<ResponseData>) => {
   const [data, setData] = useState<ResponseData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +49,8 @@ export const useGetQuery = <ResponseData>({
   }, [fetcher]);
 
   useEffect(() => {
+    if (!enabled) return;
+
     getData();
   }, []);
 

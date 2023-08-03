@@ -37,7 +37,12 @@ export const LongCategoryName: Story = {
       <StoryContainer>
         {names.map((name) => (
           <StoryItemContainer>
-            <Category id={1} categoryName={name} />
+            <Category
+              id={1}
+              categoryName={name}
+              getCategories={() => Promise.resolve()}
+              isDefaultCategory={false}
+            />
           </StoryItemContainer>
         ))}
       </StoryContainer>

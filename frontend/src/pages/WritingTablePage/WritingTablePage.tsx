@@ -1,7 +1,7 @@
 import { getCategoryIdWritingList } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
-import { PageContext, usePageContext } from 'pages/Layout/Layout';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
@@ -9,10 +9,16 @@ import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
 const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
-
-  const { data } = useGetQuery<GetCategoryIdWritingListResponse>({
+  const { data, getData } = useGetQuery<GetCategoryIdWritingListResponse>({
     fetcher: () => getCategoryIdWritingList(categoryId),
   });
+
+  useEffect(() => {
+    const refetch = async () => {
+      await getData();
+    };
+    refetch();
+  }, [categoryId]);
 
   return (
     <S.Article>

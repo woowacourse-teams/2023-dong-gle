@@ -19,11 +19,11 @@ const Spinner = ({
 }: Partial<Props>) => {
   return (
     <S.Spinner
-      size={size}
-      thickness={thickness}
-      duration={duration}
-      backgroundColor={backgroundColor}
-      barColor={barColor}
+      $size={size}
+      $thickness={thickness}
+      $duration={duration}
+      $backgroundColor={backgroundColor}
+      $barColor={barColor}
     />
   );
 };
@@ -31,19 +31,25 @@ const Spinner = ({
 export default Spinner;
 
 const S = {
-  Spinner: styled.div<Props>`
-    ${({ size, thickness, backgroundColor, barColor, duration }) => {
+  Spinner: styled.div<{
+    $size: number;
+    $thickness: number;
+    $duration: number;
+    $backgroundColor: string;
+    $barColor: string;
+  }>`
+    ${({ $size, $thickness, $backgroundColor, $barColor, $duration }) => {
       return css`
         display: inline-block;
 
-        width: ${size}px;
-        height: ${size}px;
+        width: ${$size}px;
+        height: ${$size}px;
 
-        border: ${thickness}px solid ${backgroundColor};
-        border-bottom-color: ${barColor};
+        border: ${$thickness}px solid ${$backgroundColor};
+        border-bottom-color: ${$barColor};
         border-radius: 50%;
 
-        animation: ${rotation} ${duration}s linear infinite;
+        animation: ${rotation} ${$duration}s linear infinite;
       `;
     }}
   `,

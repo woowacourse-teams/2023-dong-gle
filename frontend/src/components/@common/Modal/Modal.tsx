@@ -6,10 +6,21 @@ import { CloseIcon } from 'assets/icons';
 
 type Props = {
   isOpen: boolean;
+  canBackdropClose?: boolean;
+  canEscKeyClose?: boolean;
+  hasCloseButton?: boolean;
   closeModal: () => void;
 } & ComponentPropsWithoutRef<'dialog'>;
 
-const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
+const Modal = ({
+  isOpen = true,
+  canBackdropClose = true,
+  canEscKeyClose = true,
+  hasCloseButton = true,
+  closeModal,
+  children,
+  ...rest
+}: Props) => {
   const onKeyDownEscape = useCallback(
     (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -20,25 +31,35 @@ const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
 
   useEffect(() => {
     if (isOpen) {
-      window.addEventListener('keydown', onKeyDownEscape);
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      window.removeEventListener('keydown', onKeyDownEscape);
       document.body.style.overflow = 'auto';
     };
-  }, [isOpen, onKeyDownEscape]);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && canEscKeyClose) {
+      window.addEventListener('keydown', onKeyDownEscape);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDownEscape);
+    };
+  }, [isOpen, canEscKeyClose, onKeyDownEscape]);
 
   return createPortal(
     <S.ModalWrapper>
       {isOpen && (
         <>
-          <S.Backdrop onClick={closeModal} />
+          <S.Backdrop onClick={canBackdropClose ? closeModal : undefined} />
           <S.Content {...rest}>
-            <S.CloseButton type='button' onClick={closeModal}>
-              <CloseIcon width={24} height={24} />
-            </S.CloseButton>
+            {hasCloseButton && (
+              <S.CloseButton type='button' onClick={closeModal}>
+                <CloseIcon width={24} height={24} />
+              </S.CloseButton>
+            )}
             {children}
           </S.Content>
         </>

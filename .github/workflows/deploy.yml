@@ -16,7 +16,7 @@ jobs:
       run: |
         touch .env
         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-        echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+        echo "DB_URL=${{ secrets.DEV_DB_URL }}" >> .env
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
         echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
@@ -25,6 +25,6 @@ jobs:
     - name: Deploy to prod
       run: |
         sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose down -v
+        sudo docker compose down
         sudo docker compose pull
         sudo docker compose up -d

@@ -134,7 +134,27 @@ class CategoryServiceTest {
                 () -> assertThat(categories).hasSize(1),
                 () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
                 () -> assertThat(categories.get(0).getNextCategory()).isNull(),
-                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0))
+                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0)),
+                () -> assertThat(writing.getNextWriting()).isNull()
+        );
+    }
+
+    @Test
+    @DisplayName("비어있는 카테고리 삭제 테스트")
+    void removeCategoryWithEmptyCategory() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+
+        //when
+        categoryService.removeCategory(1L, secondId);
+        final List<Category> categories = categoryRepository.findAllByMemberId(1L);
+        categoryRepository.flush();
+
+        //then
+        assertAll(
+                () -> assertThat(categories).hasSize(1),
+                () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
+                () -> assertThat(categories.get(0).getNextCategory()).isNull()
         );
     }
 
@@ -152,6 +172,23 @@ class CategoryServiceTest {
                 () -> assertThat(response.categoryName()).isEqualTo("기본"),
                 () -> assertThat(response.writings().get(0).id()).isEqualTo(findWriting.getId()),
                 () -> assertThat(response.writings().get(0).title()).isEqualTo(findWriting.getTitleValue())
+        );
+    }
+
+    @Test
+    @DisplayName("비어있는 카테고리 글 목록 조회 테스트")
+    void findAllWritingsByIdWithEmptyCategory() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+
+        //when
+        final CategoryWritingsResponse response = categoryService.findAllWritings(1L, secondId);
+
+        //then
+        assertAll(
+                () -> assertThat(response.writings()).hasSize(0),
+                () -> assertThat(response.writings()).isEmpty(),
+                () -> assertThat(response.categoryName()).isEqualTo("두 번째 카테고리")
         );
     }
 

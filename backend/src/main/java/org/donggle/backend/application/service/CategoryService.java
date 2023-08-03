@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,9 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        if (findWritings.isEmpty()) {
+            return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
+        }
         final Writing firstWriting = findFirstWriting(findWritings);
         final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
         final List<WritingSimpleResponse> writingSimpleResponses = sortedWriting.stream()
@@ -125,11 +129,19 @@ public class CategoryService {
 
     private void transferToBasicCategory(final Long memberId, final Category findCategory) {
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
-        final List<Writing> writings = writingRepository.findAllByCategoryId(findCategory.getId());
-        final Writing firstWritingInCategory = findFirstWriting(writings);
-        final Writing lastWriting = findLastWritingInCategory(findCategory);
-        lastWriting.changeNextWriting(firstWritingInCategory);
-        writings.forEach(writing -> writing.changeCategory(basicCategory));
+        if (haveWritingsCategory(findCategory)) {
+            final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+            final Writing firstWritingInCategory = findFirstWriting(findWritings);
+            if (haveWritingsCategory(basicCategory)) {
+                final Writing lastWritingInBasicCategory = findLastWritingInCategory(basicCategory);
+                lastWritingInBasicCategory.changeNextWriting(firstWritingInCategory);
+            }
+            findWritings.forEach(writing -> writing.changeCategory(basicCategory));
+        }
+    }
+
+    private boolean haveWritingsCategory(final Category category) {
+        return !writingRepository.findAllByCategoryId(category.getId()).isEmpty();
     }
 
     private void deleteCategory(final Category findCategory) {

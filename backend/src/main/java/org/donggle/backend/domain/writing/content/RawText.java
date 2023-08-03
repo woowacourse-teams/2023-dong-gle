@@ -2,7 +2,6 @@ package org.donggle.backend.domain.writing.content;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Lob;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +12,7 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RawText {
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String rawText;
 
     private RawText(final String rawText) {

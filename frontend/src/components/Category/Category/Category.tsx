@@ -71,7 +71,10 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
         />
       ) : (
         <>
-          <S.CategoryButton onClick={() => goWritingTablePage(id)}>
+          <S.CategoryButton
+            onClick={() => goWritingTablePage(id)}
+            aria-label={`${name} 폴더 메인 화면에 열기`}
+          >
             <S.Text>{name}</S.Text>
           </S.CategoryButton>
           {!isDefaultCategory && (

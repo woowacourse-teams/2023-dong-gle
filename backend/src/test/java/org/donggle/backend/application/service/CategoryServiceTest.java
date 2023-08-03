@@ -156,6 +156,23 @@ class CategoryServiceTest {
     }
 
     @Test
+    @DisplayName("비어있는 카테고리 글 목록 조회 테스트")
+    void findAllWritingsByIdWithEmptyCategory() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+
+        //when
+        final CategoryWritingsResponse response = categoryService.findAllWritings(1L, secondId);
+
+        //then
+        assertAll(
+                () -> assertThat(response.writings()).hasSize(0),
+                () -> assertThat(response.writings()).isEmpty(),
+                () -> assertThat(response.categoryName()).isEqualTo("두 번째 카테고리")
+        );
+    }
+
+    @Test
     @DisplayName("카테고리 순서 수정 테스트")
     void modifyCategoryOrder() {
         //given

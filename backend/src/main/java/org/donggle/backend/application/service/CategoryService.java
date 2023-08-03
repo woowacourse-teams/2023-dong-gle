@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,9 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        if (findWritings.isEmpty()) {
+            return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
+        }
         final Writing firstWriting = findFirstWriting(findWritings);
         final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
         final List<WritingSimpleResponse> writingSimpleResponses = sortedWriting.stream()

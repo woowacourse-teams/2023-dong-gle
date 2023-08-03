@@ -38,7 +38,7 @@ const CategorySection = () => {
   return (
     <S.Section>
       <S.Header>
-        <S.Title>Folders</S.Title>
+        <S.Title>카테고리</S.Title>
         {isInputOpen ? (
           <Input
             type='text'
@@ -53,7 +53,7 @@ const CategorySection = () => {
             onKeyUp={requestAddCategory}
           />
         ) : (
-          <S.Button onClick={() => setIsInputOpen(true)} aria-label='폴더 추가 입력 창 열기'>
+          <S.Button onClick={() => setIsInputOpen(true)} aria-label='카테고리 추가 입력 창 열기'>
             <PlusCircleIcon width={12} height={12} />
           </S.Button>
         )}
@@ -64,7 +64,7 @@ const CategorySection = () => {
             <Accordion.Item key={categoryDetail.id}>
               <Accordion.Title
                 onIconClick={() => setSelectedCategoryId(categoryDetail.id)}
-                aria-label={`${categoryDetail.categoryName} 폴더 왼쪽 사이드바에서 열기`}
+                aria-label={`${categoryDetail.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
               >
                 <Category
                   id={categoryDetail.id}

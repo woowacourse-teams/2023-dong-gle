@@ -8,6 +8,7 @@ import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
 import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
+import Input from 'components/@common/Input/Input';
 
 const CategorySection = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
@@ -39,15 +40,17 @@ const CategorySection = () => {
       <S.Header>
         <S.Title>Folders</S.Title>
         {isInputOpen ? (
-          <S.Input
+          <Input
             type='text'
+            variant='underlined'
+            size='small'
+            placeholder='Add category ...'
             value={value}
             ref={inputRef}
             onBlur={closeInput}
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}
-            placeholder='New category name'
           />
         ) : (
           <S.Button onClick={() => setIsInputOpen(true)}>
@@ -63,8 +66,8 @@ const CategorySection = () => {
                 <Category
                   id={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
-                  getCategories={getCategories}
                   isDefaultCategory={index === 0}
+                  getCategories={getCategories}
                 />
               </Accordion.Title>
               <Accordion.Panel>

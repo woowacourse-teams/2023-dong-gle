@@ -4,6 +4,7 @@ import { KeyboardEventHandler, MouseEventHandler, useState } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
+import Input from 'components/@common/Input/Input';
 
 type Props = {
   id: number;
@@ -56,15 +57,17 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   return (
     <S.Container>
       {isInputOpen ? (
-        <S.Input
+        <Input
           type='text'
+          variant='underlined'
+          size='small'
+          placeholder='Change category name ...'
           value={value}
           ref={inputRef}
           onBlur={closeInput}
           onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
-          placeholder='Change category name'
         />
       ) : (
         <>

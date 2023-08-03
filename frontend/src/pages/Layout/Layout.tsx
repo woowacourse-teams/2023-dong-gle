@@ -52,7 +52,6 @@ const Layout = () => {
             Add Post
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
-          <Button onClick={() => goWritingTablePage(1)}>ㅋㅋ</Button>
           <CategorySection />
         </S.LeftSidebarSection>
         <S.Main>

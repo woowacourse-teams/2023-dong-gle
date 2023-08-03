@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -111,6 +112,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
         log.warn("Exception from handleHttpMessageNotReadableException = ", e);
         final ErrorResponse errorResponse = new ErrorResponse("잘못된 요청입니다. 요청 바디를 다시 확인해주세요.");
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
+        log.warn("Exception from handleHttpMediaTypeNotSupportedException = ", e);
+        final ErrorResponse errorResponse = new ErrorResponse(
+                "잘못된 요청입니다. 지원하지 않는 미디어 타입입니다. 지원되는 미디어 타입: " + e.getSupportedMediaTypes()
+        );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);

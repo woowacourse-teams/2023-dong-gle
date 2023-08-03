@@ -5,12 +5,14 @@ import { ChangeEventHandler, useState } from 'react';
 import { AddWritingRequest } from 'types/apis/writings';
 
 type Args = {
+  categoryId: number | null;
   closeModal: () => void;
 };
 
-export const useFileUploadModal = ({ closeModal }: Args) => {
+export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
   const { goWritingPage } = usePageNavigate();
+  const addedCategoryId = categoryId ?? 1;
 
   const { mutateQuery: uploadNotion, isLoading: isNotionUploadLoading } = useMutation({
     fetcher: addNotionWriting,
@@ -33,7 +35,7 @@ export const useFileUploadModal = ({ closeModal }: Args) => {
   const uploadOnServer = async (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
-    selectedFile.append('categoryId', JSON.stringify(1));
+    selectedFile.append('categoryId', JSON.stringify(addedCategoryId));
 
     await uploadFile(selectedFile);
   };
@@ -51,7 +53,7 @@ export const useFileUploadModal = ({ closeModal }: Args) => {
 
     await uploadNotion({
       blockId: blockId,
-      categoryId: 1,
+      categoryId: addedCategoryId,
     });
   };
 

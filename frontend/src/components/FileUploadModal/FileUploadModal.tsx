@@ -5,6 +5,7 @@ import Spinner from 'components/@common/Spinner/Spinner';
 import { styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
+import { useParams } from 'react-router-dom';
 
 type Props = {
   isOpen: boolean;
@@ -12,8 +13,9 @@ type Props = {
 };
 
 const FileUploadModal = ({ isOpen, closeModal }: Props) => {
+  const categoryId = useParams()['categoryId'] ? Number(useParams()['categoryId']) : null;
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
-    useFileUploadModal({ closeModal });
+    useFileUploadModal({ closeModal, categoryId });
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>

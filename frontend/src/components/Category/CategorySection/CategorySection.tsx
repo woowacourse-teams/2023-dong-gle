@@ -53,7 +53,7 @@ const CategorySection = () => {
             onKeyUp={requestAddCategory}
           />
         ) : (
-          <S.Button onClick={() => setIsInputOpen(true)}>
+          <S.Button onClick={() => setIsInputOpen(true)} aria-label='폴더 추가 입력 창 열기'>
             <PlusCircleIcon width={12} height={12} />
           </S.Button>
         )}
@@ -62,7 +62,7 @@ const CategorySection = () => {
         {categoryDetails.map((categoryDetail, index) => {
           return (
             <Accordion.Item key={categoryDetail.id}>
-              <Accordion.Title 
+              <Accordion.Title
                 onIconClick={() => setSelectedCategoryId(categoryDetail.id)}
                 aria-label={`${categoryDetail.categoryName} 폴더 왼쪽 사이드바에서 열기`}
               >

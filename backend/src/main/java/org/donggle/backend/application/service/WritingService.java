@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,6 +159,9 @@ public class WritingService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        if (findWritings.isEmpty()) {
+            return WritingListWithCategoryResponse.of(findCategory, Collections.emptyList());
+        }
         final Writing firstWriting = findFirstWriting(findWritings);
         final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
         final List<WritingDetailResponse> writingDetailResponses = sortedWriting.stream()

@@ -1,5 +1,6 @@
 package org.donggle.backend.ui;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.PublishService;
 import org.donggle.backend.application.service.WritingService;
@@ -38,7 +39,7 @@ public class WritingController {
     }
 
     @PostMapping("/notion")
-    public ResponseEntity<Void> writingAdd(@RequestBody final NotionUploadRequest request) {
+    public ResponseEntity<Void> writingAdd(@Valid @RequestBody final NotionUploadRequest request) {
         final Long writingId = writingService.uploadNotionPage(1L, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
@@ -76,7 +77,7 @@ public class WritingController {
 
     @PostMapping("/{writingId}/publish")
     public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId,
-                                               @RequestBody final PublishRequest request) {
+                                               @Valid @RequestBody final PublishRequest request) {
         publishService.publishWriting(1L, writingId, request);
         return ResponseEntity.ok().build();
     }

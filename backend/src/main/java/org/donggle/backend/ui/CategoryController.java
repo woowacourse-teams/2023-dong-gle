@@ -1,5 +1,6 @@
 package org.donggle.backend.ui;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
@@ -25,7 +26,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Void> categoryAdd(@RequestBody final CategoryAddRequest request) {
+    public ResponseEntity<Void> categoryAdd(@Valid @RequestBody final CategoryAddRequest request) {
         final Long categoryId = categoryService.addCategory(1L, request);
         return ResponseEntity.created(URI.create("/categories/" + categoryId)).build();
     }

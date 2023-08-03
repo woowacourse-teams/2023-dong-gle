@@ -4,6 +4,7 @@ import Modal from 'components/@common/Modal/Modal';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
+import Input from 'components/@common/Input/Input';
 
 type Props = {
   isOpen: boolean;
@@ -31,11 +32,14 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
             </S.Item>
             <S.Item>
               <S.ItemTitle>노션에서 가져오기</S.ItemTitle>
-              <S.InputContainer>
-                <S.Input id='notion-link' value={inputValue} onChange={setNotionPageLink} />
-                <S.Label htmlFor='notion-link'>페이지 링크</S.Label>
-                <S.Underline />
-              </S.InputContainer>
+              <Input
+                labelText='페이지 링크'
+                variant='filled'
+                supportingText='페이지 공유 - 링크 복사 후 붙여넣기'
+                placeholder='https://www.notion.so/..'
+                value={inputValue}
+                onChange={setNotionPageLink}
+              />
             </S.Item>
             <Button block={true} variant='secondary' onClick={uploadNotionWriting}>
               가져오기
@@ -74,53 +78,11 @@ const S = {
   Item: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
+    gap: 1.5rem;
     width: 100%;
   `,
   ItemTitle: styled.h2`
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 500;
-  `,
-  InputContainer: styled.div`
-    position: relative;
-    margin-top: 1rem;
-  `,
-  Input: styled.input`
-    font-size: 1.3rem;
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid ${({ theme }) => theme.color.gray6};
-    padding: 0.5rem;
-    background-color: transparent;
-    outline-color: ${({ theme }) => theme.color.gray1};
-
-    &:focus ~ label {
-      top: -1.3rem;
-      font-size: 1.2rem;
-      color: ${({ theme }) => theme.color.gray8};
-    }
-
-    &:focus ~ div {
-      transform: scaleX(1);
-    }
-  `,
-  Label: styled.label`
-    position: absolute;
-    top: 25%;
-    left: 0.5rem;
-    color: ${({ theme }) => theme.color.gray6};
-    transition: all 0.3s ease;
-    font-size: 1.2rem;
-    pointer-events: none;
-  `,
-  Underline: styled.div`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: ${({ theme }) => theme.color.primary};
-    transform: scaleX(0);
-    transition: all 0.3s ease;
   `,
 };

@@ -39,7 +39,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile-prod
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend-prod:latest
           platforms: linux/arm64
 
   deploy:

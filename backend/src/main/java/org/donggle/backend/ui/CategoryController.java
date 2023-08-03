@@ -1,5 +1,7 @@
 package org.donggle.backend.ui;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
@@ -25,13 +27,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Void> categoryAdd(@RequestBody final CategoryAddRequest request) {
+    public ResponseEntity<Void> categoryAdd(@Valid @RequestBody final CategoryAddRequest request) {
         final Long categoryId = categoryService.addCategory(1L, request);
         return ResponseEntity.created(URI.create("/categories/" + categoryId)).build();
     }
 
     @PatchMapping("/{categoryId}")
-    public ResponseEntity<Void> categoryModify(@PathVariable final Long categoryId,
+    public ResponseEntity<Void> categoryModify(@NotNull(message = "카테고리 ID가 없습니다.") @PathVariable final Long categoryId,
                                                @RequestBody final CategoryModifyRequest request) {
         if (request.categoryName() != null) {
             categoryService.modifyCategoryName(1L, categoryId, request);
@@ -44,7 +46,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> categoryRemove(@PathVariable final Long categoryId) {
+    public ResponseEntity<Void> categoryRemove(@NotNull(message = "카테고리 ID가 없습니다.") @PathVariable final Long categoryId) {
         categoryService.removeCategory(1L, categoryId);
         return ResponseEntity.noContent().build();
     }
@@ -56,7 +58,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryWritingsResponse> categoryWritingList(@PathVariable final Long categoryId) {
+    public ResponseEntity<CategoryWritingsResponse> categoryWritingList(@NotNull(message = "카테고리 ID가 없습니다.") @PathVariable final Long categoryId) {
         final CategoryWritingsResponse response = categoryService.findAllWritings(1L, categoryId);
         return ResponseEntity.ok(response);
     }

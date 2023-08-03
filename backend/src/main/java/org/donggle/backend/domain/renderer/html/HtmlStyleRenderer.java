@@ -46,7 +46,6 @@ public class HtmlStyleRenderer {
                 htmlStyleType = HtmlStyleType.findByStyleType(style.getStyleType());
             }
 
-
             createStyleTag(startTags, htmlStyleType.getStartTag(), startIndex);
             createStyleTag(endTags, htmlStyleType.getEndTag(), endIndex);
         }

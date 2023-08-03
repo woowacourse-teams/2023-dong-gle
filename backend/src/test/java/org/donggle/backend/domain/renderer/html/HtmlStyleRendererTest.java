@@ -115,7 +115,6 @@ class HtmlStyleRendererTest {
         final String result = htmlStyleRenderer.render(rawText, styles);
         final String expected = "<a href=\"link.com\"></a>";
 
-
         //then
         assertThat(result).isEqualTo(expected);
 

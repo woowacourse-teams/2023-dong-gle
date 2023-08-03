@@ -1,4 +1,4 @@
-import { RuleSet, css } from 'styled-components';
+import { css } from 'styled-components';
 import { theme } from './theme';
 
 export const HEADER_STYLE = {
@@ -16,6 +16,9 @@ export const SIDEBAR_STYLE = {
 } as const;
 
 export const sidebarStyle = css`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   width: ${SIDEBAR_STYLE.width};
   border: ${LAYOUT_STYLE.border};
   border-radius: 8px;

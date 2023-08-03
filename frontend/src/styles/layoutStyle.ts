@@ -2,11 +2,11 @@ import { RuleSet, css } from 'styled-components';
 import { theme } from './theme';
 
 export const HEADER_STYLE = {
-  height: '3rem',
+  height: '4rem',
 } as const;
 
 export const LAYOUT_STYLE = {
-  padding: '1rem',
+  padding: '0 1rem 1rem 1rem',
   border: `2px solid ${theme.color.gray13}`,
   gap: '0.4rem',
 } as const;

@@ -2,6 +2,11 @@ import { Blog, PublishingPropertyData } from 'types/domain';
 
 export type AddWritingRequest = FormData;
 
+export type AddNotionWritingRequest = {
+  blockId: string;
+  categoryId: number;
+};
+
 export type GetWritingResponse = {
   id: number;
   title: string;

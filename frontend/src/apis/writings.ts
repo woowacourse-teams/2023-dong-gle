@@ -1,6 +1,10 @@
 import { writingURL } from 'constants/apis/url';
 import { http } from './fetch';
-import type { AddWritingRequest, PublishWritingArgs } from 'types/apis/writings';
+import type {
+  AddNotionWritingRequest,
+  AddWritingRequest,
+  PublishWritingArgs,
+} from 'types/apis/writings';
 
 // 글 생성(글 업로드): POST
 export const addWriting = (body: AddWritingRequest) =>
@@ -9,6 +13,15 @@ export const addWriting = (body: AddWritingRequest) =>
     // headers: {
     //   'Content-Type': 'multipart/form-data',
     // },
+  });
+
+// 노션 - 글 생성(글 업로드): POST
+export const addNotionWriting = (body: AddNotionWritingRequest) =>
+  http.post(`${writingURL}/notion`, {
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 
 // 글 조회: GET

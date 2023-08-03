@@ -1,6 +1,6 @@
 import { MediumLogoIcon, TistoryLogoIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { Fragment, ReactElement } from 'react';
+import { Fragment, ReactElement, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { Writing } from 'types/apis/writings';
 import { Blog } from 'types/domain';
@@ -15,6 +15,11 @@ const blogIcon: Record<Blog, ReactElement> = {
 
 const WritingTable = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
+  const rowRef = useRef<HTMLTableRowElement>(null);
+
+  useEffect(() => {
+    rowRef.current?.focus();
+  }, [writings]);
 
   return (
     <S.WritingTableContainer>
@@ -24,7 +29,7 @@ const WritingTable = ({ writings }: Props) => {
         <col width='20%' />
       </colgroup>
       <thead>
-        <tr>
+        <tr ref={rowRef} tabIndex={0}>
           <th>글 제목</th>
           <th>발행한 블로그 플랫폼</th>
           <th>발행 시간</th>
@@ -32,7 +37,7 @@ const WritingTable = ({ writings }: Props) => {
       </thead>
       <tbody>
         {writings.map(({ id, title, publishedDetails, createdAt }) => (
-          <tr key={id} onClick={() => goWritingPage(id)}>
+          <tr key={id} onClick={() => goWritingPage(id)} role='button' tabIndex={0}>
             <td>{title}</td>
             <td>
               <S.PublishedToIconContainer>

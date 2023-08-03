@@ -26,8 +26,8 @@ const AccordionTitle = ({
   };
 
   return (
-    <S.Container onClick={onTitleClick} aria-label={rest['aria-label']}>
-      <S.IconButton $isOpen={isOpen} onClick={togglePanel}>
+    <S.Container onClick={onTitleClick}>
+      <S.IconButton $isOpen={isOpen} onClick={togglePanel} aria-label={rest['aria-label']}>
         <ArrowRightIcon width={8} height={14} />
       </S.IconButton>
       {children}

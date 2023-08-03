@@ -26,7 +26,7 @@ const WritingPropertySection = ({ writingId }: Props) => {
 
   return (
     <S.WritingPropertySection>
-      <S.SectionTitle>Writing Info</S.SectionTitle>
+      <S.SectionTitle>글 정보</S.SectionTitle>
       <S.InfoList>
         <S.Info>
           <S.InfoTitle>PROPERTIES</S.InfoTitle>

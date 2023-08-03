@@ -25,9 +25,9 @@ const WritingTable = ({ writings }: Props) => {
       </colgroup>
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Published To</th>
-          <th>Published Time</th>
+          <th>글 제목</th>
+          <th>발행한 블로그 플랫폼</th>
+          <th>발행 시간</th>
         </tr>
       </thead>
       <tbody>

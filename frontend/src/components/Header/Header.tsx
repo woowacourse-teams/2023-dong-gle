@@ -13,7 +13,7 @@ const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive
     <S.Container>
       <S.LeftIconsBox>
         <SettingIcon width='2.4rem' height='2.4rem' />
-        <button onClick={onClickLeftSidebar}>
+        <button onClick={onClickLeftSidebar} aria-label='왼쪽 사이드바 토글'>
           <SidebarLeftIcon width='2.4rem' height='2.4rem' />
         </button>
       </S.LeftIconsBox>

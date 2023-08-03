@@ -22,7 +22,7 @@ const WritingTable = ({ writings }: Props) => {
   }, [writings]);
 
   return (
-    <S.WritingTableContainer>
+    <S.WritingTableContainer summary='카테고리 내부 글 목록을 나타낸'>
       <colgroup>
         <col width='60%' />
         <col width='20%' />

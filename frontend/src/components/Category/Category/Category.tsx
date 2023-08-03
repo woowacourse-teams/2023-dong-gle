@@ -24,6 +24,8 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
     isInputOpen,
     setIsInputOpen,
     resetInput,
+    isError,
+    setIsError,
   } = useCategoryInput('');
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
@@ -31,7 +33,10 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) return alert('카테고리의 이름은 1~30자 사이만 가능해요'); // 에러 처리 고도화 필요
+    if (!isValidCategoryName(value)) {
+      setIsError(true);
+      return;
+    }
 
     setName(value);
     resetInput();
@@ -67,6 +72,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
           placeholder='Change category name ...'
           value={value}
           ref={inputRef}
+          isError={isError}
           onBlur={resetInput}
           onChange={handleOnChange}
           onKeyDown={escapeRename}

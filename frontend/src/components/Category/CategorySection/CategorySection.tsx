@@ -24,12 +24,17 @@ const CategorySection = () => {
     isInputOpen,
     setIsInputOpen,
     resetInput,
+    isError,
+    setIsError,
   } = useCategoryInput('');
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) return alert('카테고리의 이름은 1~30자 사이만 가능해요'); // 에러 처리 고도화 필요
+    if (!isValidCategoryName(value)) {
+      setIsError(true);
+      return;
+    }
 
     resetInput();
     await addCategory({ categoryName: value.trim() });
@@ -50,6 +55,7 @@ const CategorySection = () => {
             placeholder='Add category ...'
             value={value}
             ref={inputRef}
+            isError={isError}
             onBlur={resetInput}
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}

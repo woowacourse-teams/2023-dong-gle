@@ -39,7 +39,7 @@ const Modal = ({ isOpen = true, closeModal, children, ...rest }: Props) => {
         <>
           <S.Backdrop onClick={closeModal} />
           <S.Content ref={myRef} aria-modal={isOpen} {...rest}>
-            <S.CloseButton type='button' onClick={closeModal}>
+            <S.CloseButton type='button' onClick={closeModal} aria-label='모달 닫기'>
               <CloseIcon width={24} height={24} />
             </S.CloseButton>
             {children}

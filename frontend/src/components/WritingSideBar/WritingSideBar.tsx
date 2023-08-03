@@ -1,12 +1,13 @@
 import PublishingPropertySection from 'components/PublishingPropertySection/PublishingPropertySection';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
+import Button from 'components/@common/Button/Button';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -52,23 +53,23 @@ const WritingSideBar = ({ writingId }: Props) => {
 
   return (
     <S.SidebarContainer>
-      <S.MenuTabList>
+      <S.MenuTabList role='tablist'>
         {menus
           .filter((menu) => menu.key !== TabKeys.PublishingProperty)
           .map((menu) => (
             <S.Tab key={menu.key}>
-              <S.Input
-                type='radio'
-                name='tab'
-                id={menu.key}
-                checked={currentTab === menu.key}
-                onChange={() => selectCurrentTab(menu.key)}
-              />
-              <S.Label htmlFor={menu.key}>{menu.label}</S.Label>
+              <S.Button
+                $checked={currentTab === menu.key}
+                onClick={() => selectCurrentTab(menu.key)}
+              >
+                {menu.label}
+              </S.Button>
             </S.Tab>
           ))}
       </S.MenuTabList>
-      {menus.find((menu) => menu.key === currentTab)?.content}
+      <div role='tabpanel' aria-labelledby={currentTab}>
+        {menus.find((menu) => menu.key === currentTab)?.content}
+      </div>
     </S.SidebarContainer>
   );
 };
@@ -93,10 +94,13 @@ const S = {
     display: flex;
     width: 100%;
   `,
-  Input: styled.input`
-    appearance: none;
-  `,
   Label: styled.label`
+    input[type='radio']:checked + & {
+      transition: all 0.2s ease-in;
+      background-color: ${({ theme }) => theme.color.gray1};
+    }
+  `,
+  Button: styled.button<{ $checked: boolean }>`
     display: flex;
 
     justify-content: center;
@@ -105,15 +109,16 @@ const S = {
     width: 100%;
     border-radius: 8px;
 
-    cursor: pointer;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.color.gray6};
-    }
-
-    input[type='radio']:checked + & {
-      transition: all 0.2s ease-in;
-      background-color: ${({ theme }) => theme.color.gray1};
-    }
+    ${({ $checked }) =>
+      $checked
+        ? css`
+            transition: all 0.2s ease-in;
+            background-color: ${({ theme }) => theme.color.gray1};
+          `
+        : css`
+            &:hover {
+              background-color: ${({ theme }) => theme.color.gray6};
+            }
+          `}
   `,
 };

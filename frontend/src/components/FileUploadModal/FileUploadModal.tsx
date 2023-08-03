@@ -18,7 +18,13 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
     useFileUploadModal({ closeModal, categoryId });
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal
+      isOpen={isOpen}
+      canBackdropClose={!isLoading}
+      canEscKeyClose={!isLoading}
+      hasCloseButton={!isLoading}
+      closeModal={closeModal}
+    >
       <S.Container>
         <S.Title>글 가져오기</S.Title>
         {isLoading ? (

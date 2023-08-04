@@ -13,7 +13,6 @@ import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const { addCategory } = useCategoryMutation();
   const writings = useCategoryWritings(selectedCategoryId);
   const { categoryDetails, getCategories } = useCategoryDetails(selectedCategoryId, writings);
   const {
@@ -27,6 +26,7 @@ const CategorySection = () => {
     isError,
     setIsError,
   } = useCategoryInput('');
+  const { addCategory } = useCategoryMutation();
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
@@ -98,6 +98,7 @@ export default CategorySection;
 const S = {
   Section: styled.section`
     width: 26rem;
+    overflow: auto;
   `,
 
   Header: styled.header`

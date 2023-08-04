@@ -1,5 +1,6 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { CategoryWriting } from 'types/components/category';
 
@@ -9,6 +10,7 @@ type Props = {
 
 const WritingList = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
+  const writingId = Number(useParams()['writingId']);
 
   if (writings.length === 0) return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
 
@@ -17,6 +19,7 @@ const WritingList = ({ writings }: Props) => {
       {writings.map((writing) => (
         <S.Item key={writing.id}>
           <S.Button
+            $isClicked={writingId === writing.id} 
             onClick={() => goWritingPage(writing.id)}
             aria-label={`${writing.title}글 메인화면에 열기`}
           >
@@ -38,7 +41,7 @@ const S = {
     width: 100%;
   `,
 
-  Button: styled.button`
+  Button: styled.button<{ $isClicked: boolean }>`
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -46,6 +49,7 @@ const S = {
     height: 3.6rem;
     padding: 0.8rem;
     border-radius: 8px;
+    background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray5};
 
     &:hover {
       background-color: ${({ theme }) => theme.color.gray5};

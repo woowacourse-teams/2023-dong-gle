@@ -20,10 +20,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  render: ({ writingId }) => {
+  render: () => {
     return (
       <StoryContainer>
-        <WritingSideBar writingId={writingId} />
+        <WritingSideBar />
       </StoryContainer>
     );
   },

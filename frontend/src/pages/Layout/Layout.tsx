@@ -30,7 +30,7 @@ const Layout = () => {
   const toggleRightSidebar = () => {
     setIsRightSidebarOpen(!isRightSidebarOpen);
   };
-  console.log(activeWritingId);
+
   return (
     <S.Container>
       <Header

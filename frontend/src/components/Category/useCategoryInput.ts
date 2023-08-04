@@ -1,6 +1,7 @@
 import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState } from 'react';
 
 const useCategoryInput = (initialValue: string) => {
+  const [isError, setIsError] = useState(false);
   const [value, setValue] = useState(initialValue);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,28 +14,28 @@ const useCategoryInput = (initialValue: string) => {
 
   const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => setValue(e.target.value);
 
-  const resetValue = () => setValue('');
-
-  const closeInput = () => {
+  const resetInput = () => {
+    setIsError(false);
     setIsInputOpen(false);
-    resetValue();
+    setValue('');
   };
 
   const escapeInput: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Escape') return;
 
-    closeInput();
+    resetInput();
   };
 
   return {
     value,
-    resetValue,
     inputRef,
     handleOnChange,
     escapeInput,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
+    isError,
+    setIsError,
   };
 };
 

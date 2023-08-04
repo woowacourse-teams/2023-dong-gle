@@ -1,9 +1,9 @@
-name: CICD for Frontend Development
+name: CICD for Frontend Production
 
 on:
   push:
     branches:
-      - develop
+      - main
     paths:
       - 'frontend/**'
   workflow_dispatch:
@@ -19,11 +19,11 @@ jobs:
       - name: move to frontend path
         run: |
           cd ./frontend
-      - name: Create .env.development variable
+      - name: Create .env.production variable
         run: |
           cd ./frontend
-          touch .env.development
-          echo "BASE_URL=${{secrets.BASE_URL_DEVELOPMENT}}" >> .env.development
+          touch .env.production
+          echo "BASE_URL=${{secrets.BASE_URL_PRODUCTION}}" >> .env.production
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -37,12 +37,12 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
-          file: ./frontend/Dockerfile
+          file: ./frontend/Dockerfile-prod
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend-dev:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend-prod:latest
           platforms: linux/arm64
 
   deploy:
     needs: build
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy-prod.yml
     secrets: inherit

@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
+import { isValidCategoryName } from '../isValidCategoryName';
 
 type Props = {
   id: number;
@@ -22,7 +23,9 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
     escapeInput: escapeRename,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
+    isError,
+    setIsError,
   } = useCategoryInput('');
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
@@ -30,12 +33,17 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
+    if (!isValidCategoryName(value)) {
+      setIsError(true);
+      return;
+    }
+
     setName(value);
-    closeInput();
+    resetInput();
     await patchCategory({
       categoryId: id,
       body: {
-        categoryName: value,
+        categoryName: value.trim(),
       },
     });
     await getCategories();
@@ -64,7 +72,8 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
           placeholder='Change category name ...'
           value={value}
           ref={inputRef}
-          onBlur={closeInput}
+          isError={isError}
+          onBlur={resetInput}
           onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}

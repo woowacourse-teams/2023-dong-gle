@@ -9,6 +9,7 @@ import WritingList from '../WritingList/WritingList';
 import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
+import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
@@ -22,14 +23,21 @@ const CategorySection = () => {
     escapeInput: escapeAddCategory,
     isInputOpen,
     setIsInputOpen,
-    closeInput,
+    resetInput,
+    isError,
+    setIsError,
   } = useCategoryInput('');
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    closeInput();
-    await addCategory({ categoryName: value });
+    if (!isValidCategoryName(value)) {
+      setIsError(true);
+      return;
+    }
+
+    resetInput();
+    await addCategory({ categoryName: value.trim() });
     await getCategories();
   };
 
@@ -47,7 +55,8 @@ const CategorySection = () => {
             placeholder='Add category ...'
             value={value}
             ref={inputRef}
-            onBlur={closeInput}
+            isError={isError}
+            onBlur={resetInput}
             onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}

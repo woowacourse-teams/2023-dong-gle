@@ -6,6 +6,7 @@ import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
 import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { GetWritingResponse } from 'types/apis/writings';
+import Spinner from 'components/@common/Spinner/Spinner';
 
 type Props = { writingId: number };
 
@@ -28,7 +29,14 @@ const WritingViewer = ({ writingId }: Props) => {
     hljs.highlightAll();
   }, [data]);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) {
+    return (
+      <S.LoadingContainer>
+        <Spinner size={60} thickness={4} />
+        <h1>글을 불러오는 중입니다 ...</h1>
+      </S.LoadingContainer>
+    );
+  }
 
   return (
     <S.WritingViewerContainer>
@@ -56,12 +64,25 @@ const S = {
     max-width: 100%;
     overflow-wrap: break-word;
   `,
+
+  LoadingContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    max-width: 100%;
+    height: 100%;
+  `,
+
   TitleWrapper: styled.div`
     padding-bottom: 2rem;
   `,
+
   Title: styled.h1`
     font-size: 4rem;
   `,
+
   ContentWrapper: styled.section`
     padding: 1.6rem 0;
     font-size: 1.6rem;

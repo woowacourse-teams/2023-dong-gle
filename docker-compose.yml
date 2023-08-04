@@ -1,7 +1,7 @@
 version: "3"
 services:
   frontend:
-    image: ${DOCKER_USERNAME}/dong-gle-frontend
+    image: ${DOCKER_USERNAME}/dong-gle-frontend-${PROFILE}
     expose:
       - 3000
 

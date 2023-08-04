@@ -1,11 +1,10 @@
-import { Dispatch, MutableRefObject, RefObject, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
-import { usePageNavigate } from 'hooks/usePageNavigate';
 import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
 import CategorySection from 'components/Category/CategorySection/CategorySection';
 import { useModal } from 'hooks/@common/useModal';
@@ -32,7 +31,6 @@ const Layout = () => {
     setIsRightSidebarOpen(!isRightSidebarOpen);
   };
 
-  const { goWritingTablePage } = usePageNavigate();
   return (
     <S.Container>
       <Header

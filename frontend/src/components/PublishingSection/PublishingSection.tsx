@@ -17,7 +17,7 @@ const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
 
   return (
     <S.PublishingSection>
-      <S.PublishingTitle>Publish</S.PublishingTitle>
+      <S.PublishingTitle>발행하기</S.PublishingTitle>
       <S.BlogPublishButtonList>
         {Object.values(BLOG_LIST).map((name) => {
           return (

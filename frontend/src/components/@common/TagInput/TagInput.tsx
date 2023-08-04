@@ -27,7 +27,7 @@ const TagInput = ({ onChangeTags }: Props) => {
       <TagsList />
       <S.Input
         value={inputValue}
-        placeholder='Add tag'
+        placeholder='태그 추가'
         onKeyUp={addTag}
         onKeyDown={removeLastTag}
         onChange={onInputValueChange}

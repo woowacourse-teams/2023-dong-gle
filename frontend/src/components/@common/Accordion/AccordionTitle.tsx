@@ -15,6 +15,7 @@ const AccordionTitle = ({
   onIconClick,
   onTitleClick,
   children,
+  ...rest
 }: Partial<Props>) => {
   const togglePanel = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -26,7 +27,7 @@ const AccordionTitle = ({
 
   return (
     <S.Container onClick={onTitleClick}>
-      <S.IconButton $isOpen={isOpen} onClick={togglePanel}>
+      <S.IconButton $isOpen={isOpen} onClick={togglePanel} aria-label={rest['aria-label']}>
         <ArrowRightIcon width={8} height={14} />
       </S.IconButton>
       {children}

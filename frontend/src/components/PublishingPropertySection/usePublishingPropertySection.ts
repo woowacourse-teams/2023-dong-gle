@@ -19,7 +19,11 @@ export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishingPropertyData>({ tags: [] });
   const { mutateQuery, isLoading } = useMutation<PublishWritingArgs, null>({
     fetcher: publishWriting,
-    onSuccess: () => selectCurrentTab(TabKeys.WritingProperty),
+    onSuccess: () => {
+      selectCurrentTab(TabKeys.WritingProperty);
+      alert('글 발행에 성공했습니다.');
+    },
+    onError: () => alert('글 발행에 실패했습니다.'),
   });
 
   const publishWritingToBlog = async ({ writingId, publishTo }: PublishWritingToBlogArgs) => {

@@ -6,8 +6,7 @@ export const getWritingTableMock = (categoryId: number): GetCategoryIdWritingLis
   writings: [
     {
       id: 200,
-      title:
-        '우테코에서 뜻또라는 사람은 2023년에 이 편지를 받았습니다. 그는 쿠마에게 복사해서 보내라고 했습니다. 며칠 뒤에 복권이 당첨되어 20억을 받았습니다.',
+      title: '우테코 레벨 1: 우테코 생활기',
       createdAt: new Date('2023-07-11T06:55:46.922Z'),
       publishedDetails: [
         {
@@ -22,183 +21,179 @@ export const getWritingTableMock = (categoryId: number): GetCategoryIdWritingLis
     },
     {
       id: 34,
-      title: '우테코 레벨2',
+      title: '우테코 레벨 2: 레벨 인터뷰 회고',
       createdAt: new Date('2023-07-11T06:55:46.922Z'),
       publishedDetails: [
         {
           blogName: 'MEDIUM',
           publishedAt: new Date('2023-07-11T06:55:46.922Z'),
         },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
       ],
     },
-    {
-      id: 35,
-      title: '우테코 레벨3',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
-    {
-      id: 36,
-      title: '우테코 레벨4',
-      createdAt: new Date('2023-07-11T06:55:46.922Z'),
-      publishedDetails: [
-        {
-          blogName: 'MEDIUM',
-          publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-        },
-        {
-          blogName: 'TISTORY',
-          publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-        },
-      ],
-    },
+    // {
+    //   id: 35,
+    //   title: '우테코 레벨3',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨4',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨5',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨6',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨7',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨8',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨9',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨10',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨11',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨12',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 36,
+    //   title: '우테코 레벨13',
+    //   createdAt: new Date('2023-07-11T06:55:46.922Z'),
+    //   publishedDetails: [
+    //     {
+    //       blogName: 'MEDIUM',
+    //       publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+    //     },
+    //     {
+    //       blogName: 'TISTORY',
+    //       publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+    //     },
+    //   ],
+    // },
   ],
 });

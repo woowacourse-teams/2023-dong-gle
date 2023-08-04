@@ -2,15 +2,15 @@ export const categories = {
   categories: [
     {
       id: 1,
-      categoryName: '테스트',
+      categoryName: '우아한테크코스',
     },
     {
       id: 2,
-      categoryName: '우테코',
+      categoryName: '동글',
     },
     {
       id: 3,
-      categoryName: '동글',
+      categoryName: '테스트',
     },
     {
       id: 4,
@@ -21,7 +21,7 @@ export const categories = {
 
 export const writingsInCategory = {
   id: 1,
-  categoryName: '우테코',
+  categoryName: '우아한테크코스',
   writings: [
     {
       id: 1,
@@ -44,7 +44,7 @@ export const writingsInCategory2 = {
       title: '우테코 레벨 42: 우테코 생활기',
     },
     {
-      id: 4,
+      id: 200,
       title: '우테코 레벨 24: 레벨 인터뷰',
     },
   ],

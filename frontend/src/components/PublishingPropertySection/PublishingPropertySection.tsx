@@ -30,10 +30,13 @@ const PublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: P
   return (
     <S.PublishingPropertySection $blog={publishTo}>
       <S.SectionHeader>
-        <button onClick={() => selectCurrentTab(TabKeys.Publishing)}>
+        <button
+          onClick={() => selectCurrentTab(TabKeys.Publishing)}
+          aria-label='발행 블로그 플랫폼 선택란으로 이동'
+        >
           <LeftArrowHeadIcon width={14} height={14} />
         </button>
-        Publishing Properties
+        발행 정보
       </S.SectionHeader>
       <S.Properties>
         <S.PropertyRow>
@@ -51,7 +54,7 @@ const PublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: P
         variant='secondary'
         onClick={() => publishWritingToBlog({ writingId, publishTo })}
       >
-        Publish
+        발행하기
       </Button>
     </S.PublishingPropertySection>
   );

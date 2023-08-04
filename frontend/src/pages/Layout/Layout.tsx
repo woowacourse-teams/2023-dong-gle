@@ -46,6 +46,7 @@ const Layout = () => {
             block={true}
             align='left'
             onClick={openModal}
+            aria-label='글 업로드'
           >
             Add Post
           </Button>

@@ -18,7 +18,11 @@ const WritingList = ({ writings }: Props) => {
     <ul>
       {writings.map((writing) => (
         <S.Item key={writing.id}>
-          <S.Button onClick={() => goWritingPage(writing.id)} $isClicked={writingId === writing.id}>
+          <S.Button
+            $isClicked={writingId === writing.id} 
+            onClick={() => goWritingPage(writing.id)}
+            aria-label={`${writing.title}글 메인화면에 열기`}
+          >
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />
             </S.IconWrapper>

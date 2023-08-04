@@ -26,7 +26,7 @@ const WritingPropertySection = ({ writingId }: Props) => {
 
   return (
     <S.WritingPropertySection>
-      <S.SectionTitle>Writing Info</S.SectionTitle>
+      <S.SectionTitle>글 정보</S.SectionTitle>
       <S.InfoList>
         <S.Info>
           <S.InfoTitle>PROPERTIES</S.InfoTitle>
@@ -106,6 +106,7 @@ const S = {
     color: ${({ theme }) => theme.color.gray7};
   `,
   InfoTitle: styled.h2`
+    color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
     line-height: 1.3rem;
@@ -135,6 +136,7 @@ const S = {
     font-weight: 600;
   `,
   PropertyValue: styled.div`
+    color: ${({ theme }) => theme.color.gray10};
     display: flex;
     flex-wrap: wrap;
     gap: 0.2rem;

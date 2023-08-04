@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { ComponentPropsWithoutRef } from 'react';
 import { createPortal } from 'react-dom';
 import { styled } from 'styled-components';
@@ -21,6 +21,8 @@ const Modal = ({
   children,
   ...rest
 }: Props) => {
+  const myRef = useRef<HTMLDialogElement>(null);
+
   const onKeyDownEscape = useCallback(
     (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -32,6 +34,7 @@ const Modal = ({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      myRef.current?.focus();
     }
 
     return () => {
@@ -54,9 +57,9 @@ const Modal = ({
       {isOpen && (
         <>
           <S.Backdrop onClick={canBackdropClose ? closeModal : undefined} />
-          <S.Content {...rest}>
+          <S.Content ref={myRef} aria-modal={isOpen} {...rest}>
             {hasCloseButton && (
-              <S.CloseButton type='button' onClick={closeModal}>
+              <S.CloseButton type='button' onClick={closeModal} aria-label='모달 닫기'>
                 <CloseIcon width={24} height={24} />
               </S.CloseButton>
             )}

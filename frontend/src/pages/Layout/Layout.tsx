@@ -66,7 +66,7 @@ const Layout = () => {
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>
-            <WritingSideBar writingId={activeWritingId} />
+            <WritingSideBar />
           </S.RightSidebarSection>
         )}
       </S.Row>

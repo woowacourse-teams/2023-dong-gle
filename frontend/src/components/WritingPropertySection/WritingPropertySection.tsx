@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from 'react';
+import { Fragment, ReactElement, useEffect } from 'react';
 import { getWritingProperties } from 'apis/writings';
 import { CalendarIcon, MediumLogoIcon, TagIcon, TistoryLogoIcon } from 'assets/icons';
 import Tag from 'components/@common/Tag/Tag';
@@ -18,9 +18,16 @@ type Props = {
 };
 
 const WritingPropertySection = ({ writingId }: Props) => {
-  const { data: writingInfo } = useGetQuery<GetWritingPropertiesResponse>({
+  const { data: writingInfo, getData } = useGetQuery<GetWritingPropertiesResponse>({
     fetcher: () => getWritingProperties(writingId),
   });
+
+  useEffect(() => {
+    const refetch = async () => {
+      await getData();
+    };
+    refetch();
+  }, [writingId]);
 
   if (!writingInfo) return null;
 

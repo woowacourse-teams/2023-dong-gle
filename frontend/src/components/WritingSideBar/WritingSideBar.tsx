@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 import Button from 'components/@common/Button/Button';
+import { useParams } from 'react-router-dom';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -15,15 +16,14 @@ export enum TabKeys {
   PublishingProperty = 'PublishingProperty',
 }
 
-type Props = { writingId: number };
-
 const ariaLabelFromTabKeys = {
   [TabKeys.WritingProperty]: '글 정보',
   [TabKeys.Publishing]: '발행 하기',
   [TabKeys.PublishingProperty]: '발행 정보',
 };
 
-const WritingSideBar = ({ writingId }: Props) => {
+const WritingSideBar = () => {
+  const writingId = Number(useParams()['writingId']);
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
 

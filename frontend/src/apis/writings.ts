@@ -4,6 +4,7 @@ import type {
   AddNotionWritingRequest,
   AddWritingRequest,
   GetCategoryIdWritingListResponse,
+  GetWritingResponse,
   PublishWritingArgs,
 } from 'types/apis/writings';
 
@@ -26,7 +27,8 @@ export const addNotionWriting = (body: AddNotionWritingRequest) =>
   });
 
 // 글 조회: GET
-export const getWriting = (writingId: number) => http.get(`${writingURL}/${writingId}`);
+export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
+  http.get(`${writingURL}/${writingId}`);
 
 // 글 정보: GET
 export const getWritingProperties = (writingId: number) =>

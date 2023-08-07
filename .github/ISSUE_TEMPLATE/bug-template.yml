@@ -1,0 +1,47 @@
+name: "Bug Reporting Template"
+description: "버그를 작성해주세요."
+labels: "🐞 Bug"
+body:
+  - type: textarea
+    attributes: 
+      label: 어떤 버그인가요?
+      description: "버그에 대해 대략적으로 알려주세요."
+      placeholder: "버그 내용"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 예상 결과
+      description: "예상했던 결과를 알려주세요."
+      placeholder: "예상 결과"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 실제 결과
+      description: "실제 결과를 알려주세요."
+      placeholder: "실제 결과"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 스크린샷
+      description: "결과 사진을 올려주세요."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 버그를 재현하는 법
+      description: "버그 재현 과정을 설명해주세요."
+      placeholder: "재현 과정"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 어떤 환경에서 발생했나요?
+      description: "버그 발생 환경을 설명해주세요."
+      value: |
+        - 브라우저 및 버전:
+        - 기기 및 OS:
+    validations:
+      required: true

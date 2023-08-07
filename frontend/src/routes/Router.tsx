@@ -1,13 +1,13 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Layout from 'pages/Layout/Layout';
 import WritingPage from 'pages/WritingPage/WritingPage';
 import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
+import App from '../App';
 
 export const Router = () => {
   const browserRouter = createBrowserRouter([
     {
       path: '',
-      element: <Layout />,
+      element: <App />,
       children: [
         {
           path: '/writing/:writingId',

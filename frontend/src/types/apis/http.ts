@@ -12,16 +12,16 @@ export class HttpError extends Error {
   }
 }
 
-export const handleHttpError = async (response: Response) => {
+export const handleHttpError = (response: Response) => {
   const statusCode = response.status;
 
-  if (statusCode >= HttpStatus.MULTIPLE_CHOICES) {
+  if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
     throw new HttpError(statusCode);
   }
   if (statusCode >= HttpStatus.BAD_REQUEST) {
     throw new HttpError(statusCode);
   }
-  if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+  if (statusCode >= HttpStatus.MULTIPLE_CHOICES) {
     throw new HttpError(statusCode);
   }
 };

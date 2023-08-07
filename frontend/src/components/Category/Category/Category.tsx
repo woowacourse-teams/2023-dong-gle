@@ -8,13 +8,13 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 
 type Props = {
-  id: number;
+  categoryId: number;
   categoryName: string;
   isDefaultCategory: boolean;
   getCategories: () => Promise<unknown>;
 };
 
-const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props) => {
+const Category = ({ categoryId, categoryName, isDefaultCategory, getCategories }: Props) => {
   const [name, setName] = useState(categoryName);
   const {
     value,
@@ -41,7 +41,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
     setName(value);
     resetInput();
     await patchCategory({
-      categoryId: id,
+      categoryId,
       body: {
         categoryName: value.trim(),
       },
@@ -58,7 +58,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   const deleteCategoryClick: MouseEventHandler<SVGSVGElement> = async (e) => {
     e.stopPropagation();
 
-    await deleteCategory(id);
+    await deleteCategory(categoryId);
     await getCategories();
   };
 
@@ -81,7 +81,7 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
       ) : (
         <>
           <S.CategoryButton
-            onClick={() => goWritingTablePage(id)}
+            onClick={() => goWritingTablePage(categoryId)}
             aria-label={`${name} 카테고리 메인 화면에 열기`}
           >
             <S.Text>{name}</S.Text>

@@ -76,7 +76,7 @@ const CategorySection = () => {
                 aria-label={`${categoryDetail.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
               >
                 <Category
-                  id={categoryDetail.id}
+                  categoryId={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
                   isDefaultCategory={index === 0}
                   getCategories={getCategories}

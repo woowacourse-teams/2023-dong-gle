@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { getCategories } from 'apis/category';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { useEffect, useState } from 'react';
 import { GetCategoriesResponse, GetCategoryDetailResponse } from 'types/apis/category';
 import { CategoryWriting } from 'types/components/category';
@@ -8,9 +8,7 @@ export const useCategoryDetails = (
   selectedCategoryId: number | null,
   writings: CategoryWriting[] | null,
 ) => {
-  const { data, getData } = useGetQuery<GetCategoriesResponse>({
-    fetcher: getCategories,
-  });
+  const { data, refetch: getData } = useQuery(['categories'], getCategories);
 
   const [categoryDetails, setCategoryDetails] = useState<GetCategoryDetailResponse[] | null>(null);
 

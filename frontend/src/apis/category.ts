@@ -1,12 +1,16 @@
 import { categoryURL } from 'constants/apis/url';
 import { http } from './fetch';
-import { AddCategoriesRequest, PatchCategoryArgs } from 'types/apis/category';
+import {
+  AddCategoriesRequest,
+  GetCategoriesResponse,
+  PatchCategoryArgs,
+} from 'types/apis/category';
 
 // POST: 카테고리 추가
 export const addCategory = (body: AddCategoriesRequest) => http.post(categoryURL, { json: body });
 
 // GET: 카테고리 목록 조회
-export const getCategories = () => http.get(categoryURL);
+export const getCategories = (): Promise<GetCategoriesResponse> => http.get(categoryURL);
 
 // GET: 카테고리 글 목록 조회
 export const getWritingsInCategory = (categoryId: number) =>

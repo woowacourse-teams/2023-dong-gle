@@ -11,7 +11,7 @@ type Props = {
   id: number;
   categoryName: string;
   isDefaultCategory: boolean;
-  getCategories: () => Promise<void>;
+  getCategories: () => Promise<unknown>;
 };
 
 const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props) => {

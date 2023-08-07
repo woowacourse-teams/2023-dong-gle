@@ -10,7 +10,14 @@ import Layout from 'pages/Layout/Layout';
 type Props = {};
 
 const App = ({}: Props) => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        useErrorBoundary: true,
+        suspense: true,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

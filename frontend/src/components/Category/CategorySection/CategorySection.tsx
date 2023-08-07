@@ -12,8 +12,7 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const writings = useCategoryWritings(selectedCategoryId);
+  const { writings, selectedCategoryId, setSelectedCategoryId } = useCategoryWritings();
   const { categoryDetails, getCategories } = useCategoryDetails(selectedCategoryId, writings);
   const {
     value,

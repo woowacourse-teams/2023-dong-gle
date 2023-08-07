@@ -4,24 +4,17 @@ import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { GetWritingResponse } from 'types/apis/writings';
 import Spinner from 'components/@common/Spinner/Spinner';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = { writingId: number };
 
 const WritingViewer = ({ writingId }: Props) => {
   const myRef = useRef<HTMLHeadingElement>(null);
-  const { data, isLoading, getData } = useGetQuery<GetWritingResponse>({
-    fetcher: () => getWriting(writingId),
-    // onSuccess: () => hljs.highlightAll(),
-  });
+  const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
 
   useEffect(() => {
-    const refetch = async () => {
-      await getData();
-    };
-    refetch();
     myRef.current?.focus();
   }, [writingId]);
 

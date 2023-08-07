@@ -1,6 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { getCategoryIdWritingList } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -9,16 +9,10 @@ import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
 const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
-  const { data, getData } = useGetQuery<GetCategoryIdWritingListResponse>({
-    fetcher: () => getCategoryIdWritingList(categoryId),
-  });
-
-  useEffect(() => {
-    const refetch = async () => {
-      await getData();
-    };
-    refetch();
-  }, [categoryId]);
+  const { data } = useQuery<GetCategoryIdWritingListResponse>(
+    ['category', categoryId, 'writingList'],
+    () => getCategoryIdWritingList(categoryId),
+  );
 
   return (
     <S.Article>

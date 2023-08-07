@@ -10,16 +10,16 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Layout from 'pages/Layout/Layout';
 type Props = {};
 
-const App = ({}: Props) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        useErrorBoundary: true,
-        suspense: true,
-      },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      useErrorBoundary: true,
+      suspense: true,
     },
-  });
+  },
+});
 
+const App = ({}: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>

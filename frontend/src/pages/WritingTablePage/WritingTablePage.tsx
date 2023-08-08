@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getCategoryIdWritingList } from 'apis/writings';
+import { getDetailWritings } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -7,9 +7,7 @@ import { sidebarStyle } from 'styles/layoutStyle';
 
 const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
-  const { data } = useQuery(['category', categoryId, 'writingList'], () =>
-    getCategoryIdWritingList(categoryId),
-  );
+  const { data } = useQuery(['detailWritings', categoryId], () => getDetailWritings(categoryId));
 
   return (
     <S.Article>

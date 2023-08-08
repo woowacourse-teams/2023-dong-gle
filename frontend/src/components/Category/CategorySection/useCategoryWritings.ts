@@ -1,7 +1,6 @@
 import { GetCategoryDetailResponse } from 'types/apis/category';
-import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCategoryWritings = () => {

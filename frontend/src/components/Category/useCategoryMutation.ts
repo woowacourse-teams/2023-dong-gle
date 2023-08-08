@@ -1,4 +1,4 @@
-import useMutation from 'hooks/@common/useMutation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   addCategory as addCategoryRequest,
   patchCategory as patchCategoryRequest,
@@ -6,16 +6,24 @@ import {
 } from 'apis/category';
 
 export const useCategoryMutation = () => {
-  const { mutateQuery: addCategory } = useMutation({
-    fetcher: addCategoryRequest,
+  const queryClient = useQueryClient();
+
+  const { mutate: addCategory } = useMutation(addCategoryRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categories']);
+    },
   });
 
-  const { mutateQuery: patchCategory } = useMutation({
-    fetcher: patchCategoryRequest,
+  const { mutate: patchCategory } = useMutation(patchCategoryRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categories']);
+    },
   });
 
-  const { mutateQuery: deleteCategory } = useMutation({
-    fetcher: deleteCategoryRequest,
+  const { mutate: deleteCategory } = useMutation(deleteCategoryRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categories']);
+    },
   });
 
   return { addCategory, patchCategory, deleteCategory };

@@ -2,7 +2,7 @@ import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
 import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
@@ -13,7 +13,7 @@ import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
   const { writings, selectedCategoryId, setSelectedCategoryId } = useCategoryWritings();
-  const { categoryDetails, getCategories } = useCategoryDetails(selectedCategoryId, writings);
+  const { categoryDetails } = useCategoryDetails(selectedCategoryId, writings);
   const {
     value,
     inputRef,
@@ -36,8 +36,7 @@ const CategorySection = () => {
     }
 
     resetInput();
-    await addCategory({ categoryName: value.trim() });
-    await getCategories();
+    addCategory({ categoryName: value.trim() });
   };
 
   if (!categoryDetails) return null;
@@ -78,7 +77,6 @@ const CategorySection = () => {
                   categoryId={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
                   isDefaultCategory={index === 0}
-                  getCategories={getCategories}
                 />
               </Accordion.Title>
               <Accordion.Panel>

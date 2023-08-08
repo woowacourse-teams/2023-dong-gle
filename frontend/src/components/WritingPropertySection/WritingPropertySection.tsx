@@ -3,7 +3,6 @@ import { getWritingProperties } from 'apis/writings';
 import { CalendarIcon, MediumLogoIcon, TagIcon, TistoryLogoIcon } from 'assets/icons';
 import Tag from 'components/@common/Tag/Tag';
 import { styled } from 'styled-components';
-import { GetWritingPropertiesResponse } from 'types/apis/writings';
 import { dateFormatter } from 'utils/date';
 import type { Blog } from 'types/domain';
 import { useQuery } from '@tanstack/react-query';

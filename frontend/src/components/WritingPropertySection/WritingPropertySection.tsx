@@ -2,11 +2,11 @@ import { Fragment, ReactElement, useEffect } from 'react';
 import { getWritingProperties } from 'apis/writings';
 import { CalendarIcon, MediumLogoIcon, TagIcon, TistoryLogoIcon } from 'assets/icons';
 import Tag from 'components/@common/Tag/Tag';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { styled } from 'styled-components';
 import { GetWritingPropertiesResponse } from 'types/apis/writings';
 import { dateFormatter } from 'utils/date';
 import type { Blog } from 'types/domain';
+import { useQuery } from '@tanstack/react-query';
 
 const blogIcon: Record<Blog, ReactElement> = {
   MEDIUM: <MediumLogoIcon width='1.2rem' height='1.2rem' />,
@@ -18,16 +18,9 @@ type Props = {
 };
 
 const WritingPropertySection = ({ writingId }: Props) => {
-  const { data: writingInfo, getData } = useGetQuery<GetWritingPropertiesResponse>({
-    fetcher: () => getWritingProperties(writingId),
-  });
-
-  useEffect(() => {
-    const refetch = async () => {
-      await getData();
-    };
-    refetch();
-  }, [writingId]);
+  const { data: writingInfo } = useQuery(['writingProperties', writingId], () =>
+    getWritingProperties(writingId),
+  );
 
   if (!writingInfo) return null;
 

@@ -4,6 +4,7 @@ import type {
   AddNotionWritingRequest,
   AddWritingRequest,
   GetCategoryIdWritingListResponse,
+  GetWritingPropertiesResponse,
   GetWritingResponse,
   PublishWritingArgs,
 } from 'types/apis/writings';
@@ -31,7 +32,7 @@ export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
   http.get(`${writingURL}/${writingId}`);
 
 // 글 정보: GET
-export const getWritingProperties = (writingId: number) =>
+export const getWritingProperties = (writingId: number): Promise<GetWritingPropertiesResponse> =>
   http.get(`${writingURL}/${writingId}/properties`);
 
 // 글 발행하기: POST

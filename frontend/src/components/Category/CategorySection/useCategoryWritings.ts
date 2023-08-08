@@ -7,10 +7,14 @@ export const useCategoryWritings = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   const { data } = useQuery<GetCategoryDetailResponse>(
-    ['categories', selectedCategoryId, 'writings'],
+    ['writingsInCategory', selectedCategoryId],
     () => getWritingsInCategory(selectedCategoryId!),
     { enabled: Boolean(selectedCategoryId) }, // 첫번째 요청만 disabled
   );
 
-  return { writings: data ? data.writings : null, selectedCategoryId, setSelectedCategoryId };
+  return {
+    selectedCategoryWritings: data ? data.writings : null,
+    selectedCategoryId,
+    setSelectedCategoryId,
+  };
 };

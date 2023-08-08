@@ -1,6 +1,5 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
-import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
 import { PlusCircleIcon } from 'assets/icons';
 import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
@@ -12,8 +11,7 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
-  const { writings, selectedCategoryId, setSelectedCategoryId } = useCategoryWritings();
-  const { categoryDetails } = useCategoryDetails(selectedCategoryId, writings);
+  const { categoryDetails, setSelectedCategoryId } = useCategoryDetails();
   const {
     value,
     inputRef,

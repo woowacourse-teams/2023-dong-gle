@@ -17,6 +17,7 @@ export const useCategoryMutation = () => {
   const { mutate: patchCategory } = useMutation(patchCategoryRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
+      queryClient.invalidateQueries(['detailWritings']);
     },
   });
 

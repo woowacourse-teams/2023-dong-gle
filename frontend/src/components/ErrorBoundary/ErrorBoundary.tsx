@@ -29,9 +29,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.error) {
       const error = this.state.error;
       if (error instanceof HttpError) {
-        if (error.statusCode === HttpStatus.UNAUTHORIZED) {
-          alert('로그인 해주세요');
-        }
+        alert(error.message);
       }
     }
 

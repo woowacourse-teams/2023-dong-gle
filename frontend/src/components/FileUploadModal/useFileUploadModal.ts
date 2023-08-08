@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { addNotionWriting, addWriting } from 'apis/writings';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { ChangeEventHandler, useState } from 'react';
-import { AddWritingRequest } from 'types/apis/writings';
 
 type Args = {
   categoryId: number | null;

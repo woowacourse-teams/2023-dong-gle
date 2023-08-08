@@ -1,17 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { getCategoryIdWritingList } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
-import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
 
 const WritingTablePage = () => {
   const categoryId = Number(useParams()['categoryId']);
-  const { data } = useQuery<GetCategoryIdWritingListResponse>(
-    ['category', categoryId, 'writingList'],
-    () => getCategoryIdWritingList(categoryId),
+  const { data } = useQuery(['category', categoryId, 'writingList'], () =>
+    getCategoryIdWritingList(categoryId),
   );
 
   return (

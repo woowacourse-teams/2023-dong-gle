@@ -3,7 +3,7 @@ import { http } from './fetch';
 import type {
   AddNotionWritingRequest,
   AddWritingRequest,
-  GetCategoryIdWritingListResponse,
+  GetDetailWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
   PublishWritingArgs,
@@ -40,6 +40,5 @@ export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
   http.post(`${writingURL}/${writingId}/publish`, { json: body });
 
 // 카테고리 글 상세 목록 조회 : GET
-export const getCategoryIdWritingList = (
-  categoryId: number,
-): Promise<GetCategoryIdWritingListResponse> => http.get(`${writingURL}?categoryId=${categoryId}`);
+export const getDetailWritings = (categoryId: number): Promise<GetDetailWritingsResponse> =>
+  http.get(`${writingURL}?categoryId=${categoryId}`);

@@ -2,7 +2,7 @@ import { rest } from 'msw';
 import { writingURL } from 'constants/apis/url';
 import { writingContentMock } from 'mocks/writingContentMock';
 import {
-  GetCategoryIdWritingListResponse,
+  GetDetailWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
 } from 'types/apis/writings';
@@ -81,7 +81,7 @@ export const writingHandlers = [
     const categoryId = Number(req.url.searchParams.get('categoryId'));
 
     return res(
-      ctx.json<GetCategoryIdWritingListResponse>(getWritingTableMock(categoryId)),
+      ctx.json<GetDetailWritingsResponse>(getWritingTableMock(categoryId)),
       // ctx.delay(1000),
       ctx.status(200),
     );

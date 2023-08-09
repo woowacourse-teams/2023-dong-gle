@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService {
+public class AuthService {
     private final MemberRepository memberRepository;
 
     public void loginByKakao(final KakaoProfileResponse kakaoProfileResponse) {

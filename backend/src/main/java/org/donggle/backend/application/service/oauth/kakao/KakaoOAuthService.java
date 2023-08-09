@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service.oauth.kakao;
 
+import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
@@ -23,11 +24,13 @@ public class KakaoOAuthService {
     private final String clientId;
     private final String clientSecret;
     private final WebClient webClient;
+    private final AuthService authService;
 
     public KakaoOAuthService(@Value("${kakao_client_id}") final String clientId,
-                             @Value("${kakao_client_secret}") final String clientSecret) {
+                             @Value("${kakao_client_secret}") final String clientSecret, final AuthService authService) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.authService = authService;
         webClient = WebClient.create();
     }
 
@@ -35,7 +38,13 @@ public class KakaoOAuthService {
         return AUTHORIZE_URL + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&response_type=" + RESPONSE_TYPE;
     }
 
-    public String requestAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
+    public void login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
+        final String accessToken = requestAccessToken(oAuthAccessTokenRequest);
+        final KakaoProfileResponse kakaoProfileResponse = requestKakaoProfile(accessToken);
+        authService.loginByKakao(kakaoProfileResponse);
+    }
+
+    private String requestAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final BodyInserters.FormInserter<String> bodyForm = BodyInserters.fromFormData("grant_type", GRANT_TYPE)
                 .with("client_id", clientId)
                 .with("redirect_uri", oAuthAccessTokenRequest.redirectUri())
@@ -53,7 +62,7 @@ public class KakaoOAuthService {
         return Objects.requireNonNull(kakaoTokenResponse).access_token();
     }
 
-    public KakaoProfileResponse requestKakaoProfile(final String accessToken) {
+    private KakaoProfileResponse requestKakaoProfile(final String accessToken) {
         return webClient.get()
                 .uri(PROFILE_URL)
                 .header("Authorization", "Bearer " + accessToken)

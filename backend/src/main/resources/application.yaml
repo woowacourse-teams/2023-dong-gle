@@ -15,5 +15,5 @@ spring:
   h2:
     console:
       enabled: true
-kakao_client_secret: kakao_client_secret
-kakao_client_id: kakao_client_secret
+kakao_client_secret: ${KAKAO_CLIENT_SECRET}
+kakao_client_id: ${KAKAO_CLIENT_ID}

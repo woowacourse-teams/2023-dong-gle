@@ -3,6 +3,7 @@ package org.donggle.backend.ui;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.oauth.kakao.KakaoOAuthService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.auth.TokenResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class KakaoOAuthController {
     }
 
     @PostMapping("/oauth/login/kakao")
-    public ResponseEntity<Void> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        kakaoOAuthService.login(oAuthAccessTokenRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
+        final TokenResponse response = kakaoOAuthService.login(oAuthAccessTokenRequest);
+        return ResponseEntity.ok(response);
     }
 }

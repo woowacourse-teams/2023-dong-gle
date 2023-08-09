@@ -4,6 +4,7 @@ import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.auth.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,10 @@ public class KakaoOAuthService {
         return AUTHORIZE_URL + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&response_type=" + RESPONSE_TYPE;
     }
 
-    public void login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
+    public TokenResponse login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final String accessToken = requestAccessToken(oAuthAccessTokenRequest);
         final KakaoProfileResponse kakaoProfileResponse = requestKakaoProfile(accessToken);
-        authService.loginByKakao(kakaoProfileResponse);
+        return authService.loginByKakao(kakaoProfileResponse);
     }
 
     private String requestAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {

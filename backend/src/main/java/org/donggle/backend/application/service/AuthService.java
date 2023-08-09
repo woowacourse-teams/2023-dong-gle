@@ -26,6 +26,10 @@ public class AuthService {
                         new MemberName(kakaoProfileResponse.getNickname()),
                         kakaoProfileResponse.id())
                 ));
-        return null;
+        final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
+        final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
+        jwtTokenService.synchronizeRefreshToken(loginMember, refreshToken);
+
+        return new TokenResponse(accessToken, refreshToken);
     }
 }

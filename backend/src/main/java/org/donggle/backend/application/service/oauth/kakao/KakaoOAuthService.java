@@ -14,9 +14,9 @@ import java.util.Objects;
 
 @Service
 public class KakaoOAuthService {
-    public static final String GRANT_TYPE = "authorization_code";
+    private static final String GRANT_TYPE = "authorization_code";
     private static final String RESPONSE_TYPE = "code";
-    public static final String PROFILE_URL = "https://kapi.kakao.com/v2/user/me";
+    private static final String PROFILE_URL = "https://kapi.kakao.com/v2/user/me";
     private static final String AUTHORIZE_URL = "https://kauth.kakao.com/oauth/authorize";
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
@@ -24,7 +24,8 @@ public class KakaoOAuthService {
     private final String clientSecret;
     private final WebClient webClient;
 
-    public KakaoOAuthService(@Value("${kakao_client_id}") final String clientId, @Value("${kakao_client_secret}") final String clientSecret) {
+    public KakaoOAuthService(@Value("${kakao_client_id}") final String clientId,
+                             @Value("${kakao_client_secret}") final String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         webClient = WebClient.create();

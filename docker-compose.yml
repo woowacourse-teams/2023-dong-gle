@@ -16,6 +16,8 @@ services:
       - DB_URL
       - DB_USERNAME
       - DB_PASSWORD
+      - KAKAO_CLIENT_ID
+      - KAKAO_CLIENT_SECRET
 
   nginx:
     container_name: nginx

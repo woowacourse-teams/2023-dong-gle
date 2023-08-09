@@ -4,6 +4,23 @@ type Option = {
   json?: unknown;
 } & RequestInit;
 
+const parseOption = (option: Option): RequestInit => {
+  let parsedOption: RequestInit = { ...option };
+
+  if (option.json) {
+    parsedOption = {
+      ...parsedOption,
+      body: JSON.stringify(option.json),
+      headers: {
+        ...parsedOption.headers,
+        'Content-Type': 'application/json',
+      },
+    };
+  }
+
+  return parsedOption;
+};
+
 const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
   try {
     const response = await fetch(endpoint, parseOption(option));
@@ -25,23 +42,6 @@ const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
     }
     alert(error); // httpError가 아니면 여기서 바로 alert
   }
-};
-
-const parseOption = (option: Option): RequestInit => {
-  let parsedOption: RequestInit = { ...option };
-
-  if (option.json) {
-    parsedOption = {
-      ...parsedOption,
-      body: JSON.stringify(option.json),
-      headers: {
-        ...parsedOption.headers,
-        'Content-Type': 'application/json',
-      },
-    };
-  }
-
-  return parsedOption;
 };
 
 export const http = {

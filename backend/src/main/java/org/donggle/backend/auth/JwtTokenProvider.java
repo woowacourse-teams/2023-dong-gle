@@ -54,7 +54,7 @@ public class JwtTokenProvider {
                 getClaims(token).getBody().getSubject());
     }
 
-    public boolean validateTokenNotUsable(final String token) {
+    public boolean inValidTokenUsage(final String token) {
         try {
             final Jws<Claims> claims = getClaims(token);
             return claims.getBody().getExpiration().before(new Date());

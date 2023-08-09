@@ -32,4 +32,9 @@ public class AuthService {
 
         return new TokenResponse(accessToken, refreshToken);
     }
+
+    public boolean inValidateTokenOwner(final Long memberId, final String token) {
+        final Member member = memberRepository.findById(memberId).orElseThrow();
+        return true;
+    }
 }

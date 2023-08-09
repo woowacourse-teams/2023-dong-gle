@@ -28,13 +28,15 @@ const CategorySection = () => {
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) {
+    const categoryName = value.trim();
+
+    if (!isValidCategoryName(categoryName)) {
       setIsError(true);
       return;
     }
 
     resetInput();
-    addCategory({ categoryName: value.trim() });
+    addCategory({ categoryName: categoryName });
   };
 
   if (!categoryDetails) return null;

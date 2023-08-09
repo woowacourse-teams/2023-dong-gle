@@ -30,6 +30,7 @@ public class Member extends BaseEntity {
     @NotNull
     @Embedded
     private Password password;
+    private Long kakaoId;
 
     public Member(final MemberName memberName, final Email email, final Password password) {
         this.memberName = memberName;

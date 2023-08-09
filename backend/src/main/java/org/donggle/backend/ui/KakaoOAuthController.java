@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequiredArgsConstructor
 public class KakaoOAuthController {
@@ -24,10 +22,11 @@ public class KakaoOAuthController {
 
     @GetMapping("/oauth/login/kakao")
     public ResponseEntity<Void> oauthRedirectKakao(@RequestParam final String redirect_uri) {
-        final HttpHeaders headers = new HttpHeaders();
         final String redirectUri = kakaoOAuthService.createRedirectUri(redirect_uri);
-        headers.setLocation(URI.create(redirectUri));
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return ResponseEntity
+                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .header(HttpHeaders.LOCATION, redirectUri)
+                .build();
     }
 
     @PostMapping("/oauth/login/kakao")

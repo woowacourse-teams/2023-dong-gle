@@ -5,41 +5,33 @@ type Option = {
 } & RequestInit;
 
 const parseOption = (option: Option): RequestInit => {
-  let parsedOption: RequestInit = { ...option };
-
-  if (option.json) {
-    parsedOption = {
-      ...parsedOption,
-      body: JSON.stringify(option.json),
-      headers: {
-        ...parsedOption.headers,
-        'Content-Type': 'application/json',
-      },
-    };
-  }
-
-  return parsedOption;
+  return option.json
+    ? {
+        ...option,
+        body: JSON.stringify(option.json),
+        headers: {
+          ...option.headers,
+          'Content-Type': 'application/json',
+        },
+      }
+    : { ...option };
 };
 
 const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
   try {
     const response = await fetch(endpoint, parseOption(option));
 
-    if (!response.ok) {
-      handleHttpError(response);
-    }
+    if (!response.ok) handleHttpError(response);
 
     const contentType = response.headers.get('content-type');
 
     if (!contentType && response.ok) return response;
 
-    const jsonData = await response.json();
-    return jsonData;
+    return response.json();
   } catch (error) {
     // httpError 면 던져서 fetch API 사용하는 쪽에서 핸들링
-    if (error instanceof HttpError) {
-      throw error;
-    }
+    if (error instanceof HttpError) throw error;
+
     alert(error); // httpError가 아니면 여기서 바로 alert
   }
 };

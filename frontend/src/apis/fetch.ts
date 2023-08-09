@@ -1,4 +1,4 @@
-import { HttpError, handleHttpError } from 'types/apis/http';
+import { HttpError, handleHttpError } from 'utils/apis/HttpError';
 
 type Option = {
   json?: unknown;

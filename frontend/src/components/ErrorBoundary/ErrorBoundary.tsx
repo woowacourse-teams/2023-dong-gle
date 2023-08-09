@@ -1,6 +1,6 @@
 import { HttpStatus } from 'constants/apis/http';
 import React, { ErrorInfo, ReactNode } from 'react';
-import { HttpError } from 'types/apis/http';
+import { HttpError } from 'utils/apis/HttpError';
 
 type Props = {
   children: ReactNode;

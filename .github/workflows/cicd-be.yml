@@ -40,6 +40,9 @@ jobs:
       run: |
         cd ./backend
         ./gradlew test
+      env:
+        KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+        KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
     
     - name: Build with Gradle
       run: |

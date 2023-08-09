@@ -1,5 +1,5 @@
 import { HttpStatus } from 'constants/apis/http';
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { HttpError } from 'utils/apis/HttpError';
 
 type Props = {
@@ -12,7 +12,7 @@ type State = {
   error: Error | null;
 };
 
-export class ErrorBoundary extends React.Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   // getDerivedStateFrom~ → render → componentDid~ 순서로 동작
   constructor(props: Props) {
     super(props);

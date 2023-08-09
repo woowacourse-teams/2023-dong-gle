@@ -5,4 +5,7 @@ public record KakaoProfileResponse(
         String connected_at,
         KakaoAccountResponse kakao_account
 ) {
+    public String getNickname() {
+        return this.kakao_account.profile().nickname();
+    }
 }

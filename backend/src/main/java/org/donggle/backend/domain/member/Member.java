@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.domain.common.BaseEntity;
 
 import java.util.Objects;
@@ -34,6 +35,10 @@ public class Member extends BaseEntity {
         this.memberName = memberName;
         this.email = email;
         this.password = password;
+    }
+
+    public static Member createByKakao(final KakaoProfileResponse kakaoProfileResponse) {
+        return new Member(new MemberName(kakaoProfileResponse.getNickname()), null, null);
     }
 
     @Override

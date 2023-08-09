@@ -25,7 +25,7 @@ const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
 
     const contentType = response.headers.get('content-type');
 
-    if (!contentType && response.ok) return response;
+    if (!contentType || !contentType.includes('application/json')) return response;
 
     return response.json();
   } catch (error) {

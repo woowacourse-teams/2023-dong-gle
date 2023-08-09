@@ -25,7 +25,22 @@ export const useCategoryDetails = () => {
       }));
     };
 
-    setCategoryDetails(initCategoryDetails());
+    const updatedCategoryDetails = (prevDetails: GetCategoryDetailResponse[]) => {
+      // 카테고리가 변경됐을 때 동기화
+      return categories.categories.map((category) => {
+        const prevDetail = prevDetails.find((detail) => detail.id === category.id);
+
+        return {
+          id: category.id,
+          categoryName: category.categoryName,
+          writings: prevDetail?.writings ?? null,
+        };
+      });
+    };
+
+    setCategoryDetails((prevDetails) => {
+      return prevDetails ? updatedCategoryDetails(prevDetails) : initCategoryDetails();
+    });
   }, [categories]);
 
   useEffect(() => {

@@ -13,9 +13,7 @@ import { isValidCategoryName } from '../isValidCategoryName';
 const CategorySection = () => {
   const { categoryDetails, setSelectedCategoryId } = useCategoryDetails();
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeAddCategory,
     isInputOpen,
     openInput,
@@ -28,7 +26,7 @@ const CategorySection = () => {
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    const categoryName = value.trim();
+    const categoryName = e.currentTarget.value.trim();
 
     if (!isValidCategoryName(categoryName)) {
       setIsError(true);
@@ -51,11 +49,9 @@ const CategorySection = () => {
             variant='underlined'
             size='small'
             placeholder='Add category ...'
-            value={value}
             ref={inputRef}
             isError={isError}
             onBlur={resetInput}
-            onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}
           />

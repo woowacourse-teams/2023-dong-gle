@@ -15,9 +15,7 @@ type Props = {
 
 const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeRename,
     isInputOpen,
     openInput,
@@ -31,18 +29,21 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) {
+    const categoryName = e.currentTarget.value.trim();
+
+    if (!isValidCategoryName(categoryName)) {
       setIsError(true);
       return;
     }
 
-    resetInput();
     patchCategory({
       categoryId,
       body: {
-        categoryName: value.trim(),
+        categoryName,
       },
     });
+
+    resetInput();
   };
 
   return (
@@ -53,11 +54,9 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           variant='underlined'
           size='small'
           placeholder='Change category name ...'
-          value={value}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}
-          onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
         />

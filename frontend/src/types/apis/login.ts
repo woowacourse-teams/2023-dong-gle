@@ -1,6 +1,9 @@
 export type OauthPlatform = 'kakao';
 
 export type PostOauthLogin = {
-  code: string;
-  redirect_uri: string;
+  platform: OauthPlatform;
+  body: {
+    code: string;
+    redirect_uri: string;
+  };
 };

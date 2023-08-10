@@ -1,4 +1,6 @@
-export type OauthPlatform = 'kakao';
+import { Platforms } from 'constants/apis/oauth';
+
+export type OauthPlatform = (typeof Platforms)[keyof typeof Platforms];
 
 export type PostOauthLogin = {
   platform: OauthPlatform;

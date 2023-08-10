@@ -29,4 +29,16 @@ describe('동글 첫 페이지', () => {
 
     cy.findByText('글 가져오기').should('exist');
   });
+
+  it('드래그 앤 드롭으로 마크다운 파일을 업로드할 수 있다.', () => {
+    cy.findByText('Add Post').click();
+    cy.findByLabelText('파일 업로드 존').attachFile('markdown-test.md', {
+      subjectType: 'drag-n-drop',
+    });
+
+    cy.findByText('markdown-test').should('exist');
+    cy.findByText('e2e 테스트를 위한 마크다운 파일입니다.').should('exist');
+    cy.findByText('글 정보').should('exist');
+    cy.findByLabelText('오른쪽 사이드바 토글').should('exist');
+  });
 });

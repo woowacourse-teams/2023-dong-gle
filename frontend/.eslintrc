@@ -25,6 +25,7 @@
     "plugin:import/typescript",
     "plugin:storybook/recommended",
     "plugin:@typescript-eslint/parser",
+    "plugin:cypress/recommended",
     "prettier"
   ],
   "rules": {

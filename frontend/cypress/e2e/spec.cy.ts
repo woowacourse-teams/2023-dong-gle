@@ -18,6 +18,12 @@ describe('동글 첫 페이지', () => {
     cy.findByText('동글동글이').should('exist');
   });
 
+  it('카테고리 삭제 버튼을 클릭하여 카테고리를 삭제할 수 있다.', () => {
+    cy.findByText('동글동글이').realHover();
+    cy.findByLabelText('동글동글이 카테고리 삭제').click();
+    cy.findByText('동글동글이').should('not.exist');
+  });
+
   it('Add Post 버튼을 누르면 글 가져오기 모달 창이 열린다.', () => {
     cy.findByText('Add Post').click();
 

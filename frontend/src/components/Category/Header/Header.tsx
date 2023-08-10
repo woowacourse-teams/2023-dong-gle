@@ -2,7 +2,7 @@ import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
-import { isValidCategoryName } from './isValidCategoryName';
+import { isValidCategoryName } from '../isValidCategoryName';
 import Input from 'components/@common/Input/Input';
 import { PlusCircleIcon } from 'assets/icons';
 

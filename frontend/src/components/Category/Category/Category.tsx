@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
-import { isValidCategoryName } from '../Header/isValidCategoryName';
+import { isValidCategoryName } from '../isValidCategoryName';
 
 type Props = {
   categoryId: number;

@@ -40,8 +40,6 @@ const CategorySection = () => {
     addCategory({ categoryName: categoryName });
   };
 
-  if (!categories) return null;
-
   return (
     <S.Section>
       <S.Header>
@@ -66,27 +64,29 @@ const CategorySection = () => {
           </S.Button>
         )}
       </S.Header>
-      <Accordion>
-        {categories.map((category, index) => {
-          return (
-            <Accordion.Item key={category.id}>
-              <Accordion.Title
-                onIconClick={() => setSelectedCategoryId(category.id)}
-                aria-label={`${category.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
-              >
-                <Category
-                  categoryId={category.id}
-                  categoryName={category.categoryName}
-                  isDefaultCategory={Boolean(index === 0)}
-                />
-              </Accordion.Title>
-              <Accordion.Panel>
-                <WritingList categoryId={category.id} selectedCategoryId={selectedCategoryId} />
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
-      </Accordion>
+      {categories ? (
+        <Accordion>
+          {categories.map((category, index) => {
+            return (
+              <Accordion.Item key={category.id}>
+                <Accordion.Title
+                  onIconClick={() => setSelectedCategoryId(category.id)}
+                  aria-label={`${category.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
+                >
+                  <Category
+                    categoryId={category.id}
+                    categoryName={category.categoryName}
+                    isDefaultCategory={Boolean(index === 0)}
+                  />
+                </Accordion.Title>
+                <Accordion.Panel>
+                  <WritingList categoryId={category.id} selectedCategoryId={selectedCategoryId} />
+                </Accordion.Panel>
+              </Accordion.Item>
+            );
+          })}
+        </Accordion>
+      ) : null}
     </S.Section>
   );
 };

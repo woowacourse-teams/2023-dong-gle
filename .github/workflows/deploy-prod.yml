@@ -23,6 +23,8 @@ jobs:
         echo "PROFILE"=${{ secrets.PROD_PROFILE }} >> .env
         echo "KAKAO_CLIENT_ID"=${{ secrets.KAKAO_CLIENT_ID }} >> .env
         echo "KAKAO_CLIENT_SECRET"=${{ secrets.KAKAO_CLIENT_SECRET }} >> .env
+        echo "TISTORY_CLIENT_ID"=${{ secrets.TISTORY_CLIENT_ID }} >> .env
+        echo "TISTORY_CLIENT_SECRET"=${{ secrets.TISTORY_CLIENT_SECRET }} >> .env
     ## deploy to production
     - name: Deploy to prod
       run: |

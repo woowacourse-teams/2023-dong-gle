@@ -36,6 +36,7 @@
     "@storybook/react-webpack5": "^7.0.26",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@svgr/webpack": "^8.0.1",
+    "@testing-library/cypress": "^9.0.0",
     "@testing-library/react": "^14.0.0",
     "@types/dompurify": "^3.0.2",
     "@types/jest": "^29.5.3",

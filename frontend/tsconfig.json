@@ -14,7 +14,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["cypress", "@testing-library/cypress"]
   },
   "include": ["src", "__tests__"],
   "exclude": ["node_modules"]

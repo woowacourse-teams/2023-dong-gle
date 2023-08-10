@@ -1,22 +1,20 @@
 import { GetCategoryDetailResponse } from 'types/apis/category';
-import { useGetQuery } from '../../../hooks/@common/useGetQuery';
 import { getWritingsInCategory } from 'apis/category';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-export const useCategoryWritings = (selectedCategoryId: number) => {
-  const { data, getData } = useGetQuery<GetCategoryDetailResponse>({
-    fetcher: () => getWritingsInCategory(selectedCategoryId),
-    enabled: Boolean(selectedCategoryId),
-  });
+export const useCategoryWritings = () => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const refetch = async () => {
-      if (!selectedCategoryId) return;
+  const { data } = useQuery<GetCategoryDetailResponse>(
+    ['writingsInCategory', selectedCategoryId],
+    () => getWritingsInCategory(selectedCategoryId!),
+    { enabled: Boolean(selectedCategoryId) }, // 첫번째 요청만 disabled
+  );
 
-      await getData();
-    };
-    refetch();
-  }, [selectedCategoryId]);
-
-  return data ? data.writings : null;
+  return {
+    selectedCategoryWritings: data ? data.writings : null,
+    selectedCategoryId,
+    setSelectedCategoryId,
+  };
 };

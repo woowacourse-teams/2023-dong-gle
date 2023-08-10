@@ -1,7 +1,6 @@
-import { publishWriting } from 'apis/writings';
+import { useMutation } from '@tanstack/react-query';
+import { publishWriting as PublishWritingRequest } from 'apis/writings';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
-import useMutation from 'hooks/@common/useMutation';
-import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useState } from 'react';
 import { PublishWritingArgs } from 'types/apis/writings';
 import { Blog, PublishingPropertyData } from 'types/domain';
@@ -17,8 +16,7 @@ type PublishWritingToBlogArgs = {
 
 export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishingPropertyData>({ tags: [] });
-  const { mutateQuery, isLoading } = useMutation<PublishWritingArgs, null>({
-    fetcher: publishWriting,
+  const { mutate: publishWriting, isLoading } = useMutation(PublishWritingRequest, {
     onSuccess: () => {
       selectCurrentTab(TabKeys.WritingProperty);
       alert('글 발행에 성공했습니다.');
@@ -26,13 +24,13 @@ export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
     onError: () => alert('글 발행에 실패했습니다.'),
   });
 
-  const publishWritingToBlog = async ({ writingId, publishTo }: PublishWritingToBlogArgs) => {
+  const publishWritingToBlog = ({ writingId, publishTo }: PublishWritingToBlogArgs) => {
     const body = {
       publishTo,
       tags: propertyFormInfo.tags,
     };
 
-    await mutateQuery({ writingId, body });
+    publishWriting({ writingId, body });
   };
 
   const setTags = (tags: string[]) => {

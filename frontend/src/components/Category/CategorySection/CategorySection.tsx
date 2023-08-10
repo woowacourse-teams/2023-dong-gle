@@ -1,8 +1,7 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
-import { useCategoryWritings } from 'components/Category/CategorySection/useCategoryWritings';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
@@ -12,9 +11,7 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 
 const CategorySection = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const writings = useCategoryWritings(selectedCategoryId);
-  const { categoryDetails, getCategories } = useCategoryDetails(selectedCategoryId, writings);
+  const { categoryDetails, setSelectedCategoryId } = useCategoryDetails();
   const {
     value,
     inputRef,
@@ -31,14 +28,15 @@ const CategorySection = () => {
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) {
+    const categoryName = value.trim();
+
+    if (!isValidCategoryName(categoryName)) {
       setIsError(true);
       return;
     }
 
     resetInput();
-    await addCategory({ categoryName: value.trim() });
-    await getCategories();
+    addCategory({ categoryName: categoryName });
   };
 
   if (!categoryDetails) return null;
@@ -76,10 +74,9 @@ const CategorySection = () => {
                 aria-label={`${categoryDetail.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
               >
                 <Category
-                  id={categoryDetail.id}
+                  categoryId={categoryDetail.id}
                   categoryName={categoryDetail.categoryName}
                   isDefaultCategory={index === 0}
-                  getCategories={getCategories}
                 />
               </Accordion.Title>
               <Accordion.Panel>

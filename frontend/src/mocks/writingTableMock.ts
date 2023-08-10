@@ -1,6 +1,6 @@
-import { GetCategoryIdWritingListResponse } from 'types/apis/writings';
+import { GetDetailWritingsResponse } from 'types/apis/writings';
 
-export const getWritingTableMock = (categoryId: number): GetCategoryIdWritingListResponse => ({
+export const getWritingTableMock = (categoryId: number): GetDetailWritingsResponse => ({
   id: categoryId,
   categoryName: '우아한테크코스',
   writings: [

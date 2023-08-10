@@ -1,61 +1,62 @@
+import { useQuery } from '@tanstack/react-query';
 import { getCategories } from 'apis/category';
-import { useGetQuery } from 'hooks/@common/useGetQuery';
 import { useEffect, useState } from 'react';
-import { GetCategoriesResponse, GetCategoryDetailResponse } from 'types/apis/category';
+import { GetCategoryDetailResponse } from 'types/apis/category';
 import { CategoryWriting } from 'types/components/category';
+import { useCategoryWritings } from './useCategoryWritings';
 
-export const useCategoryDetails = (
-  selectedCategoryId: number | null,
-  writings: CategoryWriting[] | null,
-) => {
-  const { data, getData } = useGetQuery<GetCategoriesResponse>({
-    fetcher: getCategories,
-  });
+export const useCategoryDetails = () => {
+  const { selectedCategoryWritings, selectedCategoryId, setSelectedCategoryId } =
+    useCategoryWritings();
 
-  const [categoryDetails, setCategoryDetails] = useState<GetCategoryDetailResponse[] | null>(null);
+  const { data: categories } = useQuery(['categories'], getCategories);
+
+  const [categoryDetails, setCategoryDetails] = useState<GetCategoryDetailResponse[]>([]);
 
   useEffect(() => {
-    if (!data) return;
+    if (!categories) return;
 
     const initCategoryDetails = () => {
-      return data.categories.map((category) => ({
+      // 동글 첫 진입 시, 카테고리 목록 데이터 만드는 함수
+      return categories.categories.map((category) => ({
         id: category.id,
         categoryName: category.categoryName,
         writings: null,
       }));
     };
 
-    const updateAddedCategory = (prevDetails: GetCategoryDetailResponse[]) => {
-      return data.categories.map((category) => {
+    const updatedCategoryDetails = (prevDetails: GetCategoryDetailResponse[]) => {
+      // 카테고리가 변경됐을 때 동기화
+      return categories.categories.map((category) => {
         const prevDetail = prevDetails.find((detail) => detail.id === category.id);
-        const addedCategory = {
+
+        return {
           id: category.id,
           categoryName: category.categoryName,
-          writings: null,
+          writings: prevDetail?.writings ?? null,
         };
-
-        return prevDetail ? prevDetail : addedCategory;
       });
     };
 
     setCategoryDetails((prevDetails) => {
-      return prevDetails ? updateAddedCategory(prevDetails) : initCategoryDetails();
+      return prevDetails ? updatedCategoryDetails(prevDetails) : initCategoryDetails();
     });
-  }, [data]);
+  }, [categories]);
 
   useEffect(() => {
     const updateCategoryDetails = (selectedCategoryId: number, writings: CategoryWriting[]) => {
-      setCategoryDetails((prevDetails: GetCategoryDetailResponse[] | null) => {
-        return prevDetails
-          ? prevDetails.map((detail) =>
-              detail.id === selectedCategoryId ? { ...detail, writings } : { ...detail },
-            )
-          : null;
-      });
+      // 카테고리 토글 클릭 시 selectedCategoryWritings 업데이트
+      setCategoryDetails(
+        (prevDetails) =>
+          prevDetails?.map((detail) =>
+            detail.id === selectedCategoryId ? { ...detail, writings } : { ...detail },
+          ),
+      );
     };
 
-    if (selectedCategoryId && writings) updateCategoryDetails(selectedCategoryId, writings);
-  }, [writings]);
+    if (selectedCategoryId && selectedCategoryWritings)
+      updateCategoryDetails(selectedCategoryId, selectedCategoryWritings);
+  }, [selectedCategoryId, selectedCategoryWritings]);
 
-  return { categoryDetails, getCategories: getData };
+  return { categoryDetails, setSelectedCategoryId };
 };

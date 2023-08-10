@@ -21,7 +21,12 @@ const FileUploader = ({ accept = '*', width = '30rem', height = '10rem', onFileS
 
   return (
     <button ref={dragRef} onClick={openFinder}>
-      <S.Description $isDragging={isDragging} $width={width} $height={height}>
+      <S.Description
+        $isDragging={isDragging}
+        $width={width}
+        $height={height}
+        aria-label='파일 업로드 존'
+      >
         <ImportIcon />
         드래그하거나 클릭해서 업로드
       </S.Description>

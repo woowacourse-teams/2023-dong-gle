@@ -1,21 +1,13 @@
 import { GetCategoryDetailResponse } from 'types/apis/category';
 import { getWritingsInCategory } from 'apis/category';
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-export const useWritings = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-
+export const useWritings = (categoryId: number, isOpen: boolean) => {
   const { data } = useQuery<GetCategoryDetailResponse>(
-    ['writingsInCategory', selectedCategoryId],
-    () => getWritingsInCategory(selectedCategoryId!),
-    { enabled: Boolean(selectedCategoryId) }, // 첫번째 요청만 disabled
+    ['writingsInCategory', categoryId],
+    () => getWritingsInCategory(categoryId),
+    { enabled: Boolean(isOpen) }, // 첫번째 요청만 disabled
   );
 
-  const getWritings = (id: number) => setSelectedCategoryId(id);
-
-  return {
-    writings: data ? data.writings : null,
-    getWritings,
-  };
+  return { writings: data ? data.writings : null };
 };

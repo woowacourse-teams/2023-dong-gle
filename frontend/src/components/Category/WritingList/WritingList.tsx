@@ -3,23 +3,16 @@ import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useWritings } from '../CategorySection/useWritings';
-import { useEffect } from 'react';
 
 type Props = {
   categoryId: number;
-  selectedCategoryId: number | null;
+  isOpen: boolean;
 };
 
-const WritingList = ({ categoryId, selectedCategoryId }: Props) => {
+const WritingList = ({ categoryId, isOpen }: Props) => {
   const { goWritingPage } = usePageNavigate();
-  const { writings, getWritings } = useWritings();
+  const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
-
-  useEffect(() => {
-    if (categoryId !== selectedCategoryId) return;
-
-    getWritings(selectedCategoryId);
-  }, []);
 
   if (!writings || writings?.length === 0)
     return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;

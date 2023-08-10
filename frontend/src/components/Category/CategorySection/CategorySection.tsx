@@ -1,18 +1,16 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
-import Category from '../Category/Category';
-import WritingList from '../WritingList/WritingList';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 import { useCategories } from './useCategories';
+import CategoryItem from './CategoryItem';
 
 const CategorySection = () => {
   const { categories } = useCategories();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const {
     value,
     inputRef,
@@ -68,21 +66,12 @@ const CategorySection = () => {
         <Accordion>
           {categories.map((category, index) => {
             return (
-              <Accordion.Item key={category.id}>
-                <Accordion.Title
-                  onIconClick={() => setSelectedCategoryId(category.id)}
-                  aria-label={`${category.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
-                >
-                  <Category
-                    categoryId={category.id}
-                    categoryName={category.categoryName}
-                    isDefaultCategory={Boolean(index === 0)}
-                  />
-                </Accordion.Title>
-                <Accordion.Panel>
-                  <WritingList categoryId={category.id} selectedCategoryId={selectedCategoryId} />
-                </Accordion.Panel>
-              </Accordion.Item>
+              <CategoryItem
+                key={category.id}
+                categoryId={category.id}
+                categoryName={category.categoryName}
+                isDefaultCategory={Boolean(index === 0)}
+              />
             );
           })}
         </Accordion>

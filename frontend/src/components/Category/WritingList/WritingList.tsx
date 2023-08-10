@@ -2,7 +2,7 @@ import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { useCategoryWritings } from '../CategorySection/useCategoryWritings';
+import { useWritings } from '../CategorySection/useWritings';
 import { useEffect } from 'react';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const WritingList = ({ categoryId, selectedCategoryId }: Props) => {
   const { goWritingPage } = usePageNavigate();
-  const { writings, getWritings } = useCategoryWritings();
+  const { writings, getWritings } = useWritings();
   const writingId = Number(useParams()['writingId']);
 
   useEffect(() => {

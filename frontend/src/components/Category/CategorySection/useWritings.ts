@@ -3,7 +3,7 @@ import { getWritingsInCategory } from 'apis/category';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-export const useCategoryWritings = () => {
+export const useWritings = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   const { data } = useQuery<GetCategoryDetailResponse>(

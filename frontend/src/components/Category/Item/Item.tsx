@@ -9,7 +9,7 @@ type Props = {
   isDefaultCategory: boolean;
 };
 
-const CategoryItem = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
+const Item = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -31,4 +31,4 @@ const CategoryItem = ({ categoryId, categoryName, isDefaultCategory }: Props) =>
   );
 };
 
-export default CategoryItem;
+export default Item;

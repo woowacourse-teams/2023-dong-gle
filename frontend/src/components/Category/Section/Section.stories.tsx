@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CategorySection from './CategorySection';
+import Section from './Section';
 
-const meta: Meta<typeof CategorySection> = {
-  title: 'CategorySection',
-  component: CategorySection,
+const meta: Meta<typeof Section> = {
+  title: 'Section',
+  component: Section,
 };
 
 export default meta;

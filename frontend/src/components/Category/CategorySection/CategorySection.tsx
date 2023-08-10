@@ -1,17 +1,18 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
-import { KeyboardEventHandler } from 'react';
+import { KeyboardEventHandler, useState } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
-import { useCategoryDetails } from './useCategoryDetails';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
+import { useCategories } from './useCategories';
 
 const CategorySection = () => {
-  const { categoryDetails, setSelectedCategoryId } = useCategoryDetails();
+  const { categories } = useCategories();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const {
     value,
     inputRef,
@@ -39,7 +40,7 @@ const CategorySection = () => {
     addCategory({ categoryName: categoryName });
   };
 
-  if (!categoryDetails) return null;
+  if (!categories) return null;
 
   return (
     <S.Section>
@@ -66,21 +67,21 @@ const CategorySection = () => {
         )}
       </S.Header>
       <Accordion>
-        {categoryDetails.map((categoryDetail, index) => {
+        {categories.map((category, index) => {
           return (
-            <Accordion.Item key={categoryDetail.id}>
+            <Accordion.Item key={category.id}>
               <Accordion.Title
-                onIconClick={() => setSelectedCategoryId(categoryDetail.id)}
-                aria-label={`${categoryDetail.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
+                onIconClick={() => setSelectedCategoryId(category.id)}
+                aria-label={`${category.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
               >
                 <Category
-                  categoryId={categoryDetail.id}
-                  categoryName={categoryDetail.categoryName}
-                  isDefaultCategory={index === 0}
+                  categoryId={category.id}
+                  categoryName={category.categoryName}
+                  isDefaultCategory={Boolean(index === 0)}
                 />
               </Accordion.Title>
               <Accordion.Panel>
-                {categoryDetail.writings && <WritingList writings={categoryDetail.writings} />}
+                <WritingList categoryId={category.id} selectedCategoryId={selectedCategoryId} />
               </Accordion.Panel>
             </Accordion.Item>
           );

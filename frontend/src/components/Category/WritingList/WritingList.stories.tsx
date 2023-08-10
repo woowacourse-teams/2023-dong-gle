@@ -5,19 +5,15 @@ const meta: Meta<typeof WritingList> = {
   title: 'WritingList',
   component: WritingList,
   args: {
-    writings: [
-      { id: 1, title: '동글' },
-      { id: 2, title: '테트리스 중독' },
-      {
-        id: 3,
-        title:
-          '테트리스 하고 싶다 테트리스 하고 싶다 테트리스 하고 싶다 테트리스 하고 싶다 테트리스 하고 싶다 테트리스 하고 싶다',
-      },
-    ],
+    categoryId: 1,
+    selectedCategoryId: 1,
   },
   argTypes: {
-    writings: {
-      description: '글 목록 데이터입니다.',
+    categoryId: {
+      description: '현재 속한 카테고리의 아이디입니다.',
+    },
+    selectedCategoryId: {
+      description: '클릭된 카테고리의 아이디입니다.',
     },
   },
 };

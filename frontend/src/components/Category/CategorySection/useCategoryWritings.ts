@@ -12,9 +12,10 @@ export const useCategoryWritings = () => {
     { enabled: Boolean(selectedCategoryId) }, // 첫번째 요청만 disabled
   );
 
+  const getWritings = (id: number) => setSelectedCategoryId(id);
+
   return {
-    selectedCategoryWritings: data ? data.writings : null,
-    selectedCategoryId,
-    setSelectedCategoryId,
+    writings: data ? data.writings : null,
+    getWritings,
   };
 };

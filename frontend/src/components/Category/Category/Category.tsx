@@ -59,6 +59,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
+          aria-label={`${categoryName} 카테고리 이름 수정 입력 창`}
         />
       ) : (
         <>

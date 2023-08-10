@@ -1,6 +1,6 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
-import { PlusCircleIcon } from 'assets/icons';
+import { PlusIcon } from 'assets/icons';
 import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
@@ -18,7 +18,7 @@ const CategorySection = () => {
     handleOnChange,
     escapeInput: escapeAddCategory,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -60,8 +60,8 @@ const CategorySection = () => {
             onKeyUp={requestAddCategory}
           />
         ) : (
-          <S.Button onClick={() => setIsInputOpen(true)} aria-label='카테고리 추가 입력 창 열기'>
-            <PlusCircleIcon width={12} height={12} />
+          <S.Button aria-label='카테고리 추가 입력 창 열기' onClick={openInput}>
+            <PlusIcon width={12} height={12} />
           </S.Button>
         )}
       </S.Header>

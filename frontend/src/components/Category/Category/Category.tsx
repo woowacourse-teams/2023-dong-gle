@@ -20,7 +20,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
     handleOnChange,
     escapeInput: escapeRename,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -43,10 +43,6 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
         categoryName: value.trim(),
       },
     });
-  };
-
-  const openRenamingInput: MouseEventHandler<SVGSVGElement> = (e) => {
-    setIsInputOpen(true);
   };
 
   return (
@@ -75,11 +71,14 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           </S.CategoryButton>
           {!isDefaultCategory && (
             <S.IconContainer>
-              <S.Button aria-label={`${categoryName} 카테고리 이름 수정`}>
-                <PencilIcon onClick={openRenamingInput} width={12} height={12} />
+              <S.Button aria-label={`${categoryName} 카테고리 이름 수정`} onClick={openInput}>
+                <PencilIcon width={12} height={12} />
               </S.Button>
-              <S.Button aria-label={`${categoryName} 카테고리 삭제`}>
-                <DeleteIcon onClick={() => deleteCategory(categoryId)} width={12} height={12} />
+              <S.Button
+                aria-label={`${categoryName} 카테고리 삭제`}
+                onClick={() => deleteCategory(categoryId)}
+              >
+                <DeleteIcon width={12} height={12} />
               </S.Button>
             </S.IconContainer>
           )}

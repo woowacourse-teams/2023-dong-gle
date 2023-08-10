@@ -19,7 +19,7 @@ public class KakaoOAuthController {
 
     @GetMapping("/oauth/login/kakao")
     public ResponseEntity<Void> oauthRedirectKakao(@RequestParam final String redirect_uri) {
-        final String redirectUri = kakaoOAuthService.createRedirectUri(redirect_uri);
+        final String redirectUri = kakaoOAuthService.createAuthorizeRedirectUri(redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)

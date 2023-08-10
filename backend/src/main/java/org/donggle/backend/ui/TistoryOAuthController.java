@@ -19,7 +19,7 @@ public class TistoryOAuthController {
 
     @GetMapping("/connections/tistory")
     public ResponseEntity<Void> connectionsRedirectTistory(@RequestParam final String redirect_uri) {
-        final String redirectUri = tistoryOAuthService.createRedirectUri(redirect_uri);
+        final String redirectUri = tistoryOAuthService.createAuthorizeRedirectUri(redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)

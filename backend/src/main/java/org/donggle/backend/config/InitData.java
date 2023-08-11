@@ -71,6 +71,7 @@ public class InitData implements CommandLineRunner {
 
             final Block savedBlock = blockRepository.save(
                     new NormalBlock(
+                            savedWriting,
                             Depth.from(1),
                             BlockType.PARAGRAPH,
                             RawText.from("테스트 글입니다."),
@@ -78,7 +79,6 @@ public class InitData implements CommandLineRunner {
                             )
                     )
             );
-            savedBlock.setWriting(savedWriting);
         }
     }
 }

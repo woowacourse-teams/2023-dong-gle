@@ -67,15 +67,13 @@ public class WritingService {
         }
         final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
 
-        final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser());
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
         final Writing writing = Writing.lastOf(findMember, new Title(findFileName(originalFilename)), findCategory);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
+        final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser(), savedWriting);
 
         final List<Block> blocks = markDownParser.parse(originalFileText);
-        blocks.stream()
-                .forEach(content -> content.setWriting(savedWriting));
         blockRepository.saveAll(blocks);
         return savedWriting.getId();
     }
@@ -95,19 +93,20 @@ public class WritingService {
         final NotionApiService notionApiService = new NotionApiService();
 
         final String blockId = request.blockId();
-        final NotionParser notionParser = new NotionParser();
-
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
-        final String title = notionParser.parseTitle(parentBlockNode);
+        final String title = findTitle(parentBlockNode);
         final Writing writing = Writing.lastOf(findMember, new Title(title), findCategory);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
+        final NotionParser notionParser = new NotionParser(savedWriting);
 
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
         final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
-        blocks.stream()
-                .forEach(content -> content.setWriting(savedWriting));
         blockRepository.saveAll(blocks);
         return writing.getId();
+    }
+
+    private String findTitle(final NotionBlockNode parentBlockNode) {
+        return parentBlockNode.getBlockProperties().get("title").asText();
     }
 
     private Writing saveAndGetWriting(final Category findCategory, final Writing writing) {

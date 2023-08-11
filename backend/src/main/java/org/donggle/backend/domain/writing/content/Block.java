@@ -32,32 +32,29 @@ public abstract class Block extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writing_id")
+    private Writing writing;
     @NotNull
     @Embedded
     private Depth depth;
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private BlockType blockType;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writing_id")
-    private Writing writing;
 
-    public Block(final Depth depth, final BlockType blockType) {
-        this(null, depth, blockType);
+    public Block(final Writing writing, final Depth depth, final BlockType blockType) {
+        this(null, writing, depth, blockType);
     }
 
-    public Block(final Long id, final Depth depth, final BlockType blockType) {
+    public Block(final Long id, final Writing writing, final Depth depth, final BlockType blockType) {
         this.id = id;
+        this.writing = writing;
         this.depth = depth;
         this.blockType = blockType;
     }
 
     public int getDepthValue() {
         return this.depth.getDepth();
-    }
-
-    public void setWriting(final Writing writing) {
-        this.writing = writing;
     }
 
     @Override

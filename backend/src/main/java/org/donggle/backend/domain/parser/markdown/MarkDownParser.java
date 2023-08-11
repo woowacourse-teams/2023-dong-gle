@@ -3,6 +3,7 @@ package org.donggle.backend.domain.parser.markdown;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
@@ -30,6 +31,7 @@ public class MarkDownParser {
     private static final int SPACE_GROUP_INDEX = 2;
 
     private final MarkDownStyleParser markDownStyleParser;
+    private final Writing writing;
 
     public List<Block> parse(final String text) {
         return splitBlocks(text).stream()
@@ -72,17 +74,17 @@ public class MarkDownParser {
 
         switch (blockType) {
             case CODE_BLOCK -> {
-                return new CodeBlock(blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
+                return new CodeBlock(writing, blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
             }
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
-                return new ImageBlock(blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+                return new ImageBlock(writing, blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
             }
             default -> {
                 final String removedBlockTypeText = matcher.replaceAll("");
                 final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
                 final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
-                return new NormalBlock(depth, blockType, RawText.from(removedStyleTypeText), styles);
+                return new NormalBlock(writing, depth, blockType, RawText.from(removedStyleTypeText), styles);
             }
         }
     }

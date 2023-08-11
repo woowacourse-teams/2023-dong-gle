@@ -2,6 +2,7 @@ package org.donggle.backend.domain.parser.notion;
 
 import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
@@ -19,9 +20,10 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class NotionParser {
-    private static final Map<NotionBlockType, Function<NotionBlockNode, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new HashMap<>();
+    private final Map<NotionBlockType, Function<NotionBlockNode, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new HashMap<>();
+    private final Writing writing;
 
-    static {
+    public NotionParser(final Writing writing) {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalContent(notionBlockNode, BookmarkParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalContent(notionBlockNode, CalloutParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlockContent(CodeBlockParser.from(notionBlockNode)));
@@ -35,18 +37,19 @@ public class NotionParser {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalContent(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageContent(ImageParser.from(notionBlockNode)));
+        this.writing = writing;
     }
 
-    private static Optional<Block> createNormalContent(final NotionBlockNode notionBlockNode, final NotionNormalBlockParser blockParser, final BlockType blockType) {
-        return Optional.of(new NormalBlock(Depth.from(notionBlockNode.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
+    private Optional<Block> createNormalContent(final NotionBlockNode notionBlockNode, final NotionNormalBlockParser blockParser, final BlockType blockType) {
+        return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
-    private static Optional<Block> createCodeBlockContent(final CodeBlockParser blockParser) {
-        return Optional.of(new CodeBlock(BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
+    private Optional<Block> createCodeBlockContent(final CodeBlockParser blockParser) {
+        return Optional.of(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
     }
 
-    private static Optional<Block> createImageContent(final ImageParser blockParser) {
-        return Optional.of(new ImageBlock(BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
+    private Optional<Block> createImageContent(final ImageParser blockParser) {
+        return Optional.of(new ImageBlock(writing, BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
     }
 
     public List<Block> parseBody(final List<NotionBlockNode> notionBlockNodes) {
@@ -61,9 +64,5 @@ public class NotionParser {
         return NOTION_BLOCK_TYPE_MAP
                 .getOrDefault(notionBlockNode.getBlockType(), unused -> Optional.empty())
                 .apply(notionBlockNode);
-    }
-
-    public String parseTitle(final NotionBlockNode parentBlockNode) {
-        return parentBlockNode.getBlockProperties().get("title").asText();
     }
 }

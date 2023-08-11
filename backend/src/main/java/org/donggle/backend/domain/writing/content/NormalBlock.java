@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.Writing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,11 @@ public class NormalBlock extends Block {
     @NotNull
     private RawText rawText;
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "normal_content_id", updatable = false, nullable = false)
+    @JoinColumn(name = "normal_block_id", updatable = false, nullable = false)
     private List<Style> styles = new ArrayList<>();
 
-    public NormalBlock(final Depth depth, final BlockType blockType, final RawText rawText, final List<Style> styles) {
-        super(depth, blockType);
+    public NormalBlock(final Writing writing, final Depth depth, final BlockType blockType, final RawText rawText, final List<Style> styles) {
+        super(writing, depth, blockType);
         this.rawText = rawText;
         this.styles = styles;
     }

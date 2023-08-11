@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Writing;
 
 @Entity
 @Getter
@@ -19,8 +20,8 @@ public class CodeBlock extends Block {
     @Embedded
     private Language language;
 
-    public CodeBlock(final BlockType blockType, final RawText rawText, final Language language) {
-        super(Depth.empty(), blockType);
+    public CodeBlock(final Writing writing, final BlockType blockType, final RawText rawText, final Language language) {
+        super(writing, Depth.empty(), blockType);
         this.rawText = rawText;
         this.language = language;
     }

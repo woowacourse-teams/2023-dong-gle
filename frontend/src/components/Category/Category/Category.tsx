@@ -6,6 +6,7 @@ import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
+import DeleteButton from 'components/DeleteButton/DeleteButton';
 
 type Props = {
   categoryId: number;
@@ -73,12 +74,10 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
               <S.Button aria-label={`${categoryName} 카테고리 이름 수정`} onClick={openInput}>
                 <PencilIcon width={12} height={12} />
               </S.Button>
-              <S.Button
+              <DeleteButton
                 aria-label={`${categoryName} 카테고리 삭제`}
                 onClick={() => deleteCategory(categoryId)}
-              >
-                <TrashCanIcon width={12} height={12} />
-              </S.Button>
+              />
             </S.IconContainer>
           )}
         </>

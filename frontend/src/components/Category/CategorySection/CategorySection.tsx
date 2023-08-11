@@ -1,6 +1,6 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { styled } from 'styled-components';
-import { PlusCircleIcon } from 'assets/icons';
+import { PlusIcon } from 'assets/icons';
 import { KeyboardEventHandler } from 'react';
 import useCategoryInput from '../useCategoryInput';
 import Category from '../Category/Category';
@@ -13,12 +13,10 @@ import { isValidCategoryName } from '../isValidCategoryName';
 const CategorySection = () => {
   const { categoryDetails, setSelectedCategoryId } = useCategoryDetails();
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeAddCategory,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -28,7 +26,7 @@ const CategorySection = () => {
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    const categoryName = value.trim();
+    const categoryName = e.currentTarget.value.trim();
 
     if (!isValidCategoryName(categoryName)) {
       setIsError(true);
@@ -51,17 +49,15 @@ const CategorySection = () => {
             variant='underlined'
             size='small'
             placeholder='Add category ...'
-            value={value}
             ref={inputRef}
             isError={isError}
             onBlur={resetInput}
-            onChange={handleOnChange}
             onKeyDown={escapeAddCategory}
             onKeyUp={requestAddCategory}
           />
         ) : (
-          <S.Button onClick={() => setIsInputOpen(true)} aria-label='카테고리 추가 입력 창 열기'>
-            <PlusCircleIcon width={12} height={12} />
+          <S.Button aria-label='카테고리 추가 입력 창 열기' onClick={openInput}>
+            <PlusIcon width={12} height={12} />
           </S.Button>
         )}
       </S.Header>

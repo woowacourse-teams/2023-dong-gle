@@ -1,14 +1,12 @@
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js';
-import { KeyboardEventHandler, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
-import { getWriting, updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
+import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { PencilIcon } from 'assets/icons';
-import useCategoryInput from 'components/Category/useCategoryInput';
-import Input from 'components/@common/Input/Input';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import WritingTitle from './WritingTitle/WritingTitle';
 
 type Props = {
   writingId: number;
@@ -16,42 +14,7 @@ type Props = {
 };
 
 const WritingViewer = ({ writingId, categoryId }: Props) => {
-  const myRef = useRef<HTMLHeadingElement>(null);
-  const {
-    inputRef,
-    escapeInput: escapeRename,
-    isInputOpen,
-    openInput,
-    resetInput,
-    isError,
-  } = useCategoryInput('');
-  const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
-  const { mutate: updateWritingTitle } = useMutation(updateWritingTitleRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['writings', writingId]);
-      queryClient.invalidateQueries(['writingsInCategory', categoryId]);
-    },
-  });
-
-  const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key !== 'Enter') return;
-
-    const writingTitle = e.currentTarget.value;
-
-    updateWritingTitle({
-      writingId,
-      body: {
-        title: writingTitle,
-      },
-    });
-
-    resetInput();
-  };
-
-  useEffect(() => {
-    myRef.current?.focus();
-  }, [writingId]);
 
   useEffect(() => {
     hljs.highlightAll();
@@ -68,30 +31,7 @@ const WritingViewer = ({ writingId, categoryId }: Props) => {
 
   return (
     <S.WritingViewerContainer>
-      <S.TitleWrapper>
-        {isInputOpen ? (
-          <Input
-            type='text'
-            variant='unstyled'
-            size='large'
-            placeholder='새 제목을 입력해주세요'
-            ref={inputRef}
-            isError={isError}
-            onBlur={resetInput}
-            onKeyDown={escapeRename}
-            onKeyUp={requestChangedName}
-          />
-        ) : (
-          <>
-            <S.Title ref={myRef} tabIndex={0}>
-              {data?.title}
-            </S.Title>
-            <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
-              <PencilIcon width={20} height={20} />
-            </S.Button>
-          </>
-        )}
-      </S.TitleWrapper>
+      <WritingTitle categoryId={categoryId} writingId={writingId} title={data?.title ?? ''} />
       <Divider />
       <S.ContentWrapper
         tabIndex={0}
@@ -120,18 +60,6 @@ const S = {
     gap: 2rem;
     max-width: 100%;
     height: 100%;
-  `,
-
-  TitleWrapper: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 2rem;
-  `,
-
-  Title: styled.h1`
-    font-size: 4rem;
-    padding: 0.1rem;
   `,
 
   ContentWrapper: styled.section`
@@ -232,18 +160,6 @@ const S = {
 
     em {
       font-style: italic;
-    }
-  `,
-  Button: styled.button`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    padding: 1rem;
-    background-color: ${({ theme }) => theme.color.gray4};
-
-    &:hover {
-      background-color: ${({ theme }) => theme.color.gray5};
     }
   `,
 };

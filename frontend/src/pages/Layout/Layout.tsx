@@ -9,7 +9,6 @@ import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
 import CategorySection from 'components/Category/Section/Section';
 import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
-import Kakao from 'components/Login/Kakao';
 
 export type PageContext = {
   isLeftSidebarOpen?: boolean;
@@ -39,7 +38,6 @@ const Layout = () => {
         onClickRightSidebar={toggleRightSidebar}
         isWritingViewerActive={isWritingViewerActive}
       />
-      <Kakao />
       <S.Row>
         <S.LeftSidebarSection $isLeftSidebarOpen={isLeftSidebarOpen}>
           <Button

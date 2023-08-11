@@ -1,5 +1,6 @@
 import { KakaoLoginIcon } from 'assets/icons';
-import { oauthRedirectURL } from 'constants/apis/url';
+import { getRedirectURL } from 'constants/apis/oauth';
+import { getOauthURL } from 'constants/apis/url';
 // import { useQuery } from '@tanstack/react-query';
 // import { getRedirection } from 'apis/login';
 
@@ -11,7 +12,7 @@ const Kakao = () => {
   // const redirect = () => refetch();
 
   const redirectToKakao = () => {
-    window.location.href = oauthRedirectURL('kakao');
+    window.location.href = `${getOauthURL('kakao')}?redirect_uri=${getRedirectURL('kakao')}`;
   };
 
   return (

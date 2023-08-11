@@ -19,7 +19,7 @@ export const Router = () => {
           element: <WritingTablePage />,
         },
         {
-          path: '/oauth/*',
+          path: '/oauth/login/*',
           children: [
             {
               path: 'kakao',

@@ -1,0 +1,64 @@
+name: semantic-versioning
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  semantic-versioning:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'main'
+    steps:
+      - name: semantic-versioning
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: draft-release.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  package-version-update:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Github 회원 정보 설정
+        env:
+          MY_EMAIL: 2023donggle@gmail.com
+          MY_NAME: Dong-gle
+        run: |
+          git config --global user.email $MY_EMAIL
+          git config --global user.name $MY_NAME
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: PR Label 확인
+        id: pr-labels
+        uses: joerick/pr-labels-action@v1.0.9
+
+      - name: 메이저 버전 업데이트
+        if: |
+          contains(steps.pr-labels.outputs.labels, ' major ')
+        run: |
+          yarn version --major
+        working-directory: ./frontend
+
+      - name: 마이너 버전 업데이트
+        if: |
+          contains(steps.pr-labels.outputs.labels, ' minor ')
+        run: |
+          yarn version --minor
+        working-directory: ./frontend
+
+      - name: 패치 버전 업데이트
+        if: |
+          contains(steps.pr-labels.outputs.labels, ' patch ')
+        run: |
+          yarn version --patch
+        working-directory: ./frontend
+
+      - name: main 브랜치 Push
+        uses: ad-m/github-push-action@master
+        with:
+          branch: 'main'

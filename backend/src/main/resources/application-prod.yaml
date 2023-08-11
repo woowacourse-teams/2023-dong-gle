@@ -10,5 +10,11 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY}
+      access-token-expire-length: ${ACCESS-TOKEN-EXPIRE-LENGTH}
+      refresh-token-expire-length: ${REFRESH-TOKEN-EXPIRE-LENGTH}
 kakao_client_secret: ${KAKAO_CLIENT_SECRET}
 kakao_client_id: ${KAKAO_CLIENT_ID}

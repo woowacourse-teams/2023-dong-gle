@@ -53,7 +53,7 @@ public class NotionOAuthService {
                 .block();
     }
 
-    private static String base64Encode(String value) {
+    private String base64Encode(String value) {
         return java.util.Base64.getEncoder().encodeToString(value.getBytes());
     }
 }

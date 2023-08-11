@@ -1,5 +1,6 @@
-package org.donggle.backend.auth;
+package org.donggle.backend.application.repository;
 
+import org.donggle.backend.auth.JwtToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

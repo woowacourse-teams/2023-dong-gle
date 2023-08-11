@@ -2,6 +2,7 @@ package org.donggle.backend.auth;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.domain.member.Member;
 import org.springframework.stereotype.Service;
 

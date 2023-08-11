@@ -4,7 +4,7 @@ import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.auth.TokenResponse;
+import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

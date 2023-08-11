@@ -29,6 +29,10 @@ public class JwtToken {
         this.member = member;
     }
 
+    public boolean isDifferentRefreshToken(final String refreshToken) {
+        return !this.refreshToken.equals(refreshToken);
+    }
+
     public void updateRefreshToken(final String refreshToken) {
         this.refreshToken = refreshToken;
     }

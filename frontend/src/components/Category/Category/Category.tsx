@@ -1,6 +1,6 @@
-import { DeleteIcon, PencilIcon } from 'assets/icons';
+import { TrashCanIcon, PencilIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { KeyboardEventHandler, MouseEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
@@ -77,7 +77,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
                 aria-label={`${categoryName} 카테고리 삭제`}
                 onClick={() => deleteCategory(categoryId)}
               >
-                <DeleteIcon width={12} height={12} />
+                <TrashCanIcon width={12} height={12} />
               </S.Button>
             </S.IconContainer>
           )}

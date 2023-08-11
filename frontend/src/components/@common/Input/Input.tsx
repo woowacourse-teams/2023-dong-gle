@@ -105,8 +105,8 @@ const genSizeStyle = (size: Required<Props>['size']): RuleSet<object> => {
       font-size: 1.4rem;
     `,
     large: css`
-      font-size: 4rem;
-      font-weight: 700;
+      padding: 1rem 1.2rem;
+      font-size: 1.5rem;
     `,
   };
   return styles[size];

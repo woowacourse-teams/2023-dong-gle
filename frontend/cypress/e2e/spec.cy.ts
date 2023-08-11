@@ -41,4 +41,10 @@ describe('동글 첫 페이지', () => {
     cy.findByText('글 정보').should('exist');
     cy.findByLabelText('오른쪽 사이드바 토글').should('exist');
   });
+
+  it('기본 카테고리에서 업로드한 글을 확인할 수 있다.', () => {
+    cy.findByText('기본').click();
+
+    cy.findAllByText('markdown-test').should('exist');
+  });
 });

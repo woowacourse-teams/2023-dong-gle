@@ -15,12 +15,10 @@ type Props = {
 
 const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeRename,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -31,22 +29,21 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) {
+    const categoryName = e.currentTarget.value.trim();
+
+    if (!isValidCategoryName(categoryName)) {
       setIsError(true);
       return;
     }
 
-    resetInput();
     patchCategory({
       categoryId,
       body: {
-        categoryName: value.trim(),
+        categoryName,
       },
     });
-  };
 
-  const openRenamingInput: MouseEventHandler<SVGSVGElement> = (e) => {
-    setIsInputOpen(true);
+    resetInput();
   };
 
   return (
@@ -57,11 +54,9 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           variant='underlined'
           size='small'
           placeholder='Change category name ...'
-          value={value}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}
-          onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
         />
@@ -75,11 +70,14 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           </S.CategoryButton>
           {!isDefaultCategory && (
             <S.IconContainer>
-              <S.Button aria-label={`${categoryName} 카테고리 이름 수정`}>
-                <PencilIcon onClick={openRenamingInput} width={12} height={12} />
+              <S.Button aria-label={`${categoryName} 카테고리 이름 수정`} onClick={openInput}>
+                <PencilIcon width={12} height={12} />
               </S.Button>
-              <S.Button aria-label={`${categoryName} 카테고리 삭제`}>
-                <DeleteIcon onClick={() => deleteCategory(categoryId)} width={12} height={12} />
+              <S.Button
+                aria-label={`${categoryName} 카테고리 삭제`}
+                onClick={() => deleteCategory(categoryId)}
+              >
+                <DeleteIcon width={12} height={12} />
               </S.Button>
             </S.IconContainer>
           )}

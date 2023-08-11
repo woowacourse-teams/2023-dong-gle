@@ -6,7 +6,7 @@ import Button from 'components/@common/Button/Button';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
-import CategorySection from 'components/Category/CategorySection/CategorySection';
+import CategorySection from 'components/Category/Section/Section';
 import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Kakao from 'components/Login/Kakao';

@@ -43,6 +43,8 @@ jobs:
       env:
         KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
         KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+        TISTORY_CLIENT_ID: ${{ secrets.TISTORY_CLIENT_ID }}
+        TISTORY_CLIENT_SECRET: ${{ secrets.TISTORY_CLIENT_SECRET }}
     
     - name: Build with Gradle
       run: |

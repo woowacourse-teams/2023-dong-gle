@@ -1,10 +1,8 @@
 package org.donggle.backend.domain.renderer.html;
 
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.writing.Block;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Title;
@@ -33,7 +31,7 @@ class HtmlRendererTest {
     void setUp() {
         htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         blocks = new ArrayList<>();
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Category category = Category.basic(member);
         writing = Writing.lastOf(member, new Title("title"), category);
     }

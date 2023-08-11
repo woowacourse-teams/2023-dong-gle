@@ -12,11 +12,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class NotionOAuthService {
+    public static final String AUTHORIZE_URL = "https://api.notion.com/v1/oauth/authorize";
+    public static final String TOKEN_URL = "https://api.notion.com/v1/oauth/token";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String RESPONSE_TYPE = "code";
     private static final String OWNER = "user";
-    public static final String AUTHORIZE_URL = "https://api.notion.com/v1/oauth/authorize";
-    public static final String TOKEN_URL = "https://api.notion.com/v1/oauth/token";
 
     private final String clientId;
     private final String clientSecret;

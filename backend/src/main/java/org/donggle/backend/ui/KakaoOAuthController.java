@@ -36,13 +36,13 @@ public class KakaoOAuthController {
     }
 
     @PostMapping("/oauth/login/kakao")
-    public ResponseEntity<TokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest, final HttpServletResponse httpServletResponse) {
+    public ResponseEntity<AccessTokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest, final HttpServletResponse httpServletResponse) {
         final TokenResponse response = kakaoOAuthService.login(oAuthAccessTokenRequest);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
         httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new AccessTokenResponse(response.accessToken()));
     }
 
     @PostMapping("/token/refresh")

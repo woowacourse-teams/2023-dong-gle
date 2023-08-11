@@ -49,8 +49,8 @@ const WritingTable = ({ writings, categoryId }: Props) => {
             <td>{title}</td>
             <td>
               <S.PublishedToIconContainer>
-                {publishedDetails.map(({ blogName }) => (
-                  <Fragment key={blogName}>{blogIcon[blogName]}</Fragment>
+                {publishedDetails.map(({ blogName }, index) => (
+                  <Fragment key={index}>{blogIcon[blogName]}</Fragment>
                 ))}
               </S.PublishedToIconContainer>
             </td>

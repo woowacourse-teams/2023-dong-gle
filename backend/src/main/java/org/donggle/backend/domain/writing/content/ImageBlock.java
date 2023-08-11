@@ -11,7 +11,7 @@ import org.donggle.backend.domain.writing.BlockType;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageContent extends Content {
+public class ImageBlock extends Block {
     @NotNull
     @Embedded
     private ImageUrl imageUrl;
@@ -19,7 +19,7 @@ public class ImageContent extends Content {
     @Embedded
     private ImageCaption imageCaption;
 
-    public ImageContent(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+    public ImageBlock(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
         super(Depth.empty(), blockType);
         this.imageUrl = imageUrl;
         this.imageCaption = imageCaption;

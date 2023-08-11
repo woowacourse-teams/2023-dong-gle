@@ -6,14 +6,14 @@ import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
-import org.donggle.backend.domain.writing.content.CodeBlockContent;
-import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
+import org.donggle.backend.domain.writing.content.ImageBlock;
 import org.donggle.backend.domain.writing.content.ImageCaption;
-import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.ImageUrl;
 import org.donggle.backend.domain.writing.content.Language;
-import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.NormalBlock;
 import org.donggle.backend.domain.writing.content.RawText;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -34,13 +34,13 @@ class NotionParserTest {
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
-        final Content contents = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block contents = notionParser.parseBody(notionBlockNodes).get(0);
 
         //then
         final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNode);
         final String rawText = blockParser.parseRawText();
         final List<Style> styles = blockParser.parseStyles();
-        final NormalContent expected = new NormalContent(Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
+        final NormalBlock expected = new NormalBlock(Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
         assertThat(contents)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt", "styles")
@@ -57,7 +57,7 @@ class NotionParserTest {
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
-        final Content contents = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block contents = notionParser.parseBody(notionBlockNodes).get(0);
 
         //then
         final CodeBlockParser blockParser = CodeBlockParser.from(notionBlockNode);
@@ -66,7 +66,7 @@ class NotionParserTest {
         assertThat(contents)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from(rawText), Language.from(blockParser.language())));
+                .isEqualTo(new CodeBlock(BlockType.CODE_BLOCK, RawText.from(rawText), Language.from(blockParser.language())));
     }
 
     @Test
@@ -79,7 +79,7 @@ class NotionParserTest {
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
-        final Content contents = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block contents = notionParser.parseBody(notionBlockNodes).get(0);
 
         //then
         final ImageParser imageParser = ImageParser.from(notionBlockNode);
@@ -89,7 +89,7 @@ class NotionParserTest {
         assertThat(contents)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new ImageContent(BlockType.IMAGE, new ImageUrl(url), new ImageCaption(caption)));
+                .isEqualTo(new ImageBlock(BlockType.IMAGE, new ImageUrl(url), new ImageCaption(caption)));
     }
 
     @Test
@@ -102,12 +102,12 @@ class NotionParserTest {
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
-        final Content contents = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block contents = notionParser.parseBody(notionBlockNodes).get(0);
 
         //then
         final BookmarkParser bookmarkParser = BookmarkParser.from(notionBlockNode);
         final String rawText = bookmarkParser.parseRawText();
-        final NormalContent expected = new NormalContent(
+        final NormalBlock expected = new NormalBlock(
                 Depth.from(0),
                 BlockType.PARAGRAPH,
                 RawText.from(rawText), List.of(
@@ -115,7 +115,7 @@ class NotionParserTest {
                 new Style(new StyleRange(0, 6), StyleType.LINK)
         ));
 
-        final NormalContent normalContent = (NormalContent) contents;
+        final NormalBlock normalContent = (NormalBlock) contents;
         final List<Style> styles = normalContent.getStyles();
         Assertions.assertAll(
                 () -> assertThat(normalContent)

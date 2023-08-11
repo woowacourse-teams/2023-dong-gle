@@ -17,14 +17,14 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NormalContent extends Content {
+public class NormalBlock extends Block {
     @NotNull
     private RawText rawText;
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "normal_content_id", updatable = false, nullable = false)
     private List<Style> styles = new ArrayList<>();
 
-    public NormalContent(final Depth depth, final BlockType blockType, final RawText rawText, final List<Style> styles) {
+    public NormalBlock(final Depth depth, final BlockType blockType, final RawText rawText, final List<Style> styles) {
         super(depth, blockType);
         this.rawText = rawText;
         this.styles = styles;

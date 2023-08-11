@@ -21,10 +21,9 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.parser.notion.NotionParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
-import org.donggle.backend.domain.writing.Block;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -74,12 +73,10 @@ public class WritingService {
         final Writing writing = Writing.lastOf(findMember, new Title(findFileName(originalFilename)), findCategory);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
-        final List<Content> contents = markDownParser.parse(originalFileText);
-        final List<Block> blocks = contents.stream()
-                .map(content -> new Block(savedWriting, content))
-                .toList();
+        final List<Block> blocks = markDownParser.parse(originalFileText);
+        blocks.stream()
+                .forEach(content -> content.setWriting(savedWriting));
         blockRepository.saveAll(blocks);
-
         return savedWriting.getId();
     }
 
@@ -106,12 +103,10 @@ public class WritingService {
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
-        final List<Content> contents = notionParser.parseBody(bodyBlockNodes);
-        final List<Block> blocks = contents.stream()
-                .map(content -> new Block(savedWriting, content))
-                .toList();
+        final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
+        blocks.stream()
+                .forEach(content -> content.setWriting(savedWriting));
         blockRepository.saveAll(blocks);
-
         return writing.getId();
     }
 

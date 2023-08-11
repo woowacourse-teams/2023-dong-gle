@@ -16,7 +16,7 @@ type Props = {
 
 const Input = (
   {
-    size = 'large',
+    size = 'medium',
     labelText,
     supportingText,
     variant = 'outline',
@@ -80,10 +80,6 @@ const genVariantStyle = (
       ${({ theme }) => css`
         border: 1px solid ${theme.color.gray1};
         outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray1};
-
-        &:focus {
-          outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray8};
-        }
       `}
     `,
     underlined: css`
@@ -109,8 +105,8 @@ const genSizeStyle = (size: Required<Props>['size']): RuleSet<object> => {
       font-size: 1.4rem;
     `,
     large: css`
-      padding: 1rem 1.2rem;
-      font-size: 1.5rem;
+      font-size: 4rem;
+      font-weight: 700;
     `,
   };
   return styles[size];

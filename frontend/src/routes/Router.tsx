@@ -10,7 +10,7 @@ export const Router = () => {
       element: <App />,
       children: [
         {
-          path: '/writing/:writingId',
+          path: '/writings/:categoryId/:writingId',
           element: <WritingPage />,
         },
         {

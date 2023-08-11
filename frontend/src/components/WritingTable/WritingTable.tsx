@@ -6,14 +6,17 @@ import { Writing } from 'types/apis/writings';
 import { Blog } from 'types/domain';
 import { dateFormatter } from 'utils/date';
 
-type Props = { writings: Writing[] };
+type Props = {
+  writings: Writing[];
+  categoryId: number;
+};
 
 const blogIcon: Record<Blog, ReactElement> = {
   MEDIUM: <MediumLogoIcon width='2.4rem' height='2.4rem' />,
   TISTORY: <TistoryLogoIcon width='2.4rem' height='2.4rem' />,
 };
 
-const WritingTable = ({ writings }: Props) => {
+const WritingTable = ({ writings, categoryId }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const rowRef = useRef<HTMLTableRowElement>(null);
 
@@ -37,7 +40,12 @@ const WritingTable = ({ writings }: Props) => {
       </thead>
       <tbody>
         {writings.map(({ id, title, publishedDetails, createdAt }) => (
-          <tr key={id} onClick={() => goWritingPage(id)} role='button' tabIndex={0}>
+          <tr
+            key={id}
+            onClick={() => goWritingPage({ categoryId, writingId: id })}
+            role='button'
+            tabIndex={0}
+          >
             <td>{title}</td>
             <td>
               <S.PublishedToIconContainer>

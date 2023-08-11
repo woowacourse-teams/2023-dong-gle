@@ -22,7 +22,7 @@ const S = {
     border-radius: 8px;
 
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray5};
+      background-color: ${({ theme }) => theme.color.gray6};
     }
   `,
 };

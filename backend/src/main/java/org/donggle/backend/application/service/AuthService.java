@@ -6,9 +6,11 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.auth.JwtTokenProvider;
 import org.donggle.backend.auth.JwtTokenService;
-import org.donggle.backend.auth.TokenResponse;
+import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.ui.response.AccessTokenResponse;
+import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,12 +31,16 @@ public class AuthService {
         final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
         final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
         jwtTokenService.synchronizeRefreshToken(loginMember, refreshToken);
-
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    public boolean inValidateTokenOwner(final Long memberId, final String token) {
-        final Member member = memberRepository.findById(memberId).orElseThrow();
-        return true;
+    public AccessTokenResponse reissueAccessToken(final Long memberId) {
+        final boolean isExistMember = memberRepository.existsById(memberId);
+        if (!isExistMember) {
+            throw new NoSuchTokenException();
+        }
+
+        final String accessToken = jwtTokenProvider.createAccessToken(memberId);
+        return new AccessTokenResponse(accessToken);
     }
 }

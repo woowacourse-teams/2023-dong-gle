@@ -21,7 +21,6 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenService jwtTokenService;
 
-
     public TokenResponse loginByKakao(final KakaoProfileResponse kakaoProfileResponse) {
         final Member loginMember = memberRepository.findByKakaoId(kakaoProfileResponse.id())
                 .orElseGet(() -> memberRepository.save(Member.createByKakao(

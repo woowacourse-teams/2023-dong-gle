@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -27,15 +28,21 @@ public class KakaoOAuthService {
     private final AuthService authService;
 
     public KakaoOAuthService(@Value("${kakao_client_id}") final String clientId,
-                             @Value("${kakao_client_secret}") final String clientSecret, final AuthService authService) {
+                             @Value("${kakao_client_secret}") final String clientSecret,
+                             final AuthService authService) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.authService = authService;
         webClient = WebClient.create();
     }
 
-    public String createRedirectUri(final String redirectUri) {
-        return AUTHORIZE_URL + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&response_type=" + RESPONSE_TYPE;
+    public String createAuthorizeRedirectUri(final String redirectUri) {
+        return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
+                .queryParam("client_id", clientId)
+                .queryParam("redirect_uri", redirectUri)
+                .queryParam("response_type", RESPONSE_TYPE)
+                .build()
+                .toUriString();
     }
 
     public void login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {

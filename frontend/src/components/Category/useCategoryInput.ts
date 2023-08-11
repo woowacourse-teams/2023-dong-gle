@@ -14,6 +14,8 @@ const useCategoryInput = (initialValue: string) => {
 
   const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => setValue(e.target.value);
 
+  const openInput = () => setIsInputOpen(true);
+
   const resetInput = () => {
     setIsError(false);
     setIsInputOpen(false);
@@ -32,7 +34,7 @@ const useCategoryInput = (initialValue: string) => {
     handleOnChange,
     escapeInput,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,

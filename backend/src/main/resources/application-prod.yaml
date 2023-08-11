@@ -12,3 +12,5 @@ spring:
     show-sql: true
 kakao_client_secret: ${KAKAO_CLIENT_SECRET}
 kakao_client_id: ${KAKAO_CLIENT_ID}
+tistory_client_id: ${TISTORY_CLIENT_ID}
+tistory_client_secret: ${TISTORY_CLIENT_SECRET}

@@ -28,8 +28,8 @@ import java.net.URI;
 
 @Authenticated
 @RestController
-@RequestMapping("/writings")
 @RequiredArgsConstructor
+@RequestMapping("/writings")
 public class WritingController {
     private final WritingService writingService;
     private final PublishService publishService;

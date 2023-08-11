@@ -40,7 +40,7 @@ export type Writing = {
   publishedDetails: Omit<PublishedDetail, 'tags'>[];
 };
 
-export type GetCategoryIdWritingListResponse = {
+export type GetDetailWritingsResponse = {
   id: number;
   categoryName: string;
   writings: Writing[];

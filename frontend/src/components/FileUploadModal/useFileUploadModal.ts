@@ -1,8 +1,7 @@
+import { useMutation } from '@tanstack/react-query';
 import { addNotionWriting, addWriting } from 'apis/writings';
-import useMutation from 'hooks/@common/useMutation';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { ChangeEventHandler, useState } from 'react';
-import { AddWritingRequest } from 'types/apis/writings';
 
 type Args = {
   categoryId: number | null;
@@ -14,15 +13,11 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const { goWritingPage } = usePageNavigate();
   const selectedCategoryId = categoryId ?? 1;
 
-  const { mutateQuery: uploadNotion, isLoading: isNotionUploadLoading } = useMutation({
-    fetcher: addNotionWriting,
+  const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {
     onSuccess: (data) => onFileUploadSuccess(data.headers),
   });
-  const { mutateQuery: uploadFile, isLoading: isFileUploadLoading } = useMutation<
-    AddWritingRequest,
-    null
-  >({
-    fetcher: addWriting,
+
+  const { mutate: uploadFile, isLoading: isFileUploadLoading } = useMutation(addWriting, {
     onSuccess: (data) => onFileUploadSuccess(data.headers),
   });
 
@@ -32,26 +27,26 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
     closeModal();
   };
 
-  const uploadOnServer = async (selectedFile: FormData | null) => {
+  const uploadOnServer = (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
     selectedFile.append('categoryId', JSON.stringify(selectedCategoryId));
 
-    await uploadFile(selectedFile);
+    uploadFile(selectedFile);
   };
 
   const setNotionPageLink: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputValue(e.target.value);
   };
 
-  const uploadNotionWriting = async () => {
+  const uploadNotionWriting = () => {
     const blockId = inputValue.split('/')?.pop()?.split('?')?.shift()?.split('-').pop();
 
     if (!blockId) return;
 
     setInputValue('');
 
-    await uploadNotion({
+    uploadNotion({
       blockId: blockId,
       categoryId: selectedCategoryId,
     });

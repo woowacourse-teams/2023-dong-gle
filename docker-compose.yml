@@ -18,6 +18,10 @@ services:
       - DB_PASSWORD
       - KAKAO_CLIENT_ID
       - KAKAO_CLIENT_SECRET
+      - TISTORY_CLIENT_ID
+      - TISTORY_CLIENT_SECRET
+      - NOTION_CLIENT_ID
+      - NOTION_CLIENT_SECRET
 
   nginx:
     container_name: nginx

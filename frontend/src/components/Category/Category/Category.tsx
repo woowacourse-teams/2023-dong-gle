@@ -8,21 +8,17 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 
 type Props = {
-  id: number;
+  categoryId: number;
   categoryName: string;
   isDefaultCategory: boolean;
-  getCategories: () => Promise<void>;
 };
 
-const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props) => {
-  const [name, setName] = useState(categoryName);
+const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeRename,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -30,36 +26,24 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
 
-  const requestChangedName: KeyboardEventHandler<HTMLInputElement> = async (e) => {
+  const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
-    if (!isValidCategoryName(value)) {
+    const categoryName = e.currentTarget.value.trim();
+
+    if (!isValidCategoryName(categoryName)) {
       setIsError(true);
       return;
     }
 
-    setName(value);
-    resetInput();
-    await patchCategory({
-      categoryId: id,
+    patchCategory({
+      categoryId,
       body: {
-        categoryName: value.trim(),
+        categoryName,
       },
     });
-    await getCategories();
-  };
 
-  const openRenamingInput: MouseEventHandler<SVGSVGElement> = (e) => {
-    e.stopPropagation();
-
-    setIsInputOpen(true);
-  };
-
-  const deleteCategoryClick: MouseEventHandler<SVGSVGElement> = async (e) => {
-    e.stopPropagation();
-
-    await deleteCategory(id);
-    await getCategories();
+    resetInput();
   };
 
   return (
@@ -70,29 +54,30 @@ const Category = ({ id, categoryName, isDefaultCategory, getCategories }: Props)
           variant='underlined'
           size='small'
           placeholder='Change category name ...'
-          value={value}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}
-          onChange={handleOnChange}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
         />
       ) : (
         <>
           <S.CategoryButton
-            onClick={() => goWritingTablePage(id)}
-            aria-label={`${name} 카테고리 메인 화면에 열기`}
+            onClick={() => goWritingTablePage(categoryId)}
+            aria-label={`${categoryName} 카테고리 메인 화면에 열기`}
           >
-            <S.Text>{name}</S.Text>
+            <S.Text>{categoryName}</S.Text>
           </S.CategoryButton>
           {!isDefaultCategory && (
             <S.IconContainer>
-              <S.Button aria-label={`${name} 카테고리 이름 수정`}>
-                <PencilIcon onClick={openRenamingInput} width={12} height={12} />
+              <S.Button aria-label={`${categoryName} 카테고리 이름 수정`} onClick={openInput}>
+                <PencilIcon width={12} height={12} />
               </S.Button>
-              <S.Button aria-label={`${name} 카테고리 삭제`}>
-                <DeleteIcon onClick={deleteCategoryClick} width={12} height={12} />
+              <S.Button
+                aria-label={`${categoryName} 카테고리 삭제`}
+                onClick={() => deleteCategory(categoryId)}
+              >
+                <DeleteIcon width={12} height={12} />
               </S.Button>
             </S.IconContainer>
           )}

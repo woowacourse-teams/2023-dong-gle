@@ -19,3 +19,4 @@ export { ReactComponent as DeleteIcon } from './delete.svg';
 export { ReactComponent as PencilIcon } from './pencil.svg';
 export { ReactComponent as WritingIcon } from './writing.svg';
 export { ReactComponent as ImportIcon } from './import.svg';
+export { ReactComponent as PlusIcon } from './plus.svg';

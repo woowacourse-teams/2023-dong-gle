@@ -2,7 +2,6 @@ import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState }
 
 const useCategoryInput = (initialValue: string) => {
   const [isError, setIsError] = useState(false);
-  const [value, setValue] = useState(initialValue);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -12,14 +11,11 @@ const useCategoryInput = (initialValue: string) => {
     }
   }, [isInputOpen]);
 
-  const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => setValue(e.target.value);
-
   const openInput = () => setIsInputOpen(true);
 
   const resetInput = () => {
     setIsError(false);
     setIsInputOpen(false);
-    setValue('');
   };
 
   const escapeInput: KeyboardEventHandler<HTMLInputElement> = (e) => {
@@ -29,9 +25,7 @@ const useCategoryInput = (initialValue: string) => {
   };
 
   return {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput,
     isInputOpen,
     openInput,

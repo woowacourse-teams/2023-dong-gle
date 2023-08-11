@@ -8,12 +8,10 @@ import { PlusCircleIcon } from 'assets/icons';
 
 const Header = () => {
   const {
-    value,
     inputRef,
-    handleOnChange,
     escapeInput: escapeAddCategory,
     isInputOpen,
-    setIsInputOpen,
+    openInput,
     resetInput,
     isError,
     setIsError,
@@ -23,7 +21,7 @@ const Header = () => {
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key !== 'Enter') return;
 
-    const categoryName = value.trim();
+    const categoryName = e.currentTarget.value.trim();
 
     if (!isValidCategoryName(categoryName)) {
       setIsError(true);
@@ -43,16 +41,14 @@ const Header = () => {
           variant='underlined'
           size='small'
           placeholder='Add category ...'
-          value={value}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}
-          onChange={handleOnChange}
           onKeyDown={escapeAddCategory}
           onKeyUp={requestAddCategory}
         />
       ) : (
-        <S.Button onClick={() => setIsInputOpen(true)} aria-label='카테고리 추가 입력 창 열기'>
+        <S.Button onClick={openInput} aria-label='카테고리 추가 입력 창 열기'>
           <PlusCircleIcon width={12} height={12} />
         </S.Button>
       )}

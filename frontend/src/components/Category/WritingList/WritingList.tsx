@@ -2,26 +2,29 @@ import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { CategoryWriting } from 'types/components/category';
+import { useWritings } from './useWritings';
 
 type Props = {
-  writings: CategoryWriting[];
+  categoryId: number;
+  isOpen: boolean;
 };
 
-const WritingList = ({ writings }: Props) => {
+const WritingList = ({ categoryId, isOpen }: Props) => {
   const { goWritingPage } = usePageNavigate();
+  const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
 
-  if (writings.length === 0) return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
+  if (!writings || writings?.length === 0)
+    return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
 
   return (
     <ul>
       {writings.map((writing) => (
         <S.Item key={writing.id}>
           <S.Button
-            $isClicked={writingId === writing.id} 
-            onClick={() => goWritingPage(writing.id)}
+            $isClicked={writingId === writing.id}
             aria-label={`${writing.title}글 메인화면에 열기`}
+            onClick={() => goWritingPage(writing.id)}
           >
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />

@@ -22,6 +22,9 @@ services:
       - TISTORY_CLIENT_SECRET
       - NOTION_CLIENT_ID
       - NOTION_CLIENT_SECRET
+      - JWT_SECRET_KET
+      - ACCESS_TOKEN_EXPIRE
+      - REFRESH_TOKEN_EXPIRE_LENGTH
 
   nginx:
     container_name: nginx

@@ -14,8 +14,8 @@ security:
   jwt:
     token:
       secret-key: ${JWT_SECRET_KEY}
-      access-token-expire-length: ${ACCESS-TOKEN-EXPIRE-LENGTH}
-      refresh-token-expire-length: ${REFRESH-TOKEN-EXPIRE-LENGTH}
+      access-token-expire-length: ${ACCESS_TOKEN_EXPIRE_LENGTH}
+      refresh-token-expire-length: ${REFRESH_TOKEN_EXPIRE_LENGTH}
 kakao_client_id: ${KAKAO_CLIENT_ID}
 kakao_client_secret: ${KAKAO_CLIENT_SECRET}
 tistory_client_id: ${TISTORY_CLIENT_ID}

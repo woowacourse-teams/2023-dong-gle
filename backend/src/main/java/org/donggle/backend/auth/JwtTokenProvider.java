@@ -7,6 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
+    private static final String MEMBER_ID_KEY = "memberId";
+
     private final SecretKey key;
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
@@ -36,13 +39,12 @@ public class JwtTokenProvider {
         return createToken(payload, refreshTokenValidityInMilliseconds);
     }
 
-    private String createToken(final Long payload, final long validityInMilliseconds) {
-        final Claims claims = Jwts.claims().setSubject(Long.toString(payload));
+    public String createToken(final Long payload, final long validityInMilliseconds) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .claim(MEMBER_ID_KEY, payload)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -50,8 +52,7 @@ public class JwtTokenProvider {
     }
 
     public Long getPayload(final String token) {
-        return Long.valueOf(
-                getClaims(token).getBody().getSubject());
+        return getClaims(token).getBody().get(MEMBER_ID_KEY, Long.class);
     }
 
     public boolean inValidTokenUsage(final String token) {
@@ -59,7 +60,7 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = getClaims(token);
             return claims.getBody().getExpiration().before(new Date());
         } catch (final ExpiredJwtException e) {
-            throw new AuthExpiredException(e.getMessage());
+            throw new NoSuchTokenException();
         } catch (final JwtException | IllegalArgumentException e) {
             return true;
         }

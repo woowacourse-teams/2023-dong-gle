@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/writings")
 @RequiredArgsConstructor
+@RequestMapping("/writings")
 public class WritingController {
     private final WritingService writingService;
     private final PublishService publishService;

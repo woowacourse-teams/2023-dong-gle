@@ -35,7 +35,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
-                .addPathPatterns("/*");
+                .addPathPatterns("/*")
+                .excludePathPatterns("/token/refresh")
+                .excludePathPatterns("/oauth/login/kakao");
 
         registry.addInterceptor(new RefreshTokenAuthInterceptor(jwtTokenProvider, tokenRepository))
                 .addPathPatterns("/token/refresh");

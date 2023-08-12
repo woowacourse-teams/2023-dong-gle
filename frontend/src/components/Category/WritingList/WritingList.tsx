@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
-import { useMutation } from '@tanstack/react-query';
-import { moveToTrash } from 'apis/trash';
+import { useDeleteWritings } from './useDeleteWritings';
 
 type Props = {
   categoryId: number;
@@ -16,14 +15,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
-  const { mutate } = useMutation(moveToTrash, {
-    onSuccess: () => alert('글이 휴지통으로 이동됐습니다.'),
-    onError: () => alert('글 삭제가 실패했습니다.'),
-  });
-
-  const deleteWriting = () => {
-    if (confirm('글을 삭제하시겠습니까?')) mutate([writingId]);
-  };
+  const deleteWritings = useDeleteWritings();
 
   if (!writings || writings?.length === 0)
     return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
@@ -43,7 +35,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
             <S.Text>{writing.title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={deleteWriting} />
+            <DeleteButton onClick={() => deleteWritings([writingId])} />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}

@@ -14,7 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class TokenResolver implements HandlerMethodArgumentResolver {
+public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenProvider jwtTokenProvider;
 

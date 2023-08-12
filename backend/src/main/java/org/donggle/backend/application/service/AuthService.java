@@ -9,7 +9,6 @@ import org.donggle.backend.auth.JwtTokenService;
 import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.ui.response.AccessTokenResponse;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +32,13 @@ public class AuthService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    public AccessTokenResponse reissueAccessToken(final Long memberId) {
-        final boolean isExistMember = memberRepository.existsById(memberId);
-        if (!isExistMember) {
-            throw new NoSuchTokenException();
-        }
+    public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
+        final Member member = memberRepository.findById(memberId).
+                orElseThrow(NoSuchTokenException::new);
 
         final String accessToken = jwtTokenProvider.createAccessToken(memberId);
-        return new AccessTokenResponse(accessToken);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
+        jwtTokenService.synchronizeRefreshToken(member, refreshToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 }

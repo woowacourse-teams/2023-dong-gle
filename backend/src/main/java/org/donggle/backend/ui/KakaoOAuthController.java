@@ -46,9 +46,13 @@ public class KakaoOAuthController {
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId) {
-        final AccessTokenResponse response = authService.reissueAccessToken(memberId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId, final HttpServletResponse httpServletResponse) {
+        final TokenResponse response = authService.reissueAccessTokenAndRefreshToken(memberId);
+
+        final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
+        httpServletResponse.setHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok(new AccessTokenResponse(response.accessToken()));
     }
 
     private ResponseCookie createRefreshTokenCookie(final String refreshToken) {

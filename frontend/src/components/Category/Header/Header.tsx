@@ -33,7 +33,6 @@ const Header = () => {
   };
 
   return (
-<<<<<<< develop:frontend/src/components/Category/Header/Header.tsx
     <S.Header>
       <S.Title>카테고리</S.Title>
       {isInputOpen ? (
@@ -47,6 +46,7 @@ const Header = () => {
           onBlur={resetInput}
           onKeyDown={escapeAddCategory}
           onKeyUp={requestAddCategory}
+          aria-label='카테고리 추가 입력 창'
         />
       ) : (
         <S.Button onClick={openInput} aria-label='카테고리 추가 입력 창 열기'>
@@ -54,54 +54,6 @@ const Header = () => {
         </S.Button>
       )}
     </S.Header>
-=======
-    <S.Section>
-      <S.Header>
-        <S.Title>카테고리</S.Title>
-        {isInputOpen ? (
-          <Input
-            type='text'
-            variant='underlined'
-            size='small'
-            placeholder='Add category ...'
-            value={value}
-            ref={inputRef}
-            isError={isError}
-            onBlur={resetInput}
-            onChange={handleOnChange}
-            onKeyDown={escapeAddCategory}
-            onKeyUp={requestAddCategory}
-            aria-label='카테고리 추가 입력 창'
-          />
-        ) : (
-          <S.Button onClick={() => setIsInputOpen(true)} aria-label='카테고리 추가 입력 창 열기'>
-            <PlusCircleIcon width={12} height={12} />
-          </S.Button>
-        )}
-      </S.Header>
-      <Accordion>
-        {categoryDetails.map((categoryDetail, index) => {
-          return (
-            <Accordion.Item key={categoryDetail.id}>
-              <Accordion.Title
-                onIconClick={() => setSelectedCategoryId(categoryDetail.id)}
-                aria-label={`${categoryDetail.categoryName} 카테고리 왼쪽 사이드바에서 열기`}
-              >
-                <Category
-                  categoryId={categoryDetail.id}
-                  categoryName={categoryDetail.categoryName}
-                  isDefaultCategory={index === 0}
-                />
-              </Accordion.Title>
-              <Accordion.Panel>
-                {categoryDetail.writings && <WritingList writings={categoryDetail.writings} />}
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
-      </Accordion>
-    </S.Section>
->>>>>>> feat: 카테고리 추가 input에 `aria-label` 추가:frontend/src/components/Category/CategorySection/CategorySection.tsx
   );
 };
 

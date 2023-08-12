@@ -67,7 +67,6 @@ const S = {
   Button: styled.button<{ $isClicked: boolean }>`
     display: flex;
     align-items: center;
-    flex: 1;
     gap: 0.8rem;
     min-width: 0;
     height: 3.6rem;

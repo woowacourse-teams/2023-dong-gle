@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - frontend/**
+      - .github/**
 
 defaults:
   run:

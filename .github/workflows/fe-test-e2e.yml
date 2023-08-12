@@ -30,5 +30,6 @@ jobs:
           start: yarn start
           wait-on: 'http://localhost:3000'
           browser: chrome
+          working-directory: ./frontend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

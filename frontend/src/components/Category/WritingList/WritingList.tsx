@@ -3,6 +3,8 @@ import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useWritings } from './useWritings';
+import DeleteButton from 'components/DeleteButton/DeleteButton';
+import { useDeleteWritings } from './useDeleteWritings';
 
 type Props = {
   categoryId: number;
@@ -13,6 +15,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
+  const deleteWritings = useDeleteWritings();
 
   if (!writings || writings?.length === 0)
     return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
@@ -31,6 +34,9 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
             </S.IconWrapper>
             <S.Text>{writing.title}</S.Text>
           </S.Button>
+          <S.DeleteButtonWrapper>
+            <DeleteButton onClick={() => deleteWritings([writingId])} />
+          </S.DeleteButtonWrapper>
         </S.Item>
       ))}
     </ul>
@@ -41,22 +47,32 @@ export default WritingList;
 
 const S = {
   Item: styled.li`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray5};
+
+      div {
+        display: inline-flex;
+        flex-shrink: 0;
+        gap: 0.8rem;
+      }
+    }
   `,
 
   Button: styled.button<{ $isClicked: boolean }>`
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    width: 100%;
+    min-width: 0;
     height: 3.6rem;
     padding: 0.8rem;
     border-radius: 8px;
     background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray5};
-
-    &:hover {
-      background-color: ${({ theme }) => theme.color.gray5};
-    }
   `,
 
   IconWrapper: styled.div`
@@ -78,5 +94,10 @@ const S = {
     font-size: 1.4rem;
     font-weight: 500;
     cursor: default;
+  `,
+
+  DeleteButtonWrapper: styled.div`
+    display: none;
+    margin-right: 0.8rem;
   `,
 };

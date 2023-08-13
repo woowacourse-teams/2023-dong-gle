@@ -42,7 +42,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "void main()",
+                            "block": "void main()",
                             "link": null
                         },
                         "annotations": {
@@ -66,7 +66,7 @@ public class NotionBlockJsonBuilder {
                 {
                     "type": "text",
                     "text": {
-                        "content": "heel",
+                        "block": "heel",
                         "link": null
                     },
                     "annotations": {
@@ -83,7 +83,7 @@ public class NotionBlockJsonBuilder {
                 {
                     "type": "text",
                     "text": {
-                        "content": "oo",
+                        "block": "oo",
                         "link": null
                     },
                     "annotations": {
@@ -109,7 +109,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "this is just normal paragraph ",
+                            "block": "this is just normal paragraph ",
                             "link": null
                         },
                         "annotations": {
@@ -126,7 +126,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "bold",
+                            "block": "bold",
                             "link": null
                         },
                         "annotations": {
@@ -143,7 +143,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": " ",
+                            "block": " ",
                             "link": null
                         },
                         "annotations": {
@@ -160,7 +160,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "italic",
+                            "block": "italic",
                             "link": null
                         },
                         "annotations": {
@@ -177,7 +177,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": " ",
+                            "block": " ",
                             "link": null
                         },
                         "annotations": {
@@ -194,7 +194,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "bolditalic",
+                            "block": "bolditalic",
                             "link": null
                         },
                         "annotations": {
@@ -211,7 +211,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": " ",
+                            "block": " ",
                             "link": null
                         },
                         "annotations": {
@@ -228,7 +228,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "code",
+                            "block": "code",
                             "link": null
                         },
                         "annotations": {
@@ -245,7 +245,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": " ",
+                            "block": " ",
                             "link": null
                         },
                         "annotations": {
@@ -262,7 +262,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "codehasbold",
+                            "block": "codehasbold",
                             "link": null
                         },
                         "annotations": {
@@ -279,7 +279,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": " ",
+                            "block": " ",
                             "link": null
                         },
                         "annotations": {
@@ -296,7 +296,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "codehasitalicbold",
+                            "block": "codehasitalicbold",
                             "link": null
                         },
                         "annotations": {
@@ -320,7 +320,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "call out",
+                            "block": "call out",
                             "link": null
                         },
                         "annotations": {
@@ -349,7 +349,7 @@ public class NotionBlockJsonBuilder {
                     {
                         "type": "text",
                         "text": {
-                            "content": "heading",
+                            "block": "heading",
                             "link": null
                         },
                         "annotations": {

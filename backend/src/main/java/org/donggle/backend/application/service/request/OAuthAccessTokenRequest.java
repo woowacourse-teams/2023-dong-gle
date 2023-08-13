@@ -1,4 +1,4 @@
 package org.donggle.backend.application.service.request;
 
-public record OAuthAccessTokenRequest(String redirectUri, String code) {
+public record OAuthAccessTokenRequest(String redirect_uri, String code) {
 }

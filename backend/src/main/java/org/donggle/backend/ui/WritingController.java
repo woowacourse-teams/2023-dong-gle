@@ -35,7 +35,7 @@ public class WritingController {
     private final PublishService publishService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> writingAdd(final MarkdownUploadRequest request) throws IOException {
+    public ResponseEntity<Void> writingAdd(@Valid final MarkdownUploadRequest request) throws IOException {
         final Long writingId = writingService.uploadMarkDownFile(1L, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }

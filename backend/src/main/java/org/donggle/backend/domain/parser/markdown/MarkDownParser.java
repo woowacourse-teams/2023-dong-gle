@@ -3,14 +3,15 @@ package org.donggle.backend.domain.parser.markdown;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
-import org.donggle.backend.domain.writing.content.CodeBlockContent;
-import org.donggle.backend.domain.writing.content.Content;
+import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
+import org.donggle.backend.domain.writing.content.ImageBlock;
 import org.donggle.backend.domain.writing.content.ImageCaption;
-import org.donggle.backend.domain.writing.content.ImageContent;
 import org.donggle.backend.domain.writing.content.ImageUrl;
 import org.donggle.backend.domain.writing.content.Language;
-import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.NormalBlock;
 import org.donggle.backend.domain.writing.content.RawText;
 
 import java.util.ArrayList;
@@ -30,8 +31,9 @@ public class MarkDownParser {
     private static final int SPACE_GROUP_INDEX = 2;
 
     private final MarkDownStyleParser markDownStyleParser;
+    private final Writing writing;
 
-    public List<Content> parse(final String text) {
+    public List<Block> parse(final String text) {
         return splitBlocks(text).stream()
                 .map(this::createContentFromTextBlock)
                 .toList();
@@ -64,7 +66,7 @@ public class MarkDownParser {
         return matchText != null && !matchText.isEmpty();
     }
 
-    private Content createContentFromTextBlock(final String textBlock) {
+    private Block createContentFromTextBlock(final String textBlock) {
         final Depth depth = parseDepth(textBlock);
         final String removedDepthText = removeDepth(depth, textBlock);
         final Matcher matcher = findBlockMatcher(removedDepthText);
@@ -72,17 +74,17 @@ public class MarkDownParser {
 
         switch (blockType) {
             case CODE_BLOCK -> {
-                return new CodeBlockContent(blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
+                return new CodeBlock(writing, blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
             }
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
-                return new ImageContent(blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+                return new ImageBlock(writing, blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
             }
             default -> {
                 final String removedBlockTypeText = matcher.replaceAll("");
                 final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
                 final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
-                return new NormalContent(depth, blockType, RawText.from(removedStyleTypeText), styles);
+                return new NormalBlock(writing, depth, blockType, RawText.from(removedStyleTypeText), styles);
             }
         }
     }

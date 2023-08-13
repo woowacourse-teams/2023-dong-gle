@@ -12,7 +12,7 @@ const WritingTablePage = () => {
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-      <WritingTable writings={data?.writings ?? []} />
+      <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
     </S.Article>
   );
 };

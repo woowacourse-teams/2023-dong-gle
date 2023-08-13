@@ -40,7 +40,7 @@ public class NotionOAuthService {
     }
 
     public void getAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        final String redirectUri = oAuthAccessTokenRequest.redirectUri();
+        final String redirectUri = oAuthAccessTokenRequest.redirect_uri();
         final String code = oAuthAccessTokenRequest.code();
 
         NotionTokenResponse response = webClient.post()

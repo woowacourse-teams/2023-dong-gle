@@ -21,7 +21,7 @@ class RichTextTest {
                                 {
                                     "type": "text",
                                     "text": {
-                                        "content": "dfsdf",
+                                        "block": "dfsdf",
                                         "link": null
                                     },
                                     "annotations": {
@@ -38,7 +38,7 @@ class RichTextTest {
                                 {
                                     "type": "text",
                                     "text": {
-                                        "content": "안녕",
+                                        "block": "안녕",
                                         "link": null
                                     },
                                     "annotations": {
@@ -72,7 +72,7 @@ class RichTextTest {
 
         //when
         final List<RichText> richText = RichText.parseRichTexts(jsonNode, "rich_text");
-        
+
         //then
         final List<RichText> expected = List.of(new RichText(
                 "dfsdf",

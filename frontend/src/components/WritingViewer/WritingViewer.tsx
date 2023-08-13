@@ -4,19 +4,17 @@ import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
-import { GetWritingResponse } from 'types/apis/writings';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { useQuery } from '@tanstack/react-query';
+import WritingTitle from './WritingTitle/WritingTitle';
 
-type Props = { writingId: number };
+type Props = {
+  writingId: number;
+  categoryId: number;
+};
 
-const WritingViewer = ({ writingId }: Props) => {
-  const myRef = useRef<HTMLHeadingElement>(null);
+const WritingViewer = ({ writingId, categoryId }: Props) => {
   const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
-
-  useEffect(() => {
-    myRef.current?.focus();
-  }, [writingId]);
 
   useEffect(() => {
     hljs.highlightAll();
@@ -33,11 +31,7 @@ const WritingViewer = ({ writingId }: Props) => {
 
   return (
     <S.WritingViewerContainer>
-      <S.TitleWrapper>
-        <S.Title ref={myRef} tabIndex={0}>
-          {data?.title}
-        </S.Title>
-      </S.TitleWrapper>
+      <WritingTitle categoryId={categoryId} writingId={writingId} title={data?.title ?? ''} />
       <Divider />
       <S.ContentWrapper
         tabIndex={0}
@@ -66,14 +60,6 @@ const S = {
     gap: 2rem;
     max-width: 100%;
     height: 100%;
-  `,
-
-  TitleWrapper: styled.div`
-    padding-bottom: 2rem;
-  `,
-
-  Title: styled.h1`
-    font-size: 4rem;
   `,
 
   ContentWrapper: styled.section`

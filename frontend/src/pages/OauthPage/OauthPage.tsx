@@ -8,26 +8,34 @@ import { OauthPlatform } from 'types/apis/login';
 
 const OauthPage = () => {
   const { goHomePage } = usePageNavigate();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const onError = () => {
+    alert('에러: 로그인을 실패했습니다.');
+    goHomePage();
+  };
   const { mutate } = useMutation(postOauthLogin, {
     onSuccess: goHomePage,
-    onError: (error) => alert(error),
+    onError,
   });
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    const code = searchParams.get('code');
     const platform = location.pathname.split('/').pop();
 
     const isOauthPlatform = (platform: string | undefined): platform is OauthPlatform => {
       return platform ? platform in Platforms : false;
     };
 
-    if (!isOauthPlatform(platform)) return;
+    if (!isOauthPlatform(platform) || !code) {
+      onError();
+      return;
+    }
 
     mutate({
       platform,
       body: {
-        code: searchParams.get('code') ?? '',
+        code,
         redirect_uri: getRedirectURL(platform),
       },
     });

@@ -13,7 +13,7 @@ public abstract class NotFoundException extends RuntimeException {
     
     public abstract String getHint();
     
-    public int getErrorCode() {
+    public final int getErrorCode() {
         return HttpStatus.NOT_FOUND.value();
     }
 }

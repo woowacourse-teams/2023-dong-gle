@@ -19,7 +19,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenService jwtTokenService;
-
+    
     public TokenResponse loginByKakao(final KakaoProfileResponse kakaoProfileResponse) {
         final Member loginMember = memberRepository.findByKakaoId(kakaoProfileResponse.id())
                 .orElseGet(() -> memberRepository.save(Member.createByKakao(
@@ -28,20 +28,20 @@ public class AuthService {
                 ));
         return createTokens(loginMember);
     }
-
+    
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
         final Member member = memberRepository.findById(memberId).
                 orElseThrow(RefreshTokenNotFoundException::new);
-
+        
         return createTokens(member);
     }
-
+    
     private TokenResponse createTokens(final Member loginMember) {
         final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
         final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
-
+        
         jwtTokenService.synchronizeRefreshToken(loginMember, refreshToken);
-
+        
         return new TokenResponse(accessToken, refreshToken);
     }
 }

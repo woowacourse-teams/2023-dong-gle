@@ -39,7 +39,7 @@ public class JwtTokenProvider {
         return createToken(payload, refreshTokenValidityInMilliseconds);
     }
 
-    public String createToken(final Long payload, final long validityInMilliseconds) {
+    private String createToken(final Long payload, final long validityInMilliseconds) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 

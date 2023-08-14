@@ -9,10 +9,8 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
@@ -52,11 +50,7 @@ public class InitData implements CommandLineRunner {
 
         @Transactional
         public void init() {
-            final Member savedMember = memberRepository.save(new Member(
-                    new MemberName("동그리"),
-                    new Email("a@a.com"),
-                    new Password("1234")
-            ));
+            final Member savedMember = memberRepository.save(Member.createByKakao(new MemberName("동그리"), 1L));
 
             final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
 

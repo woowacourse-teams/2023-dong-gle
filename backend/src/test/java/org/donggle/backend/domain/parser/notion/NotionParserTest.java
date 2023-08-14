@@ -3,10 +3,8 @@ package org.donggle.backend.domain.parser.notion;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
@@ -36,7 +34,7 @@ class NotionParserTest {
 
     @BeforeEach
     void setUp() {
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Category category = Category.basic(member);
         writing = Writing.lastOf(member, new Title("title"), category);
     }

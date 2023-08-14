@@ -55,7 +55,7 @@ public class KakaoOAuthService {
     private String requestAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final BodyInserters.FormInserter<String> bodyForm = BodyInserters.fromFormData("grant_type", GRANT_TYPE)
                 .with("client_id", clientId)
-                .with("redirect_uri", oAuthAccessTokenRequest.redirectUri())
+                .with("redirect_uri", oAuthAccessTokenRequest.redirect_uri())
                 .with("code", oAuthAccessTokenRequest.code())
                 .with("client_secret", clientSecret);
 

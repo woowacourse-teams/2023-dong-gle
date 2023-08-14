@@ -16,6 +16,7 @@ const meta = {
   component: WritingViewer,
   args: {
     writingId: 200,
+    categoryId: 1,
   },
   argTypes: {
     writingId: {
@@ -29,12 +30,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Success: Story = {
-  render: ({ writingId }) => {
+  render: ({ writingId, categoryId }) => {
     return (
       <StoryContainer>
         <StoryItemContainer>
           <StoryItemTitle>글 가져오기 성공</StoryItemTitle>
-          <WritingViewer writingId={writingId}></WritingViewer>
+          <WritingViewer categoryId={categoryId} writingId={writingId}></WritingViewer>
         </StoryItemContainer>
       </StoryContainer>
     );
@@ -47,7 +48,7 @@ export const Failure: Story = {
       <StoryContainer>
         <StoryItemContainer>
           <StoryItemTitle>글 가져오기 실패</StoryItemTitle>
-          <WritingViewer writingId={404}></WritingViewer>
+          <WritingViewer categoryId={1} writingId={404}></WritingViewer>
         </StoryItemContainer>
       </StoryContainer>
     );

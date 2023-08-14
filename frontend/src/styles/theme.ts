@@ -33,8 +33,32 @@ const color = {
   gray13: '#000000',
 } as const;
 
+const toastColor = {
+  plain: {
+    border: '#BEBEBE',
+    background: '#fafafa',
+  },
+  info: {
+    border: '#48c1b5',
+    background: '#f6fff9',
+  },
+  success: {
+    border: '#9dc0ee',
+    background: '#f5f9ff',
+  },
+  warning: {
+    border: '#f7d9a4',
+    background: '#fff8ec',
+  },
+  error: {
+    border: '#f4b0a1',
+    background: '#fff5f3',
+  },
+};
+
 export type Color = keyof typeof theme.color;
 
 export const theme = {
   color,
+  toastColor,
 };

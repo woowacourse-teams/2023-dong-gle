@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.domain.common.BaseEntity;
 
 import java.util.Objects;
@@ -24,22 +23,15 @@ public class Member extends BaseEntity {
     @NotNull
     @Embedded
     private MemberName memberName;
-    @NotNull
-    @Embedded
-    private Email email;
-    @NotNull
-    @Embedded
-    private Password password;
     private Long kakaoId;
 
-    public Member(final MemberName memberName, final Email email, final Password password) {
+    private Member(final MemberName memberName, final Long kakaoId) {
         this.memberName = memberName;
-        this.email = email;
-        this.password = password;
+        this.kakaoId = kakaoId;
     }
 
-    public static Member createByKakao(final KakaoProfileResponse kakaoProfileResponse) {
-        return new Member(new MemberName(kakaoProfileResponse.getNickname()), null, null);
+    public static Member createByKakao(final MemberName memberName, final Long kakaoId) {
+        return new Member(memberName, kakaoId);
     }
 
     @Override

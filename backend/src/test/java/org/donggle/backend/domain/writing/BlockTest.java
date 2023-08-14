@@ -5,10 +5,8 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Language;
@@ -37,7 +35,7 @@ class BlockTest {
     @DisplayName("block과 content save 테스트")
     void blockSave() {
         //given
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Member savedMember = memberRepository.save(member);
         final Category basicCategory = categoryRepository.findById(1L).get();
         final Writing writing = Writing.lastOf(savedMember, new Title("title"), basicCategory);

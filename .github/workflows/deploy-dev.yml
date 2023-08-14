@@ -21,12 +21,15 @@ jobs:
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
         echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
         echo "PROFILE=${{ secrets.DEV_PROFILE }}" >> .env
-        echo "KAKAO_CLIENT_ID"=${{ secrets.KAKAO_CLIENT_ID }} >> .env
-        echo "KAKAO_CLIENT_SECRET"=${{ secrets.KAKAO_CLIENT_SECRET }} >> .env
-        echo "TISTORY_CLIENT_ID"=${{ secrets.TISTORY_CLIENT_ID }} >> .env
-        echo "TISTORY_CLIENT_SECRET"=${{ secrets.TISTORY_CLIENT_SECRET }} >> .env
-        echo "NOTION_CLIENT_ID"=${{ secrets.NOTION_CLIENT_ID }} >> .env
-        echo "NOTION_CLIENT_SECRET"=${{ secrets.NOTION_CLIENT_SECRET }} >> .env
+        echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+        echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+        echo "TISTORY_CLIENT_ID=${{ secrets.TISTORY_CLIENT_ID }}" >> .env
+        echo "TISTORY_CLIENT_SECRET=${{ secrets.TISTORY_CLIENT_SECRET }}" >> .env
+        echo "NOTION_CLIENT_ID=${{ secrets.NOTION_CLIENT_ID }}" >> .env
+        echo "NOTION_CLIENT_SECRET=${{ secrets.NOTION_CLIENT_SECRET }}" >> .env
+        echo "JWT_SECRET_KET=${{ secrets.JWT_SECRET_KEY }}" >> .env
+        echo "ACCESS_TOKEN_EXPIRE=${{ secrets.ACCESS_TOKEN_EXPIRE_LENGTH }}" >> .env
+        echo "REFRESH_TOKEN_EXPIRE_LENGTH=${{ secrets.REFRESH_TOKEN_EXPIRE_LENGTH }}" >> .env
     ## deploy to production
     - name: Deploy to prod
       run: |

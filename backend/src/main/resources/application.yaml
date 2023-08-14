@@ -15,6 +15,12 @@ spring:
   h2:
     console:
       enabled: true
+security:
+  jwt:
+    token:
+      secret-key: 'wjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd'
+      access-token-expire-length: 600000
+      refresh-token-expire-length: 1200000
 kakao_client_id: kakao_client_id
 kakao_client_secret: kakao_client_secret
 tistory_client_id: tistory_client_id

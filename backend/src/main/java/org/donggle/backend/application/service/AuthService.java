@@ -26,19 +26,22 @@ public class AuthService {
                         new MemberName(kakaoProfileResponse.getNickname()),
                         kakaoProfileResponse.id())
                 ));
-        final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
-        final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
-        jwtTokenService.synchronizeRefreshToken(loginMember, refreshToken);
-        return new TokenResponse(accessToken, refreshToken);
+        return createTokens(loginMember);
     }
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
         final Member member = memberRepository.findById(memberId).
                 orElseThrow(NoSuchTokenException::new);
 
-        final String accessToken = jwtTokenProvider.createAccessToken(memberId);
-        final String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
-        jwtTokenService.synchronizeRefreshToken(member, refreshToken);
+        return createTokens(member);
+    }
+
+    private TokenResponse createTokens(final Member loginMember) {
+        final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
+        final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
+
+        jwtTokenService.synchronizeRefreshToken(loginMember, refreshToken);
+
         return new TokenResponse(accessToken, refreshToken);
     }
 }

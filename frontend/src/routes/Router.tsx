@@ -6,6 +6,7 @@ import OauthPage from 'pages/OauthPage/OauthPage';
 import IntroducePage from 'pages/IntroducePage/IntroducePage';
 import Layout from 'pages/Layout/Layout';
 import { PATH } from 'constants/path';
+import ErrorPage from 'pages/ErrorPage/ErrorPage';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 
 export const Router = () => {
@@ -46,6 +47,10 @@ export const Router = () => {
           ],
         },
       ],
+    },
+    {
+      path: '*',
+      element: <ErrorPage />,
     },
   ]);
 

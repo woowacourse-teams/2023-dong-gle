@@ -25,7 +25,7 @@ const FileUploader = ({ accept = '*', width = '30rem', height = '10rem', onFileS
         $isDragging={isDragging}
         $width={width}
         $height={height}
-        aria-label='파일 업로드 존'
+        aria-label='파일 업로드'
       >
         <ImportIcon />
         드래그하거나 클릭해서 업로드

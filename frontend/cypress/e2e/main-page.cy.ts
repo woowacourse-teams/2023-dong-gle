@@ -13,7 +13,7 @@ describe('동글 메인 페이지', () => {
 
     it('드래그 앤 드롭으로 마크다운 파일을 업로드할 수 있다.', () => {
       cy.findByText('Add Post').click();
-      cy.findByLabelText('파일 업로드 존').attachFile('markdown-test.md', {
+      cy.findByLabelText('파일 업로드').attachFile('markdown-test.md', {
         subjectType: 'drag-n-drop',
       });
 

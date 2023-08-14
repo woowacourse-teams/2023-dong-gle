@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
-
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
 
@@ -23,13 +22,13 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
                              final Object handler) {
         final String refreshToken = extract(request);
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final JwtToken jwtToken = tokenRepository.findByMemberId(memberId).orElseThrow();
-        if (jwtToken.isDifferentRefreshToken(refreshToken)) {
+        final JwtToken jwtToken = tokenRepository.findByMemberId(memberId)
+                .orElseThrow(NoSuchTokenException::new);
+
+        if (jwtToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
             throw new NoSuchTokenException();
         }
-        if (jwtTokenProvider.inValidTokenUsage(refreshToken)) {
-            throw new NoSuchTokenException();
-        }
+        
         return true;
     }
 

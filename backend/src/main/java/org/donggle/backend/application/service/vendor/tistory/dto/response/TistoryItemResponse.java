@@ -1,8 +1,7 @@
 package org.donggle.backend.application.service.vendor.tistory.dto.response;
 
-public record TistoryPublishStatusDataResponse(
+public record TistoryItemResponse<T>(
         int status,
-        Long postId,
-        String url
+        T item
 ) {
 }

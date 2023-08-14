@@ -6,6 +6,7 @@ import org.donggle.backend.auth.JwtTokenProvider;
 import org.donggle.backend.auth.presentation.AuthInterceptor;
 import org.donggle.backend.auth.presentation.RefreshTokenAuthInterceptor;
 import org.donggle.backend.auth.presentation.TokenArgumentResolver;
+import org.donggle.backend.ui.common.MDCInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -18,7 +19,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
-
+    private final MDCInterceptor mdcInterceptor;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
 
@@ -34,6 +35,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(mdcInterceptor)
+                .addPathPatterns("/**")
+                .order(1);
+        
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
                 .addPathPatterns("/**")
                 .excludePathPatterns("/token/refresh")

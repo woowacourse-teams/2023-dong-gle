@@ -7,6 +7,8 @@ import { handlers } from '../src/mocks/handlers';
 
 import GlobalStyle from '../src/styles/GlobalStyle';
 import { theme } from '../src/styles/theme';
+import ToastProvider from '../src/contexts/ToastProvider';
+import ToastContainer from '../src/components/@common/Toast/ToastContainer';
 
 // msw init
 initialize();
@@ -33,7 +35,10 @@ export const decorators = [
   (Story) => (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Story />
+      <ToastProvider>
+        <Story />
+        <ToastContainer />
+      </ToastProvider>
     </ThemeProvider>
   ),
   withRouter,

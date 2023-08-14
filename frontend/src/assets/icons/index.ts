@@ -20,3 +20,4 @@ export { ReactComponent as PencilIcon } from './pencil.svg';
 export { ReactComponent as WritingIcon } from './writing.svg';
 export { ReactComponent as ImportIcon } from './import.svg';
 export { ReactComponent as PlusIcon } from './plus.svg';
+export { ReactComponent as KakaoLoginIcon } from './kakao-login.svg';

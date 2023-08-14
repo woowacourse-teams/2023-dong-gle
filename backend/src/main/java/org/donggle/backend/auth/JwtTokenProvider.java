@@ -7,7 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.donggle.backend.auth.exception.ExpiredTokenException;
+import org.donggle.backend.auth.exception.ExpiredAccessTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = getClaims(token);
             return claims.getBody().getExpiration().before(new Date());
         } catch (final ExpiredJwtException e) {
-            throw new ExpiredTokenException();
+            throw new ExpiredAccessTokenException();
         } catch (final JwtException | IllegalArgumentException e) {
             return true;
         }

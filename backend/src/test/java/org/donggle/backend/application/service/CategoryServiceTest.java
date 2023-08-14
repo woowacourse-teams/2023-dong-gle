@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
@@ -9,7 +8,9 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.DuplicateCategoryNameException;
+import org.donggle.backend.exception.business.EmptyCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
+import org.donggle.backend.exception.business.OverLengthCategoryNameException;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
@@ -217,7 +218,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("카테고리 이름 중복 테스트")
+    @DisplayName("카테고리 이름 중복 예외")
     void duplicateCategoryName() {
         //given
         categoryService.addCategory(1L, new CategoryAddRequest("기본 카테고리"));
@@ -225,10 +226,64 @@ class CategoryServiceTest {
         //when
 
         //then
-        Assertions.assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest("기본 카테고리")))
+        assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest("기본 카테고리")))
                 .isInstanceOf(DuplicateCategoryNameException.class)
                 .hasMessage("이미 존재하는 카테고리 이름입니다.");
     }
+
+    @Test
+    @DisplayName("카테고리 빈 이름 예외")
+    void emptyCategoryName() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest("")))
+                .isInstanceOf(EmptyCategoryNameException.class)
+                .hasMessage("카테고리 이름은 빈 값이 될 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("카테고리 공백 이름 예외")
+    void blankCategoryName() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest(" ")))
+                .isInstanceOf(EmptyCategoryNameException.class)
+                .hasMessage("카테고리 이름은 빈 값이 될 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("카테고리 이름 빈 이름 수정 예외")
+    void modifyCategoryNameWithEmptyName() {
+        //given
+        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.modifyCategoryName(1L, secondId, new CategoryModifyRequest("", null)))
+                .isInstanceOf(EmptyCategoryNameException.class)
+                .hasMessage("카테고리 이름은 빈 값이 될 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("카테고리 긴 이름 예외")
+    void longCategoryName() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest("123456789012345678901234567890123456789012345678901234567890")))
+                .isInstanceOf(OverLengthCategoryNameException.class)
+                .hasMessage("카테고리 이름은 30자를 넘을 수 없습니다.");
+    }
+
     @Test
     @DisplayName("기본 카테고리 삭제 예외")
     void removeDefaultCategory() {

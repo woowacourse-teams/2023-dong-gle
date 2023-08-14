@@ -11,7 +11,9 @@ import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.DuplicateCategoryNameException;
+import org.donggle.backend.exception.business.EmptyCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
+import org.donggle.backend.exception.business.OverLengthCategoryNameException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.CategoryListResponse;
@@ -43,14 +45,24 @@ public class CategoryService {
         //TODO: member checking
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());
-        if (categoryRepository.existsByCategoryName(categoryName)) {
-            throw new DuplicateCategoryNameException(request.categoryName());
-        }
+        validateCategoryName(categoryName);
         final Category category = Category.of(categoryName, findMember);
         final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
         lastCategory.changeNextCategory(savedCategory);
         return savedCategory.getId();
+    }
+
+    private void validateCategoryName(final CategoryName categoryName) {
+        if (categoryRepository.existsByCategoryName(categoryName)) {
+            throw new DuplicateCategoryNameException(categoryName.getName());
+        }
+        if (categoryName.isBlank()) {
+            throw new EmptyCategoryNameException();
+        }
+        if (categoryName.isOverLength()) {
+            throw new OverLengthCategoryNameException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -121,7 +133,11 @@ public class CategoryService {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
         validateBasicCategory(findCategory);
-        findCategory.changeName(new CategoryName(request.categoryName()));
+
+        final CategoryName categoryName = new CategoryName(request.categoryName());
+        validateCategoryName(categoryName);
+
+        findCategory.changeName(categoryName);
     }
 
     public void removeCategory(final Long memberId, final Long categoryId) {

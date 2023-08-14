@@ -6,9 +6,9 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.auth.JwtTokenProvider;
 import org.donggle.backend.auth.JwtTokenService;
-import org.donggle.backend.auth.exception.RefreshTokenNotFoundException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class AuthService {
     
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
         final Member member = memberRepository.findById(memberId).
-                orElseThrow(RefreshTokenNotFoundException::new);
+                orElseThrow(() -> new MemberNotFoundException(memberId));
         
         return createTokens(member);
     }

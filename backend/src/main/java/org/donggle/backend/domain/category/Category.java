@@ -36,20 +36,20 @@ public class Category {
     @JoinColumn(name = "member_id")
     private Member member;
     @NotNull
-    private boolean isDefault;
+    private boolean isBasic;
 
     private Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;
-        this.isDefault = false;
+        this.isBasic = false;
     }
 
-    private Category(final CategoryName categoryName, final Category nextCategory, final Member member, final boolean isDefault) {
+    private Category(final CategoryName categoryName, final Category nextCategory, final Member member, final boolean isBasic) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;
-        this.isDefault = isDefault;
+        this.isBasic = isBasic;
     }
 
     public static Category basic(final Member member) {
@@ -60,9 +60,6 @@ public class Category {
         return new Category(categoryName, null, member);
     }
 
-    public boolean isBasic() {
-        return isDefault;
-    }
 
     public String getCategoryNameValue() {
         return categoryName.getName();

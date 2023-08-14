@@ -7,11 +7,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Writing;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageContent extends Content {
+public class ImageBlock extends Block {
     @NotNull
     @Embedded
     private ImageUrl imageUrl;
@@ -19,8 +20,8 @@ public class ImageContent extends Content {
     @Embedded
     private ImageCaption imageCaption;
 
-    public ImageContent(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
-        super(Depth.empty(), blockType);
+    public ImageBlock(final Writing writing, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(writing, Depth.empty(), blockType);
         this.imageUrl = imageUrl;
         this.imageCaption = imageCaption;
     }

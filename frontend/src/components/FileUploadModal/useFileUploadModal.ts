@@ -23,7 +23,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
   const onFileUploadSuccess = (headers: Headers) => {
     const writingId = headers.get('Location')?.split('/').pop();
-    goWritingPage(Number(writingId));
+    goWritingPage({ categoryId: 1, writingId: Number(writingId) });
     closeModal();
   };
 

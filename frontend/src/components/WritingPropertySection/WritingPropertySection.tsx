@@ -45,9 +45,9 @@ const WritingPropertySection = ({ writingId }: Props) => {
           <S.Info>
             <S.InfoTitle>PUBLISHED</S.InfoTitle>
             <S.InfoContent>
-              {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }) => {
+              {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }, index) => {
                 return (
-                  <Fragment key={blogName}>
+                  <Fragment key={index}>
                     <S.PropertyRow>
                       <S.PropertyName>
                         {blogIcon[blogName]} {blogName}

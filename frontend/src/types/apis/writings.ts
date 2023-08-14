@@ -45,3 +45,8 @@ export type GetDetailWritingsResponse = {
   categoryName: string;
   writings: Writing[];
 };
+
+export type UpdateWritingTitleArgs = {
+  writingId: number;
+  body: Pick<Writing, 'title'>;
+};

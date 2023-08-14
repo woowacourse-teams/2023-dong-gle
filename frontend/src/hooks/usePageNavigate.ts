@@ -5,7 +5,8 @@ export const usePageNavigate = () => {
 
   const goHomePage = () => navigate('/');
 
-  const goWritingPage = (writingId: number) => navigate(`/writing/${writingId}`);
+  const goWritingPage = ({ categoryId, writingId }: { categoryId: number; writingId: number }) =>
+    navigate(`/writings/${categoryId}/${writingId}`);
 
   const goWritingTablePage = (categoryId: number) => navigate(`/writings/${categoryId}`);
 

@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service;
 
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
@@ -7,6 +8,7 @@ import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.exception.business.DuplicateCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
@@ -164,7 +166,7 @@ class CategoryServiceTest {
         //given
         //when
         final CategoryWritingsResponse response = categoryService.findAllWritings(1L, 1L);
-        Writing findWriting = writingRepository.findById(1L).get();
+        final Writing findWriting = writingRepository.findById(1L).get();
 
         //then
         assertAll(
@@ -203,7 +205,7 @@ class CategoryServiceTest {
         categoryService.modifyCategoryOrder(1L, thirdId, new CategoryModifyRequest(null, secondId));
 
         //then
-        CategoryListResponse response = categoryService.findAll(1L);
+        final CategoryListResponse response = categoryService.findAll(1L);
         assertAll(
                 () -> assertThat(response.categories()).hasSize(3),
                 () -> assertThat(response.categories()).containsExactly(
@@ -212,5 +214,19 @@ class CategoryServiceTest {
                         new CategoryResponse(secondId, "두 번째 카테고리")
                 )
         );
+    }
+
+    @Test
+    @DisplayName("카테고리 이름 중복 테스트")
+    void duplicateCategoryName() {
+        //given
+        categoryService.addCategory(1L, new CategoryAddRequest("기본 카테고리"));
+
+        //when
+
+        //then
+        Assertions.assertThatThrownBy(() -> categoryService.addCategory(1L, new CategoryAddRequest("기본 카테고리")))
+                .isInstanceOf(DuplicateCategoryNameException.class)
+                .hasMessage("이미 존재하는 카테고리 이름입니다.");
     }
 }

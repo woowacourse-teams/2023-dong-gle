@@ -10,6 +10,7 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.exception.business.DuplicateCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -41,7 +42,11 @@ public class CategoryService {
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         //TODO: member checking
         final Member findMember = findMember(memberId);
-        final Category category = Category.of(new CategoryName(request.categoryName()), findMember);
+        final CategoryName categoryName = new CategoryName(request.categoryName());
+        if (categoryRepository.existsByCategoryName(categoryName)) {
+            throw new DuplicateCategoryNameException(request.categoryName());
+        }
+        final Category category = Category.of(categoryName, findMember);
         final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
         lastCategory.changeNextCategory(savedCategory);

@@ -7,5 +7,7 @@ export const usePageNavigate = () => {
 
   const goWritingTablePage = (categoryId: number) => navigate(`/writings/${categoryId}`);
 
-  return { goWritingPage, goWritingTablePage };
+  const goTrashCanPage = () => navigate('/trash-can');
+
+  return { goWritingPage, goWritingTablePage, goTrashCanPage };
 };

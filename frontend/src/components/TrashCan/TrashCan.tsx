@@ -1,15 +1,15 @@
 import Accordion from 'components/@common/Accordion/Accordion';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 
 const TrashCan = () => {
+  const { goTrashCanPage } = usePageNavigate();
+
   return (
     <Accordion>
       <Accordion.Item>
         <Accordion.Title>
-          <S.Button
-            // onClick={() => goWritingTablePage(categoryId)}
-            aria-label='휴지통으로 이동하기'
-          >
+          <S.Button aria-label='휴지통으로 이동하기' onClick={goTrashCanPage}>
             <S.Text>휴지통</S.Text>
           </S.Button>
         </Accordion.Title>

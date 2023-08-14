@@ -11,7 +11,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override

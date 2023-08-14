@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthorizationExtractor {
-
     private static final String BEARER_TYPE = "Bearer ";
 
     public static String extract(final HttpServletRequest request) {

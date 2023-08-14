@@ -40,9 +40,11 @@ public class KakaoOAuthController {
         final TokenResponse response = kakaoOAuthService.login(oAuthAccessTokenRequest);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
-        httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
-        return ResponseEntity.ok(new AccessTokenResponse(response.accessToken()));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Set-Cookie", cookie.toString())
+                .build();
     }
 
     @PostMapping("/token/refresh")
@@ -52,7 +54,10 @@ public class KakaoOAuthController {
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
         httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
-        return ResponseEntity.ok(new AccessTokenResponse(response.accessToken()));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Set-Cookie", cookie.toString())
+                .build();
     }
 
     private ResponseCookie createRefreshTokenCookie(final String refreshToken) {

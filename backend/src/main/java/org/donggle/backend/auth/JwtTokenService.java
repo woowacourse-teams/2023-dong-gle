@@ -16,7 +16,7 @@ public class JwtTokenService {
         tokenRepository.findByMemberId(member.getId())
                 .ifPresentOrElse(
                         token -> token.updateRefreshToken(refreshToken),
-                        () -> tokenRepository.save(new JwtToken(refreshToken, member))
+                        () -> tokenRepository.save(new RefreshToken(refreshToken, member))
                 );
     }
 }

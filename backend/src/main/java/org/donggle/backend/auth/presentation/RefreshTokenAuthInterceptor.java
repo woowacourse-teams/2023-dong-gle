@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.auth.JwtToken;
 import org.donggle.backend.auth.JwtTokenProvider;
+import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -22,13 +22,13 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
                              final Object handler) {
         final String refreshToken = extract(request);
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final JwtToken jwtToken = tokenRepository.findByMemberId(memberId)
+        final RefreshToken jwtToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(NoSuchTokenException::new);
 
         if (jwtToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
             throw new NoSuchTokenException();
         }
-        
+
         return true;
     }
 

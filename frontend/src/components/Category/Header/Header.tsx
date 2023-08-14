@@ -46,6 +46,7 @@ const Header = () => {
           onBlur={resetInput}
           onKeyDown={escapeAddCategory}
           onKeyUp={requestAddCategory}
+          aria-label='카테고리 추가 입력 창'
         />
       ) : (
         <S.Button onClick={openInput} aria-label='카테고리 추가 입력 창 열기'>

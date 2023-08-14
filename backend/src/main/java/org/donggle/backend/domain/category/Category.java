@@ -35,15 +35,25 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+    @NotNull
+    private boolean isDefault;
 
     private Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;
+        this.isDefault = false;
+    }
+
+    private Category(final CategoryName categoryName, final Category nextCategory, final Member member, final boolean isDefault) {
+        this.categoryName = categoryName;
+        this.nextCategory = nextCategory;
+        this.member = member;
+        this.isDefault = isDefault;
     }
 
     public static Category basic(final Member member) {
-        return new Category(BASIC_CATEGORY_NAME, null, member);
+        return new Category(BASIC_CATEGORY_NAME, null, member, true);
     }
 
     public static Category of(final CategoryName categoryName, final Member member) {
@@ -51,7 +61,7 @@ public class Category {
     }
 
     public boolean isBasic() {
-        return this.categoryName.equals(BASIC_CATEGORY_NAME);
+        return isDefault;
     }
 
     public String getCategoryNameValue() {

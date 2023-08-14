@@ -229,4 +229,16 @@ class CategoryServiceTest {
                 .isInstanceOf(DuplicateCategoryNameException.class)
                 .hasMessage("이미 존재하는 카테고리 이름입니다.");
     }
+    @Test
+    @DisplayName("기본 카테고리 삭제 예외")
+    void removeDefaultCategory() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.removeCategory(1L, 1L))
+                .isInstanceOf(InvalidBasicCategoryException.class)
+                .hasMessage("기본 카테고리는 변경이 불가합니다.");
+    }
 }

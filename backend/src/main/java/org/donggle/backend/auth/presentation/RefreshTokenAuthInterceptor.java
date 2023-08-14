@@ -24,10 +24,10 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
                              final Object handler) {
         final String refreshToken = extract(request);
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final JwtToken jwtToken = tokenRepository.findByMemberId(memberId)
+        final JwtToken findRefreshToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(RefreshTokenNotFoundException::new);
 
-        if (jwtToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
+        if (findRefreshToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
             throw new InvalidRefreshTokenException();
         }
         

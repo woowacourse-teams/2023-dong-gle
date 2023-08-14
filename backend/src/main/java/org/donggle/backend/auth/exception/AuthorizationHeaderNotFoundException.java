@@ -2,12 +2,12 @@ package org.donggle.backend.auth.exception;
 
 import org.donggle.backend.exception.authentication.AuthenticationException;
 
-public class EmptyAuthorizationHeaderException extends AuthenticationException {
-    public EmptyAuthorizationHeaderException() {
+public class AuthorizationHeaderNotFoundException extends AuthenticationException {
+    public AuthorizationHeaderNotFoundException() {
         super(null);
     }
     
-    public EmptyAuthorizationHeaderException(final Throwable cause) {
+    public AuthorizationHeaderNotFoundException(final Throwable cause) {
         super(null, cause);
     }
     

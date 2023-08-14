@@ -29,7 +29,6 @@ public class GlobalExceptionHandler {
         log.warn("Exception from handleAuthenticationException = ", e);
         final ErrorWrapper errorWrapper = new ErrorWrapper(
                 ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())
-                
         );
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)

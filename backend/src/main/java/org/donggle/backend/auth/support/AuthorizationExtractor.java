@@ -3,7 +3,7 @@ package org.donggle.backend.auth.support;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.auth.exception.EmptyAuthorizationHeaderException;
+import org.donggle.backend.auth.exception.AuthorizationHeaderNotFoundException;
 import org.donggle.backend.auth.exception.InvalidAuthorizationHeaderTypeException;
 import org.springframework.http.HttpHeaders;
 
@@ -16,7 +16,7 @@ public class AuthorizationExtractor {
     public static String extract(final HttpServletRequest request) {
         final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Objects.isNull(authorizationHeader)) {
-            throw new EmptyAuthorizationHeaderException();
+            throw new AuthorizationHeaderNotFoundException();
         }
 
         validateAuthorizationFormat(authorizationHeader);

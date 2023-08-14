@@ -4,6 +4,7 @@ import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -45,16 +46,16 @@ public class KakaoOAuthService {
                 .toUriString();
     }
 
-    public void login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
+    public TokenResponse login(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final String accessToken = requestAccessToken(oAuthAccessTokenRequest);
         final KakaoProfileResponse kakaoProfileResponse = requestKakaoProfile(accessToken);
-        authService.loginByKakao(kakaoProfileResponse);
+        return authService.loginByKakao(kakaoProfileResponse);
     }
 
     private String requestAccessToken(final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final BodyInserters.FormInserter<String> bodyForm = BodyInserters.fromFormData("grant_type", GRANT_TYPE)
                 .with("client_id", clientId)
-                .with("redirect_uri", oAuthAccessTokenRequest.redirectUri())
+                .with("redirect_uri", oAuthAccessTokenRequest.redirect_uri())
                 .with("code", oAuthAccessTokenRequest.code())
                 .with("client_secret", clientSecret);
 

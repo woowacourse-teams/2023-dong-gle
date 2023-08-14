@@ -5,11 +5,10 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
-import org.donggle.backend.domain.writing.content.CodeBlockContent;
+import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.RawText;
 import org.junit.jupiter.api.DisplayName;
@@ -36,20 +35,19 @@ class BlockTest {
     @DisplayName("block과 content save 테스트")
     void blockSave() {
         //given
-        final Member member = new Member(new MemberName("동그리"), new Email("a@a.com"), new Password("1234"));
+        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Member savedMember = memberRepository.save(member);
-        Category basicCategory = categoryRepository.findById(1L).get();
+        final Category basicCategory = categoryRepository.findById(1L).get();
         final Writing writing = Writing.lastOf(savedMember, new Title("title"), basicCategory);
         final Writing savedWriting = writingRepository.save(writing);
-        final CodeBlockContent expectedContent = new CodeBlockContent(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
-        final Block block = new Block(savedWriting, expectedContent);
+        final Block codeBlock = new CodeBlock(savedWriting, BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
 
         //when
-        final Block savedBlock = blockRepository.save(block);
+        final Block savedBlock = blockRepository.save(codeBlock);
         blockRepository.flush();
 
         //then
         final Block findBlock = blockRepository.findById(savedBlock.getId()).get();
-        assertThat(findBlock.getContent()).isEqualTo(expectedContent);
+        assertThat(findBlock).isEqualTo(savedBlock);
     }
 }

@@ -86,4 +86,9 @@ export const writingHandlers = [
       ctx.status(200),
     );
   }),
+
+  // 글 제목 변경: PATCH
+  rest.patch(`${writingURL}/:writingId`, async (req, res, ctx) => {
+    return res(ctx.delay(3000), ctx.status(200));
+  }),
 ];

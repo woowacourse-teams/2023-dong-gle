@@ -10,6 +10,11 @@ export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['acc
 
     const newFile = target.files[0];
 
+    if (newFile.size > 5 * 1024 * 1024) {
+      alert('업로드 가능한 최대 용량은 5MB입니다. ');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', newFile);
 

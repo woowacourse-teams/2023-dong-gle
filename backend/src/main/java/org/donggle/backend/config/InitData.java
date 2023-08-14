@@ -9,19 +9,17 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Email;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
-import org.donggle.backend.domain.member.Password;
-import org.donggle.backend.domain.writing.Block;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.Depth;
-import org.donggle.backend.domain.writing.content.NormalContent;
+import org.donggle.backend.domain.writing.content.NormalBlock;
 import org.donggle.backend.domain.writing.content.RawText;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +35,7 @@ public class InitData implements CommandLineRunner {
     private final InitService initService;
 
     @Override
-    public void run(String... args) {
+    public void run(final String... args) {
         initService.init();
     }
 
@@ -52,11 +50,7 @@ public class InitData implements CommandLineRunner {
 
         @Transactional
         public void init() {
-            final Member savedMember = memberRepository.save(new Member(
-                    new MemberName("동그리"),
-                    new Email("a@a.com"),
-                    new Password("1234")
-            ));
+            final Member savedMember = memberRepository.save(Member.createByKakao(new MemberName("동그리"), 1L));
 
             final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
 
@@ -69,16 +63,16 @@ public class InitData implements CommandLineRunner {
                     savedCategory
             ));
 
-            blockRepository.save(new Block(
-                    savedWriting,
-                    new NormalContent(
+            final Block savedBlock = blockRepository.save(
+                    new NormalBlock(
+                            savedWriting,
                             Depth.from(1),
                             BlockType.PARAGRAPH,
                             RawText.from("테스트 글입니다."),
                             List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
                             )
                     )
-            ));
+            );
         }
     }
 }

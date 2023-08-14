@@ -1,11 +1,12 @@
-import { DeleteIcon, PencilIcon } from 'assets/icons';
+import { TrashCanIcon, PencilIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { KeyboardEventHandler, MouseEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
 import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
+import DeleteButton from 'components/DeleteButton/DeleteButton';
 
 type Props = {
   categoryId: number;
@@ -59,6 +60,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
+          aria-label={`${categoryName} 카테고리 이름 수정 입력 창`}
         />
       ) : (
         <>
@@ -73,12 +75,10 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
               <S.Button aria-label={`${categoryName} 카테고리 이름 수정`} onClick={openInput}>
                 <PencilIcon width={12} height={12} />
               </S.Button>
-              <S.Button
+              <DeleteButton
                 aria-label={`${categoryName} 카테고리 삭제`}
                 onClick={() => deleteCategory(categoryId)}
-              >
-                <DeleteIcon width={12} height={12} />
-              </S.Button>
+              />
             </S.IconContainer>
           )}
         </>

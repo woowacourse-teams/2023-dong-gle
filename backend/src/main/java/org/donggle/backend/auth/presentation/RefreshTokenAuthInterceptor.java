@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.auth.JwtToken;
 import org.donggle.backend.auth.JwtTokenProvider;
-import org.donggle.backend.auth.exception.NoSuchTokenException;
+import org.donggle.backend.auth.exception.InvalidRefreshTokenException;
+import org.donggle.backend.auth.exception.NoRefreshTokenInCookieException;
+import org.donggle.backend.auth.exception.RefreshTokenNotFoundException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
@@ -23,10 +25,10 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
         final String refreshToken = extract(request);
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
         final JwtToken jwtToken = tokenRepository.findByMemberId(memberId)
-                .orElseThrow(NoSuchTokenException::new);
+                .orElseThrow(RefreshTokenNotFoundException::new);
 
         if (jwtToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
-            throw new NoSuchTokenException();
+            throw new InvalidRefreshTokenException();
         }
         
         return true;
@@ -36,7 +38,7 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
         return Arrays.stream(request.getCookies())
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
-                .orElseThrow(NoSuchTokenException::new)
+                .orElseThrow(NoRefreshTokenInCookieException::new)
                 .getValue();
     }
 }

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.auth.exception.EmptyAuthorizationHeaderException;
-import org.donggle.backend.auth.exception.NoSuchTokenException;
+import org.donggle.backend.auth.exception.InvalidAuthorizationHeaderTypeException;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Objects;
@@ -25,7 +25,7 @@ public class AuthorizationExtractor {
 
     private static void validateAuthorizationFormat(final String authorizationHeader) {
         if (!authorizationHeader.toLowerCase().startsWith(BEARER_TYPE.toLowerCase())) {
-            throw new NoSuchTokenException();
+            throw new InvalidAuthorizationHeaderTypeException(authorizationHeader);
         }
     }
 }

@@ -1,11 +1,18 @@
 package org.donggle.backend.auth.exception;
 
-import org.donggle.backend.exception.business.BusinessException;
+import org.donggle.backend.exception.authentication.AuthenticationException;
 
-public class EmptyAuthorizationHeaderException extends BusinessException {
-    private static final String MESSAGE = "header에 Authorization이 존재하지 않습니다.";
-
+public class EmptyAuthorizationHeaderException extends AuthenticationException {
     public EmptyAuthorizationHeaderException() {
-        super(MESSAGE);
+        super(null);
+    }
+    
+    public EmptyAuthorizationHeaderException(final Throwable cause) {
+        super(null, cause);
+    }
+    
+    @Override
+    public String getHint() {
+        return "Authorization 해더값이 존재하지 않습니다.";
     }
 }

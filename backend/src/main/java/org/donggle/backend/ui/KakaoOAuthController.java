@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.KakaoOAuthService;
@@ -36,7 +35,7 @@ public class KakaoOAuthController {
     }
 
     @PostMapping("/oauth/login/kakao")
-    public ResponseEntity<AccessTokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest, final HttpServletResponse httpServletResponse) {
+    public ResponseEntity<AccessTokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final TokenResponse response = kakaoOAuthService.login(oAuthAccessTokenRequest);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
@@ -48,11 +47,10 @@ public class KakaoOAuthController {
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId, final HttpServletResponse httpServletResponse) {
+    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId) {
         final TokenResponse response = authService.reissueAccessTokenAndRefreshToken(memberId);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
-        httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity
                 .status(HttpStatus.OK)

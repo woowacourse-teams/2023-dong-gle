@@ -1,16 +1,8 @@
 import { KakaoLoginIcon } from 'assets/icons';
 import { getRedirectURL } from 'constants/apis/oauth';
 import { getOauthURL } from 'constants/apis/url';
-// import { useQuery } from '@tanstack/react-query';
-// import { getRedirection } from 'apis/login';
 
-// 추후 oauth 플랫폼이 많아지면 해당 컴포넌트를 추상화해도 될 것같음.
-const Kakao = () => {
-  // const { refetch } = useQuery(['RedirectionKakao'], () => getRedirection('kakao'), {
-  //   enabled: false,
-  // });
-  // const redirect = () => refetch();
-
+const KakaoLoginButton = () => {
   const redirectToKakao = () => {
     window.location.href = `${getOauthURL('kakao')}?redirect_uri=${getRedirectURL('kakao')}`;
   };
@@ -22,4 +14,4 @@ const Kakao = () => {
   );
 };
 
-export default Kakao;
+export default KakaoLoginButton;

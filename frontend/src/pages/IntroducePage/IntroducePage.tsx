@@ -1,9 +1,9 @@
-import Kakao from 'components/Login/Kakao';
+import KakaoLoginButton from 'components/Login/KakaoLoginButton';
 
 const IntroducePage = () => {
   return (
     <>
-      <Kakao />
+      <KakaoLoginButton />
     </>
   );
 };

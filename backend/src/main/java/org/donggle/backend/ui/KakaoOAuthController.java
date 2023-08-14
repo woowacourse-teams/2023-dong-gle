@@ -1,12 +1,12 @@
 package org.donggle.backend.ui;
 
-import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.KakaoOAuthService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.auth.support.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.AccessTokenResponse;
 import org.donggle.backend.ui.response.TokenResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -18,12 +18,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 public class KakaoOAuthController {
-    private static final int ONE_DAYS = 24 * 60 * 60;
+
+    private final long cookieTime;
 
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService;
+
+    public KakaoOAuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final long cookieTime,
+                                final KakaoOAuthService kakaoOAuthService,
+                                final AuthService authService
+    ) {
+        this.cookieTime = cookieTime;
+        this.kakaoOAuthService = kakaoOAuthService;
+        this.authService = authService;
+    }
 
     @GetMapping("/oauth/login/kakao")
     public ResponseEntity<Void> oauthRedirectKakao(@RequestParam final String redirect_uri) {
@@ -60,7 +69,7 @@ public class KakaoOAuthController {
 
     private ResponseCookie createRefreshTokenCookie(final String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
-                .maxAge(KakaoOAuthController.ONE_DAYS)
+                .maxAge(cookieTime)
                 .path("/")
                 .secure(true)
                 .sameSite("None")

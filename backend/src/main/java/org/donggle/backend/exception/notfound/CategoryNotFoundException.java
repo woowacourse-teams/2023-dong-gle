@@ -1,13 +1,22 @@
 package org.donggle.backend.exception.notfound;
 
-public class CategoryNotFoundException extends NotFoundException {
-    private static final String MESSAGE = "해당 카테고리를 찾을 수 없습니다. 입력한 id: ";
+public final class CategoryNotFoundException extends NotFoundException {
+    private static final String MESSAGE = "존재하지 않는 카테고리 입니다.";
+    
+    private final Long categoryId;
 
-    public CategoryNotFoundException(final Long id) {
-        super(MESSAGE + id);
+    public CategoryNotFoundException(final Long categoryId) {
+        super(MESSAGE);
+        this.categoryId = categoryId;
     }
 
-    public CategoryNotFoundException(final Long id, final Throwable cause) {
-        super(MESSAGE + id, cause);
+    public CategoryNotFoundException(final Long categoryId, final Throwable cause) {
+        super(MESSAGE, cause);
+        this.categoryId = categoryId;
+    }
+    
+    @Override
+    public String getHint() {
+        return "해당 카테고리를 찾을 수 없습니다. 입력한 id: " + categoryId;
     }
 }

@@ -1,7 +1,9 @@
 package org.donggle.backend.exception.business;
 
+import org.springframework.http.HttpStatus;
+
 public class InvalidBasicCategoryException extends BusinessException {
-    private static final String MESSAGE = "기본 카테고리는 변경이 불가합니다.";
+    private static final String MESSAGE = "잘못된 요청입니다. 카테고리 이름은 '기본'이 될 수 없습니다.";
 
     public InvalidBasicCategoryException() {
         super(MESSAGE);
@@ -9,5 +11,15 @@ public class InvalidBasicCategoryException extends BusinessException {
 
     public InvalidBasicCategoryException(final Throwable cause) {
         super(MESSAGE, cause);
+    }
+    
+    @Override
+    public String getHint() {
+        return null;
+    }
+    
+    @Override
+    public int getErrorCode() {
+        return HttpStatus.BAD_REQUEST.value();
     }
 }

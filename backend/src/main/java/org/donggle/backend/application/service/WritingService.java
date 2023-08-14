@@ -64,7 +64,7 @@ public class WritingService {
         //TODO: member checking
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
-            throw new InvalidFileFormatException();
+            throw new InvalidFileFormatException(originalFilename);
         }
         final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
 

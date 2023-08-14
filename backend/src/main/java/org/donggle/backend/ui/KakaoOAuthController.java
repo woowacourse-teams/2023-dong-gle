@@ -25,7 +25,7 @@ public class KakaoOAuthController {
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService;
 
-    public KakaoOAuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final long cookieTime,
+    public KakaoOAuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final int cookieTime,
                                 final KakaoOAuthService kakaoOAuthService,
                                 final AuthService authService
     ) {

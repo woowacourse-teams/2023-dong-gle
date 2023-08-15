@@ -29,11 +29,11 @@ public class RefreshToken {
         this.member = member;
     }
 
-    public boolean isDifferentRefreshToken(final String refreshToken) {
+    public boolean isDifferentFrom(final String refreshToken) {
         return !this.refreshToken.equals(refreshToken);
     }
 
-    public void updateRefreshToken(final String refreshToken) {
+    public void update(final String refreshToken) {
         this.refreshToken = refreshToken;
     }
 

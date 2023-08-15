@@ -20,8 +20,8 @@ public class JwtTokenProvider {
     private static final String MEMBER_ID_KEY = "memberId";
 
     private final SecretKey key;
-    private final long accessTokenValidityInMilliseconds;
-    private final long refreshTokenValidityInMilliseconds;
+    private final int accessTokenValidityInMilliseconds;
+    private final int refreshTokenValidityInMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
                             @Value("${security.jwt.token.access-token-expire-length}") final int accessTokenValidityInMilliseconds,

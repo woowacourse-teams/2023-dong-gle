@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.auth.JwtToken;
 import org.donggle.backend.auth.JwtTokenProvider;
+import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.auth.exception.ExpiredRefreshTokenException;
 import org.donggle.backend.auth.exception.InvalidRefreshTokenException;
 import org.donggle.backend.auth.exception.NoRefreshTokenInCookieException;
@@ -23,18 +23,18 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
-        final String refreshToken = extract(request);
-        final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final JwtToken findRefreshToken = tokenRepository.findByMemberId(memberId)
+        final String comparisonRefreshToken = extract(request);
+        final Long memberId = jwtTokenProvider.getPayload(comparisonRefreshToken);
+        final RefreshToken originalRefreshToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(RefreshTokenNotFoundException::new);
 
-        if (findRefreshToken.isDifferentRefreshToken(refreshToken)) {
+        if (originalRefreshToken.isDifferentFrom(comparisonRefreshToken)) {
             throw new InvalidRefreshTokenException();
         }
-        if (jwtTokenProvider.inValidTokenUsage(refreshToken)) {
+        if (jwtTokenProvider.inValidTokenUsage(comparisonRefreshToken)) {
             throw new ExpiredRefreshTokenException();
         }
-        
+
         return true;
     }
 

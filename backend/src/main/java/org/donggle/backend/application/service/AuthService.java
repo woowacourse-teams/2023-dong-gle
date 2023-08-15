@@ -31,8 +31,8 @@ public class AuthService {
     }
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
-        final Member member = memberRepository.findById(memberId).
-                orElseThrow(NoSuchTokenException::new);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(NoSuchTokenException::new);
 
         return createTokens(member);
     }
@@ -56,7 +56,7 @@ public class AuthService {
     private void synchronizeRefreshToken(final Member member, final String refreshToken) {
         tokenRepository.findByMemberId(member.getId())
                 .ifPresentOrElse(
-                        token -> token.updateRefreshToken(refreshToken),
+                        token -> token.update(refreshToken),
                         () -> tokenRepository.save(new RefreshToken(refreshToken, member))
                 );
     }

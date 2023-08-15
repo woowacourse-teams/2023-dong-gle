@@ -1,4 +1,5 @@
 import { trashURL } from 'constants/apis/url';
+import { deletedWritings } from 'mocks/trashCanContentsMock';
 import { rest } from 'msw';
 
 export const trashHandlers = [
@@ -9,7 +10,7 @@ export const trashHandlers = [
 
   // 휴지통에서 글 목록 조회
   rest.get(trashURL, (_, res, ctx) => {
-    return res(ctx.status(200));
+    return res(ctx.json(deletedWritings), ctx.status(200));
   }),
 
   // 휴지통에서 글 복구

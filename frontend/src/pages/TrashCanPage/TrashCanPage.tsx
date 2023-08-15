@@ -1,16 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
 import { getDeletedWritings } from 'apis/trash';
+import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
 import { styled } from 'styled-components';
+import { GetDeletedWritingsResponse } from 'types/apis/trash';
 
 const TrashCanPage = () => {
-  const { data } = useQuery(['deletedWritings'], getDeletedWritings, {
-    onError: () => alert('휴지통의 글을 불러올 수 없습니다'),
-  });
+  const { data, isLoading } = useQuery<GetDeletedWritingsResponse>(
+    ['deletedWritings'],
+    getDeletedWritings,
+    {
+      onError: () => alert('휴지통의 글을 불러올 수 없습니다'),
+    },
+  );
+
+  if (isLoading) return <>로딩 중...</>;
 
   return (
     <S.Article>
       <S.CategoryNameTitle>휴지통</S.CategoryNameTitle>
-      {/* <WritingTable writings={[]} categoryId={0} /> */}
+      {data ? <TrashCanTable writings={data.writings} categoryId={0} /> : <>휴지통이 비었습니다</>}
     </S.Article>
   );
 };

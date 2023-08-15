@@ -182,6 +182,20 @@ class HtmlRendererTest {
     }
 
     @Test
+    @DisplayName("CodeBlock escape 렌더링")
+    void renderCodeBlock2() {
+        //given
+        blocks.add(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
+
+        //when
+        final String result = htmlRenderer.render(blocks);
+        final String expected = "<pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre>";
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
     @DisplayName("리스트 렌더링")
     void renderList() {
         //given

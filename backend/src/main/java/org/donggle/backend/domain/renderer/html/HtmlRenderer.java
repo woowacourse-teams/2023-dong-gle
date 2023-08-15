@@ -69,12 +69,43 @@ public class HtmlRenderer {
     private String renderCodeBlock(final CodeBlock content) {
         final HtmlType htmlType = HtmlType.findByBlockType(content.getBlockType());
         final String language = content.getLanguageValue();
-        final String rawText = content.getRawTextValue();
+        final String rawText = convertToEscape(content.getRawTextValue());
 
         final String startTag = htmlType.getStartTag()
                 .replace("${language}", language);
 
         return startTag + rawText + htmlType.getEndTag();
+    }
+
+    private String convertToEscape(final String rawText) {
+        final StringBuffer bufferText = new StringBuffer();
+        final int len = rawText.length();
+        for (int i = 0; i < len; i++) {
+            final char letter = rawText.charAt(i);
+            convertToEscapeLetter(letter, bufferText);
+        }
+        return bufferText.toString()
+                .replaceAll("\\n", "&NewLine;")
+                .replaceAll("    ", "&Tab;");
+    }
+
+    private void convertToEscapeLetter(final char letter, final StringBuffer bufferText) {
+        switch (letter) {
+            case '<':
+                bufferText.append("&lt;");
+                break;
+            case '>':
+                bufferText.append("&gt;");
+                break;
+            case '&':
+                bufferText.append("&amp;");
+                break;
+            case '"':
+                bufferText.append("&quot;");
+                break;
+            default:
+                bufferText.append(letter);
+        }
     }
 
     private String renderList(final List<NormalBlock> contents) {

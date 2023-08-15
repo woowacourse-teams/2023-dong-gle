@@ -17,7 +17,7 @@ import static org.donggle.backend.application.service.vendor.exception.VendorApi
 public class TistoryApiService {
     public static final String PLATFORM_NAME = "Tistory";
     private static final String TISTORY_URL = "https://www.tistory.com/apis";
-    private static final int OK = 200;
+
     private final WebClient webClient;
 
     public TistoryApiService() {
@@ -53,12 +53,12 @@ public class TistoryApiService {
                 .queryParam("output", "json")
                 .build()
                 .toUriString();
-        final TistoryBlogInfoResponseWrapper BlogInfo = webClient.get()
+        final TistoryBlogInfoResponseWrapper blogInfo = webClient.get()
                 .uri(blogInfoUri)
                 .retrieve()
                 .bodyToMono(TistoryBlogInfoResponseWrapper.class)
                 .block();
-        return BlogInfo.tistory().item().blogs().stream()
+        return blogInfo.tistory().item().blogs().stream()
                 .filter(blog -> blog.defaultValue().equals("Y"))
                 .map(TistoryBlogResponse::name)
                 .findFirst()
@@ -66,12 +66,15 @@ public class TistoryApiService {
     }
 
     public TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
+        final String publishPropertyUri = UriComponentsBuilder.fromUriString("/post/read")
+                .queryParam("access_token", request.access_token())
+                .queryParam("blogName", request.blogName())
+                .queryParam("postId", request.postId())
+                .queryParam("output", "json")
+                .build()
+                .toUriString();
         return webClient.get()
-                .uri("/post/read?" +
-                        "access_token=" + request.access_token() +
-                        "&blogName=" + request.blogName() +
-                        "&postId=" + request.postId() +
-                        "&output=json")
+                .uri(publishPropertyUri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> handle4xxException(clientResponse.statusCode().value(), PLATFORM_NAME))
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> clientResponse.bodyToMono(String.class)

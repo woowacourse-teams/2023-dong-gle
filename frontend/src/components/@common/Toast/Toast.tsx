@@ -37,15 +37,13 @@ const Toast = ({
 
   const hideToast: HideToast = () => setIsVisible(false);
 
-  const removeToast =
-    (toastId: number): AnimationEventHandler<HTMLDivElement> =>
-    () => {
-      onClose(toastId);
-    };
+  const removeToast = (toastId: number) => {
+    onClose(toastId);
+  };
 
   return (
-    <AnimationDiv isVisible={isVisible} onDisappear={removeToast(toastId)}>
-      <S.ToastContainer $theme={theme} $type={type}>
+    <AnimationDiv isVisible={isVisible} onDisappear={() => removeToast(toastId)}>
+      <S.ToastContainer $toastTheme={theme} $type={type}>
         <S.Content>
           <span>{message}</span>
           {hasCloseButton && (
@@ -66,14 +64,14 @@ export default Toast;
 
 const S = {
   ToastContainer: styled.div<{
-    $theme: ToastTheme;
+    $toastTheme: ToastTheme;
     $type: ToastType;
   }>`
     position: relative;
     width: fit-content;
     padding: 1.2rem 2.4rem;
-    background-color: ${({ theme, $type, $theme }) =>
-      $theme === 'light' ? theme.color.gray1 : theme.toastColor[$type].background};
+    background-color: ${({ theme, $type, $toastTheme }) =>
+      $toastTheme === 'light' ? theme.color.gray1 : theme.toastColor[$type].background};
     border: 1px solid ${({ theme, $type }) => theme.toastColor[$type].border};
     border-radius: 8px;
     box-shadow:

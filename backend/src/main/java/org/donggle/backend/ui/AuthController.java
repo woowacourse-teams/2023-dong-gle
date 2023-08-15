@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/member")
 public class AuthController {
+
     private final int cookieTime;
 
     private final AuthService authService;

@@ -35,25 +35,15 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    @NotNull
-    private boolean isBasic;
 
     private Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;
-        this.isBasic = false;
-    }
-
-    private Category(final CategoryName categoryName, final Category nextCategory, final Member member, final boolean isBasic) {
-        this.categoryName = categoryName;
-        this.nextCategory = nextCategory;
-        this.member = member;
-        this.isBasic = isBasic;
     }
 
     public static Category basic(final Member member) {
-        return new Category(BASIC_CATEGORY_NAME, null, member, true);
+        return new Category(BASIC_CATEGORY_NAME, null, member);
     }
 
     public static Category of(final CategoryName categoryName, final Member member) {

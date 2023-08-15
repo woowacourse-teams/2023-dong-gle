@@ -12,8 +12,7 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategoryName {
-    public static final int CATEGORY_NAME_MAX_LENGTH = 30;
-    @Column(length = CATEGORY_NAME_MAX_LENGTH, nullable = false)
+    @Column(length = 30, nullable = false)
     private String name;
 
     public CategoryName(final String name) {
@@ -25,7 +24,7 @@ public class CategoryName {
     }
 
     public boolean isOverLength() {
-        return name.length() > CATEGORY_NAME_MAX_LENGTH;
+        return name.length() > 30;
     }
 
     @Override

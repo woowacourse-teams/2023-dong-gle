@@ -1,6 +1,5 @@
 package org.donggle.backend.application.repository;
 
-import jakarta.validation.constraints.NotNull;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findFirstByMemberId(final Long memberId);
 
-    boolean existsByCategoryName(final @NotNull CategoryName categoryName);
+    boolean existsByCategoryName(final CategoryName categoryName);
 
     @Query("select c from Category c " +
             "where c.nextCategory.id = :categoryId")

@@ -132,7 +132,7 @@ public class CategoryService {
     public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
-        validateBasicCategory(findCategory);
+        validateBasicCategory(memberId, findCategory);
 
         final CategoryName categoryName = new CategoryName(request.categoryName());
         validateCategoryName(categoryName);
@@ -143,7 +143,7 @@ public class CategoryService {
     public void removeCategory(final Long memberId, final Long categoryId) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
-        validateBasicCategory(findCategory);
+        validateBasicCategory(memberId, findCategory);
         transferToBasicCategory(memberId, findCategory);
         deleteCategory(findCategory);
     }
@@ -177,7 +177,7 @@ public class CategoryService {
     public void modifyCategoryOrder(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         final Long nextCategoryId = request.nextCategoryId();
         final Category source = findCategory(categoryId);
-        validateBasicCategory(source);
+        validateBasicCategory(memberId, source);
         deleteCategoryOrder(source);
         addCategoryOrder(nextCategoryId, source, memberId);
     }
@@ -203,8 +203,10 @@ public class CategoryService {
         }
     }
 
-    private void validateBasicCategory(final Category category) {
-        if (category.isBasic()) {
+    private void validateBasicCategory(final Long memberId, final Category category) {
+        final Category basicCategory = categoryRepository.findFirstByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
+        if (basicCategory.equals(category)) {
             throw new InvalidBasicCategoryException(category.getId());
         }
     }

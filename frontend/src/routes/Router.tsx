@@ -17,7 +17,7 @@ export const Router = () => {
           element: <IntroducePage />,
         },
         {
-          path: '/oauth/login/*',
+          path: 'oauth/login/*',
           children: [
             {
               path: 'kakao',
@@ -26,7 +26,7 @@ export const Router = () => {
           ],
         },
         {
-          path: '/space',
+          path: 'space',
           element: <Layout />,
           children: [
             {

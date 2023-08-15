@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 export const usePageNavigate = () => {
   const navigate = useNavigate();
 
-  const goHomePage = () => navigate('/');
+  const goHomePage = () => navigate('/space');
 
   const goWritingPage = ({ categoryId, writingId }: { categoryId: number; writingId: number }) =>
-    navigate(`/writings/${categoryId}/${writingId}`);
+    navigate(`/space/writings/${categoryId}/${writingId}`);
 
-  const goWritingTablePage = (categoryId: number) => navigate(`/writings/${categoryId}`);
+  const goWritingTablePage = (categoryId: number) => navigate(`/space/writings/${categoryId}`);
 
   return { goHomePage, goWritingPage, goWritingTablePage };
 };

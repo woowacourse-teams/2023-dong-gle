@@ -33,20 +33,17 @@ const AnimationDiv = ({
 
   // 바깥에서 받아온 isVisible 상태로 appear할 건지 disappear 할 건지 결정.
   // isVisible을 true로 받으면 appear, display가 show인 상태에서 isVisible을 false로 받으면 disappear.
-  useLayoutEffect(
-    function checkDisplayState() {
-      const isConditionAppear = isVisible;
-      const isConditionDisappear = displayState === 'show' && !isVisible;
+  useLayoutEffect(() => {
+    const isConditionAppear = isVisible;
+    const isConditionDisappear = displayState === 'show' && !isVisible;
 
-      if (!isConditionAppear && !isConditionDisappear) return;
+    if (!isConditionAppear && !isConditionDisappear) return;
 
-      setDisplayState(isVisible ? 'appear' : 'disappear');
-    },
-    [isVisible],
-  );
+    setDisplayState(isVisible ? 'appear' : 'disappear');
+  }, [isVisible]);
 
   // hidden 상태인데 isVisible도 false라면 아무것도 렌더링 되지 않아야함.
-  const isUnmounted = isVisible === false && displayState === 'hidden';
+  const isUnmounted = !isVisible && displayState === 'hidden';
 
   if (isUnmounted) return <></>;
 

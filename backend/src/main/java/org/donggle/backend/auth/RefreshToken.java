@@ -16,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class JwtToken {
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,16 +24,16 @@ public class JwtToken {
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    public JwtToken(final String token, final Member member) {
+    public RefreshToken(final String token, final Member member) {
         this.refreshToken = token;
         this.member = member;
     }
 
-    public boolean isDifferentRefreshToken(final String refreshToken) {
+    public boolean isDifferentFrom(final String refreshToken) {
         return !this.refreshToken.equals(refreshToken);
     }
 
-    public void updateRefreshToken(final String refreshToken) {
+    public void update(final String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
@@ -54,8 +54,8 @@ public class JwtToken {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final JwtToken jwtToken = (JwtToken) o;
-        return Objects.equals(getId(), jwtToken.getId());
+        final RefreshToken refreshToken = (RefreshToken) o;
+        return Objects.equals(getId(), refreshToken.getId());
     }
 
     @Override

@@ -20,12 +20,12 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
-        final String refreshToken = extract(request);
-        final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final RefreshToken jwtToken = tokenRepository.findByMemberId(memberId)
+        final String comparisonRefreshToken = extract(request);
+        final Long memberId = jwtTokenProvider.getPayload(comparisonRefreshToken);
+        final RefreshToken originalRefreshToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(NoSuchTokenException::new);
 
-        if (jwtToken.isDifferentRefreshToken(refreshToken) || jwtTokenProvider.inValidTokenUsage(refreshToken)) {
+        if (originalRefreshToken.isDifferentFrom(comparisonRefreshToken) || jwtTokenProvider.inValidTokenUsage(comparisonRefreshToken)) {
             throw new NoSuchTokenException();
         }
 

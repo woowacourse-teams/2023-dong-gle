@@ -12,6 +12,11 @@ export const useRestoreDeleteWritings = () => {
   });
 
   const restoreDeletedWritings = (writingIds: number[]) => {
+    if (writingIds.length === 0) {
+      alert('복구할 글을 선택해주세요.');
+      return;
+    }
+
     if (confirm('글을 복구 하시겠습니까?')) mutate(writingIds);
   };
 

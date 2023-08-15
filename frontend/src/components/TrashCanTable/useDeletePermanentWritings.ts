@@ -12,6 +12,11 @@ export const useDeletePermanentWritings = () => {
   });
 
   const deletePermanentWritings = (writingIds: number[]) => {
+    if (writingIds.length === 0) {
+      alert('삭제할 글을 선택해주세요.');
+      return;
+    }
+
     if (confirm('글을 영구 삭제하시겠습니까?')) mutate(writingIds);
   };
 

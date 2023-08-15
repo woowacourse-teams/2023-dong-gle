@@ -39,6 +39,10 @@ export const Router = () => {
               path: PATH.writingTablePage,
               element: <WritingTablePage />,
             },
+            {
+              path: PATH.trashCanPage,
+              element: <TrashCanPage />,
+            },
           ],
         },
       ],

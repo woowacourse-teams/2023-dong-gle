@@ -12,7 +12,7 @@ export const usePageNavigate = () => {
   const goWritingPage = ({ categoryId, writingId }: { categoryId: number; writingId: number }) =>
     navigate(NAVIGATE_PATH.getWritingPage(categoryId, writingId));
 
-  const goTrashCanPage = () => navigate('/trash-can');
+  const goTrashCanPage = () => navigate(NAVIGATE_PATH.trashCanPage);
 
   return { goHomePage, goWritingTablePage, goWritingPage, goTrashCanPage };
 };

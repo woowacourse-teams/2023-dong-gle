@@ -2,6 +2,8 @@ package org.donggle.backend.domain.writing;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,12 +18,16 @@ import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.common.BaseEntity;
 import org.donggle.backend.domain.member.Member;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
 @Entity
 @Getter
+@Where(clause = "status = 'ACTIVE'")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE writing SET status = 'DELETED' WHERE id = ?")
 public class Writing extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +44,9 @@ public class Writing extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "next_writing_id")
     private Writing nextWriting;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private WritingStatus status = WritingStatus.ACTIVE;
 
     private Writing(final Member member, final Title title, final Category category, final Writing nextWriting) {
         this.member = member;
@@ -58,6 +67,11 @@ public class Writing extends BaseEntity {
         this.title = title;
     }
 
+    public void restore() {
+        this.status = WritingStatus.ACTIVE;
+        changeNextWritingNull();
+    }
+
     public String getTitleValue() {
         return this.title.getTitle();
     }
@@ -72,6 +86,15 @@ public class Writing extends BaseEntity {
 
     public void changeNextWritingNull() {
         this.nextWriting = null;
+    }
+
+    public void moveToTrash() {
+        this.status = WritingStatus.TRASHED;
+        changeNextWritingNull();
+    }
+
+    public boolean isOwner(final Long memberId) {
+        return this.member.getId().equals(memberId);
     }
 
     @Override

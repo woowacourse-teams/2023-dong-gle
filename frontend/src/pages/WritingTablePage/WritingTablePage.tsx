@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getDetailWritings } from 'apis/writings';
+import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -12,7 +13,8 @@ const WritingTablePage = () => {
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-      <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
+      {/* <WritingTable categoryId={categoryId} writings={data?.writings ?? []} /> */}
+      <TrashCanTable categoryId={categoryId} writings={data?.writings ?? []} />
     </S.Article>
   );
 };

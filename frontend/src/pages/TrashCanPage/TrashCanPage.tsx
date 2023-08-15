@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { getDeletedWritings } from 'apis/trash';
-import WritingTable from 'components/WritingTable/WritingTable';
 import { styled } from 'styled-components';
 
 const TrashCanPage = () => {
@@ -11,8 +10,7 @@ const TrashCanPage = () => {
   return (
     <S.Article>
       <S.CategoryNameTitle>휴지통</S.CategoryNameTitle>
-      {/* <WritingTable writings={data?.writings ?? []} /> */}
-      <WritingTable writings={[]} />
+      {/* <WritingTable writings={[]} categoryId={0} /> */}
     </S.Article>
   );
 };

@@ -15,7 +15,7 @@ import org.donggle.backend.application.service.vendor.medium.dto.request.MediumR
 import org.donggle.backend.application.service.vendor.medium.dto.response.MediumPublishResponse;
 import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
 import org.donggle.backend.application.service.vendor.tistory.dto.request.TistoryPublishRequest;
-import org.donggle.backend.application.service.vendor.tistory.dto.response.TistoryPublishWritingResponse;
+import org.donggle.backend.application.service.vendor.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
@@ -84,7 +84,7 @@ public class PublishService {
 
     private BlogWriting createBlogWritingAfterTistoryPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
         final TistoryPublishRequest request = buildTistoryRequest(member, publishRequest, writing, content);
-        final TistoryPublishWritingResponse response = tistoryApiService.publishContent(request);
+        final TistoryGetWritingResponseWrapper response = tistoryApiService.publishContent(request);
         return new BlogWriting(blog, writing, response.getDateTime(), response.getTags());
     }
 
@@ -93,7 +93,7 @@ public class PublishService {
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
         //TODO TistoryBlogName 못찾은 예외 발생시키기
         final String tistoryToken = memberCredentials.getTistoryToken();
-        final String tistoryBlogName = memberCredentials.getTistoryBlogName();
+        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(tistoryToken);
         return TistoryPublishRequest.builder()
                 .access_token(tistoryToken)
                 .blogName(tistoryBlogName)

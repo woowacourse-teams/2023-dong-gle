@@ -7,8 +7,8 @@ import java.util.List;
 @Builder
 public record TistoryPublishRequest(
         String access_token,
-        String output,
         String blogName,
+        String output,
         String title,
         String content,
         int visibility,

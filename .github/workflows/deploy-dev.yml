@@ -27,8 +27,8 @@ jobs:
         echo "TISTORY_CLIENT_SECRET=${{ secrets.TISTORY_CLIENT_SECRET }}" >> .env
         echo "NOTION_CLIENT_ID=${{ secrets.NOTION_CLIENT_ID }}" >> .env
         echo "NOTION_CLIENT_SECRET=${{ secrets.NOTION_CLIENT_SECRET }}" >> .env
-        echo "JWT_SECRET_KET=${{ secrets.JWT_SECRET_KEY }}" >> .env
-        echo "ACCESS_TOKEN_EXPIRE=${{ secrets.ACCESS_TOKEN_EXPIRE_LENGTH }}" >> .env
+        echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+        echo "ACCESS_TOKEN_EXPIRE_LENGTH=${{ secrets.ACCESS_TOKEN_EXPIRE_LENGTH }}" >> .env
         echo "REFRESH_TOKEN_EXPIRE_LENGTH=${{ secrets.REFRESH_TOKEN_EXPIRE_LENGTH }}" >> .env
     ## deploy to production
     - name: Deploy to prod

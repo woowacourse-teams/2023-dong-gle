@@ -3,32 +3,41 @@ import WritingPage from 'pages/WritingPage/WritingPage';
 import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
 import App from '../App';
 import OauthPage from 'pages/OauthPage/OauthPage';
+import IntroducePage from 'pages/IntroducePage/IntroducePage';
+import Layout from 'pages/Layout/Layout';
+import { PATH } from 'constants/path';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 
 export const Router = () => {
   const browserRouter = createBrowserRouter([
     {
-      path: '',
+      path: PATH.app,
       element: <App />,
       children: [
         {
-          path: '/writings/:categoryId/:writingId',
-          element: <WritingPage />,
+          path: PATH.introducePage,
+          element: <IntroducePage />,
         },
         {
-          path: '/writings/:categoryId',
-          element: <WritingTablePage />,
-        },
-        {
-          path: '/trash-can',
-          element: <TrashCanPage />,
-        },
-        {
-          path: '/oauth/login/*',
+          path: PATH.oauthPage,
           children: [
             {
-              path: 'kakao',
+              path: PATH.kakao,
               element: <OauthPage />,
+            },
+          ],
+        },
+        {
+          path: PATH.space,
+          element: <Layout />,
+          children: [
+            {
+              path: PATH.writingPage,
+              element: <WritingPage />,
+            },
+            {
+              path: PATH.writingTablePage,
+              element: <WritingTablePage />,
             },
           ],
         },

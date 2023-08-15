@@ -1,9 +1,7 @@
 package org.donggle.backend.ui;
 
-import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.oauth.kakao.KakaoOAuthService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.AccessTokenResponse;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class KakaoOAuthController {
 
-    private final long cookieTime;
+    private final int cookieTime;
 
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService;
@@ -32,6 +30,13 @@ public class KakaoOAuthController {
         this.cookieTime = cookieTime;
         this.kakaoOAuthService = kakaoOAuthService;
         this.authService = authService;
+    }
+
+    public KakaoOAuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final int cookieTime,
+                                final KakaoOAuthService kakaoOAuthService
+    ) {
+        this.cookieTime = cookieTime;
+        this.kakaoOAuthService = kakaoOAuthService;
     }
 
     @GetMapping("/oauth/login/kakao")
@@ -46,18 +51,6 @@ public class KakaoOAuthController {
     @PostMapping("/oauth/login/kakao")
     public ResponseEntity<AccessTokenResponse> oauthRedirectKakao(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
         final TokenResponse response = kakaoOAuthService.login(oAuthAccessTokenRequest);
-
-        final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .header("Set-Cookie", cookie.toString())
-                .build();
-    }
-
-    @PostMapping("/token/refresh")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId) {
-        final TokenResponse response = authService.reissueAccessTokenAndRefreshToken(memberId);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
 

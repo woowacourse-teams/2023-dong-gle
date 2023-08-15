@@ -184,7 +184,7 @@ public class CategoryService {
 
     private void validateBasicCategory(final Category category) {
         if (category.isBasic()) {
-            throw new InvalidBasicCategoryException();
+            throw new InvalidBasicCategoryException(category.getId());
         }
     }
 

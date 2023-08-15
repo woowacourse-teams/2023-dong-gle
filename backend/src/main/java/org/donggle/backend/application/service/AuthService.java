@@ -10,6 +10,7 @@ import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class AuthService {
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(NoSuchTokenException::new);
+                        .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         return createTokens(member);
     }

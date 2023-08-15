@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.auth.JwtTokenProvider;
+import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.auth.exception.ExpiredRefreshTokenException;
 import org.donggle.backend.auth.exception.InvalidRefreshTokenException;
 import org.donggle.backend.auth.exception.NoRefreshTokenInCookieException;
@@ -27,13 +28,13 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
         final RefreshToken originalRefreshToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(RefreshTokenNotFoundException::new);
 
-        if (originalRefreshToken.isDifferentFrom(comparisonRefreshToken)){
+        if (originalRefreshToken.isDifferentFrom(comparisonRefreshToken)) {
             throw new InvalidRefreshTokenException();
         }
         if (jwtTokenProvider.inValidTokenUsage(comparisonRefreshToken)) {
             throw new ExpiredRefreshTokenException();
         }
-        
+
         return true;
     }
 

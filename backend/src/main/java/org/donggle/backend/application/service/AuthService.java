@@ -7,7 +7,6 @@ import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse;
 import org.donggle.backend.auth.JwtTokenProvider;
 import org.donggle.backend.auth.RefreshToken;
-import org.donggle.backend.auth.exception.NoSuchTokenException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -33,7 +32,7 @@ public class AuthService {
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-                        .orElseThrow(() -> new MemberNotFoundException(memberId));
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         return createTokens(member);
     }
@@ -48,8 +47,8 @@ public class AuthService {
     }
 
     public void logout(final Long memberId) {
-        final Member member = memberRepository.findById(memberId).
-                orElseThrow(NoSuchTokenException::new);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         tokenRepository.deleteByMemberId(member.getId());
     }

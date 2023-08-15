@@ -1,6 +1,7 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
+import DeletedWritingList from './DeletedWritingList';
 
 const TrashCan = () => {
   const { goTrashCanPage } = usePageNavigate();
@@ -13,7 +14,9 @@ const TrashCan = () => {
             <S.Text>휴지통</S.Text>
           </S.Button>
         </Accordion.Title>
-        <Accordion.Panel></Accordion.Panel>
+        <Accordion.Panel>
+          <DeletedWritingList />
+        </Accordion.Panel>
       </Accordion.Item>
     </Accordion>
   );
@@ -46,5 +49,13 @@ const S = {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  `,
+
+  NoWritingsText: styled.p`
+    padding: 0.8rem;
+    color: ${({ theme }) => theme.color.gray6};
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: default;
   `,
 };

@@ -24,7 +24,7 @@ export const writingsInCategory = {
   categoryName: '우아한테크코스',
   writings: [
     {
-      id: 1,
+      id: 200,
       title: '우테코 레벨 1: 우테코 생활기',
     },
     {

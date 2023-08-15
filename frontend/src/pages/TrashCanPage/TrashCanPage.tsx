@@ -18,7 +18,7 @@ const TrashCanPage = () => {
   return (
     <S.Article>
       <S.CategoryNameTitle>휴지통</S.CategoryNameTitle>
-      {data ? <TrashCanTable writings={data.writings} categoryId={0} /> : <>휴지통이 비었습니다</>}
+      {data ? <TrashCanTable writings={data.writings} /> : <>휴지통이 비었습니다</>}
     </S.Article>
   );
 };

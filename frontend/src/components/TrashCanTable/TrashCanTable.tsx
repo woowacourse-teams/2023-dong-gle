@@ -6,11 +6,11 @@ import { DeletedWriting } from 'types/apis/trash';
 
 type Props = {
   writings: DeletedWriting[];
-  categoryId: number;
 };
 
-const TrashCanTable = ({ writings, categoryId }: Props) => {
+const TrashCanTable = ({ writings }: Props) => {
   const [writingIds, setWritingIds] = useState<number[]>([]);
+  const [isClickedAllCheckbox, setIsClickedAllCheckbox] = useState(false);
   const { goWritingPage } = usePageNavigate();
   const rowRef = useRef<HTMLTableRowElement>(null);
 
@@ -19,24 +19,30 @@ const TrashCanTable = ({ writings, categoryId }: Props) => {
   }, [writings]);
 
   const toggleAllCheckbox = () => {
-    if (writingIds.length === writings.length) {
-      setWritingIds([]); // 모두 체크해제
+    if (isClickedAllCheckbox) {
+      // checked 상태 -> 모두 체크 해제
+      setWritingIds([]);
     } else {
+      // unChecked 상태 -> 모두 체크
       const allWritingIds = writings.map((writing) => writing.id);
-      setWritingIds(allWritingIds); // 모두 체크
+      setWritingIds(allWritingIds);
     }
+
+    setIsClickedAllCheckbox((prev) => !prev);
   };
 
   const toggleCheckbox = (id: number) => {
     if (writingIds.includes(id)) {
+      // checked 상태 -> unCheck
       setWritingIds(writingIds.filter((writingId) => writingId !== id));
     } else {
+      // unCheck 상태 -> check
       setWritingIds([...writingIds, id]);
     }
   };
 
   return (
-    <S.TrashCanTableContainer summary='카테고리 내부 글 목록을 나타낸'>
+    <S.TrashCanTableContainer summary='카테고리 내부 글 목록을 나타낸다'>
       <colgroup>
         <col width='10%' />
         <col width='90%' />
@@ -50,13 +56,13 @@ const TrashCanTable = ({ writings, categoryId }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {writings.map(({ id, title }) => (
+        {writings.map(({ id, title, categoryId }) => (
           <tr key={id} tabIndex={0}>
             <td>
               <Input
                 variant='unstyled'
                 type='checkbox'
-                checked={writingIds.includes(id)}
+                checked={writingIds.includes(id)} // 여기서 체크 상태를 제어합니다.
                 onChange={() => toggleCheckbox(id)}
               />
             </td>

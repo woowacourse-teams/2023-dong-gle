@@ -5,36 +5,37 @@ import App from '../App';
 import OauthPage from 'pages/OauthPage/OauthPage';
 import IntroducePage from 'pages/IntroducePage/IntroducePage';
 import Layout from 'pages/Layout/Layout';
+import { PATH } from 'constants/path';
 
 export const Router = () => {
   const browserRouter = createBrowserRouter([
     {
-      path: '',
+      path: PATH.app,
       element: <App />,
       children: [
         {
-          path: '',
+          path: PATH.introducePage,
           element: <IntroducePage />,
         },
         {
-          path: 'oauth/login/*',
+          path: PATH.oauthPage,
           children: [
             {
-              path: 'kakao',
+              path: PATH.kakao,
               element: <OauthPage />,
             },
           ],
         },
         {
-          path: 'space',
+          path: PATH.space,
           element: <Layout />,
           children: [
             {
-              path: 'writings/:categoryId/:writingId',
+              path: PATH.writingPage,
               element: <WritingPage />,
             },
             {
-              path: 'writings/:categoryId',
+              path: PATH.writingTablePage,
               element: <WritingTablePage />,
             },
           ],

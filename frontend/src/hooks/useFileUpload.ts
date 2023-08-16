@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, useState } from 'react';
+import { getErrorMessage } from 'utils/error';
 
 export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['accept'] = '*') => {
   const [selectedFile, setSelectedFile] = useState<FormData | null>(null);
@@ -20,7 +21,7 @@ export const useFileUpload = (accept: InputHTMLAttributes<HTMLInputElement>['acc
 
       setSelectedFile(formData);
     } catch (error) {
-      if (error instanceof Error) alert(error.message);
+      alert(getErrorMessage(error));
     }
   };
 

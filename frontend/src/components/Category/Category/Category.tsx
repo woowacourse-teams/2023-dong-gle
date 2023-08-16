@@ -8,6 +8,7 @@ import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useToast } from 'hooks/@common/useToast';
+import { getErrorMessage } from 'utils/error';
 
 type Props = {
   categoryId: number;
@@ -49,8 +50,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 
       resetInput();
     } catch (error) {
-      if (error instanceof Error)
-        toast.show({ type: 'error', message: error.message, hasProgressBar: true });
+      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
     }
   };
 

@@ -12,6 +12,8 @@ public enum HtmlType {
     HEADING5("<h5>", "</h5>"),
     HEADING6("<h6>", "</h6>"),
     BLOCKQUOTE("<blockquote>", "</blockquote>"),
+    CHECKED_TASK_LIST("<input type=\"checkbox\" checked>", "</input>"),
+    UNCHECKED_TASK_LIST("<input type=\"checkbox\" unchecked>", "</input>"),
     UNORDERED_LIST("<ul>", "</ul>"),
     ORDERED_LIST("<ol>", "</ol>"),
     LIST("<li>", "</li>"),

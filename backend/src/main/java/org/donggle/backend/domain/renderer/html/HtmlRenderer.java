@@ -45,12 +45,11 @@ public class HtmlRenderer {
         String htmlText = "";
 
         switch (blockType) {
-            case HEADING1, HEADING2, HEADING3, HEADING4, HEADING5, HEADING6, PARAGRAPH, BLOCKQUOTE ->
-                    htmlText = renderNormalBlock((NormalBlock) block);
             case ORDERED_LIST, UNORDERED_LIST -> subBlock.add((NormalBlock) block);
             case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlock) block);
             case IMAGE -> htmlText = renderImage((ImageBlock) block);
             case HORIZONTAL_RULES -> htmlText = renderHorizontalRules((HorizontalRulesBlock) block);
+            default -> htmlText = renderNormalBlock((NormalBlock) block);
         }
         return htmlText;
     }

@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
+import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,9 @@ public class TrashService {
     }
 
     public void trashWritings(final Long memberId, final List<Long> writingIds) {
-        checkEmptyWritings(writingIds);
         writingIds.stream()
                 .map(writingId -> writingRepository.findByMemberIdAndId(memberId, writingId)
-                        .orElseThrow(() -> new IllegalArgumentException("삭제할 수 없는 글이 포함되어 있습니다.")))
+                        .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                     final Writing nextWriting = writing.getNextWriting();
                     writing.moveToTrash();
@@ -34,10 +35,9 @@ public class TrashService {
     }
 
     public void deleteWritings(final Long memberId, final List<Long> writingIds) {
-        checkEmptyWritings(writingIds);
         writingIds.stream()
                 .map(writingId -> writingRepository.findByMemberIdAndIdAndStatusIsNotDeleted(memberId, writingId)
-                        .orElseThrow(() -> new IllegalArgumentException("삭제할 수 없는 글이 포함되어 있습니다.")))
+                        .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                     final Writing nextWriting = writing.getNextWriting();
                     writingRepository.delete(writing);
@@ -47,21 +47,14 @@ public class TrashService {
     }
 
     public void restoreWritings(final Long memberId, final List<Long> writingIds) {
-        checkEmptyWritings(writingIds);
         writingIds.stream()
                 .map(writingId -> writingRepository.findByMemberIdAndIdAndStatusIsNotDeleted(memberId, writingId)
-                        .orElseThrow(() -> new IllegalArgumentException("복원할 수 없는 글이 포함되어 있습니다.")))
+                        .orElseThrow(() -> new RestoreWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                             writingRepository.findLastWritingByCategoryId(writing.getCategory().getId())
                                     .ifPresent(lastWriting -> lastWriting.changeNextWriting(writing));
                             writing.restore();
                         }
                 );
-    }
-
-    private static void checkEmptyWritings(final List<Long> writingIds) {
-        if (writingIds.isEmpty()) {
-            throw new IllegalArgumentException("삭제할 글이 없습니다.");
-        }
     }
 }

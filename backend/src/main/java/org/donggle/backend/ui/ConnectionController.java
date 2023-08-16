@@ -3,7 +3,9 @@ package org.donggle.backend.ui;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.oauth.notion.NotionOAuthService;
 import org.donggle.backend.application.service.oauth.tistory.TistoryOAuthService;
+import org.donggle.backend.application.service.request.AddTokenRequest;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.auth.support.AuthenticationPrincipal;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +45,11 @@ public class ConnectionController {
     }
 
     @GetMapping("/notion")
-    public ResponseEntity<Void> connectionsRedirectNotion(@RequestParam final String redirect_uri) {
-        final String redirectUri = notionOAuthService.createRedirectUri(redirect_uri);
+    public ResponseEntity<Void> connectionsRedirectNotion(
+            @AuthenticationPrincipal final Long memberId,
+            @RequestParam final String redirect_uri
+    ) {
+        final String redirectUri = notionOAuthService.createRedirectUri(memberId, redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)
@@ -52,8 +57,11 @@ public class ConnectionController {
     }
 
     @PostMapping("/notion")
-    public ResponseEntity<Void> connectionsAddNotion(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        notionOAuthService.getAccessToken(oAuthAccessTokenRequest);
+    public ResponseEntity<Void> connectionsAddNotion(
+            @AuthenticationPrincipal final Long memberId,
+            @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
+    ) {
+        notionOAuthService.saveAccessToken(memberId, oAuthAccessTokenRequest);
         return ResponseEntity.ok().build();
     }
 }

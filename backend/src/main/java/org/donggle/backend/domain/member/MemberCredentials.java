@@ -49,6 +49,10 @@ public class MemberCredentials extends BaseEntity {
         return new MemberCredentials(null, member, null, null, tistoryToken, tistoryBlogName);
     }
 
+    public static MemberCredentials createByNotionToken(final Member member, final String notionToken) {
+        return new MemberCredentials(null, member, notionToken, null, null, null);
+    }
+
     public MemberCredentials updateTistoryToken(final String tistoryToken) {
         this.tistoryToken = tistoryToken;
         return this;

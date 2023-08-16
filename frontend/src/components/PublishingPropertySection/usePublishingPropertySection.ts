@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { publishWriting as PublishWritingRequest } from 'apis/writings';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
+import { useToast } from 'hooks/@common/useToast';
 import { useState } from 'react';
 import { PublishWritingArgs } from 'types/apis/writings';
 import { Blog, PublishingPropertyData } from 'types/domain';
@@ -16,12 +17,15 @@ type PublishWritingToBlogArgs = {
 
 export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishingPropertyData>({ tags: [] });
+  const toast = useToast();
   const { mutate: publishWriting, isLoading } = useMutation(PublishWritingRequest, {
     onSuccess: () => {
       selectCurrentTab(TabKeys.WritingProperty);
-      alert('글 발행에 성공했습니다.');
+      toast.show({ type: 'success', message: '글 발행에 성공했습니다.' });
     },
-    onError: () => alert('글 발행에 실패했습니다.'),
+    onError: () => {
+      toast.show({ type: 'error', message: '글 발행에 실패했습니다.' });
+    },
   });
 
   const publishWritingToBlog = ({ writingId, publishTo }: PublishWritingToBlogArgs) => {

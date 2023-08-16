@@ -169,4 +169,59 @@ class MarkDownParserTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("HorizontalRules 파싱을 테스트한다.")
+    class ParseHorizontalRules {
+        @Test
+        @DisplayName("기본적인 Horizontal Rules")
+        void parseHorizontalRules() {
+            //given
+            final String text = "---\n___\n***\n";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES)
+            );
+        }
+
+        @Test
+        @DisplayName("여러개의 Horizontal Rules 파싱 테스트")
+        void parseHorizontalRulesAdditional() {
+            //given
+            final String text = "------------\n______________\n**************";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES)
+            );
+        }
+
+        @Test
+        @DisplayName("Horizontal Rules 예외상황 파싱 테스트")
+        void parseHorizontalRulesException() {
+            //given
+            final String text = "-----안녕안녕-------\n___안녕\n***안***";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.PARAGRAPH),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.PARAGRAPH),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.PARAGRAPH)
+            );
+        }
+    }
 }

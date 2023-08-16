@@ -19,6 +19,7 @@ public enum BlockType {
     ORDERED_LIST("^[1-9][0-9]{0,4}\\.\\ "),
     CODE_BLOCK("^```([a-zA-Z]*)\\n([\\s\\S]*?)\\n```$"),
     IMAGE("\\!\\[(.*)\\]\\((.*)\\)"),
+    HORIZONTAL_RULES("^((?:\\* *){3,}|(?:- *){3,}|(?:_ *){3,})$"),
     PARAGRAPH("");
 
     private final Pattern pattern;

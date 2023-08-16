@@ -16,8 +16,9 @@ public enum HtmlType {
     ORDERED_LIST("<ol>", "</ol>"),
     LIST("<li>", "</li>"),
     CODE_BLOCK("<pre><code class=\"language-${language}\">", "</code></pre>"),
-    PARAGRAPH("<p>", "</p>"),
-    IMAGE("<img src=\"url\", alt=\"caption\">", "</img>");
+    IMAGE("<img src=\"url\", alt=\"caption\">", "</img>"),
+    HORIZONTAL_RULES("<hr>", "</hr>"),
+    PARAGRAPH("<p>", "</p>");
 
     private final String startTag;
     private final String endTag;

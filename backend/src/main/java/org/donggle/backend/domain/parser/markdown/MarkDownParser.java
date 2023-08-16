@@ -7,6 +7,7 @@ import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
+import org.donggle.backend.domain.writing.content.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.content.ImageBlock;
 import org.donggle.backend.domain.writing.content.ImageCaption;
 import org.donggle.backend.domain.writing.content.ImageUrl;
@@ -79,6 +80,9 @@ public class MarkDownParser {
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
                 return new ImageBlock(writing, blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+            }
+            case HORIZONTAL_RULES -> {
+                return new HorizontalRulesBlock(writing, blockType, RawText.from(matcher.group(1)));
             }
             default -> {
                 final String removedBlockTypeText = matcher.replaceAll("");

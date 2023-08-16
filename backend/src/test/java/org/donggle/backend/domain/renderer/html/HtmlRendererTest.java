@@ -9,6 +9,7 @@ import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
 import org.donggle.backend.domain.writing.content.Depth;
+import org.donggle.backend.domain.writing.content.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.content.Language;
 import org.donggle.backend.domain.writing.content.NormalBlock;
 import org.donggle.backend.domain.writing.content.RawText;
@@ -214,6 +215,20 @@ class HtmlRendererTest {
         //when
         final String result = htmlRenderer.render(blocks);
         final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul>";
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("HorizontalRules 렌더링")
+    void renderHorizontalRules() {
+        //given
+        blocks.add(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("***")));
+
+        //when
+        final String result = htmlRenderer.render(blocks);
+        final String expected = "<hr></hr>";
 
         //then
         assertThat(result).isEqualTo(expected);

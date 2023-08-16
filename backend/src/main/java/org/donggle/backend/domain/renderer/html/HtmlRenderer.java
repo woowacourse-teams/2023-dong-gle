@@ -3,6 +3,7 @@ package org.donggle.backend.domain.renderer.html;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.domain.writing.content.CodeBlock;
+import org.donggle.backend.domain.writing.content.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.content.ImageBlock;
 import org.donggle.backend.domain.writing.content.NormalBlock;
 
@@ -50,6 +51,7 @@ public class HtmlRenderer {
             case ORDERED_LIST, UNORDERED_LIST -> subContent.add((NormalBlock) block);
             case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlock) block);
             case IMAGE -> htmlText = renderImage((ImageBlock) block);
+            case HORIZONTAL_RULES -> htmlText = renderHorizontalRules((HorizontalRulesBlock) block);
         }
         return htmlText;
     }
@@ -175,5 +177,10 @@ public class HtmlRenderer {
                 .replace("url", url);
 
         return startTag + htmlType.getEndTag();
+    }
+
+    private String renderHorizontalRules(final HorizontalRulesBlock block) {
+        final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
+        return htmlType.getStartTag() + htmlType.getEndTag();
     }
 }

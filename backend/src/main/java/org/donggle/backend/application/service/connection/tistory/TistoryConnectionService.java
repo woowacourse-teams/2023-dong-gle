@@ -56,16 +56,16 @@ public class TistoryConnectionService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
+        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(accessToken);
 
         final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .map(memberCredentials -> memberCredentials.updateTistoryToken(accessToken))
-                .orElseGet(() -> creatMemberCredentials(member, accessToken));
+                .map(memberCredentials -> memberCredentials.updateTistory(accessToken, tistoryBlogName))
+                .orElseGet(() -> creatMemberCredentials(member, accessToken, tistoryBlogName));
 
         memberCredentialsRepository.save(findMemberCredentials);
     }
 
-    private MemberCredentials creatMemberCredentials(final Member member, final String accessToken) {
-        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(accessToken);
+    private MemberCredentials creatMemberCredentials(final Member member, final String accessToken, final String tistoryBlogName) {
         return MemberCredentials.createByTistoryToken(member, accessToken, tistoryBlogName);
     }
 

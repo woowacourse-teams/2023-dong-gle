@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MediumConnectionService {
-
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 

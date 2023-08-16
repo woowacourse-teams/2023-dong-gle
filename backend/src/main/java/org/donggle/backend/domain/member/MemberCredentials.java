@@ -57,8 +57,9 @@ public class MemberCredentials extends BaseEntity {
         return new MemberCredentials(null, member, null, mediumToken, null, null);
     }
 
-    public MemberCredentials updateTistoryToken(final String tistoryToken) {
+    public MemberCredentials updateTistory(final String tistoryToken, final String tistoryBlogName) {
         this.tistoryToken = tistoryToken;
+        this.tistoryBlogName = tistoryBlogName;
         return this;
     }
 

@@ -31,7 +31,7 @@ import java.util.List;
 @Component
 @Profile({"local", "test"})
 @RequiredArgsConstructor
-public class InitData implements CommandLineRunner {
+public class InitLocalAndTestData implements CommandLineRunner {
     private final InitService initService;
 
     @Override

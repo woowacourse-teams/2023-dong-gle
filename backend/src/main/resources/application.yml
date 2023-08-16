@@ -36,7 +36,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 security:
   jwt:
     token:
@@ -49,3 +49,11 @@ tistory_client_id: ${TISTORY_CLIENT_ID}
 tistory_client_secret: ${TISTORY_CLIENT_SECRET}
 notion_client_id: ${NOTION_CLIENT_ID}
 notion_client_secret: ${NOTION_CLIENT_SECRET}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create

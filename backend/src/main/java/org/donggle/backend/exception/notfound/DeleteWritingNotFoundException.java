@@ -2,6 +2,7 @@ package org.donggle.backend.exception.notfound;
 
 public class DeleteWritingNotFoundException extends NotFoundException {
     private static final String MESSAGE = "삭제할 글을 찾을 수 없습니다.";
+    
     private final Long writingId;
 
     public DeleteWritingNotFoundException(final Long writingId) {

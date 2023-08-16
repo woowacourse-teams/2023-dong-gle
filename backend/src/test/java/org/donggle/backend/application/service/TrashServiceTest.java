@@ -90,6 +90,7 @@ class TrashServiceTest {
     void changeOrderOfTrashedWritingsLast() {
         //given
         final Writing writing = writingRepository.findById(4L).get();
+        
         //when
         trashService.trashWritings(1L, List.of(writing.getId()));
 

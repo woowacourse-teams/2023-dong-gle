@@ -36,10 +36,11 @@ public class TrashService {
 
     public void deleteWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndIdAndStatusIsNotDeleted(memberId, writingId)
+                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
                         .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                     final Writing nextWriting = writing.getNextWriting();
+                    writing.changeNextWritingNull();
                     writingRepository.delete(writing);
                     writingRepository.findPreWritingByWritingId(writing.getId())
                             .ifPresent(preWriting -> preWriting.changeNextWriting(nextWriting));
@@ -48,7 +49,7 @@ public class TrashService {
 
     public void restoreWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndIdAndStatusIsNotDeleted(memberId, writingId)
+                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
                         .orElseThrow(() -> new RestoreWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                             writingRepository.findLastWritingByCategoryId(writing.getCategory().getId())

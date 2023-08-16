@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class WritingAlreadyPublishedException extends BusinessException {
     private static final String MESSAGE = "이미 발행된 글입니다.";
+    
     private final Long writingId;
     private final BlogType blogType;
 

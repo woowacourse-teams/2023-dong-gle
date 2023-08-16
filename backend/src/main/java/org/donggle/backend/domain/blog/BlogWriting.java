@@ -47,7 +47,7 @@ public class BlogWriting extends BaseEntity {
     }
 
     public boolean isSameBlogType(final BlogType blogType) {
-        return blog.getBlogType().equals(blogType);
+        return blog.getBlogType() == blogType;
     }
 
     @Override

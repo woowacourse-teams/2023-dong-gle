@@ -5,6 +5,7 @@ import org.donggle.backend.application.service.TrashService;
 import org.donggle.backend.application.service.request.DeleteWritingsRequest;
 import org.donggle.backend.application.service.request.RestoreWritingsRequest;
 import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,9 @@ public class TrashController {
     private final TrashService trashService;
 
     @GetMapping
-    public ResponseEntity<Void> trashGetWritings(@AuthenticationPrincipal final Long memberId) {
-        trashService.findTrashedWritingList(memberId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TrashResponse> trashGetWritings(@AuthenticationPrincipal final Long memberId) {
+        final TrashResponse trashResponse = trashService.findTrashedWritingList(memberId);
+        return ResponseEntity.ok(trashResponse);
     }
 
     @PostMapping

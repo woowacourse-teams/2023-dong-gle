@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ToastProvider from 'contexts/ToastProvider';
 import ToastContainer from 'components/@common/Toast/ToastContainer';
 import { Outlet } from 'react-router-dom';
+import ErrorPage from 'pages/ErrorPage/ErrorPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +19,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <ErrorBoundary>
+        <ErrorBoundary fallback={ErrorPage}>
           <Outlet />
         </ErrorBoundary>
         <ToastContainer />

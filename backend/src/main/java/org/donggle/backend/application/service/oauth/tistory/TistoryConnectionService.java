@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-public class TistoryOAuthService {
+public class TistoryConnectionService {
     private static final String AUTHORIZE_URL = "https://www.tistory.com/oauth/authorize";
     private static final String TOKEN_URL = "https://www.tistory.com/oauth/access_token";
     public static final String CLIENT_ID = "client_id";
@@ -26,11 +26,11 @@ public class TistoryOAuthService {
     private final MemberRepository memberRepository;
     private final TistoryApiService tistoryApiService;
 
-    public TistoryOAuthService(@Value("${tistory_client_id}") final String clientId,
-                               @Value("${tistory_client_secret}") final String clientSecret,
-                               final MemberCredentialsRepository memberCredentialsRepository,
-                               final MemberRepository memberRepository,
-                               final TistoryApiService tistoryApiService) {
+    public TistoryConnectionService(@Value("${tistory_client_id}") final String clientId,
+                                    @Value("${tistory_client_secret}") final String clientSecret,
+                                    final MemberCredentialsRepository memberCredentialsRepository,
+                                    final MemberRepository memberRepository,
+                                    final TistoryApiService tistoryApiService) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.memberCredentialsRepository = memberCredentialsRepository;

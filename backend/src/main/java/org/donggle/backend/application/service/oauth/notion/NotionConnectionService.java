@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Objects;
 
 @Service
-public class NotionOAuthService {
+public class NotionConnectionService {
     public static final String AUTHORIZE_URL = "https://api.notion.com/v1/oauth/authorize";
     public static final String TOKEN_URL = "https://api.notion.com/v1/oauth/token";
     private static final String GRANT_TYPE = "authorization_code";
@@ -31,8 +31,8 @@ public class NotionOAuthService {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 
-    public NotionOAuthService(@Value("${notion_client_id}") final String clientId,
-                              @Value("${notion_client_secret}") final String clientSecret, final MemberRepository memberRepository, final MemberCredentialsRepository memberCredentialsRepository) {
+    public NotionConnectionService(@Value("${notion_client_id}") final String clientId,
+                                   @Value("${notion_client_secret}") final String clientSecret, final MemberRepository memberRepository, final MemberCredentialsRepository memberCredentialsRepository) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.memberRepository = memberRepository;
@@ -60,7 +60,7 @@ public class NotionOAuthService {
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
 
         final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .map(memberCredentials -> memberCredentials.updateTistoryToken(accessToken))
+                .map(memberCredentials -> memberCredentials.updateNotionToken(accessToken))
                 .orElseGet(() -> creatMemberCredentials(member, accessToken));
 
         memberCredentialsRepository.save(findMemberCredentials);

@@ -53,8 +53,22 @@ public class MemberCredentials extends BaseEntity {
         return new MemberCredentials(null, member, notionToken, null, null, null);
     }
 
+    public static MemberCredentials createByMediumToken(final Member member, final String mediumToken) {
+        return new MemberCredentials(null, member, null, mediumToken, null, null);
+    }
+
     public MemberCredentials updateTistoryToken(final String tistoryToken) {
         this.tistoryToken = tistoryToken;
+        return this;
+    }
+
+    public MemberCredentials updateMediumToken(final String mediumToken) {
+        this.mediumToken = mediumToken;
+        return this;
+    }
+
+    public MemberCredentials updateNotionToken(final String notionToken) {
+        this.notionToken = notionToken;
         return this;
     }
 

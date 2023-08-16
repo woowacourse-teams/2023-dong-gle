@@ -50,9 +50,6 @@ public class Category {
         return new Category(categoryName, null, member);
     }
 
-    public boolean isBasic() {
-        return this.categoryName.equals(BASIC_CATEGORY_NAME);
-    }
 
     public String getCategoryNameValue() {
         return categoryName.getName();

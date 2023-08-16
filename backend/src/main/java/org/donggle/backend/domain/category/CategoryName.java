@@ -19,6 +19,14 @@ public class CategoryName {
         this.name = name;
     }
 
+    public boolean isBlank() {
+        return name.isBlank();
+    }
+
+    public boolean isOverLength() {
+        return name.length() > 30;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -3,7 +3,7 @@ import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { LeftArrowHeadIcon, TagIcon } from 'assets/icons';
-import { slide } from 'styles/animation';
+import { slideToLeft } from 'styles/animation';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import { usePublishingPropertySection } from './usePublishingPropertySection';
 import type { Blog } from 'types/domain';
@@ -67,7 +67,7 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    animation: ${slide} 0.5s;
+    animation: ${slideToLeft} 0.5s;
 
     ${({ theme, $blog }) => css`
       & > button {

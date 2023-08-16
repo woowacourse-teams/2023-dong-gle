@@ -163,4 +163,42 @@ class NotionParserTest {
                 .ignoringFields("id", "createdAt", "updatedAt")
                 .isEqualTo(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("---")));
     }
+
+    @Test
+    @DisplayName("To-do타입 BlockNode로부터 CheckedTaskListType의 NormalBlock을 생성한다.")
+    void createTaskListBLockFromBlockNode() {
+        //given
+        final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("checked_todo", true);
+        System.out.println("jsonNode = " + jsonNode);
+        final NotionParser notionParser = new NotionParser(writing);
+        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+
+        //when
+        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+
+        //then
+        assertThat(block)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "createdAt", "updatedAt")
+                .isEqualTo(new NormalBlock(writing, Depth.empty(), BlockType.CHECKED_TASK_LIST, RawText.from("checked todo"), List.of()));
+    }
+
+    @Test
+    @DisplayName("To-do타입 BlockNode로부터 UnCheckedTaskListType의 NormalBlock을 생성한다.")
+    void createTaskListBLockFromBlockNode2() {
+        //given
+        final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("unchecked_todo", true);
+        System.out.println("jsonNode = " + jsonNode);
+        final NotionParser notionParser = new NotionParser(writing);
+        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+
+        //when
+        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+
+        //then
+        assertThat(block)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "createdAt", "updatedAt")
+                .isEqualTo(new NormalBlock(writing, Depth.empty(), BlockType.UNCHECKED_TASK_LIST, RawText.from("unchecked todo"), List.of()));
+    }
 }

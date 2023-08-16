@@ -35,7 +35,7 @@ public class NotionParser {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.NUMBERED_LIST_ITEM, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.ORDERED_LIST));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.PARAGRAPH, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.QUOTE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createTaskListBLock(notionBlockNode, TodoParser.from(notionBlockNode)));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageBlock(ImageParser.from(notionBlockNode)));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.DIVIDER, notionBlockNode -> createHorizontalBlock());
@@ -56,6 +56,13 @@ public class NotionParser {
 
     private Optional<Block> createHorizontalBlock() {
         return Optional.of(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("---")));
+    }
+
+    private Optional<Block> createTaskListBLock(final NotionBlockNode notionBlockNode, final TodoParser blockParser) {
+        if (blockParser.checked()) {
+            return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.CHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
+        }
+        return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.UNCHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
     public List<Block> parseBody(final List<NotionBlockNode> notionBlockNodes) {

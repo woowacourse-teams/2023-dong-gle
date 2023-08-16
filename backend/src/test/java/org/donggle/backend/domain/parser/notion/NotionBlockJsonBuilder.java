@@ -369,6 +369,60 @@ public class NotionBlockJsonBuilder {
             }
             """;
 
+    private static final String UNCHECKED_TODO_JSON_BODY = """
+             {
+                 "rich_text": [{
+                   "type": "text",
+                   "text": {
+                     "content": "unchecked task list",
+                     "link": null
+                   },
+                    "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "green"
+                    },
+                    "plain_text": "unchecked todo",
+                    "href": null
+                 }],
+                 "checked": false,
+                 "color": "default",
+                 "children":[{
+                   "type": "paragraph"
+                 }]
+            }
+             """;
+
+    private static final String CHECKED_TODO_JSON_BODY = """
+                         {
+                 "rich_text": [{
+                   "type": "text",
+                   "text": {
+                     "content": "unchecked task list",
+                     "link": null
+                   },
+                    "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "green"
+                    },
+                    "plain_text": "checked todo",
+                    "href": null
+                 }],
+                 "checked": true,
+                 "color": "default",
+                 "children":[{
+                   "type": "paragraph"
+                 }]
+            }
+             """;
+
     public static JsonNode buildJsonBody(final String type, final boolean hasChildren) {
         final String blockJson = BLOCK_JSON.replace("${has_children}", String.valueOf(hasChildren));
         final String body = switch (type) {
@@ -380,6 +434,10 @@ public class NotionBlockJsonBuilder {
             case "callout" -> blockJson.replaceAll("\\$\\{type}", "callout").replace("${body}", CALL_OUT_JSON_BODY);
             case "heading_1" -> blockJson.replaceAll("\\$\\{type}", "heading_1").replace("${body}", HEADING_JSON_BODY);
             case "divider" -> blockJson.replaceAll("\\$\\{type}", "divider").replace("${body}", "[]");
+            case "checked_todo" ->
+                    blockJson.replaceAll("\\$\\{type}", "to_do").replace("${body}", CHECKED_TODO_JSON_BODY);
+            case "unchecked_todo" ->
+                    blockJson.replaceAll("\\$\\{type}", "to_do").replace("${body}", UNCHECKED_TODO_JSON_BODY);
             default -> "";
         };
         try {

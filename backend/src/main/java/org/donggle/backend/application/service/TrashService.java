@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.writing.Writing;
@@ -8,6 +7,7 @@ import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
 import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
 public class TrashService {
     private final WritingRepository writingRepository;
 
+    @Transactional(readOnly = true)
     public TrashResponse findTrashedWritingList(final Long memberId) {
         final List<Writing> trashedWritings = writingRepository.findAllByMemberIdAndStatusIsTrashed(memberId);
         return TrashResponse.from(trashedWritings);

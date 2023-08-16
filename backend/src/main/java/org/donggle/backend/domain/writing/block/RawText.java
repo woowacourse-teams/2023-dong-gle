@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.writing.block;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,16 +11,16 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Language {
-    @Column(length = 20, nullable = false)
-    private String language;
+public class RawText {
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String rawText;
 
-    private Language(final String language) {
-        this.language = language;
+    private RawText(final String rawText) {
+        this.rawText = rawText;
     }
 
-    public static Language from(final String language) {
-        return new Language(language);
+    public static RawText from(final String rawText) {
+        return new RawText(rawText);
     }
 
     @Override
@@ -31,19 +31,19 @@ public class Language {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Language language1 = (Language) o;
-        return Objects.equals(language, language1.language);
+        final RawText rawText1 = (RawText) o;
+        return Objects.equals(rawText, rawText1.rawText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(language);
+        return Objects.hash(rawText);
     }
 
     @Override
     public String toString() {
-        return "Language{" +
-                "language='" + language + '\'' +
+        return "RawText{" +
+                "rawText='" + rawText + '\'' +
                 '}';
     }
 }

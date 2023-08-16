@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.writing.block;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,22 +11,12 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Depth {
-    public static final int INITIAL_VALUE = 0;
-
+public class ImageUrl {
     @Column(nullable = false)
-    private int depth;
+    private String imageUrl;
 
-    private Depth(final int depth) {
-        this.depth = depth;
-    }
-
-    public static Depth empty() {
-        return new Depth(INITIAL_VALUE);
-    }
-
-    public static Depth from(final int depth) {
-        return new Depth(depth);
+    public ImageUrl(final String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -37,19 +27,19 @@ public class Depth {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Depth depth1 = (Depth) o;
-        return depth == depth1.depth;
+        final ImageUrl imageUrl1 = (ImageUrl) o;
+        return Objects.equals(imageUrl, imageUrl1.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(depth);
+        return Objects.hash(imageUrl);
     }
 
     @Override
     public String toString() {
-        return "Depth{" +
-                "depth=" + depth +
+        return "ImageUrl{" +
+                "imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

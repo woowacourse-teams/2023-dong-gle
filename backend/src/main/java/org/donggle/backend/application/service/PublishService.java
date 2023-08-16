@@ -24,7 +24,7 @@ import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.MediumNotConnectedException;
 import org.donggle.backend.exception.business.TistoryNotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;

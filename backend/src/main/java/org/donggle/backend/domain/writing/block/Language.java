@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.writing.block;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,12 +11,16 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageCaption {
-    @Column(nullable = false)
-    private String imageCaption;
+public class Language {
+    @Column(length = 20, nullable = false)
+    private String language;
 
-    public ImageCaption(final String imageCaption) {
-        this.imageCaption = imageCaption;
+    private Language(final String language) {
+        this.language = language;
+    }
+
+    public static Language from(final String language) {
+        return new Language(language);
     }
 
     @Override
@@ -27,19 +31,19 @@ public class ImageCaption {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ImageCaption that = (ImageCaption) o;
-        return Objects.equals(imageCaption, that.imageCaption);
+        final Language language1 = (Language) o;
+        return Objects.equals(language, language1.language);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imageCaption);
+        return Objects.hash(language);
     }
 
     @Override
     public String toString() {
-        return "ImageCaption{" +
-                "imageCaption='" + imageCaption + '\'' +
+        return "Language{" +
+                "language='" + language + '\'' +
                 '}';
     }
 }

@@ -176,7 +176,7 @@ public class GlobalExceptionHandler {
                 ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())
         );
         return ResponseEntity
-                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .status(e.getErrorCode())
                 .body(errorWrapper);
     }
 }

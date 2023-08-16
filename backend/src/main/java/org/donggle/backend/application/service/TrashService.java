@@ -50,7 +50,7 @@ public class TrashService {
 
     public void restoreWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
+                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsTrashed(memberId, writingId)
                         .orElseThrow(() -> new RestoreWritingNotFoundException(writingId)))
                 .forEach(writing -> {
                             writingRepository.findLastWritingByCategoryId(writing.getCategory().getId())

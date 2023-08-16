@@ -61,7 +61,6 @@ public class WritingService {
     private final CategoryRepository categoryRepository;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
-        //TODO: member checking
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
             throw new InvalidFileFormatException(originalFilename);

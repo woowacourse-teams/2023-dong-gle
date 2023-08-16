@@ -20,8 +20,10 @@ public class MemberService {
     private final MemberCredentialsRepository memberCredentialsRepository;
 
     public MemberPageResponse findMemberPage(final Long memberId) {
-        final Member foundMember = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
-        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember).orElseThrow(NoSuchElementException::new);
+        final Member foundMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember)
+                .orElseThrow(NoSuchElementException::new);
         return MemberPageResponse.from(foundMember, foundMemberCredentials);
     }
 }

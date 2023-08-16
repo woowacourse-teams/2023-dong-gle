@@ -29,6 +29,7 @@ import org.donggle.backend.exception.business.MediumNotConnectedException;
 import org.donggle.backend.exception.business.TistoryNotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,7 @@ public class PublishService {
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final Blog blog = findBlog(publishRequest);
         final Writing writing = findWriting(writingId);
-        final Member member = memberRepository.findById(memberId).orElseThrow();
+        final Member member = findMember(memberId);
 
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
@@ -119,6 +120,11 @@ public class PublishService {
     private MemberCredentials findMemberCredentials(final Member member) {
         return memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
     private Writing findWriting(final Long writingId) {

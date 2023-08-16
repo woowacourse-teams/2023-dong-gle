@@ -21,11 +21,3 @@ const WritingPage = () => {
 };
 
 export default WritingPage;
-
-const S = {
-  Article: styled.article`
-    width: 100%;
-    padding: 0 4rem;
-    background-color: ${({ theme }) => theme.color.gray1};
-  `,
-};

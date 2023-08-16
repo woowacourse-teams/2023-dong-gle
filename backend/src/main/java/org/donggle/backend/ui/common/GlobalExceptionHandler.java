@@ -1,6 +1,7 @@
 package org.donggle.backend.ui.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.donggle.backend.application.service.vendor.exception.VendorApiException;
 import org.donggle.backend.exception.authentication.AuthenticationException;
 import org.donggle.backend.exception.business.BusinessException;
 import org.donggle.backend.exception.notfound.NotFoundException;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorWrapper> handleNotFoundException(final NotFoundException e) {
         log.warn("Exception from handleNotFoundException = ", e);
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorWrapper> handleBusinessException(final BusinessException e) {
         log.warn("Exception from handleBusinessException = ", e);
@@ -56,7 +57,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorWrapper> handleIOException(final IOException e) {
         log.warn("Exception from handleIOException = ", e);
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn("Exception from handleMethodArgumentNotValidException = ", e);
@@ -82,7 +83,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
-    
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorWrapper> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         log.warn("Exception from handleMissingServletRequestParameterException = ", e);
@@ -95,7 +96,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorWrapper> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
         log.warn("Exception from handleHttpRequestMethodNotSupportedException = ", e);
@@ -107,7 +108,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(MissingPathVariableException.class)
     public ResponseEntity<ErrorWrapper> handleMissingPathVariableException(final MissingPathVariableException e) {
         log.warn("Exception from handleMissingPathVariableException = ", e);
@@ -119,7 +120,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorWrapper> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         log.warn("Exception from handleMethodArgumentTypeMismatchException = ", e);
@@ -131,7 +132,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorWrapper> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
         log.warn("Exception from handleHttpMessageNotReadableException = ", e);
@@ -143,7 +144,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorWrapper> handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
         log.warn("Exception from handleHttpMediaTypeNotSupportedException = ", e);
@@ -155,7 +156,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorWrapper);
     }
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorWrapper> handleUnExpectedException(final Exception e) {
         log.error("Exception from handleUnExpectedException = ", e);
@@ -165,6 +166,17 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorWrapper);
+    }
+
+    @ExceptionHandler(VendorApiException.class)
+    public ResponseEntity<ErrorWrapper> handleVendorApiException(final VendorApiException e) {
+        log.warn("Exception from VendorApiException = ", e);
+        final ErrorWrapper errorWrapper = new ErrorWrapper(
+                ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())
+        );
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(errorWrapper);
     }
 }

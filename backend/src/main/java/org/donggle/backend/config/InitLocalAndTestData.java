@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-@Profile({"dev", "test"})
+@Profile({"local", "test"})
 @RequiredArgsConstructor
-public class InitData implements CommandLineRunner {
+public class InitLocalAndTestData implements CommandLineRunner {
     private final InitService initService;
 
     @Override

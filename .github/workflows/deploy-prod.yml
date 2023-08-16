@@ -19,7 +19,7 @@ jobs:
         echo "DB_URL=${{ secrets.PROD_DB_URL }}" >> .env
         echo "DB_USERNAME=${{ secrets.DB_USERNAME_PROD }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_PROD }}" >> .env
-        echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
+        echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE_PRODUCTION }}" >> .env
         echo "PROFILE=${{ secrets.PROD_PROFILE }}" >> .env
         echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
         echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env

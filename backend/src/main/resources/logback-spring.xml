@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration>
-    <springProfile name="dev">
+<configuration packagingData="true">
+    <springProfile name="local">
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -9,73 +9,58 @@
                 <charset>utf8</charset>
             </encoder>
         </appender>
-
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="dev">
+        <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+        <timestamp key="timestamp" datePattern="yyyyMMddHHmmssSSS"/>
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-        <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/warn.log</file>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>WARN</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-                <charset>utf8</charset>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/warn/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>100MB</maxFileSize>
-                <maxHistory>30</maxHistory>
-                <totalSizeCap>3GB</totalSizeCap>
-            </rollingPolicy>
-        </appender>
-
-        <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/error.log</file>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>ERROR</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-                <charset>utf8</charset>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/error/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>100MB</maxFileSize>
-                <maxHistory>30</maxHistory>
-                <totalSizeCap>3GB</totalSizeCap>
-            </rollingPolicy>
-        </appender>
-
-        <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/application.log</file>
+        <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>INFO</level>
+                <level>WARN</level>
             </filter>
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-                <charset>utf8</charset>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/application/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>100MB</maxFileSize>
-                <maxHistory>30</maxHistory>
-                <totalSizeCap>3GB</totalSizeCap>
-            </rollingPolicy>
+            <layout>
+                <!--                <pattern>%d{yyyyMMdd'T'HHmmss} %thread %level %logger{15} %msg%n</pattern>-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{requestUrl}] [%X{clientIP}] [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </layout>
+            <logGroupName>2023-dong-gle-dev</logGroupName>
+            <logRegion>ap-northeast-2</logRegion>
+            <maxBatchLogEvents>50</maxBatchLogEvents>
+            <maxFlushTimeMillis>30000</maxFlushTimeMillis>
+            <maxBlockTimeMillis>5000</maxBlockTimeMillis>
+            <retentionTimeDays>0</retentionTimeDays>
         </appender>
 
         <root level="INFO">
-            <appender-ref ref="WARN_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
-            <appender-ref ref="APPLICATION_FILE"/>
+            <appender-ref ref="ASYNC_AWS_LOGS"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+        <timestamp key="timestamp" datePattern="yyyyMMddHHmmssSSS"/>
+        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+        <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>WARN</level>
+            </filter>
+            <layout>
+<!--                <pattern>%d{yyyyMMdd'T'HHmmss} %thread %level %logger{15} %msg%n</pattern>-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{requestUrl}] [%X{clientIP}] [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </layout>
+            <logGroupName>2023-dong-gle-prod</logGroupName>
+            <logRegion>ap-northeast-2</logRegion>
+            <maxBatchLogEvents>50</maxBatchLogEvents>
+            <maxFlushTimeMillis>30000</maxFlushTimeMillis>
+            <maxBlockTimeMillis>5000</maxBlockTimeMillis>
+            <retentionTimeDays>0</retentionTimeDays>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC_AWS_LOGS"/>
         </root>
     </springProfile>
 </configuration>

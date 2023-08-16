@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-    <springProfile name="dev">
+    <springProfile name="local">
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -9,13 +9,12 @@
                 <charset>utf8</charset>
             </encoder>
         </appender>
-
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="prod,dev">
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
         <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>logs/warn.log</file>
@@ -25,7 +24,7 @@
                 <onMismatch>DENY</onMismatch>
             </filter>
             <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{requestUrl}] [%X{clientIP}] [%thread] %-5level %logger{36} - %msg%n</pattern>
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -44,7 +43,7 @@
                 <onMismatch>DENY</onMismatch>
             </filter>
             <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{requestUrl}] [%X{clientIP}] [%thread] %-5level %logger{36} - %msg%n</pattern>
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -61,7 +60,7 @@
                 <level>INFO</level>
             </filter>
             <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{requestUrl}] [%X{clientIP}] [%thread] %-5level %logger{36} - %msg%n</pattern>
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -71,7 +70,6 @@
                 <totalSizeCap>3GB</totalSizeCap>
             </rollingPolicy>
         </appender>
-
         <root level="INFO">
             <appender-ref ref="WARN_FILE"/>
             <appender-ref ref="ERROR_FILE"/>

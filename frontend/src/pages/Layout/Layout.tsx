@@ -48,9 +48,9 @@ const Layout = () => {
             block={true}
             align='left'
             onClick={openModal}
-            aria-label='글 업로드'
+            aria-label='글 가져오기'
           >
-            Add Post
+            글 가져오기
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
           <Divider />
@@ -92,6 +92,7 @@ const S = {
     width: 100vw;
     height: 100vh;
     padding: ${LAYOUT_STYLE.padding};
+    background-color: ${({ theme }) => theme.color.spaceBackground};
   `,
 
   Row: styled.div`
@@ -109,7 +110,7 @@ const S = {
     display: flex;
     justify-content: center;
     width: 100%;
-    border: ${LAYOUT_STYLE.border};
+    box-shadow: ${LAYOUT_STYLE.boxShadow};
     border-radius: 8px;
     overflow-y: auto;
   `,

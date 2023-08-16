@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
+import org.donggle.backend.auth.support.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,24 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Void> categoryAdd(@Valid @RequestBody final CategoryAddRequest request) {
-        final Long categoryId = categoryService.addCategory(1L, request);
+    public ResponseEntity<Void> categoryAdd(
+            @AuthenticationPrincipal final Long memberId,
+            @Valid @RequestBody final CategoryAddRequest request
+    ) {
+        final Long categoryId = categoryService.addCategory(memberId, request);
         return ResponseEntity.created(URI.create("/categories/" + categoryId)).build();
     }
 
     @PatchMapping("/{categoryId}")
-    public ResponseEntity<Void> categoryModify(@PathVariable final Long categoryId,
-                                               @RequestBody final CategoryModifyRequest request) {
+    public ResponseEntity<Void> categoryModify(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long categoryId,
+            @RequestBody final CategoryModifyRequest request
+    ) {
         if (request.categoryName() != null) {
-            categoryService.modifyCategoryName(1L, categoryId, request);
+            categoryService.modifyCategoryName(memberId, categoryId, request);
         } else if (request.nextCategoryId() != null) {
-            categoryService.modifyCategoryOrder(1L, categoryId, request);
+            categoryService.modifyCategoryOrder(memberId, categoryId, request);
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -45,20 +52,26 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> categoryRemove(@PathVariable final Long categoryId) {
-        categoryService.removeCategory(1L, categoryId);
+    public ResponseEntity<Void> categoryRemove(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long categoryId
+    ) {
+        categoryService.removeCategory(memberId, categoryId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<CategoryListResponse> categoryList() {
-        final CategoryListResponse response = categoryService.findAll(1L);
+    public ResponseEntity<CategoryListResponse> categoryList(@AuthenticationPrincipal final Long memberId) {
+        final CategoryListResponse response = categoryService.findAll(memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryWritingsResponse> categoryWritingList(@PathVariable final Long categoryId) {
-        final CategoryWritingsResponse response = categoryService.findAllWritings(1L, categoryId);
+    public ResponseEntity<CategoryWritingsResponse> categoryWritingList(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long categoryId
+    ) {
+        final CategoryWritingsResponse response = categoryService.findAllWritings(memberId, categoryId);
         return ResponseEntity.ok(response);
     }
 }

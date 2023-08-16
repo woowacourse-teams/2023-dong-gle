@@ -25,6 +25,7 @@ import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
@@ -45,13 +46,18 @@ public class PublishService {
 
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
-        final String blogName = publishRequest.publishTo();
-        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
-        final Member member = memberRepository.findById(memberId).orElseThrow();
-        final Blog blog = blogRepository.findByBlogType(BlogType.valueOf(blogName))
-                .orElseThrow(() -> new BlogNotFoundException(blogName));
+        final BlogType blogType = BlogType.valueOf(publishRequest.publishTo());
+        final Blog blog = blogRepository.findByBlogType(blogType)
+                .orElseThrow(() -> new BlogNotFoundException(publishRequest.publishTo()));
+        final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         final Writing writing = writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
+
+        publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blogType, writing));
+
+        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
+        final Member member = memberRepository.findById(memberId).orElseThrow();
+
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
 
@@ -61,6 +67,13 @@ public class PublishService {
         };
 
         blogWritingRepository.save(blogWriting);
+    }
+
+    private void checkWritingAlreadyPublished(final BlogWriting publishedBlog, final BlogType blogType, final Writing writing) {
+        if (publishedBlog.isSameBlogType(blogType)
+                && (writing.getUpdatedAt().isBefore(publishedBlog.getPublishedAt()))) {
+            throw new WritingAlreadyPublishedException(writing.getId(), blogType);
+        }
     }
 
     private BlogWriting createBlogWritingAfterMediumPublish(final PublishRequest publishRequest, final Member member, final Blog blog, final Writing writing, final String content) {
@@ -93,7 +106,7 @@ public class PublishService {
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
         //TODO TistoryBlogName 못찾은 예외 발생시키기
         final String tistoryToken = memberCredentials.getTistoryToken();
-        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(tistoryToken);
+        final String tistoryBlogName = memberCredentials.getTistoryBlogName();
         return TistoryPublishRequest.builder()
                 .access_token(tistoryToken)
                 .blogName(tistoryBlogName)

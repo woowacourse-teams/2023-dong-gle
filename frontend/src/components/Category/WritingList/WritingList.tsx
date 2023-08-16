@@ -17,8 +17,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
   const writingId = Number(useParams()['writingId']);
   const deleteWritings = useDeleteWritings();
 
-  if (!writings || writings?.length === 0)
-    return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
+  if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;
 
   return (
     <ul>

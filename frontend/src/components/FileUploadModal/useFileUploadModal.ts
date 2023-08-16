@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { addNotionWriting, addWriting } from 'apis/writings';
+import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { ChangeEventHandler, useState } from 'react';
 import { getErrorMessage } from 'utils/error';
@@ -11,11 +12,17 @@ type Args = {
 
 export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
+  const toast = useToast();
   const { goWritingPage } = usePageNavigate();
   const selectedCategoryId = categoryId ?? 1;
 
   const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {
-    onSuccess: (data) => onFileUploadSuccess(data.headers),
+    onSuccess: (data) => {
+      onFileUploadSuccess(data.headers);
+    },
+    onError: (error) => {
+      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+    },
   });
 
   const { mutate: uploadFile, isLoading: isFileUploadLoading } = useMutation(addWriting, {

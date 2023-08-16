@@ -62,7 +62,12 @@ export const writingHandlers = [
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/notion`, async (_, res, ctx) => {
-    return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
+    // return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/200`));
+    return res(
+      ctx.delay(1000),
+      ctx.status(404),
+      ctx.json({ message: '유효한 노션 id를 입력해주세요.' }),
+    );
   }),
 
   // 글 블로그로 발행: POST

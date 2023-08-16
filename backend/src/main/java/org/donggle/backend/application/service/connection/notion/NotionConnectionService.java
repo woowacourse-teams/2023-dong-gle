@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -61,15 +62,10 @@ public class NotionConnectionService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
 
-        final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .map(memberCredentials -> memberCredentials.updateNotionToken(accessToken))
-                .orElseGet(() -> creatMemberCredentials(member, accessToken));
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
 
-        memberCredentialsRepository.save(findMemberCredentials);
-    }
-
-    private MemberCredentials creatMemberCredentials(final Member member, final String accessToken) {
-        return MemberCredentials.createByNotionToken(member, accessToken);
+        memberCredentials.updateNotionToken(accessToken);
     }
 
     private String getAccessToken(final String code, final String redirectUri) {

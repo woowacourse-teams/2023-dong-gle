@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 public class TistoryConnectionService {
@@ -60,15 +62,10 @@ public class TistoryConnectionService {
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
         final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(accessToken);
 
-        final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .map(memberCredentials -> memberCredentials.updateTistory(accessToken, tistoryBlogName))
-                .orElseGet(() -> creatMemberCredentials(member, accessToken, tistoryBlogName));
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
 
-        memberCredentialsRepository.save(findMemberCredentials);
-    }
-
-    private MemberCredentials creatMemberCredentials(final Member member, final String accessToken, final String tistoryBlogName) {
-        return MemberCredentials.createByTistoryToken(member, accessToken, tistoryBlogName);
+        memberCredentials.updateTistory(accessToken, tistoryBlogName);
     }
 
     private String getAccessToken(final String code, final String redirectUri) {

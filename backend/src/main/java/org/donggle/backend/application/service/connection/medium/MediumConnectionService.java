@@ -9,6 +9,8 @@ import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 public class MediumConnectionService {
@@ -28,14 +30,9 @@ public class MediumConnectionService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final String accessToken = addTokenRequest.token();
 
-        final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .map(memberCredentials -> memberCredentials.updateMediumToken(accessToken))
-                .orElseGet(() -> creatMemberCredentials(member, accessToken));
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
 
-        memberCredentialsRepository.save(findMemberCredentials);
-    }
-
-    private MemberCredentials creatMemberCredentials(final Member member, final String accessToken) {
-        return MemberCredentials.createByMediumToken(member, accessToken);
+        memberCredentials.updateMediumToken(accessToken);
     }
 }

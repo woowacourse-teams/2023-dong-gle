@@ -45,32 +45,21 @@ public class MemberCredentials extends BaseEntity {
         this.tistoryBlogName = tistoryBlogName;
     }
 
-    public static MemberCredentials createByTistoryToken(final Member member, final String tistoryToken, final String tistoryBlogName) {
-        return new MemberCredentials(null, member, null, null, tistoryToken, tistoryBlogName);
+    public static MemberCredentials basic(final Member newMember) {
+        return new MemberCredentials(null, newMember, null, null, null, null);
     }
 
-    public static MemberCredentials createByNotionToken(final Member member, final String notionToken) {
-        return new MemberCredentials(null, member, notionToken, null, null, null);
-    }
-
-    public static MemberCredentials createByMediumToken(final Member member, final String mediumToken) {
-        return new MemberCredentials(null, member, null, mediumToken, null, null);
-    }
-
-    public MemberCredentials updateTistory(final String tistoryToken, final String tistoryBlogName) {
+    public void updateTistory(final String tistoryToken, final String tistoryBlogName) {
         this.tistoryToken = tistoryToken;
         this.tistoryBlogName = tistoryBlogName;
-        return this;
     }
 
-    public MemberCredentials updateMediumToken(final String mediumToken) {
+    public void updateMediumToken(final String mediumToken) {
         this.mediumToken = mediumToken;
-        return this;
     }
 
-    public MemberCredentials updateNotionToken(final String notionToken) {
+    public void updateNotionToken(final String notionToken) {
         this.notionToken = notionToken;
-        return this;
     }
 
     @Override

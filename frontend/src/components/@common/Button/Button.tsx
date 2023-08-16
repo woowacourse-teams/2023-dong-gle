@@ -59,8 +59,8 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
     primary: css`
       ${({ theme }) => css`
         color: ${theme.color.gray10};
-        background-color: ${theme.color.gray1};
-        outline: 1px solid ${theme.color.gray1};
+        background-color: transparent;
+        outline: 1px solid transparent;
 
         &:hover {
           background-color: ${theme.color.primary};

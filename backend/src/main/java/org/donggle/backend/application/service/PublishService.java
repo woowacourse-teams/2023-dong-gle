@@ -25,12 +25,15 @@ import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.exception.business.MediumNotConnectedException;
+import org.donggle.backend.exception.business.TistoryNotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -46,17 +49,12 @@ public class PublishService {
 
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
-        final BlogType blogType = BlogType.valueOf(publishRequest.publishTo());
-        final Blog blog = blogRepository.findByBlogType(blogType)
-                .orElseThrow(() -> new BlogNotFoundException(publishRequest.publishTo()));
-        final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
-        final Writing writing = writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
-
-        publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blogType, writing));
-
-        // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
+        final Blog blog = findBlog(publishRequest);
+        final Writing writing = findWriting(writingId);
         final Member member = memberRepository.findById(memberId).orElseThrow();
+
+        final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
+        publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
 
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
@@ -83,8 +81,9 @@ public class PublishService {
     }
 
     private MediumPublishRequest buildMediumRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
-        final String mediumToken = memberCredentials.getMediumToken();
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+        final String mediumToken = memberCredentials.getMediumToken()
+                .orElseThrow(MediumNotConnectedException::new);
         final MediumRequestBody body = MediumRequestBody.builder()
                 .title(writing.getTitleValue())
                 .content(content)
@@ -102,11 +101,11 @@ public class PublishService {
     }
 
     private TistoryPublishRequest buildTistoryRequest(final Member member, final PublishRequest publishRequest, final Writing writing, final String content) {
-        //TODO TistoryToken 못찾은 예외 발생시키기
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
-        //TODO TistoryBlogName 못찾은 예외 발생시키기
-        final String tistoryToken = memberCredentials.getTistoryToken();
-        final String tistoryBlogName = memberCredentials.getTistoryBlogName();
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+        final String tistoryToken = memberCredentials.getTistoryToken()
+                .orElseThrow(TistoryNotConnectedException::new);
+        final String tistoryBlogName = memberCredentials.getTistoryBlogName()
+                .orElseThrow(TistoryNotConnectedException::new);
         return TistoryPublishRequest.builder()
                 .access_token(tistoryToken)
                 .blogName(tistoryBlogName)
@@ -115,5 +114,25 @@ public class PublishService {
                 .content(content)
                 .tag(String.join(",", publishRequest.tags()))
                 .build();
+    }
+
+    private MemberCredentials findMemberCredentials(final Member member) {
+        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private Writing findWriting(final Long writingId) {
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
+    private Blog findBlog(final PublishRequest publishRequest) {
+        for (final BlogType blogType : BlogType.values()) {
+            if (blogType.name().equals(publishRequest.publishTo())) {
+                return blogRepository.findByBlogType(blogType)
+                        .orElseThrow(() -> new BlogNotFoundException(publishRequest.publishTo()));
+            }
+        }
+        throw new BlogNotFoundException(publishRequest.publishTo());
     }
 }

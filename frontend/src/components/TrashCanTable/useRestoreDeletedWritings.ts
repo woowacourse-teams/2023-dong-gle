@@ -8,7 +8,7 @@ export const useRestoreDeleteWritings = () => {
       alert('글이 복구되었습니다.');
       queryClient.invalidateQueries(['deletedWritings']);
     },
-    onError: () => alert('글 삭제가 실패했습니다.'),
+    onError: () => alert('글 복구가 실패했습니다.'),
   });
 
   const restoreDeletedWritings = (writingIds: number[]) => {

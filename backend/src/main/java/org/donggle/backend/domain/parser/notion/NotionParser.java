@@ -59,7 +59,6 @@ public class NotionParser {
     }
 
     public List<Block> parseBody(final List<NotionBlockNode> notionBlockNodes) {
-        System.out.println("notionBlockNodes = " + notionBlockNodes);
         return notionBlockNodes.stream()
                 .map(this::createContentFromBlockNode)
                 .filter(Optional::isPresent)

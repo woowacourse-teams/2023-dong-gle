@@ -161,6 +161,6 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("")));
+                .isEqualTo(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("---")));
     }
 }

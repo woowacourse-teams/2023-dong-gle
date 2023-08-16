@@ -224,4 +224,62 @@ class MarkDownParserTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("task list 파싱을 테스트한다.")
+    class ParseTaskList {
+        @Test
+        @DisplayName("checked task list 파싱 테스트")
+        void parseCheckedTaskList() {
+            //given
+            final String text = "- [x] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.CHECKED_TASK_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("unchecked task list 파싱 테스트")
+        void parseUnCheckedTaskList() {
+            //given
+            final String text = "- [ ] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNCHECKED_TASK_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("unchecked task list 파싱 예외 테스트")
+        void parseUnCheckedTaskListException() {
+            //given
+            final String text = "- [a] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNORDERED_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("[a] 안녕하세요. 동글입니다.")
+            );
+        }
+    }
 }

@@ -33,6 +33,7 @@ module.exports = {
       types: path.resolve(__dirname, 'src/types'),
       utils: path.resolve(__dirname, 'src/utils'),
       routes: path.resolve(__dirname, 'src/routes'),
+      contexts: path.resolve(__dirname, 'src/contexts'),
     },
   },
   output: {

@@ -1,9 +1,9 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.oauth.medium.MediumConnectionService;
-import org.donggle.backend.application.service.oauth.notion.NotionConnectionService;
-import org.donggle.backend.application.service.oauth.tistory.TistoryConnectionService;
+import org.donggle.backend.application.service.connection.medium.MediumConnectionService;
+import org.donggle.backend.application.service.connection.notion.NotionConnectionService;
+import org.donggle.backend.application.service.connection.tistory.TistoryConnectionService;
 import org.donggle.backend.application.service.request.AddTokenRequest;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.auth.support.AuthenticationPrincipal;

@@ -1,9 +1,9 @@
-package org.donggle.backend.application.service.oauth.notion;
+package org.donggle.backend.application.service.connection.notion;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
-import org.donggle.backend.application.service.oauth.notion.dto.NotionTokenRequest;
-import org.donggle.backend.application.service.oauth.notion.dto.NotionTokenResponse;
+import org.donggle.backend.application.service.connection.notion.dto.NotionTokenRequest;
+import org.donggle.backend.application.service.connection.notion.dto.NotionTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;

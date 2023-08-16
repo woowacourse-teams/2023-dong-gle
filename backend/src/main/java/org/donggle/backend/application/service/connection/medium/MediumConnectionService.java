@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.oauth.medium;
+package org.donggle.backend.application.service.connection.medium;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;

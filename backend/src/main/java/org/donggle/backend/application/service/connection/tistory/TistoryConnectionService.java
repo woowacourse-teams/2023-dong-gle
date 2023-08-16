@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.oauth.tistory;
+package org.donggle.backend.application.service.connection.tistory;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;

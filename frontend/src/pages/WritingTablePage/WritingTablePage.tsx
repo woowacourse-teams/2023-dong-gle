@@ -21,10 +21,8 @@ export default WritingTablePage;
 
 const S = {
   Article: styled.article`
-    width: 90%;
-    padding: 8rem 4rem;
-
-    background-color: ${({ theme }) => theme.color.gray1};
+    width: 100%;
+    padding: 8rem;
   `,
 
   CategoryNameTitle: styled.h1`

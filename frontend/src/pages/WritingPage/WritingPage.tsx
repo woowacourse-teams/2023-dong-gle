@@ -17,19 +17,15 @@ const WritingPage = () => {
     return () => clearActiveWritingId();
   }, []);
 
-  return (
-    <S.Article>
-      <WritingViewer categoryId={categoryId} writingId={writingId} />
-    </S.Article>
-  );
+  return <WritingViewer categoryId={categoryId} writingId={writingId} />;
 };
 
 export default WritingPage;
 
 const S = {
   Article: styled.article`
-    width: 90%;
-
+    width: 100%;
+    padding: 0 4rem;
     background-color: ${({ theme }) => theme.color.gray1};
   `,
 };

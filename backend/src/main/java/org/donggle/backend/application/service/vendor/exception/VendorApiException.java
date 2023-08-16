@@ -18,7 +18,7 @@ public abstract class VendorApiException extends RuntimeException {
 
     public static Mono<? extends Throwable> handle4xxException(final int code, final String platformName) {
         return switch (code) {
-            case BAD_REQUEST -> Mono.error(new VendorApiRequestException());
+            case BAD_REQUEST -> Mono.error(new VendorApiRequestException(platformName));
             case UNAUTHORIZED -> Mono.error(new VendorApiUnAuthorizedException(platformName));
             case FORBIDDEN -> Mono.error(new VendorApiForbiddenException(platformName));
             case NOT_FOUND -> Mono.error(new VendorApiNotFoundException(platformName));
@@ -29,4 +29,8 @@ public abstract class VendorApiException extends RuntimeException {
     public static Mono<? extends Throwable> handle5xxException(final String platformName) {
         return Mono.error(new VendorApiInternalServerError(platformName));
     }
+
+    public abstract String getHint();
+
+    public abstract int getErrorCode();
 }

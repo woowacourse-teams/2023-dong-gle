@@ -2,9 +2,15 @@ import { HttpStatus } from 'constants/apis/http';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { HttpError } from 'utils/apis/HttpError';
 
+export type ErrorBoundaryFallbackProps = {
+  status?: number;
+  title: string;
+  message: string;
+};
+
 type Props = {
   children: ReactNode;
-  fallback?: ReactNode;
+  fallback?: React.FunctionComponent<ErrorBoundaryFallbackProps>;
   onReset?: VoidFunction;
 };
 
@@ -26,10 +32,16 @@ export class ErrorBoundary extends Component<Props, State> {
 
   // You can render any custom fallback UI
   render() {
+    const { fallback } = this.props;
+
     if (this.state.error) {
       const error = this.state.error;
-      if (error instanceof HttpError) {
-        alert(error.message);
+      if (error instanceof HttpError && fallback) {
+        return React.createElement(fallback, {
+          status: error.statusCode,
+          title: '',
+          message: error.message,
+        });
       }
     }
 

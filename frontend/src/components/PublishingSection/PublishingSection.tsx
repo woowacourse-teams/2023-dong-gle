@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { BLOG_LIST } from 'constants/blog';
+import { BLOG_ICON, BLOG_KOREAN, BLOG_LIST } from 'constants/blog';
 import type { Blog } from 'types/domain';
 import Button from 'components/@common/Button/Button';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
@@ -26,9 +26,10 @@ const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
               size='medium'
               block
               align='left'
+              icon={BLOG_ICON[name]}
               onClick={() => openPublishingPropertySection(name)}
             >
-              {name}
+              {BLOG_KOREAN[name]}
             </Button>
           );
         })}
@@ -56,5 +57,9 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
+  `,
+
+  ButtonContent: styled.div`
+    display: flex;
   `,
 };

@@ -47,9 +47,10 @@ export default WritingViewer;
 
 const S = {
   WritingViewerContainer: styled.section`
-    padding: 8rem 4rem;
+    padding: 8rem;
     max-width: 100%;
     overflow-wrap: break-word;
+    background-color: ${({ theme }) => theme.color.gray1};
   `,
 
   LoadingContainer: styled.div`

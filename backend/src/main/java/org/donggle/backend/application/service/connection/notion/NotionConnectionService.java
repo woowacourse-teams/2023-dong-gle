@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Objects;
 
 @Service
+@Transactional
 public class NotionConnectionService {
     public static final String AUTHORIZE_URL = "https://api.notion.com/v1/oauth/authorize";
     public static final String TOKEN_URL = "https://api.notion.com/v1/oauth/token";

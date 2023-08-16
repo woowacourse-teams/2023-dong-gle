@@ -7,8 +7,10 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MediumConnectionService {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;

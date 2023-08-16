@@ -9,10 +9,12 @@ import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@Transactional
 public class TistoryConnectionService {
     private static final String AUTHORIZE_URL = "https://www.tistory.com/oauth/authorize";
     private static final String TOKEN_URL = "https://www.tistory.com/oauth/access_token";

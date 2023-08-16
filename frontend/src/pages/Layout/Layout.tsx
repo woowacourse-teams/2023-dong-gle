@@ -9,6 +9,8 @@ import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
 import CategorySection from 'components/Category/Section/Section';
 import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
+import Divider from 'components/@common/Divider/Divider';
+import TrashCan from 'components/TrashCan/TrashCan';
 
 export type PageContext = {
   isLeftSidebarOpen?: boolean;
@@ -51,7 +53,10 @@ const Layout = () => {
             글 가져오기
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
+          <Divider />
           <CategorySection />
+          <Divider />
+          <TrashCan />
         </S.LeftSidebarSection>
         <S.Main>
           <Outlet

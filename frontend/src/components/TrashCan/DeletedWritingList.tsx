@@ -2,38 +2,36 @@ import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
-import { useDeleteWritings } from './useDeleteWritings';
+import { useDeletedWritings } from 'hooks/useDeletedWritings';
+import { useDeletePermanentWritings } from 'components/TrashCanTable/useDeletePermanentWritings';
 
-type Props = {
-  categoryId: number;
-  isOpen: boolean;
-};
-
-const WritingList = ({ categoryId, isOpen }: Props) => {
+const DeletedWritingList = () => {
+  const { deletedWritings } = useDeletedWritings();
   const { goWritingPage } = usePageNavigate();
-  const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
-  const deleteWritings = useDeleteWritings();
+  const deletePermanentWritings = useDeletePermanentWritings();
 
-  if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;
+  if (!deletedWritings || deletedWritings?.length === 0)
+    return <S.NoWritingsText>빈 휴지통</S.NoWritingsText>;
 
   return (
     <ul>
-      {writings.map((writing) => (
-        <S.Item key={writing.id} $isClicked={writingId === writing.id}>
+      {deletedWritings.map((deletedWriting) => (
+        <S.Item key={deletedWriting.id} $isClicked={writingId === deletedWriting.id}>
           <S.Button
-            aria-label={`${writing.title}글 메인화면에 열기`}
-            onClick={() => goWritingPage({ categoryId, writingId: writing.id })}
+            aria-label={`${deletedWriting.title}글 메인화면에 열기`}
+            onClick={() =>
+              goWritingPage({ categoryId: deletedWriting.categoryId, writingId: deletedWriting.id })
+            }
           >
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />
             </S.IconWrapper>
-            <S.Text>{writing.title}</S.Text>
+            <S.Text>{deletedWriting.title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={() => deleteWritings([writingId])} />
+            <DeleteButton onClick={() => deletePermanentWritings([writingId])} />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}
@@ -41,7 +39,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
   );
 };
 
-export default WritingList;
+export default DeletedWritingList;
 
 const S = {
   Item: styled.li<{ $isClicked: boolean }>`
@@ -57,8 +55,9 @@ const S = {
       background-color: ${({ theme }) => theme.color.gray4};
 
       div {
-        display: flex;
+        display: inline-flex;
         flex-shrink: 0;
+        gap: 0.8rem;
       }
     }
   `,

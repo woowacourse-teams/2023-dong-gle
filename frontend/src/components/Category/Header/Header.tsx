@@ -4,7 +4,7 @@ import useCategoryInput from '../useCategoryInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import { isValidCategoryName } from '../isValidCategoryName';
 import Input from 'components/@common/Input/Input';
-import { PlusCircleIcon } from 'assets/icons';
+import { PlusIcon } from 'assets/icons';
 
 const Header = () => {
   const {
@@ -50,7 +50,7 @@ const Header = () => {
         />
       ) : (
         <S.Button onClick={openInput} aria-label='카테고리 추가 입력 창 열기'>
-          <PlusCircleIcon width={12} height={12} />
+          <PlusIcon width={12} height={12} />
         </S.Button>
       )}
     </S.Header>
@@ -64,10 +64,10 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 2.8rem;
+    height: 3.6rem;
+    padding: 0.8rem;
     font-size: 1.2rem;
     font-weight: 400;
-    padding-right: 0.8rem;
   `,
 
   Title: styled.h1`
@@ -80,8 +80,8 @@ const S = {
     justify-content: center;
     align-items: center;
     width: 2rem;
-    height: 2.4rem;
-    border-radius: 8px;
+    height: 2rem;
+    border-radius: 4px;
 
     &:hover {
       background-color: ${({ theme }) => theme.color.gray5};

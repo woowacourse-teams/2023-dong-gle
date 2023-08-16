@@ -6,6 +6,7 @@ import OauthPage from 'pages/OauthPage/OauthPage';
 import IntroducePage from 'pages/IntroducePage/IntroducePage';
 import Layout from 'pages/Layout/Layout';
 import { PATH } from 'constants/path';
+import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 
 export const Router = () => {
   const browserRouter = createBrowserRouter([
@@ -37,6 +38,10 @@ export const Router = () => {
             {
               path: PATH.writingTablePage,
               element: <WritingTablePage />,
+            },
+            {
+              path: PATH.trashCanPage,
+              element: <TrashCanPage />,
             },
           ],
         },

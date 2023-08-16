@@ -40,9 +40,15 @@ export default AccordionTitle;
 const S = {
   Container: styled.div`
     display: flex;
+    gap: 0.8rem;
     align-items: center;
     width: 100%;
+    padding: 0 0.4rem;
     border-radius: 4px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray4};
+    }
   `,
 
   IconButton: styled.button<Record<'$isOpen', boolean>>`

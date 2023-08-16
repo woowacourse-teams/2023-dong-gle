@@ -30,8 +30,7 @@ const S = {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 3.2rem;
-    padding: 0.8rem;
+    height: 3.6rem;
     border-radius: 8px;
     font-size: 1.4rem;
 

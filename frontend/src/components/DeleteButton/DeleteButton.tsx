@@ -19,10 +19,10 @@ const S = {
     align-items: center;
     width: 2rem;
     height: 2.4rem;
-    border-radius: 8px;
+    border-radius: 4px;
 
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray6};
+      background-color: ${({ theme }) => theme.color.gray5};
     }
   `,
 };

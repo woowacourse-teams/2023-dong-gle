@@ -18,9 +18,8 @@ const DeletedWritingList = () => {
   return (
     <ul>
       {deletedWritings.map((deletedWriting) => (
-        <S.Item key={deletedWriting.id}>
+        <S.Item key={deletedWriting.id} $isClicked={writingId === deletedWriting.id}>
           <S.Button
-            $isClicked={writingId === deletedWriting.id}
             aria-label={`${deletedWriting.title}글 메인화면에 열기`}
             onClick={() =>
               goWritingPage({ categoryId: deletedWriting.categoryId, writingId: deletedWriting.id })
@@ -43,15 +42,17 @@ const DeletedWritingList = () => {
 export default DeletedWritingList;
 
 const S = {
-  Item: styled.li`
+  Item: styled.li<{ $isClicked: boolean }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    border-radius: 8px;
+    height: 3.6rem;
+    border-radius: 4px;
+    background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray4};
 
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray5};
+      background-color: ${({ theme }) => theme.color.gray4};
 
       div {
         display: inline-flex;
@@ -61,15 +62,14 @@ const S = {
     }
   `,
 
-  Button: styled.button<{ $isClicked: boolean }>`
+  Button: styled.button`
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.4rem;
     min-width: 0;
-    height: 3.6rem;
-    padding: 0.8rem;
-    border-radius: 8px;
-    background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray5};
+    height: 100%;
+    padding: 0.4rem 0 0.4rem 0.8rem;
+    border-radius: 4px;
   `,
 
   IconWrapper: styled.div`

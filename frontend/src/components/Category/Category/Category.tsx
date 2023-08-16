@@ -1,4 +1,4 @@
-import { TrashCanIcon, PencilIcon } from 'assets/icons';
+import { PencilIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
@@ -95,15 +95,14 @@ const S = {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 3.2rem;
-    padding: 0.8rem;
-    border-radius: 8px;
+    height: 3.6rem;
+    border-radius: 4px;
     font-size: 1.4rem;
 
     &:hover {
       div {
         display: inline-flex;
-        gap: 0.8rem;
+        gap: 0.4rem;
       }
     }
   `,
@@ -111,6 +110,7 @@ const S = {
   CategoryButton: styled.button`
     flex: 1;
     min-width: 0;
+    height: 100%;
     text-align: left;
   `,
 
@@ -136,6 +136,7 @@ const S = {
 
   IconContainer: styled.div`
     display: none;
+    margin-right: 0.4rem;
   `,
 
   Button: styled.button`
@@ -144,7 +145,8 @@ const S = {
     align-items: center;
     width: 2rem;
     height: 2.4rem;
-    border-radius: 8px;
+    padding: 0.4rem;
+    border-radius: 4px;
 
     &:hover {
       background-color: ${({ theme }) => theme.color.gray5};

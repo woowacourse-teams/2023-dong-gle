@@ -80,7 +80,13 @@ export const writingHandlers = [
     const id = Number(req.params.writingId);
     const { publishTo } = await req.json();
 
-    if (!blog.includes(publishTo) || typeof id !== 'number') return res(ctx.status(404));
+    if (!blog.includes(publishTo) || typeof id !== 'number')
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: '글 발행을 실패했습니다.',
+        }),
+      );
 
     return res(ctx.delay(3000), ctx.status(200));
   }),

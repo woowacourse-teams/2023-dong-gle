@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import Layout from 'pages/Layout/Layout';
 import ToastProvider from 'contexts/ToastProvider';
 import ToastContainer from 'components/@common/Toast/ToastContainer';
+import { Outlet } from 'react-router-dom';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,7 +19,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <ErrorBoundary>
-          <Layout />
+          <Outlet />
         </ErrorBoundary>
         <ToastContainer />
       </ToastProvider>

@@ -7,7 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.donggle.backend.auth.exception.NoSuchTokenException;
+import org.donggle.backend.auth.exception.ExpiredAccessTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,8 @@ public class JwtTokenProvider {
     private static final String MEMBER_ID_KEY = "memberId";
 
     private final SecretKey key;
-    private final long accessTokenValidityInMilliseconds;
-    private final long refreshTokenValidityInMilliseconds;
+    private final int accessTokenValidityInMilliseconds;
+    private final int refreshTokenValidityInMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
                             @Value("${security.jwt.token.access-token-expire-length}") final int accessTokenValidityInMilliseconds,
@@ -52,7 +52,9 @@ public class JwtTokenProvider {
     }
 
     public Long getPayload(final String token) {
-        return getClaims(token).getBody().get(MEMBER_ID_KEY, Long.class);
+        return getClaims(token)
+                .getBody()
+                .get(MEMBER_ID_KEY, Long.class);
     }
 
     public boolean inValidTokenUsage(final String token) {
@@ -60,13 +62,16 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = getClaims(token);
             return claims.getBody().getExpiration().before(new Date());
         } catch (final ExpiredJwtException e) {
-            throw new NoSuchTokenException();
+            throw new ExpiredAccessTokenException();
         } catch (final JwtException | IllegalArgumentException e) {
             return true;
         }
     }
 
     private Jws<Claims> getClaims(final String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
     }
 }

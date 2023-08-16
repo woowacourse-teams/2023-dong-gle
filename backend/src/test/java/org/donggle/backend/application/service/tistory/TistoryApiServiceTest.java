@@ -1,10 +1,9 @@
 package org.donggle.backend.application.service.tistory;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
 import org.donggle.backend.application.service.vendor.tistory.dto.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.application.service.vendor.tistory.dto.request.TistoryPublishRequest;
-import org.donggle.backend.application.service.vendor.tistory.dto.response.TistoryPublishWritingResponse;
+import org.donggle.backend.application.service.vendor.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class TistoryApiServiceTest {
                 .build();
 
         //when
-        final TistoryPublishWritingResponse result = tistoryApiService.publishContent(request);
+        final TistoryGetWritingResponseWrapper result = tistoryApiService.publishContent(request);
 
         //then
         assertThat(result.tistory().status()).isEqualTo(200);
@@ -66,9 +65,23 @@ class TistoryApiServiceTest {
                 .build();
 
         //when
-        final TistoryPublishWritingResponse publishProperty = tistoryApiService.findPublishProperty(tistoryPublishPropertyRequest);
+        final TistoryGetWritingResponseWrapper publishProperty = tistoryApiService.findPublishProperty(tistoryPublishPropertyRequest);
 
         //then
         assertThat(publishProperty.tistory().status()).isEqualTo(200);
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("블로그 정보 조회 테스트")
+    void findBlogInfo() {
+        //given
+        final TistoryApiService tistoryApiService = new TistoryApiService();
+
+        //when
+        final String blogName = tistoryApiService.getDefaultTistoryBlogName("token");
+
+        //then
+        assertThat(blogName).isEqualTo("blogName");
     }
 }

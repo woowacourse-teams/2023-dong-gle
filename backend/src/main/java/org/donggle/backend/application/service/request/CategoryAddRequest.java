@@ -1,9 +1,9 @@
 package org.donggle.backend.application.service.request;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record CategoryAddRequest(
-        @NotNull(message = "카테고리 이름을 입력해주세요.")
+        @NotBlank(message = "카테고리 이름을 입력해주세요.")
         String categoryName
 ) {
 }

@@ -10,7 +10,10 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.exception.business.DuplicateCategoryNameException;
+import org.donggle.backend.exception.business.EmptyCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
+import org.donggle.backend.exception.business.OverLengthCategoryNameException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.CategoryListResponse;
@@ -41,11 +44,25 @@ public class CategoryService {
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         //TODO: member checking
         final Member findMember = findMember(memberId);
-        final Category category = Category.of(new CategoryName(request.categoryName()), findMember);
+        final CategoryName categoryName = new CategoryName(request.categoryName());
+        validateCategoryName(categoryName);
+        final Category category = Category.of(categoryName, findMember);
         final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
         lastCategory.changeNextCategory(savedCategory);
         return savedCategory.getId();
+    }
+
+    private void validateCategoryName(final CategoryName categoryName) {
+        if (categoryRepository.existsByCategoryName(categoryName)) {
+            throw new DuplicateCategoryNameException(categoryName.getName());
+        }
+        if (categoryName.isBlank()) {
+            throw new EmptyCategoryNameException();
+        }
+        if (categoryName.isOverLength()) {
+            throw new OverLengthCategoryNameException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -115,14 +132,18 @@ public class CategoryService {
     public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
-        validateBasicCategory(findCategory);
-        findCategory.changeName(new CategoryName(request.categoryName()));
+        validateBasicCategory(memberId, findCategory);
+
+        final CategoryName categoryName = new CategoryName(request.categoryName());
+        validateCategoryName(categoryName);
+
+        findCategory.changeName(categoryName);
     }
 
     public void removeCategory(final Long memberId, final Long categoryId) {
         //TODO: member checking
         final Category findCategory = findCategory(categoryId);
-        validateBasicCategory(findCategory);
+        validateBasicCategory(memberId, findCategory);
         transferToBasicCategory(memberId, findCategory);
         deleteCategory(findCategory);
     }
@@ -156,7 +177,7 @@ public class CategoryService {
     public void modifyCategoryOrder(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         final Long nextCategoryId = request.nextCategoryId();
         final Category source = findCategory(categoryId);
-        validateBasicCategory(source);
+        validateBasicCategory(memberId, source);
         deleteCategoryOrder(source);
         addCategoryOrder(nextCategoryId, source, memberId);
     }
@@ -182,9 +203,11 @@ public class CategoryService {
         }
     }
 
-    private void validateBasicCategory(final Category category) {
-        if (category.isBasic()) {
-            throw new InvalidBasicCategoryException();
+    private void validateBasicCategory(final Long memberId, final Category category) {
+        final Category basicCategory = categoryRepository.findFirstByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
+        if (basicCategory.equals(category)) {
+            throw new InvalidBasicCategoryException(category.getId());
         }
     }
 

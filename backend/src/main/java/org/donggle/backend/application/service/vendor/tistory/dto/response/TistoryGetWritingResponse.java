@@ -6,7 +6,7 @@ import org.donggle.backend.application.service.vendor.tistory.TistoryTagsDeseria
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public record TistoryPublishWritingDataResponse(
+public record TistoryGetWritingResponse(
         String url,
         String secondaryUrl,
         String id,

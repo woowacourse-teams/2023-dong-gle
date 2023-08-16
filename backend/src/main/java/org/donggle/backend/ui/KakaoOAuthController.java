@@ -47,7 +47,7 @@ public class KakaoOAuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Set-Cookie", cookie.toString())
-                .build();
+                .body(new AccessTokenResponse(response.accessToken()));
     }
 
     private ResponseCookie createRefreshTokenCookie(final String refreshToken) {

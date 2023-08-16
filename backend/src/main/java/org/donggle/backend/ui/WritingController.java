@@ -8,6 +8,7 @@ import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.auth.support.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
@@ -33,30 +34,42 @@ public class WritingController {
     private final PublishService publishService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> writingAdd(@Valid final MarkdownUploadRequest request) throws IOException {
-        final Long writingId = writingService.uploadMarkDownFile(1L, request);
+    public ResponseEntity<Void> writingAdd(
+            @AuthenticationPrincipal final Long memberId,
+            @Valid final MarkdownUploadRequest request
+    ) throws IOException {
+        final Long writingId = writingService.uploadMarkDownFile(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 
     @PostMapping("/notion")
-    public ResponseEntity<Void> writingAdd(@Valid @RequestBody final NotionUploadRequest request) {
-        final Long writingId = writingService.uploadNotionPage(1L, request);
+    public ResponseEntity<Void> writingAdd(
+            @AuthenticationPrincipal final Long memberId,
+            @Valid @RequestBody final NotionUploadRequest request
+    ) {
+        final Long writingId = writingService.uploadNotionPage(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 
     @GetMapping("/{writingId}")
-    public ResponseEntity<WritingResponse> writingDetails(@PathVariable final Long writingId) {
-        final WritingResponse response = writingService.findWriting(1L, writingId);
+    public ResponseEntity<WritingResponse> writingDetails(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long writingId
+    ) {
+        final WritingResponse response = writingService.findWriting(memberId, writingId);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{writingId}")
-    public ResponseEntity<Void> writingModify(@PathVariable final Long writingId,
-                                              @RequestBody final WritingModifyRequest request) {
+    public ResponseEntity<Void> writingModify(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long writingId,
+            @RequestBody final WritingModifyRequest request
+    ) {
         if (request.title() != null) {
-            writingService.modifyWritingTitle(1L, writingId, request);
+            writingService.modifyWritingTitle(memberId, writingId, request);
         } else if (request.nextWritingId() != null && request.targetCategoryId() != null) {
-            writingService.modifyWritingOrder(1L, writingId, request);
+            writingService.modifyWritingOrder(memberId, writingId, request);
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -64,21 +77,30 @@ public class WritingController {
     }
 
     @GetMapping("/{writingId}/properties")
-    public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(@PathVariable final Long writingId) {
-        final WritingPropertiesResponse response = writingService.findWritingProperties(1L, writingId);
+    public ResponseEntity<WritingPropertiesResponse> writingPropertiesDetails(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long writingId
+    ) {
+        final WritingPropertiesResponse response = writingService.findWritingProperties(memberId, writingId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(@RequestParam final Long categoryId) {
-        final WritingListWithCategoryResponse response = writingService.findWritingListByCategoryId(1L, categoryId);
+    public ResponseEntity<WritingListWithCategoryResponse> writingListWithCategory(
+            @AuthenticationPrincipal final Long memberId,
+            @RequestParam final Long categoryId
+    ) {
+        final WritingListWithCategoryResponse response = writingService.findWritingListByCategoryId(memberId, categoryId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{writingId}/publish")
-    public ResponseEntity<Void> writingPublish(@PathVariable final Long writingId,
-                                               @Valid @RequestBody final PublishRequest request) {
-        publishService.publishWriting(1L, writingId, request);
+    public ResponseEntity<Void> writingPublish(
+            @AuthenticationPrincipal final Long memberId,
+            @PathVariable final Long writingId,
+            @Valid @RequestBody final PublishRequest request
+    ) {
+        publishService.publishWriting(memberId, writingId, request);
         return ResponseEntity.ok().build();
     }
 }

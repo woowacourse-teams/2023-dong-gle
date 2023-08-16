@@ -1,16 +1,17 @@
 import Button from 'components/@common/Button/Button';
+import { ErrorBoundaryFallbackProps } from 'components/ErrorBoundary/ErrorBoundary';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-const ErrorPage = () => {
+const ErrorPage = ({ status, title, message }: ErrorBoundaryFallbackProps) => {
   const navigate = useNavigate();
 
   return (
     <S.Container>
-      <S.Status>404 Error</S.Status>
+      <S.Status>{status} Error</S.Status>
       <S.ErrorMessageContainer>
         <p>요청하신 페이지를 찾을 수 없습니다.</p>
-        <p>입력하신 주소가 정확한지 다시 한번 확인해주세요.</p>
+        <p>{message}</p>
       </S.ErrorMessageContainer>
       <Button variant='text' onClick={() => navigate(-1)}>
         이전 페이지로 돌아가기

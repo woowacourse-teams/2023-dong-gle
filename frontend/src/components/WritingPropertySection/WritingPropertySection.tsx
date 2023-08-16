@@ -1,16 +1,11 @@
-import { Fragment, ReactElement, useEffect } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { getWritingProperties } from 'apis/writings';
-import { CalendarIcon, MediumLogoIcon, TagIcon, TistoryLogoIcon } from 'assets/icons';
+import { CalendarIcon, TagIcon } from 'assets/icons';
 import Tag from 'components/@common/Tag/Tag';
 import { styled } from 'styled-components';
 import { dateFormatter } from 'utils/date';
-import type { Blog } from 'types/domain';
 import { useQuery } from '@tanstack/react-query';
-
-const blogIcon: Record<Blog, ReactElement> = {
-  MEDIUM: <MediumLogoIcon width='1.2rem' height='1.2rem' />,
-  TISTORY: <TistoryLogoIcon width='1.2rem' height='1.2rem' />,
-};
+import { BLOG_ICON, BLOG_KOREAN } from 'constants/blog';
 
 type Props = {
   writingId: number;
@@ -25,15 +20,15 @@ const WritingPropertySection = ({ writingId }: Props) => {
 
   return (
     <S.WritingPropertySection>
-      <S.SectionTitle>글 정보</S.SectionTitle>
+      <S.SectionTitle>정보</S.SectionTitle>
       <S.InfoList>
         <S.Info>
-          <S.InfoTitle>PROPERTIES</S.InfoTitle>
+          <S.InfoTitle>글 정보</S.InfoTitle>
           <S.InfoContent>
             <S.PropertyRow>
               <S.PropertyName>
                 <CalendarIcon width={12} height={12} />
-                Created
+                생성 날짜
               </S.PropertyName>
               <S.PropertyValue>
                 {dateFormatter(writingInfo.createdAt, 'YYYY/MM/DD HH:MM')}
@@ -43,14 +38,14 @@ const WritingPropertySection = ({ writingId }: Props) => {
         </S.Info>
         {Boolean(writingInfo.publishedDetails.length) && (
           <S.Info>
-            <S.InfoTitle>PUBLISHED</S.InfoTitle>
+            <S.InfoTitle>발행 정보</S.InfoTitle>
             <S.InfoContent>
               {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }, index) => {
                 return (
                   <Fragment key={index}>
                     <S.PropertyRow>
                       <S.PropertyName>
-                        {blogIcon[blogName]} {blogName}
+                        {BLOG_ICON[blogName]} {BLOG_KOREAN[blogName]}
                       </S.PropertyName>
                       <S.PropertyValue>
                         {dateFormatter(publishedAt, 'YYYY/MM/DD HH:MM')}
@@ -59,7 +54,7 @@ const WritingPropertySection = ({ writingId }: Props) => {
                     <S.PropertyRow>
                       <S.PropertyName>
                         <TagIcon width={12} height={12} />
-                        Tags
+                        태그
                       </S.PropertyName>
                       <S.PropertyValue>
                         {tags.map((tag) => (
@@ -133,6 +128,11 @@ const S = {
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
+
+    svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
   `,
   PropertyValue: styled.div`
     color: ${({ theme }) => theme.color.gray10};

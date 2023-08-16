@@ -46,9 +46,9 @@ const Layout = () => {
             block={true}
             align='left'
             onClick={openModal}
-            aria-label='글 업로드'
+            aria-label='글 가져오기'
           >
-            Add Post
+            글 가져오기
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
           <CategorySection />

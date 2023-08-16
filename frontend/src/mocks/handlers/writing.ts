@@ -24,7 +24,7 @@ export const writingHandlers = [
         }),
       );
     }
-    return res(ctx.delay(300), ctx.status(404));
+    return res(ctx.delay(300), ctx.status(404), ctx.json({ message: '글을 찾을 수 없습니다.' }));
   }),
 
   // 글 정보: GET
@@ -52,7 +52,11 @@ export const writingHandlers = [
         }),
       );
     }
-    return res(ctx.delay(300), ctx.status(404));
+    return res(
+      ctx.delay(300),
+      ctx.status(404),
+      ctx.json({ message: '글 정보를 찾을 수 없습니다.' }),
+    );
   }),
 
   // 글 생성(글 업로드): POST

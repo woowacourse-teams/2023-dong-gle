@@ -379,6 +379,7 @@ public class NotionBlockJsonBuilder {
             case "bookmark" -> blockJson.replaceAll("\\$\\{type}", "bookmark").replace("${body}", BOOKMARK_JSON_BODY);
             case "callout" -> blockJson.replaceAll("\\$\\{type}", "callout").replace("${body}", CALL_OUT_JSON_BODY);
             case "heading_1" -> blockJson.replaceAll("\\$\\{type}", "heading_1").replace("${body}", HEADING_JSON_BODY);
+            case "divider" -> blockJson.replaceAll("\\$\\{type}", "divider").replace("${body}", "[]");
             default -> "";
         };
         try {

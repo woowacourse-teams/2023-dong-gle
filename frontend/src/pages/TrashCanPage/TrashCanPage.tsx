@@ -19,8 +19,8 @@ export default TrashCanPage;
 
 const S = {
   Article: styled.article`
-    width: 90%;
-    padding: 8rem 4rem;
+    width: 100%;
+    padding: 8rem;
 
     background-color: ${({ theme }) => theme.color.gray1};
   `,

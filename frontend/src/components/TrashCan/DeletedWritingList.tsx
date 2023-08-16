@@ -13,7 +13,7 @@ const DeletedWritingList = () => {
   const deletePermanentWritings = useDeletePermanentWritings();
 
   if (!deletedWritings || deletedWritings?.length === 0)
-    return <S.NoWritingsText>No Writings inside</S.NoWritingsText>;
+    return <S.NoWritingsText>빈 휴지통</S.NoWritingsText>;
 
   return (
     <ul>
@@ -68,7 +68,7 @@ const S = {
     gap: 0.4rem;
     min-width: 0;
     height: 100%;
-    padding: 0.4rem 0 0.4rem 0.8rem;
+    padding: 0.4rem 0 0.4rem 3.2rem;
     border-radius: 4px;
   `,
 
@@ -86,7 +86,7 @@ const S = {
   `,
 
   NoWritingsText: styled.p`
-    padding: 0.8rem;
+    padding: 0.4rem 0 0.4rem 3.2rem;
     color: ${({ theme }) => theme.color.gray6};
     font-size: 1.4rem;
     font-weight: 500;

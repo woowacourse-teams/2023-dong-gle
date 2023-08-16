@@ -157,6 +157,17 @@ public class GlobalExceptionHandler {
                 .body(errorWrapper);
     }
 
+    @ExceptionHandler(VendorApiException.class)
+    public ResponseEntity<ErrorWrapper> handleVendorApiException(final VendorApiException e) {
+        log.warn("Exception from handleVendorApiException = ", e);
+        final ErrorWrapper errorWrapper = new ErrorWrapper(
+                ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())
+        );
+        return ResponseEntity
+                .status(e.getErrorCode())
+                .body(errorWrapper);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorWrapper> handleUnExpectedException(final Exception e) {
         log.error("Exception from handleUnExpectedException = ", e);
@@ -166,17 +177,6 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorWrapper);
-    }
-
-    @ExceptionHandler(VendorApiException.class)
-    public ResponseEntity<ErrorWrapper> handleVendorApiException(final VendorApiException e) {
-        log.warn("Exception from VendorApiException = ", e);
-        final ErrorWrapper errorWrapper = new ErrorWrapper(
-                ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())
-        );
-        return ResponseEntity
-                .status(e.getErrorCode())
                 .body(errorWrapper);
     }
 }

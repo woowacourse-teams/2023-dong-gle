@@ -38,14 +38,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(mdcInterceptor)
                 .addPathPatterns("/**")
                 .order(1);
-        
+
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
-                .addPathPatterns("/**")
-                .excludePathPatterns("/token/refresh")
-                .excludePathPatterns("/oauth/login/kakao");
+                .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**")
+                .order(2);
 
         registry.addInterceptor(new RefreshTokenAuthInterceptor(jwtTokenProvider, tokenRepository))
-                .addPathPatterns("/token/refresh");
+                .addPathPatterns("/token/refresh")
+                .order(3);
     }
 
     @Override

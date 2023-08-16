@@ -7,6 +7,8 @@ import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
+import { useToast } from 'hooks/@common/useToast';
+import { getErrorMessage } from 'utils/error';
 
 type Props = {
   categoryId: number;
@@ -26,25 +28,30 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   } = useCategoryInput('');
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
+  const toast = useToast();
 
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key !== 'Enter') return;
+    try {
+      if (e.key !== 'Enter') return;
 
-    const categoryName = e.currentTarget.value.trim();
+      const categoryName = e.currentTarget.value.trim();
 
-    if (!isValidCategoryName(categoryName)) {
-      setIsError(true);
-      return;
+      if (!isValidCategoryName(categoryName)) {
+        setIsError(true);
+        throw new Error('카테고리 이름은 1자 이상 31자 미만으로 입력해주세요.');
+      }
+
+      patchCategory({
+        categoryId,
+        body: {
+          categoryName,
+        },
+      });
+
+      resetInput();
+    } catch (error) {
+      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
     }
-
-    patchCategory({
-      categoryId,
-      body: {
-        categoryName,
-      },
-    });
-
-    resetInput();
   };
 
   return (

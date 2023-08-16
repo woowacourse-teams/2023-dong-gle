@@ -1,7 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { addNotionWriting, addWriting } from 'apis/writings';
+import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { ChangeEventHandler, useState } from 'react';
+import { getErrorMessage } from 'utils/error';
 
 type Args = {
   categoryId: number | null;
@@ -10,11 +12,17 @@ type Args = {
 
 export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
+  const toast = useToast();
   const { goWritingPage } = usePageNavigate();
   const selectedCategoryId = categoryId ?? 1;
 
   const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {
-    onSuccess: (data) => onFileUploadSuccess(data.headers),
+    onSuccess: (data) => {
+      onFileUploadSuccess(data.headers);
+    },
+    onError: (error) => {
+      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+    },
   });
 
   const { mutate: uploadFile, isLoading: isFileUploadLoading } = useMutation(addWriting, {
@@ -40,16 +48,22 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   };
 
   const uploadNotionWriting = () => {
-    const blockId = inputValue.split('/')?.pop()?.split('?')?.shift()?.split('-').pop();
+    try {
+      const blockId = inputValue.split('/')?.pop()?.split('?')?.shift()?.split('-').pop();
 
-    if (!blockId) return;
+      if (!blockId) {
+        throw new Error('노션 페이지 링크를 입력해주세요.');
+      }
 
-    setInputValue('');
+      setInputValue('');
 
-    uploadNotion({
-      blockId: blockId,
-      categoryId: selectedCategoryId,
-    });
+      uploadNotion({
+        blockId: blockId,
+        categoryId: selectedCategoryId,
+      });
+    } catch (error) {
+      alert(getErrorMessage(error));
+    }
   };
 
   const isLoading = isNotionUploadLoading || isFileUploadLoading;

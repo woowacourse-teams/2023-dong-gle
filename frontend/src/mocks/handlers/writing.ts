@@ -24,7 +24,7 @@ export const writingHandlers = [
         }),
       );
     }
-    return res(ctx.delay(300), ctx.status(404));
+    return res(ctx.delay(300), ctx.status(404), ctx.json({ message: '글을 찾을 수 없습니다.' }));
   }),
 
   // 글 정보: GET
@@ -52,7 +52,11 @@ export const writingHandlers = [
         }),
       );
     }
-    return res(ctx.delay(300), ctx.status(404));
+    return res(
+      ctx.delay(300),
+      ctx.status(404),
+      ctx.json({ message: '글 정보를 찾을 수 없습니다.' }),
+    );
   }),
 
   // 글 생성(글 업로드): POST
@@ -62,7 +66,12 @@ export const writingHandlers = [
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/notion`, async (_, res, ctx) => {
-    return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
+    // return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/200`));
+    return res(
+      ctx.delay(1000),
+      ctx.status(404),
+      ctx.json({ message: '유효한 노션 id를 입력해주세요.' }),
+    );
   }),
 
   // 글 블로그로 발행: POST
@@ -71,7 +80,13 @@ export const writingHandlers = [
     const id = Number(req.params.writingId);
     const { publishTo } = await req.json();
 
-    if (!blog.includes(publishTo) || typeof id !== 'number') return res(ctx.status(404));
+    if (!blog.includes(publishTo) || typeof id !== 'number')
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: '글 발행을 실패했습니다.',
+        }),
+      );
 
     return res(ctx.delay(3000), ctx.status(200));
   }),

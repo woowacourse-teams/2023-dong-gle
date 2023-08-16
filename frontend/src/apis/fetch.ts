@@ -21,7 +21,7 @@ const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
   try {
     const response = await fetch(endpoint, parseOption(option));
 
-    if (!response.ok) handleHttpError(response);
+    if (!response.ok) return handleHttpError(response);
 
     const contentType = response.headers.get('content-type');
 
@@ -32,7 +32,7 @@ const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
     // httpError 면 던져서 fetch API 사용하는 쪽에서 핸들링
     if (error instanceof HttpError) throw error;
 
-    alert(error); // httpError가 아니면 여기서 바로 alert
+    throw error; // httpError가 아니면 던지고 500 같은건 errorboundary errorPage에서 처리
   }
 };
 

@@ -77,7 +77,6 @@ export default Modal;
 const S = {
   ModalWrapper: styled.div`
     position: relative;
-    z-index: 9999;
   `,
   Backdrop: styled.div`
     position: fixed;

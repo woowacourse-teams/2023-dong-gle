@@ -6,6 +6,7 @@ export type ErrorBoundaryFallbackProps = {
   status?: number;
   title: string;
   message: string;
+  onResetError?: () => void;
 };
 
 type Props = {
@@ -25,6 +26,17 @@ export class ErrorBoundary extends Component<Props, State> {
     this.state = { error: null };
   }
 
+  // 원래 렌더링을 보여주기 위해 Error 리셋
+  resetError() {
+    this.state.error && this.setState({ error: null });
+  }
+
+  componentDidUpdate(_: Readonly<Props>, prevState: Readonly<State>): void {
+    if (prevState.error === this.state.error) {
+      this.resetError();
+    }
+  }
+
   // 다음 렌더링에서 폴백 UI가 보이도록 상태를 업데이트
   static getDerivedStateFromError(error: Error) {
     return { error: error || null };
@@ -36,11 +48,13 @@ export class ErrorBoundary extends Component<Props, State> {
 
     if (this.state.error) {
       const error = this.state.error;
+
       if (error instanceof HttpError && fallback) {
         return React.createElement(fallback, {
           status: error.statusCode,
           title: '',
           message: error.message,
+          onResetError: this.resetError.bind(this),
         });
       }
     }

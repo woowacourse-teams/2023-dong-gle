@@ -1,10 +1,15 @@
 import Button from 'components/@common/Button/Button';
 import { ErrorBoundaryFallbackProps } from 'components/ErrorBoundary/ErrorBoundary';
-import { useNavigate } from 'react-router-dom';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 
-const ErrorPage = ({ status, title, message }: ErrorBoundaryFallbackProps) => {
-  const navigate = useNavigate();
+const ErrorPage = ({ status, title, message, onResetError }: ErrorBoundaryFallbackProps) => {
+  const { goHomePage } = usePageNavigate();
+
+  const handleGoHomePage = () => {
+    onResetError?.();
+    goHomePage();
+  };
 
   return (
     <S.Container>
@@ -13,8 +18,8 @@ const ErrorPage = ({ status, title, message }: ErrorBoundaryFallbackProps) => {
         <p>요청하신 페이지를 찾을 수 없습니다.</p>
         <p>{message}</p>
       </S.ErrorMessageContainer>
-      <Button variant='text' onClick={() => navigate(-1)}>
-        이전 페이지로 돌아가기
+      <Button variant='text' onClick={handleGoHomePage}>
+        스페이스로 돌아가기
       </Button>
     </S.Container>
   );

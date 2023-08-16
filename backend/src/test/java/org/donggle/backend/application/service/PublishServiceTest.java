@@ -1,7 +1,6 @@
 package org.donggle.backend.application.service;
 
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.WritingRepository;
@@ -17,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -39,12 +40,10 @@ class PublishServiceTest {
         blogWritingRepository.save(new BlogWriting(blog, writing, LocalDateTime.now(), null));
 
         //when
-
         //then
-        Assertions.assertThatThrownBy(() ->
-                        publishService.publishWriting(1L, 1L, new PublishRequest("MEDIUM", null)))
+        assertThatThrownBy(() ->
+                publishService.publishWriting(1L, 1L, new PublishRequest("MEDIUM", null)))
                 .isInstanceOf(WritingAlreadyPublishedException.class)
                 .hasMessageContaining("이미 발행된 글입니다.");
-
     }
 }

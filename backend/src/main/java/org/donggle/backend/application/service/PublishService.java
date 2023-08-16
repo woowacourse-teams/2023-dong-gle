@@ -47,16 +47,16 @@ public class PublishService {
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final BlogType blogType = BlogType.valueOf(publishRequest.publishTo());
+        final Blog blog = blogRepository.findByBlogType(blogType)
+                .orElseThrow(() -> new BlogNotFoundException(publishRequest.publishTo()));
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         final Writing writing = writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
 
-        publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(writingId, publishedBlog, blogType, writing));
+        publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blogType, writing));
 
         // TODO : authentication 후 member 객체 가져오도록 수정 후 검증 로직 추가
         final Member member = memberRepository.findById(memberId).orElseThrow();
-        final Blog blog = blogRepository.findByBlogType(blogType)
-                .orElseThrow(() -> new BlogNotFoundException(publishRequest.publishTo()));
 
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
@@ -69,10 +69,10 @@ public class PublishService {
         blogWritingRepository.save(blogWriting);
     }
 
-    private void checkWritingAlreadyPublished(final Long writingId, final BlogWriting publishedBlog, final BlogType blogType, final Writing writing) {
+    private void checkWritingAlreadyPublished(final BlogWriting publishedBlog, final BlogType blogType, final Writing writing) {
         if (publishedBlog.isSameBlogType(blogType)
                 && (writing.getUpdatedAt().isBefore(publishedBlog.getPublishedAt()))) {
-            throw new WritingAlreadyPublishedException(writingId, blogType);
+            throw new WritingAlreadyPublishedException(writing.getId(), blogType);
         }
     }
 

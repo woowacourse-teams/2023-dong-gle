@@ -50,7 +50,7 @@ export const Router = () => {
     },
     {
       path: '*',
-      element: <ErrorPage />,
+      element: <ErrorPage status={404} title='' message='' />,
     },
   ]);
 

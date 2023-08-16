@@ -93,7 +93,7 @@ public class PublishService {
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).orElseThrow();
         //TODO TistoryBlogName 못찾은 예외 발생시키기
         final String tistoryToken = memberCredentials.getTistoryToken();
-        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(tistoryToken);
+        final String tistoryBlogName = memberCredentials.getTistoryBlogName();
         return TistoryPublishRequest.builder()
                 .access_token(tistoryToken)
                 .blogName(tistoryBlogName)

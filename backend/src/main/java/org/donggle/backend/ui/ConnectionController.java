@@ -22,8 +22,11 @@ public class ConnectionController {
     private final NotionOAuthService notionOAuthService;
 
     @GetMapping("/tistory")
-    public ResponseEntity<Void> connectionsRedirectTistory(@RequestParam final String redirect_uri) {
-        final String redirectUri = tistoryOAuthService.createAuthorizeRedirectUri(redirect_uri);
+    public ResponseEntity<Void> connectionsRedirectTistory(
+            @AuthenticationPrincipal final Long memberId,
+            @RequestParam final String redirect_uri
+    ) {
+        final String redirectUri = tistoryOAuthService.createAuthorizeRedirectUri(memberId, redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)
@@ -31,8 +34,11 @@ public class ConnectionController {
     }
 
     @PostMapping("/tistory")
-    public ResponseEntity<Void> connectionsAddTistory(@RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        final String accessToken = tistoryOAuthService.getAccessToken(oAuthAccessTokenRequest);
+    public ResponseEntity<Void> connectionsAddTistory(
+            @AuthenticationPrincipal final Long memberId,
+            @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
+    ) {
+        tistoryOAuthService.saveAccessToken(memberId, oAuthAccessTokenRequest);
         return ResponseEntity.ok().build();
     }
 

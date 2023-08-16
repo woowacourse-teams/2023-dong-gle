@@ -29,6 +29,31 @@ public class MemberCredentials extends BaseEntity {
     private String tistoryToken;
     private String tistoryBlogName;
 
+    private MemberCredentials(
+            final Long id,
+            final Member member,
+            final String notionToken,
+            final String mediumToken,
+            final String tistoryToken,
+            final String tistoryBlogName
+    ) {
+        this.id = id;
+        this.member = member;
+        this.notionToken = notionToken;
+        this.mediumToken = mediumToken;
+        this.tistoryToken = tistoryToken;
+        this.tistoryBlogName = tistoryBlogName;
+    }
+
+    public static MemberCredentials createByTistoryToken(final Member member, final String tistoryToken, final String tistoryBlogName) {
+        return new MemberCredentials(null, member, null, null, tistoryToken, tistoryBlogName);
+    }
+
+    public MemberCredentials updateTistoryToken(final String tistoryToken) {
+        this.tistoryToken = tistoryToken;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MemberCredentials{" +

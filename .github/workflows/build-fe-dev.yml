@@ -32,6 +32,7 @@ jobs:
         run: |
           touch .env.development
           echo "BASE_URL=${{secrets.BASE_URL_DEVELOPMENT}}" >> .env.development
+          echo "DOMAIN_URL=${{secrets.DOMAIN_URL_DEVELOPMENT}}" >> .env.development
         working-directory: ${{ vars.FE_DIRECTORY }}
 
       - name: Build

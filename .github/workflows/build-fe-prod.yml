@@ -32,6 +32,7 @@ jobs:
         run: |
           touch .env.production
           echo "BASE_URL=${{ secrets.BASE_URL_PRODUCTION }}" >> .env.production
+          echo "DOMAIN_URL=${{ secrets.DOMAIN_URL_PRODUCTION }}" >> .env.production
         working-directory: ${{ vars.FE_DIRECTORY }}
 
       - name: Build

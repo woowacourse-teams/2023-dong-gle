@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { css, styled } from 'styled-components';
 import { PencilIcon } from 'assets/icons';
-import useCategoryInput from 'components/Category/useCategoryInput';
-import Input from 'components/@common/Input/Input';
+import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
 import { updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
 import { KeyboardEventHandler, useEffect, useRef } from 'react';
 
@@ -19,8 +18,7 @@ const WritingTitle = ({ writingId, categoryId, title }: Props) => {
     isInputOpen,
     openInput,
     resetInput,
-    isError,
-  } = useCategoryInput('');
+  } = useUncontrolledInput();
   const myRef = useRef<HTMLHeadingElement>(null);
   const queryClient = useQueryClient();
   const { mutate: updateWritingTitle } = useMutation(updateWritingTitleRequest, {

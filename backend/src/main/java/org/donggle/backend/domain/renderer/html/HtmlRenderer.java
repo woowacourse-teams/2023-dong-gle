@@ -165,7 +165,7 @@ public class HtmlRenderer {
                 }
             }
             result.append(HtmlType.LIST.getStartTag())
-                    .append(htmlStyleRenderer.render(preBlock.getRawTextValue(), preBlock.getStyles()))
+                    .append(htmlStyleRenderer.render(currentBlock.getRawTextValue(), currentBlock.getStyles()))
                     .append(HtmlType.LIST.getEndTag());
             preBlock = currentBlock;
         }

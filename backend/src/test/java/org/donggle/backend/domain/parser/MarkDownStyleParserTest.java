@@ -89,18 +89,20 @@ class MarkDownStyleParserTest {
     @DisplayName("링크 스타일을 저장하는 테스트")
     void linkStyleSave() {
         //given
-        final String input = "[네이버](www)";
-        final String originalText = "www네이버";
-        final Style caption = new Style(new StyleRange(0, 2), StyleType.LINK);
-        final Style url = new Style(new StyleRange(3, 5), StyleType.LINK);
+        final String input = "[네이버](www.naver)";
+        final String originalText = "www.naver네이버";
 
         //when
         final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
 
         //then
         assertAll(
-                () -> assertThat(result.get(0)).isEqualTo(caption),
-                () -> assertThat(result.get(1)).isEqualTo(url)
+                () -> assertThat(result.get(0).getStyleType()).isEqualTo(StyleType.LINK),
+                () -> assertThat(result.get(0).getStartIndexValue()).isEqualTo(0),
+                () -> assertThat(result.get(0).getEndIndexValue()).isEqualTo(8),
+                () -> assertThat(result.get(1).getStyleType()).isEqualTo(StyleType.LINK),
+                () -> assertThat(result.get(1).getStartIndexValue()).isEqualTo(9),
+                () -> assertThat(result.get(1).getEndIndexValue()).isEqualTo(11)
         );
     }
 

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
@@ -22,10 +22,18 @@ type Props = {
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
   const { inputRef, escapeInput, isInputOpen, openInput, resetInput } = useUncontrolledInput();
   const { goMyPage } = usePageNavigate();
+  const queryClient = useQueryClient();
   const { mutate: requestStoreMediumInfo } = useMutation(storeMediumInfoRequest, {
-    onSuccess: goMyPage,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['member']);
+      goMyPage();
+    },
   });
-  const { mutate: requestDisconnect } = useMutation(disconnectRequest);
+  const { mutate: requestDisconnect } = useMutation(disconnectRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['member']);
+    },
+  });
 
   const redirect = (destination: ConnectionPlatforms) => {
     window.location.href = getConnectionPlatformURL(destination);

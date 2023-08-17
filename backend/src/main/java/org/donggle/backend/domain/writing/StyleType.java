@@ -10,7 +10,8 @@ public enum StyleType {
     ITALIC("(\\*|\\_)(.*?)(\\*|\\_)"),
     CODE("(\\`)(.*?)(\\`)"),
     LINK("(\\[)(.*)(\\]\\()(.*)(\\))"),
-    STRIKETHROUGH("(\\~\\~)(.*?)(\\~\\~)");
+    STRIKETHROUGH("(\\~\\~)(.*?)(\\~\\~)"),
+    UNDERLINE("\\n");
 
     private final Pattern pattern;
 

@@ -28,7 +28,7 @@ class RichTextTest {
                                         "bold": true,
                                         "italic": true,
                                         "strikethrough": true,
-                                        "underline": false,
+                                        "underline": true,
                                         "code": false,
                                         "color": "default"
                                     },
@@ -76,7 +76,7 @@ class RichTextTest {
         final List<RichText> expected = List.of(new RichText(
                 "dfsdf",
                 "null",
-                new Annotations(true, true, true, false, false, "default")
+                new Annotations(true, true, true, true, false, "default")
         ), new RichText(
                 "안녕",
                 "null",
@@ -97,7 +97,8 @@ class RichTextTest {
         final List<Style> expected = List.of(
                 new Style(new StyleRange(0, 4), StyleType.BOLD),
                 new Style(new StyleRange(0, 4), StyleType.ITALIC),
-                new Style(new StyleRange(0, 4), StyleType.STRIKETHROUGH));
+                new Style(new StyleRange(0, 4), StyleType.STRIKETHROUGH),
+                new Style(new StyleRange(0, 4), StyleType.UNDERLINE));
 
         //then
         assertThat(styles).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(expected);

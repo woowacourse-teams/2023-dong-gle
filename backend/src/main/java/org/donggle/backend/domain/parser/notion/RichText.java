@@ -66,6 +66,9 @@ public record RichText(String plainText, String href, Annotations annotations) {
         if (annotations.strikethrough()) {
             styles.add(new Style(new StyleRange(offset, end), StyleType.STRIKETHROUGH));
         }
+        if (annotations.underline()) {
+            styles.add(new Style(new StyleRange(offset, end), StyleType.UNDERLINE));
+        }
         return styles;
     }
 

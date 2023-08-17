@@ -28,12 +28,10 @@ export const Router = () => {
         {
           path: PATH.myPage,
           element: <MyPage />,
-          children: [
-            {
-              path: PATH.connections,
-              element: <ConnectionPage />,
-            },
-          ],
+        },
+        {
+          path: PATH.connections,
+          element: <ConnectionPage />,
         },
         {
           path: PATH.space,

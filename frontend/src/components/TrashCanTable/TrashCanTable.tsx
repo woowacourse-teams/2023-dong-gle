@@ -60,7 +60,11 @@ const TrashCanTable = ({ writings }: Props) => {
                   onChange={() => toggleCheckbox(id)}
                 />
               </td>
-              <td onClick={() => goWritingPage({ categoryId, writingId: id })}>{title}</td>
+              <td
+                onClick={() => goWritingPage({ categoryId, writingId: id, isDeletedWriting: true })}
+              >
+                {title}
+              </td>
             </tr>
           ))}
         </tbody>

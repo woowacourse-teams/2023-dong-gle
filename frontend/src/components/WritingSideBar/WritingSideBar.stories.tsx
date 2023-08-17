@@ -5,15 +5,8 @@ import WritingSideBar from './WritingSideBar';
 const meta: Meta<typeof WritingSideBar> = {
   title: 'publishing/WritingSideBar',
   component: WritingSideBar,
-  args: {
-    writingId: 200,
-  },
-  argTypes: {
-    writingId: {
-      description: '글의 id값입니다.',
-      control: { type: 'number' },
-    },
-  },
+  args: {},
+  argTypes: {},
 };
 
 export default meta;

@@ -12,9 +12,10 @@ type Props = {
   writingId: number;
   categoryId: number;
   title: string;
+  canEditTitle?: boolean;
 };
 
-const WritingTitle = ({ writingId, categoryId, title }: Props) => {
+const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Props) => {
   const {
     inputRef,
     escapeInput: escapeRename,
@@ -73,9 +74,11 @@ const WritingTitle = ({ writingId, categoryId, title }: Props) => {
           <S.Title ref={myRef} tabIndex={0}>
             {title}
           </S.Title>
-          <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
-            <PencilIcon width={20} height={20} />
-          </S.Button>
+          {canEditTitle && (
+            <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
+              <PencilIcon width={20} height={20} />
+            </S.Button>
+          )}
         </>
       )}
     </S.TitleWrapper>

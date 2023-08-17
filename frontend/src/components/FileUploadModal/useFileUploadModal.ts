@@ -28,6 +28,9 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
   const { mutate: uploadFile, isLoading: isFileUploadLoading } = useMutation(addWriting, {
     onSuccess: (data) => onFileUploadSuccess(data.headers),
+    onError: (error) => {
+      toast.show({ type: 'error', message: getErrorMessage(error) });
+    },
   });
 
   const onFileUploadSuccess = (headers: Headers) => {

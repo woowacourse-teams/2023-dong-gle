@@ -11,9 +11,10 @@ import WritingTitle from './WritingTitle/WritingTitle';
 type Props = {
   writingId: number;
   categoryId: number;
+  isDeletedWriting?: boolean;
 };
 
-const WritingViewer = ({ writingId, categoryId }: Props) => {
+const WritingViewer = ({ writingId, categoryId, isDeletedWriting }: Props) => {
   const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
 
   useEffect(() => {
@@ -31,7 +32,12 @@ const WritingViewer = ({ writingId, categoryId }: Props) => {
 
   return (
     <S.WritingViewerContainer>
-      <WritingTitle categoryId={categoryId} writingId={writingId} title={data?.title ?? ''} />
+      <WritingTitle
+        categoryId={categoryId}
+        writingId={writingId}
+        title={data?.title ?? ''}
+        canEditTitle={!isDeletedWriting}
+      />
       <Divider />
       <S.ContentWrapper
         tabIndex={0}

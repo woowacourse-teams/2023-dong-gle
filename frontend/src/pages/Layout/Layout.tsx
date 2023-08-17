@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
@@ -15,15 +15,20 @@ import TrashCan from 'components/TrashCan/TrashCan';
 export type PageContext = {
   isLeftSidebarOpen?: boolean;
   isRightSidebarOpen?: boolean;
-  setActiveWritingId?: Dispatch<SetStateAction<number | null>>;
+  setActiveWritingInfo?: Dispatch<SetStateAction<ActiveWritingInfo | null>>;
+};
+
+type ActiveWritingInfo = {
+  id: number;
+  isDeleted: boolean;
 };
 
 const Layout = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
-  const [activeWritingId, setActiveWritingId] = useState<number | null>(null);
+  const [activeWritingInfo, setActiveWritingInfo] = useState<ActiveWritingInfo | null>(null);
   const { isOpen, openModal, closeModal } = useModal();
-  const isWritingViewerActive = activeWritingId !== null;
+  const isWritingViewerActive = activeWritingInfo !== null;
 
   const toggleLeftSidebar = () => {
     setIsLeftSidebarOpen(!isLeftSidebarOpen);
@@ -64,14 +69,14 @@ const Layout = () => {
               {
                 isLeftSidebarOpen,
                 isRightSidebarOpen,
-                setActiveWritingId,
+                setActiveWritingInfo,
               } satisfies PageContext
             }
           />
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>
-            <WritingSideBar />
+            <WritingSideBar isPublishingSectionActive={!activeWritingInfo?.isDeleted} />
           </S.RightSidebarSection>
         )}
       </S.Row>

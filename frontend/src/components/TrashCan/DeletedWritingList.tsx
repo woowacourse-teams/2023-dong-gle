@@ -22,7 +22,11 @@ const DeletedWritingList = () => {
           <S.Button
             aria-label={`${deletedWriting.title}글 메인화면에 열기`}
             onClick={() =>
-              goWritingPage({ categoryId: deletedWriting.categoryId, writingId: deletedWriting.id })
+              goWritingPage({
+                categoryId: deletedWriting.categoryId,
+                writingId: deletedWriting.id,
+                isDeletedWriting: true,
+              })
             }
           >
             <S.IconWrapper>

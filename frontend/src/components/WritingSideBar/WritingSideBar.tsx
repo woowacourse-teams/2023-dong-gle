@@ -4,7 +4,7 @@ import { css, styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 import Button from 'components/@common/Button/Button';
@@ -22,7 +22,11 @@ const ariaLabelFromTabKeys = {
   [TabKeys.PublishingProperty]: '발행 정보',
 };
 
-const WritingSideBar = () => {
+type Props = {
+  isPublishingSectionActive?: boolean;
+};
+
+const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
   const writingId = Number(useParams()['writingId']);
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
@@ -37,25 +41,36 @@ const WritingSideBar = () => {
       label: <InfoIcon width={24} height={24} />,
       content: <WritingPropertySection writingId={writingId} />,
     },
-    {
-      key: TabKeys.Publishing,
-      label: <PublishingIcon width={24} height={24} />,
-      content: (
-        <PublishingSection onTabClick={selectCurrentTab} onBlogButtonClick={selectPublishTo} />
-      ),
-    },
-    {
-      key: TabKeys.PublishingProperty,
-      label: 'PublishingProperty',
-      content: publishTo && (
-        <PublishingPropertySection
-          writingId={writingId}
-          publishTo={publishTo}
-          selectCurrentTab={selectCurrentTab}
-        />
-      ),
-    },
+    ...(isPublishingSectionActive
+      ? [
+          {
+            key: TabKeys.Publishing,
+            label: <PublishingIcon width={24} height={24} />,
+            content: (
+              <PublishingSection
+                onTabClick={selectCurrentTab}
+                onBlogButtonClick={selectPublishTo}
+              />
+            ),
+          },
+          {
+            key: TabKeys.PublishingProperty,
+            label: 'PublishingProperty',
+            content: publishTo && (
+              <PublishingPropertySection
+                writingId={writingId}
+                publishTo={publishTo}
+                selectCurrentTab={selectCurrentTab}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
+
+  useEffect(() => {
+    selectCurrentTab(TabKeys.WritingProperty);
+  }, [writingId]);
 
   return (
     <S.SidebarContainer>

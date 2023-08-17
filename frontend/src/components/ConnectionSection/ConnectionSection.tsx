@@ -1,8 +1,14 @@
+import { useMutation } from '@tanstack/react-query';
 import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
+import Input from 'components/@common/Input/Input';
 import { ConnectionPlatforms, getConnectionPlatformURL } from 'constants/components/myPage';
+import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
+import { storeMediumInfo } from 'apis/connections';
+import { KeyboardEventHandler } from 'react';
 
 type Props = {
   tistory: TistoryConnection;
@@ -11,8 +17,22 @@ type Props = {
 };
 
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
+  const { inputRef, escapeInput, isInputOpen, openInput, resetInput } = useUncontrolledInput();
+  const { goMyPage } = usePageNavigate();
+  const { mutate } = useMutation(storeMediumInfo, {
+    onSuccess: goMyPage,
+  });
+
   const redirect = (destination: ConnectionPlatforms) => {
     window.location.href = getConnectionPlatformURL(destination);
+  };
+
+  const requestStoreMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key !== 'Enter') return;
+
+    mutate({
+      token: e.currentTarget.value,
+    });
   };
 
   return (
@@ -44,8 +64,20 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
             </S.IconContainer>
             {medium.isConnected ? (
               <Button size='small'>해제하기</Button>
+            ) : isInputOpen ? (
+              <Input
+                type='text'
+                variant='underlined'
+                size='small'
+                placeholder='토큰을 입력해주세요'
+                ref={inputRef}
+                onBlur={resetInput}
+                onKeyDown={escapeInput}
+                onKeyUp={requestStoreMediumInfo}
+                aria-label='미디움 토큰 입력 창'
+              />
             ) : (
-              <Button variant='secondary' size='small'>
+              <Button variant='secondary' size='small' onClick={openInput}>
                 연결하기
               </Button>
             )}

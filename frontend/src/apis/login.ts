@@ -1,6 +1,6 @@
 import { authURL } from 'constants/apis/url';
 import { http } from './fetch';
-import { OauthPlatform, PostOauthLoginRequest, PostOauthLoginResponse } from 'types/apis/login';
+import { PostOauthLoginRequest, PostOauthLoginResponse } from 'types/apis/login';
 import { OauthPlatforms, getOauthURL, getOauthRedirectURL } from 'constants/components/oauth';
 
 export const getRedirection = (platform: OauthPlatforms) =>

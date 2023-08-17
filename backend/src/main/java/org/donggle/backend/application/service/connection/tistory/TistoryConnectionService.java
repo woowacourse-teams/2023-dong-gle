@@ -88,4 +88,14 @@ public class TistoryConnectionService {
                 .build()
                 .toUriString();
     }
+
+    public void deleteAccessToken(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
+
+        memberCredentials.deleteTistoryConnection();
+    }
 }

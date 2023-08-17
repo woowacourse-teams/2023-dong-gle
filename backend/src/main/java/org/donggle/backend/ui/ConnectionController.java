@@ -46,6 +46,14 @@ public class ConnectionController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/tistory/disconnect")
+    public ResponseEntity<Void> connectionsDisconnectTistory(
+            @AuthenticationPrincipal final Long memberId
+    ) {
+        tistoryConnectService.deleteAccessToken(memberId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/notion")
     public ResponseEntity<Void> connectionsRedirectNotion(
             @AuthenticationPrincipal final Long memberId,
@@ -67,12 +75,28 @@ public class ConnectionController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/notion/disconnect")
+    public ResponseEntity<Void> connectionsDisconnectNotion(
+            @AuthenticationPrincipal final Long memberId
+    ) {
+        notionConnectionService.deleteAccessToken(memberId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/medium")
     public ResponseEntity<Void> connectionAddMedium(
             @AuthenticationPrincipal final Long memberId,
             @RequestBody final AddTokenRequest addTokenRequest
     ) {
         mediumConnectionService.saveAccessToken(memberId, addTokenRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/medium/disconnect")
+    public ResponseEntity<Void> connectionsDisconnectMedium(
+            @AuthenticationPrincipal final Long memberId
+    ) {
+        mediumConnectionService.deleteAccessToken(memberId);
         return ResponseEntity.ok().build();
     }
 }

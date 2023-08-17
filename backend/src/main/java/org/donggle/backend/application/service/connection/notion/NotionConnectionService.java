@@ -82,4 +82,14 @@ public class NotionConnectionService {
     private String base64Encode(final String value) {
         return java.util.Base64.getEncoder().encodeToString(value.getBytes());
     }
+
+    public void deleteAccessToken(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
+
+        memberCredentials.deleteNotionConnection();
+    }
 }

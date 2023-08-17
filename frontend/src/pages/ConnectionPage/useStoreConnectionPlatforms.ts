@@ -1,12 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import { storeNotionInfo, storeTistoryInfo } from 'apis/connections';
-import { ConnectionPlatforms } from 'constants/components/myPage';
+import {
+  storeNotionInfo as storeNotionInfoRequest,
+  storeTistoryInfo as storeTistoryInfoRequest,
+} from 'apis/connections';
+import { ConnectionPlatforms, getConnectionPlatformRedirectURL } from 'constants/components/myPage';
 import { ConnectionMessage } from 'constants/message';
 import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-export const useStoreConnectionPlatforms = (platform: string | undefined) => {
+export const useStoreConnectionPlatforms = () => {
   const { goMyPage } = usePageNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const toast = useToast();
   const onSuccess = () => {
     goMyPage();
@@ -16,19 +22,46 @@ export const useStoreConnectionPlatforms = (platform: string | undefined) => {
     goMyPage();
     toast.show({ type: 'error', message: ConnectionMessage.errorConnection });
   };
-  const { mutate: storeTistoryInfoMutation } = useMutation(storeTistoryInfo, {
+  const { mutate: storeTistoryInfoMutation } = useMutation(storeTistoryInfoRequest, {
     onSuccess,
     onError,
   });
-  const { mutate: storeNotionInfoMutation } = useMutation(storeNotionInfo, {
+  const { mutate: storeNotionInfoMutation } = useMutation(storeNotionInfoRequest, {
     onSuccess,
     onError,
   });
 
-  switch (platform) {
-    case ConnectionPlatforms.tistory:
-      return storeTistoryInfoMutation;
-    case ConnectionPlatforms.notion:
-      return storeNotionInfoMutation;
-  }
+  const storeInfo = () => {
+    const platform = location.pathname.split('/').pop();
+    const code = searchParams.get('code');
+
+    const isConnectionPlatforms = (
+      platform: string | undefined,
+    ): platform is ConnectionPlatforms => {
+      return platform ? platform in ConnectionPlatforms : false;
+    };
+
+    if (!isConnectionPlatforms(platform) || !code) {
+      goMyPage();
+      return;
+    }
+
+    const store = {
+      tistory: () =>
+        storeTistoryInfoMutation({
+          code,
+          redirect_uri: getConnectionPlatformRedirectURL(platform),
+        }),
+      notion: () =>
+        storeNotionInfoMutation({
+          code,
+          redirect_uri: getConnectionPlatformRedirectURL(platform),
+        }),
+      medium: () => goMyPage(),
+    };
+
+    store[platform]();
+  };
+
+  return storeInfo;
 };

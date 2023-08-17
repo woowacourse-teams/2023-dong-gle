@@ -6,6 +6,7 @@ import { styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { useParams } from 'react-router-dom';
+import { useIsNotionConnected } from './useIsNotionConnected';
 
 type Props = {
   isOpen: boolean;
@@ -16,6 +17,7 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
   const categoryId = useParams()['categoryId'] ? Number(useParams()['categoryId']) : null;
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
     useFileUploadModal({ closeModal, categoryId });
+  const { isConnected, goMyPage } = useIsNotionConnected();
 
   return (
     <Modal
@@ -38,20 +40,28 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
               <S.ItemTitle>내 컴퓨터에서 가져오기</S.ItemTitle>
               <FileUploader accept='.md' height='15rem' onFileSelect={uploadOnServer} />
             </S.Item>
-            <S.Item>
-              <S.ItemTitle>노션에서 가져오기</S.ItemTitle>
-              <Input
-                labelText='페이지 링크'
-                variant='filled'
-                supportingText='페이지 공유 - 링크 복사 후 붙여넣기'
-                placeholder='https://www.notion.so/..'
-                value={inputValue}
-                onChange={setNotionPageLink}
-              />
-            </S.Item>
-            <Button block={true} variant='secondary' onClick={uploadNotionWriting}>
-              가져오기
-            </Button>
+            {isConnected ? (
+              <>
+                <S.Item>
+                  <S.ItemTitle>노션에서 가져오기</S.ItemTitle>
+                  <Input
+                    labelText='페이지 링크'
+                    variant='filled'
+                    supportingText='페이지 공유 - 링크 복사 후 붙여넣기'
+                    placeholder='https://www.notion.so/..'
+                    value={inputValue}
+                    onChange={setNotionPageLink}
+                  />
+                </S.Item>
+                <Button block={true} variant='secondary' onClick={uploadNotionWriting}>
+                  가져오기
+                </Button>
+              </>
+            ) : (
+              <Button block={true} variant='secondary' onClick={goMyPage}>
+                노션 연동하기
+              </Button>
+            )}
           </S.Content>
         )}
       </S.Container>

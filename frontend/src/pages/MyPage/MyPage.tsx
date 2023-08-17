@@ -3,19 +3,18 @@ import { getMemberInfo } from 'apis/member';
 import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
+import { Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { MemberResponse } from 'types/apis/member';
 
 const MyPage = () => {
   const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
 
-  if (isLoading) return <Spinner />;
-
   return (
     <S.Section>
       <S.Title>마이 페이지</S.Title>
       <S.Container>
-        {data ? (
+        {data && !isLoading ? (
           <>
             <Profile name={data.name} />
             <S.ContentContainer>
@@ -23,7 +22,7 @@ const MyPage = () => {
             </S.ContentContainer>
           </>
         ) : (
-          <>새로고침을 해주세요.</>
+          <Spinner size={60} thickness={8} />
         )}
       </S.Container>
     </S.Section>
@@ -49,6 +48,8 @@ const S = {
 
   Container: styled.div`
     display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};

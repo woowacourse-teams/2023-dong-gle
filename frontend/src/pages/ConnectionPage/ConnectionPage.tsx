@@ -8,6 +8,7 @@ import { ConnectionPlatforms, getConnectionPlatformRedirectURL } from 'constants
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 export const useStoreConnectionPlatforms = (platform: string | undefined) => {
   const { goMyPage } = usePageNavigate();
@@ -51,7 +52,20 @@ const ConnectionPage = () => {
     });
   }, []);
 
-  return <Spinner />;
+  return (
+    <S.Section>
+      <Spinner size={60} thickness={8} />
+      <p>연결 중입니다 ...</p>
+    </S.Section>
+  );
 };
 
 export default ConnectionPage;
+
+const S = {
+  Section: styled.section`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+};

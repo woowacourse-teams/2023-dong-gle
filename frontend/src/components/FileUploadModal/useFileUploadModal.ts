@@ -22,7 +22,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
       onFileUploadSuccess(data.headers);
     },
     onError: (error) => {
-      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+      toast.show({ type: 'error', message: getErrorMessage(error) });
     },
   });
 

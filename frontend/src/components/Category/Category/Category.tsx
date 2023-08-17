@@ -50,7 +50,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 
       resetInput();
     } catch (error) {
-      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+      toast.show({ type: 'error', message: getErrorMessage(error) });
     }
   };
 

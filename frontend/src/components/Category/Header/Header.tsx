@@ -35,7 +35,7 @@ const Header = () => {
       resetInput();
       addCategory({ categoryName: categoryName });
     } catch (error) {
-      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+      toast.show({ type: 'error', message: getErrorMessage(error) });
     }
   };
 

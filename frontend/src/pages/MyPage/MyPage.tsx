@@ -12,6 +12,14 @@ const MyPage = () => {
   const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
   const { goSpacePage } = usePageNavigate();
 
+  if (isLoading)
+    return (
+      <S.SpinnerContainer>
+        <Spinner size={48} thickness={6} />
+        <p>마이 페이지로 이동 중입니다...</p>
+      </S.SpinnerContainer>
+    );
+
   return (
     <S.Section>
       <S.Header>
@@ -75,5 +83,16 @@ const S = {
     width: 70%;
     padding: 4rem;
     font-size: 1.2rem;
+  `,
+
+  SpinnerContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100vw;
+    height: 100vh;
+    font-size: 1.5rem;
   `,
 };

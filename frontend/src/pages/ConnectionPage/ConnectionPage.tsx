@@ -28,6 +28,7 @@ export const useStoreConnectionPlatforms = (platform: string | undefined) => {
 };
 
 const ConnectionPage = () => {
+  const { goMyPage } = usePageNavigate();
   const location = useLocation();
   const platform = location.pathname.split('/').pop();
   const mutate = useStoreConnectionPlatforms(platform);
@@ -42,7 +43,8 @@ const ConnectionPage = () => {
       return platform ? platform in ConnectionPlatforms : false;
     };
 
-    if (!isConnectionPlatforms(platform) || !mutate || !code) {
+    if (!code || !mutate || !isConnectionPlatforms(platform)) {
+      goMyPage();
       return;
     }
 
@@ -67,5 +69,7 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 100vh;
   `,
 };

@@ -6,13 +6,16 @@ import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 const OauthPage = () => {
-  const { goHomePage } = usePageNavigate();
+  const { goIntroducePage, goSpacePage } = usePageNavigate();
   const onError = () => {
     alert('에러: 로그인을 실패했습니다.');
-    goHomePage();
+    goIntroducePage();
   };
   const { mutate } = useMutation(postOauthLogin, {
-    onSuccess: goHomePage,
+    onSuccess: ({ accessToken }) => {
+      localStorage.setItem('accessToken', JSON.stringify(accessToken));
+      goSpacePage();
+    },
     onError,
   });
   const location = useLocation();

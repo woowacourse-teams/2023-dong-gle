@@ -12,14 +12,15 @@ public enum HtmlType {
     HEADING5("<h5>", "</h5>"),
     HEADING6("<h6>", "</h6>"),
     BLOCKQUOTE("<blockquote>", "</blockquote>"),
-    CHECKED_TASK_LIST("<input type=\"checkbox\" checked>", "</input>"),
-    UNCHECKED_TASK_LIST("<input type=\"checkbox\" unchecked>", "</input>"),
+    CHECKED_TASK_LIST("<div><input type=\"checkbox\" checked>", "</input></div>"),
+    UNCHECKED_TASK_LIST("<div><input type=\"checkbox\" unchecked>", "</input></div>"),
     UNORDERED_LIST("<ul>", "</ul>"),
     ORDERED_LIST("<ol>", "</ol>"),
     LIST("<li>", "</li>"),
     CODE_BLOCK("<pre><code class=\"language-${language}\">", "</code></pre>"),
     IMAGE("<img src=\"url\", alt=\"caption\">", "</img>"),
     HORIZONTAL_RULES("<hr>", "</hr>"),
+    TOGGLE("<details><summary>", "</summary>"),
     PARAGRAPH("<p>", "</p>");
 
     private final String startTag;

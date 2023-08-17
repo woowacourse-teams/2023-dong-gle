@@ -22,6 +22,11 @@ public class HorizontalRulesBlock extends Block {
         this.rawText = rawText;
     }
 
+    public HorizontalRulesBlock(final Writing writing, final Depth depth, final BlockType blockType, final RawText rawText) {
+        super(writing, depth, blockType);
+        this.rawText = rawText;
+    }
+
     @Override
     public String toString() {
         return "HorizontalRulesBlock{" +

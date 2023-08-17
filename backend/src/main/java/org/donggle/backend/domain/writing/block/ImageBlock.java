@@ -26,6 +26,12 @@ public class ImageBlock extends Block {
         this.imageCaption = imageCaption;
     }
 
+    public ImageBlock(final Writing writing, final Depth depth, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(writing, depth, blockType);
+        this.imageUrl = imageUrl;
+        this.imageCaption = imageCaption;
+    }
+
     public String getImageUrlValue() {
         return imageUrl.getImageUrl();
     }

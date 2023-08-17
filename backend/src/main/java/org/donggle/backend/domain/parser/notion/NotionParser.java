@@ -27,7 +27,7 @@ public class NotionParser {
     public NotionParser(final Writing writing) {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalBlock(notionBlockNode, BookmarkParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalBlock(notionBlockNode, CalloutParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlock(CodeBlockParser.from(notionBlockNode)));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlock(notionBlockNode, CodeBlockParser.from(notionBlockNode)));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_1, notionBlockNode -> createNormalBlock(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING1));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_2, notionBlockNode -> createNormalBlock(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING2));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.HEADING_3, notionBlockNode -> createNormalBlock(notionBlockNode, HeadingParser.from(notionBlockNode), BlockType.HEADING3));
@@ -36,9 +36,9 @@ public class NotionParser {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.PARAGRAPH, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.QUOTE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TO_DO, notionBlockNode -> createTaskListBLock(notionBlockNode, TodoParser.from(notionBlockNode)));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.PARAGRAPH));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageBlock(ImageParser.from(notionBlockNode)));
-        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.DIVIDER, notionBlockNode -> createHorizontalBlock());
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.TOGGLE));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageBlock(notionBlockNode, ImageParser.from(notionBlockNode)));
+        NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.DIVIDER, notionBlockNode -> createHorizontalBlock(notionBlockNode));
         this.writing = writing;
     }
 
@@ -46,16 +46,16 @@ public class NotionParser {
         return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
-    private Optional<Block> createCodeBlock(final CodeBlockParser blockParser) {
-        return Optional.of(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
+    private Optional<Block> createCodeBlock(final NotionBlockNode notionBlockNode, final CodeBlockParser blockParser) {
+        return Optional.of(new CodeBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
     }
 
-    private Optional<Block> createImageBlock(final ImageParser blockParser) {
-        return Optional.of(new ImageBlock(writing, BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
+    private Optional<Block> createImageBlock(final NotionBlockNode notionBlockNode, final ImageParser blockParser) {
+        return Optional.of(new ImageBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
     }
 
-    private Optional<Block> createHorizontalBlock() {
-        return Optional.of(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("---")));
+    private Optional<Block> createHorizontalBlock(final NotionBlockNode notionBlockNode) {
+        return Optional.of(new HorizontalRulesBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.HORIZONTAL_RULES, RawText.from("---")));
     }
 
     private Optional<Block> createTaskListBLock(final NotionBlockNode notionBlockNode, final TodoParser blockParser) {

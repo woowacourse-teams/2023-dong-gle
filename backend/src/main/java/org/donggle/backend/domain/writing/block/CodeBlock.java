@@ -26,6 +26,12 @@ public class CodeBlock extends Block {
         this.language = language;
     }
 
+    public CodeBlock(final Writing writing, final Depth depth, final BlockType blockType, final RawText rawText, final Language language) {
+        super(writing, depth, blockType);
+        this.rawText = rawText;
+        this.language = language;
+    }
+
     public String getRawTextValue() {
         return rawText.getRawText();
     }

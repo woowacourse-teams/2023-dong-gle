@@ -23,18 +23,38 @@ public class HtmlRenderer {
         final StringBuilder result = new StringBuilder();
         final List<NormalBlock> subBlock = new ArrayList<>();
         String htmlText;
+        boolean isToggle = false;
+        int toggleDepth = 0;
 
         for (final Block block : blocks) {
+            if (block.getBlockType() == BlockType.TOGGLE) {
+                isToggle = true;
+                toggleDepth = block.getDepthValue();
+            }
+
             htmlText = createHtmlText(subBlock, block);
             if (!htmlText.isBlank() && !subBlock.isEmpty()) {
                 result.append(renderList(subBlock));
                 subBlock.clear();
             }
             result.append(htmlText);
+
+            if ((block.getBlockType() != BlockType.TOGGLE) && isToggle && (toggleDepth >= block.getDepthValue())) {
+                isToggle = false;
+                toggleDepth = 0;
+                if (!subBlock.isEmpty()) {
+                    result.append(renderList(subBlock));
+                    subBlock.clear();
+                }
+                result.append("</details>");
+            }
         }
 
         if (!subBlock.isEmpty()) {
             result.append(renderList(subBlock));
+        }
+        if (isToggle) {
+            result.append("</details>");
         }
 
         return result.toString();
@@ -43,7 +63,6 @@ public class HtmlRenderer {
     private String createHtmlText(final List<NormalBlock> subBlock, final Block block) {
         final BlockType blockType = block.getBlockType();
         String htmlText = "";
-
         switch (blockType) {
             case ORDERED_LIST, UNORDERED_LIST -> subBlock.add((NormalBlock) block);
             case CODE_BLOCK -> htmlText = renderCodeBlock((CodeBlock) block);

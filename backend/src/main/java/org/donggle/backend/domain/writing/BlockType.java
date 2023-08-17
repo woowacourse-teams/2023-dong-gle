@@ -22,6 +22,7 @@ public enum BlockType {
     CODE_BLOCK("^```([a-zA-Z]*)\\n([\\s\\S]*?)\\n```$"),
     IMAGE("\\!\\[(.*)\\]\\((.*)\\)"),
     HORIZONTAL_RULES("^((?:\\* *){3,}|(?:- *){3,}|(?:_ *){3,})$"),
+    TOGGLE("^\\n$"),
     PARAGRAPH("");
 
     private final Pattern pattern;

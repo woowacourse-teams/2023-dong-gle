@@ -1,6 +1,6 @@
 import { OauthPlatforms } from 'constants/components/oauth';
 
-export type PostOauthLoginRequest = {
+export type LoginOauthRequest = {
   platform: OauthPlatforms;
   body: {
     code: string;
@@ -8,6 +8,6 @@ export type PostOauthLoginRequest = {
   };
 };
 
-export type PostOauthLoginResponse = {
+export type LoginOauthResponse = {
   accessToken: string;
 };

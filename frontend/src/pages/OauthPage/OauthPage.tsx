@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { postOauthLogin } from 'apis/login';
-import { OauthPlatforms, getOauthRedirectURL } from 'constants/components/oauth';
+import { loginOauth } from 'apis/login';
+import { OauthPlatforms, getOauthRedirectPlatformURL } from 'constants/components/oauth';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ const OauthPage = () => {
     alert('에러: 로그인을 실패했습니다.');
     goIntroducePage();
   };
-  const { mutate } = useMutation(postOauthLogin, {
+  const { mutate } = useMutation(loginOauth, {
     onSuccess: ({ accessToken }) => {
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
       goSpacePage();
@@ -40,7 +40,7 @@ const OauthPage = () => {
       platform,
       body: {
         code,
-        redirect_uri: getOauthRedirectURL(platform),
+        redirect_uri: getOauthRedirectPlatformURL(platform),
       },
     });
   }, []);

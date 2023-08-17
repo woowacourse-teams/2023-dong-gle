@@ -33,6 +33,12 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     @Query(value = "select * from writing w " +
             "where w.member_id = :memberId and " +
+            "w.category_id = :categoryId and " +
+            "w.status = 'TRASHED'", nativeQuery = true)
+    List<Writing> findAllByMemberIdAndCategoryIdAndStatusIsTrashed(@Param("memberId") final Long memberId, @Param("categoryId") final Long categoryId);
+
+    @Query(value = "select * from writing w " +
+            "where w.member_id = :memberId and " +
             "w.id = :writingId and " +
             "w.status = 'TRASHED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsTrashed(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);

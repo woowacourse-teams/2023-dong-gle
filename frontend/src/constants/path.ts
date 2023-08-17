@@ -3,6 +3,7 @@ export const PATH = {
   introducePage: '',
   oauthPage: 'oauth/login/*',
   kakao: 'kakao',
+  myPage: 'my-page',
   space: 'space',
   writingPage: 'writings/:categoryId/:writingId',
   writingTablePage: 'writings/:categoryId',

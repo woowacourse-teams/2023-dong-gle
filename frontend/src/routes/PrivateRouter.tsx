@@ -5,16 +5,16 @@ import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
 
 const PrivateRouter = () => {
-  const { auth } = useAuthToken();
+  const { authToken } = useAuthToken();
   const toast = useToast();
 
   useLayoutEffect(() => {
-    if (!auth) {
+    if (!authToken) {
       toast.show({ type: 'error', message: '로그인이 필요한 기능입니다.' });
     }
   }, []);
 
-  return auth ? <Outlet /> : <Navigate to={`${PATH.introducePage}`} />;
+  return authToken ? <Outlet /> : <Navigate to={`${PATH.introducePage}`} />;
 };
 
 export default PrivateRouter;

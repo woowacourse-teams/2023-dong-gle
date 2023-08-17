@@ -2,11 +2,11 @@ export const member = {
   id: 1,
   name: '아커',
   tistory: {
-    isConnected: true,
+    isConnected: false,
     blogName: '아커의 개발 블로그',
   },
   notion: {
-    isConnected: true,
+    isConnected: false,
   },
   medium: {
     isConnected: false,

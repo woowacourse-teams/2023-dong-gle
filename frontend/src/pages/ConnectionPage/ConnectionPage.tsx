@@ -1,31 +1,26 @@
 import { useMutation } from '@tanstack/react-query';
 import {
   storeTistoryInfo as storeTistoryInfoRequest,
-  // storeMediumInfo as storeMediumInfoRequest,
   storeNotionInfo as storeNotionInfoRequest,
 } from 'apis/connections';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { domainURL } from 'constants/apis/url';
-import { ConnectionPlatforms } from 'constants/components/myPage';
+import { ConnectionPlatforms, getConnectionPlatformRedirectURL } from 'constants/components/myPage';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-export const isConnectionPlatforms = (
-  platform: string | undefined,
-): platform is ConnectionPlatforms => {
-  return platform ? platform in ConnectionPlatforms : false;
-};
-
 export const useStoreConnectionPlatforms = (platform: string | undefined) => {
-  const { mutate: storeTistoryInfo } = useMutation(storeTistoryInfoRequest);
-  // const { mutate: storeMediumInfo } = useMutation(storeMediumInfoRequest);
-  const { mutate: storeNotionInfo } = useMutation(storeNotionInfoRequest);
+  const { goMyPage } = usePageNavigate();
+  const { mutate: storeTistoryInfo } = useMutation(storeTistoryInfoRequest, {
+    onSuccess: goMyPage,
+  });
+  const { mutate: storeNotionInfo } = useMutation(storeNotionInfoRequest, {
+    onSuccess: goMyPage,
+  });
 
   switch (platform) {
     case ConnectionPlatforms.tistory:
       return storeTistoryInfo;
-    // case ConnectionPlatforms.medium:
-    //   return storeMediumInfo;
     case ConnectionPlatforms.notion:
       return storeNotionInfo;
   }
@@ -40,13 +35,19 @@ const ConnectionPage = () => {
   useEffect(() => {
     const code = searchParams.get('code');
 
-    if (!mutate || !code) {
+    const isConnectionPlatforms = (
+      platform: string | undefined,
+    ): platform is ConnectionPlatforms => {
+      return platform ? platform in ConnectionPlatforms : false;
+    };
+
+    if (!isConnectionPlatforms(platform) || !mutate || !code) {
       return;
     }
 
     mutate({
       code,
-      redirect_uri: `${domainURL}/my-page`,
+      redirect_uri: getConnectionPlatformRedirectURL(platform),
     });
   }, []);
 

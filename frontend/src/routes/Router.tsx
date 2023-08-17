@@ -8,6 +8,7 @@ import Layout from 'pages/Layout/Layout';
 import { PATH } from 'constants/path';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import MyPage from 'pages/MyPage/MyPage';
+import ConnectionPage from 'pages/ConnectionPage/ConnectionPage';
 
 export const Router = () => {
   const browserRouter = createBrowserRouter([
@@ -21,16 +22,17 @@ export const Router = () => {
         },
         {
           path: PATH.oauthPage,
-          children: [
-            {
-              path: PATH.kakao,
-              element: <OauthPage />,
-            },
-          ],
+          element: <OauthPage />,
         },
         {
           path: PATH.myPage,
           element: <MyPage />,
+          children: [
+            {
+              path: PATH.connections,
+              element: <ConnectionPage />,
+            },
+          ],
         },
         {
           path: PATH.space,

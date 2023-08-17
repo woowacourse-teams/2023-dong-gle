@@ -2,8 +2,8 @@ export const PATH = {
   app: '',
   introducePage: '',
   oauthPage: 'oauth/login/*',
-  kakao: 'kakao',
   myPage: 'my-page',
+  connections: 'connections/*',
   space: 'space',
   writingPage: 'writings/:categoryId/:writingId',
   writingTablePage: 'writings/:categoryId',
@@ -16,4 +16,5 @@ export const NAVIGATE_PATH = {
   getWritingPage: (categoryId: number, writingId: number) =>
     `/${PATH.space}/writings/${categoryId}/${writingId}`,
   trashCanPage: `/${PATH.space}/${PATH.trashCanPage}`,
+  myPage: '/my-page',
 } as const;

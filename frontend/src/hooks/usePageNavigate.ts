@@ -14,5 +14,7 @@ export const usePageNavigate = () => {
 
   const goTrashCanPage = () => navigate(NAVIGATE_PATH.trashCanPage);
 
-  return { goHomePage, goWritingTablePage, goWritingPage, goTrashCanPage };
+  const goMyPage = () => navigate(NAVIGATE_PATH.myPage);
+
+  return { goHomePage, goWritingTablePage, goWritingPage, goTrashCanPage, goMyPage };
 };

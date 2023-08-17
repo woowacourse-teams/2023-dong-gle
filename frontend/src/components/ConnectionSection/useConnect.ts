@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { storeMediumInfo, disconnect as disconnectRequest } from 'apis/connections';
 import { ConnectionPlatforms, getConnectionPlatformURL } from 'constants/components/myPage';
+import { ConnectionMessage } from 'constants/message';
 import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 
@@ -12,19 +13,19 @@ export const useConnect = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['member']);
       goMyPage();
-      toast.show({ type: 'success', message: '연결을 성공했습니다' });
+      toast.show({ type: 'success', message: ConnectionMessage.successConnection });
     },
     onError: () => {
-      toast.show({ type: 'error', message: '연결을 실패했습니다' });
+      toast.show({ type: 'error', message: ConnectionMessage.errorConnection });
     },
   });
   const { mutate: requestDisconnect } = useMutation(disconnectRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['member']);
-      toast.show({ type: 'success', message: '연결을 해제했습니다' });
+      toast.show({ type: 'success', message: ConnectionMessage.successDisconnection });
     },
     onError: () => {
-      toast.show({ type: 'error', message: '연결 해제를 실패했습니다' });
+      toast.show({ type: 'error', message: ConnectionMessage.errorDisconnection });
     },
   });
 

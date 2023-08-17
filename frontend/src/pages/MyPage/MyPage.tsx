@@ -3,7 +3,6 @@ import { getMemberInfo } from 'apis/member';
 import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
-import { Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { MemberResponse } from 'types/apis/member';
 

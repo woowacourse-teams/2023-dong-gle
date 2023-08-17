@@ -5,6 +5,8 @@ import {
 } from 'apis/connections';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { ConnectionPlatforms, getConnectionPlatformRedirectURL } from 'constants/components/myPage';
+import { ConnectionMessage } from 'constants/message';
+import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -12,11 +14,19 @@ import { styled } from 'styled-components';
 
 export const useStoreConnectionPlatforms = (platform: string | undefined) => {
   const { goMyPage } = usePageNavigate();
+  const toast = useToast();
+  const onSuccess = () => {
+    goMyPage();
+    toast.show({ type: 'success', message: ConnectionMessage.successConnection });
+  };
+  const onError = () => toast.show({ type: 'error', message: ConnectionMessage.errorConnection });
   const { mutate: storeTistoryInfo } = useMutation(storeTistoryInfoRequest, {
-    onSuccess: goMyPage,
+    onSuccess,
+    onError,
   });
   const { mutate: storeNotionInfo } = useMutation(storeNotionInfoRequest, {
-    onSuccess: goMyPage,
+    onSuccess,
+    onError,
   });
 
   switch (platform) {

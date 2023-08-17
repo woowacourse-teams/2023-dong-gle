@@ -1,17 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
-import { ConnectionPlatforms, getConnectionPlatformURL } from 'constants/components/myPage';
+import { ConnectionPlatforms } from 'constants/components/myPage';
 import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
-import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
-import {
-  disconnect as disconnectRequest,
-  storeMediumInfo as storeMediumInfoRequest,
-} from 'apis/connections';
 import { KeyboardEventHandler } from 'react';
+import { useConnect } from './useConnect';
 
 type Props = {
   tistory: TistoryConnection;
@@ -22,25 +17,7 @@ type Props = {
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
   const { inputRef, escapeInput, isInputOpen, openInput, resetInput, isError, setIsError } =
     useUncontrolledInput();
-  const { goMyPage } = usePageNavigate();
-  const queryClient = useQueryClient();
-  const { mutate: requestStoreMediumInfo } = useMutation(storeMediumInfoRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['member']);
-      goMyPage();
-    },
-  });
-  const { mutate: requestDisconnect } = useMutation(disconnectRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['member']);
-    },
-  });
-
-  const redirect = (destination: ConnectionPlatforms) => {
-    window.location.href = getConnectionPlatformURL(destination);
-  };
-
-  const disconnect = (platform: ConnectionPlatforms) => requestDisconnect(platform);
+  const { requestStoreMediumInfo, redirect, disconnect } = useConnect();
 
   const storeMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;

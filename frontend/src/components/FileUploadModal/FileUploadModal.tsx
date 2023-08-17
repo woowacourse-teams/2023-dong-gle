@@ -7,6 +7,7 @@ import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { useParams } from 'react-router-dom';
 import { useIsNotionConnected } from './useIsNotionConnected';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 
 type Props = {
   isOpen: boolean;
@@ -17,7 +18,8 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
   const categoryId = useParams()['categoryId'] ? Number(useParams()['categoryId']) : null;
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
     useFileUploadModal({ closeModal, categoryId });
-  const { isConnected, goMyPage } = useIsNotionConnected();
+  const { goMyPage } = usePageNavigate();
+  const isConnected = useIsNotionConnected();
 
   return (
     <Modal

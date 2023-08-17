@@ -130,7 +130,7 @@ public class WritingService {
     @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
-        final Writing writing = findWritingById(memberId, writingId);
+        final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = htmlRenderer.render(blocks);
         return WritingResponse.of(writing, content);
@@ -138,7 +138,7 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
-        final Writing writing = findWritingById(memberId, writingId);
+        final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
         final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
         return WritingPropertiesResponse.of(writing, publishedTos);
     }
@@ -252,6 +252,11 @@ public class WritingService {
 
     private Writing findWritingById(final Long memberId, final Long writingId) {
         return writingRepository.findByMemberIdAndId(memberId, writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
+    private Writing findWritingAndTrashedWriting(final Long memberId, final Long writingId) {
+        return writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 

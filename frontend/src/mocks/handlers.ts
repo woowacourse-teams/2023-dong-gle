@@ -3,11 +3,13 @@ import { errorHandlers } from './handlers/error';
 import { trashHandlers } from './handlers/trash';
 import { writingHandlers } from './handlers/writing';
 import { loginHandlers } from './handlers/login';
+import { memberHandlers } from './handlers/member';
 
 export const handlers = [
   ...writingHandlers,
   ...categoryHandlers,
   ...errorHandlers,
-  ...trashHandlers,
   ...loginHandlers,
+  ...trashHandlers,
+  ...memberHandlers,
 ];

@@ -7,3 +7,4 @@ export const writingURL = `${baseURL}/writings`;
 export const categoryURL = `${baseURL}/categories`;
 export const trashURL = `${baseURL}/trash`;
 export const getOauthURL = (platform: OauthPlatform) => `${baseURL}/oauth/login/${platform}`;
+export const memberURL = `${baseURL}/member`;

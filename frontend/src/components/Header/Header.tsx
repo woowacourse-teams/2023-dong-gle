@@ -15,7 +15,7 @@ type Props = {
 
 const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive }: Props) => {
   const toast = useToast();
-  const { goIntroducePage } = usePageNavigate();
+  const { goIntroducePage, goMyPage } = usePageNavigate();
   const logout = useMutation(logoutAPI, {
     onSuccess: () => {
       localStorage.removeItem('accessToken');
@@ -30,7 +30,9 @@ const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive
   return (
     <S.Container>
       <S.LeftIconsBox>
-        <SettingIcon width='2.4rem' height='2.4rem' />
+        <button onClick={goMyPage} aria-label='마이 페이지 이동'>
+          <SettingIcon width='2.4rem' height='2.4rem' />
+        </button>
         <button onClick={onClickLeftSidebar} aria-label='왼쪽 사이드바 토글'>
           <SidebarLeftIcon width='2.4rem' height='2.4rem' />
         </button>

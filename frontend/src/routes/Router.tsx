@@ -1,4 +1,9 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
 import WritingPage from 'pages/WritingPage/WritingPage';
 import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
 import App from '../App';
@@ -10,54 +15,32 @@ import ErrorPage from 'pages/ErrorPage/ErrorPage';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import MyPage from 'pages/MyPage/MyPage';
 import ConnectionPage from 'pages/ConnectionPage/ConnectionPage';
+import PrivateRouter from './PrivateRouter';
 
 export const Router = () => {
-  const browserRouter = createBrowserRouter([
-    {
-      path: PATH.app,
-      element: <App />,
-      children: [
-        {
-          path: PATH.introducePage,
-          element: <IntroducePage />,
-        },
-        {
-          path: PATH.oauthPage,
-          element: <OauthPage />,
-        },
-        {
-          path: PATH.myPage,
-          element: <MyPage />,
-        },
-        {
-          path: PATH.connections,
-          element: <ConnectionPage />,
-        },
-        {
-          path: PATH.space,
-          element: <Layout />,
-          children: [
-            {
-              path: PATH.writingPage,
-              element: <WritingPage />,
-            },
-            {
-              path: PATH.writingTablePage,
-              element: <WritingTablePage />,
-            },
-            {
-              path: PATH.trashCanPage,
-              element: <TrashCanPage />,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      path: '*',
-      element: <ErrorPage status={404} title='' message='' />,
-    },
-  ]);
+  const browserRouter = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path={PATH.app} element={<App />}>
+        <Route path={PATH.introducePage} element={<IntroducePage />} />
+
+        <Route path={PATH.oauthPage} element={<OauthPage />} />
+
+        <Route element={<PrivateRouter />}>
+          <Route path={PATH.myPage} element={<MyPage />}>
+            <Route path={PATH.connections} element={<ConnectionPage />} />
+          </Route>
+
+          <Route path={PATH.space} element={<Layout />}>
+            <Route path={PATH.writingPage} element={<WritingPage />} />
+            <Route path={PATH.writingTablePage} element={<WritingTablePage />} />
+            <Route path={PATH.trashCanPage} element={<TrashCanPage />} />
+          </Route>
+        </Route>
+
+        <Route path='*' element={<ErrorPage status={404} title='' message='' />} />
+      </Route>,
+    ),
+  );
 
   return <RouterProvider router={browserRouter} />;
 };

@@ -27,7 +27,7 @@ class RichTextTest {
                                     "annotations": {
                                         "bold": true,
                                         "italic": true,
-                                        "strikethrough": false,
+                                        "strikethrough": true,
                                         "underline": false,
                                         "code": false,
                                         "color": "default"
@@ -69,7 +69,6 @@ class RichTextTest {
     @DisplayName("리치텍스트를 파싱하는 테스트")
     void parseRichTexts() {
         //given
-
         //when
         final List<RichText> richText = RichText.parseRichTexts(jsonNode, "rich_text");
 
@@ -77,7 +76,7 @@ class RichTextTest {
         final List<RichText> expected = List.of(new RichText(
                 "dfsdf",
                 "null",
-                new Annotations(true, true, false, false, false, "default")
+                new Annotations(true, true, true, false, false, "default")
         ), new RichText(
                 "안녕",
                 "null",
@@ -95,7 +94,10 @@ class RichTextTest {
 
         //when
         final List<Style> styles = RichText.parseStyles(richText);
-        final List<Style> expected = List.of(new Style(new StyleRange(0, 4), StyleType.BOLD), new Style(new StyleRange(0, 4), StyleType.ITALIC));
+        final List<Style> expected = List.of(
+                new Style(new StyleRange(0, 4), StyleType.BOLD),
+                new Style(new StyleRange(0, 4), StyleType.ITALIC),
+                new Style(new StyleRange(0, 4), StyleType.STRIKETHROUGH));
 
         //then
         assertThat(styles).usingRecursiveComparison().ignoringFields("createdAt", "updatedAt").isEqualTo(expected);

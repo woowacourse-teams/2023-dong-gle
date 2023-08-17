@@ -103,4 +103,33 @@ class MarkDownStyleParserTest {
                 () -> assertThat(result.get(1)).isEqualTo(url)
         );
     }
+
+    @Test
+    @DisplayName("strike through을 파싱하는 테스트")
+    void strikeThroughtyleParser() {
+        //given
+        final String input = "안녕~~하세요~~";
+        final String expected = "안녕하세요";
+
+        //when
+        final String result = markDownStyleParser.removeStyles(input);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("strike through을 저장하는 테스트")
+    void strikeThroughtyleSave() {
+        //given
+        final String input = "안녕~~하세요~~";
+        final String originalText = "안녕하세요";
+        Style style = new Style(new StyleRange(2, 4), StyleType.STRIKETHROUGH);
+
+        //when
+        final List<Style> result = markDownStyleParser.extractStyles(input, originalText);
+
+        //then
+        assertThat(result.get(0)).isEqualTo(style);
+    }
 }

@@ -30,7 +30,7 @@ public class KakaoOAuthController {
         this.kakaoOAuthService = kakaoOAuthService;
     }
 
-    @GetMapping("/oauth/login/kakao")
+    @GetMapping("/oauth/login/kakao/redirect")
     public ResponseEntity<Void> oauthRedirectKakao(@RequestParam final String redirect_uri) {
         final String redirectUri = kakaoOAuthService.createAuthorizeRedirectUri(redirect_uri);
         return ResponseEntity

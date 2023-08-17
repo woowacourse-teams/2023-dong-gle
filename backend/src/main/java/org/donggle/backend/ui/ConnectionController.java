@@ -25,7 +25,7 @@ public class ConnectionController {
     private final NotionConnectionService notionConnectionService;
     private final MediumConnectionService mediumConnectionService;
 
-    @GetMapping("/tistory")
+    @GetMapping("/tistory/redirect")
     public ResponseEntity<Void> connectionsRedirectTistory(
             @RequestParam final String redirect_uri
     ) {
@@ -53,7 +53,7 @@ public class ConnectionController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/notion")
+    @GetMapping("/notion/redirect")
     public ResponseEntity<Void> connectionsRedirectNotion(
             @RequestParam final String redirect_uri
     ) {

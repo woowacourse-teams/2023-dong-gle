@@ -20,7 +20,8 @@ type Props = {
 };
 
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
-  const { inputRef, escapeInput, isInputOpen, openInput, resetInput } = useUncontrolledInput();
+  const { inputRef, escapeInput, isInputOpen, openInput, resetInput, isError, setIsError } =
+    useUncontrolledInput();
   const { goMyPage } = usePageNavigate();
   const queryClient = useQueryClient();
   const { mutate: requestStoreMediumInfo } = useMutation(storeMediumInfoRequest, {
@@ -44,9 +45,16 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
   const storeMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
+    const token = e.currentTarget.value;
+
+    if (token.length === 0) {
+      setIsError(true);
+      return;
+    }
+
     resetInput();
     requestStoreMediumInfo({
-      token: e.currentTarget.value,
+      token,
     });
   };
 
@@ -90,6 +98,7 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 size='small'
                 placeholder='토큰을 입력해주세요'
                 ref={inputRef}
+                isError={isError}
                 onBlur={resetInput}
                 onKeyDown={escapeInput}
                 onKeyUp={storeMediumInfo}

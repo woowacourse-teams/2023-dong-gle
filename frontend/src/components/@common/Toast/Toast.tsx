@@ -69,7 +69,7 @@ const S = {
   }>`
     position: relative;
     width: fit-content;
-    padding: 1.2rem 2.4rem;
+    padding: 1.4rem 2.7rem;
     background-color: ${({ theme, $type, $toastTheme }) =>
       $toastTheme === 'light' ? theme.color.gray1 : theme.toastColor[$type].background};
     border: 1px solid ${({ theme, $type }) => theme.toastColor[$type].border};
@@ -77,7 +77,8 @@ const S = {
     box-shadow:
       #00000014 0px 12px 24px -4px,
       rgba(0, 0, 0, 0.04) 0px 8px 16px -4px;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    font-weight: 500;
     overflow: hidden;
   `,
   Content: styled.div`

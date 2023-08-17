@@ -6,3 +6,4 @@ export const categoryURL = `${baseURL}/categories`;
 export const trashURL = `${baseURL}/trash`;
 export const memberURL = `${baseURL}/member`;
 export const connectionsURL = `${baseURL}/connections`;
+export const authURL = `${baseURL}/auth`;

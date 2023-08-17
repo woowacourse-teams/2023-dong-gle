@@ -13,6 +13,7 @@ const TrashCanTable = ({ writings }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const {
     rowRef,
+    isAllCheckboxClicked,
     deletePermanentWritings,
     restoreDeletedWritings,
     toggleAllCheckbox,
@@ -38,7 +39,12 @@ const TrashCanTable = ({ writings }: Props) => {
         <thead>
           <tr ref={rowRef} tabIndex={0}>
             <th>
-              <Input variant='unstyled' type='checkbox' onClick={toggleAllCheckbox} />
+              <Input
+                variant='unstyled'
+                type='checkbox'
+                checked={isAllCheckboxClicked}
+                onClick={toggleAllCheckbox}
+              />
             </th>
             <th>글 제목</th>
           </tr>

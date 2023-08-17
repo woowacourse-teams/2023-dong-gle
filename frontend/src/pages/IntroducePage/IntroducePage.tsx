@@ -22,11 +22,11 @@ const IntroducePage = () => {
           <S.AbsoluteDiv>
             <BlurBackgroundIcon />
           </S.AbsoluteDiv>
-          <h1>
+          <h1 style={{ textAlign: 'center' }}>
             동글에서 블로그 글을
-            <br /> 간편하게 포스팅해보세요.
+            <br /> 간편하게 포스팅 하세요
           </h1>
-          <p>블로그 포스팅 뿐만아니라 글 관리까지 한번에</p>
+          <p>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</p>
           <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
           <img width={600} src={donggleExample} />
         </S.Introduce>

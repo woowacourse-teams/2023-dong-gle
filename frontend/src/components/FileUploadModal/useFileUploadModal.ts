@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, QueryClient, useQueryClient } from '@tanstack/react-query';
 import { addNotionWriting, addWriting } from 'apis/writings';
 import { useToast } from 'hooks/@common/useToast';
 import { usePageNavigate } from 'hooks/usePageNavigate';
@@ -15,13 +15,14 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const toast = useToast();
   const { goWritingPage } = usePageNavigate();
   const selectedCategoryId = categoryId ?? 1;
+  const queryClient = useQueryClient();
 
   const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {
     onSuccess: (data) => {
       onFileUploadSuccess(data.headers);
     },
     onError: (error) => {
-      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
+      toast.show({ type: 'error', message: getErrorMessage(error) });
     },
   });
 
@@ -31,7 +32,8 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
   const onFileUploadSuccess = (headers: Headers) => {
     const writingId = headers.get('Location')?.split('/').pop();
-    goWritingPage({ categoryId: 1, writingId: Number(writingId) });
+    queryClient.invalidateQueries(['writingsInCategory', selectedCategoryId]);
+    goWritingPage({ categoryId: selectedCategoryId, writingId: Number(writingId) });
     closeModal();
   };
 

@@ -1,4 +1,9 @@
+import { useMutation } from '@tanstack/react-query';
+import { logout as logoutAPI } from 'apis/login';
 import { SettingIcon, SidebarLeftIcon, SidebarRightIcon } from 'assets/icons';
+import Button from 'components/@common/Button/Button';
+import { useToast } from 'hooks/@common/useToast';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { HEADER_STYLE } from 'styles/layoutStyle';
 
@@ -9,15 +14,33 @@ type Props = {
 };
 
 const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive }: Props) => {
+  const toast = useToast();
+  const { goIntroducePage, goMyPage } = usePageNavigate();
+  const logout = useMutation(logoutAPI, {
+    onSuccess: () => {
+      localStorage.removeItem('accessToken');
+      goIntroducePage();
+      toast.show({ type: 'success', message: '로그아웃이 완료되었습니다.' });
+    },
+    onError: () => {
+      toast.show({ type: 'error', message: '로그아웃에 실패했습니다.' });
+    },
+  });
+
   return (
     <S.Container>
       <S.LeftIconsBox>
-        <SettingIcon width='2.4rem' height='2.4rem' />
+        <button onClick={goMyPage} aria-label='마이 페이지 이동'>
+          <SettingIcon width='2.4rem' height='2.4rem' />
+        </button>
         <button onClick={onClickLeftSidebar} aria-label='왼쪽 사이드바 토글'>
           <SidebarLeftIcon width='2.4rem' height='2.4rem' />
         </button>
       </S.LeftIconsBox>
       <S.RightIconsBox>
+        <Button size='small' variant='text' onClick={() => logout.mutate()}>
+          로그아웃
+        </Button>
         {isWritingViewerActive && (
           <button onClick={onClickRightSidebar} aria-label='오른쪽 사이드바 토글'>
             <SidebarRightIcon width='2.4rem' height='2.4rem' />
@@ -44,5 +67,8 @@ const S = {
     gap: 0.8rem;
   `,
 
-  RightIconsBox: styled.div``,
+  RightIconsBox: styled.div`
+    display: flex;
+    gap: 0.8rem;
+  `,
 };

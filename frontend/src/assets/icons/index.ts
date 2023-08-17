@@ -16,6 +16,7 @@ export { ReactComponent as InfoIcon } from './info.svg';
 export { ReactComponent as PublishingIcon } from './publishing.svg';
 export { ReactComponent as ArrowRightIcon } from './arrow-right.svg';
 export { ReactComponent as TrashCanIcon } from './trash-can.svg';
+export { ReactComponent as TrashCanEmptyIcon } from './trash-can-empty.svg';
 export { ReactComponent as PencilIcon } from './pencil.svg';
 export { ReactComponent as WritingIcon } from './writing.svg';
 export { ReactComponent as ImportIcon } from './import.svg';

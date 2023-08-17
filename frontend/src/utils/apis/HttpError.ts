@@ -1,4 +1,5 @@
 import { HttpStatus } from 'constants/apis/http';
+import { HttpErrorResponseBody } from 'types/apis/error';
 
 export class HttpError extends Error {
   statusCode: number;
@@ -14,8 +15,8 @@ export class HttpError extends Error {
 
 export const handleHttpError = async (response: Response) => {
   const statusCode = response.status;
-  const responseBody: { message: string } = await response.json();
-  const errorMessage = responseBody.message;
+  const responseBody: HttpErrorResponseBody = await response.json();
+  const errorMessage = responseBody.error.message ?? '';
 
   if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
     throw new HttpError(statusCode, errorMessage);

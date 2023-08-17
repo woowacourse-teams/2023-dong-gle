@@ -4,6 +4,18 @@ type Option = {
   json?: unknown;
 } & RequestInit;
 
+const provideAuth = (request: RequestInit) => {
+  return {
+    ...request,
+    headers: {
+      ...request.headers,
+      Authorization: `Bearer ${JSON.parse(
+        localStorage.getItem('accessToken') ?? JSON.stringify(''),
+      )}`,
+    },
+  };
+};
+
 const parseOption = (option: Option): RequestInit => {
   return option.json
     ? {
@@ -19,7 +31,7 @@ const parseOption = (option: Option): RequestInit => {
 
 const fetchAPI = async (endpoint: RequestInfo | URL, option: Option) => {
   try {
-    const response = await fetch(endpoint, parseOption(option));
+    const response = await fetch(endpoint, provideAuth(parseOption(option)));
 
     if (!response.ok) return handleHttpError(response);
 

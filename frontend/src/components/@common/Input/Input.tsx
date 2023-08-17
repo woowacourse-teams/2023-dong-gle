@@ -56,7 +56,7 @@ const genVariantStyle = (
     outline: css`
       ${({ theme }) => css`
         border: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
-        outline: 1px solid ${theme.color.gray1};
+        outline: 1px solid transparent;
 
         &:focus {
           border: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
@@ -67,27 +67,27 @@ const genVariantStyle = (
     filled: css`
       ${({ theme }) => css`
         background-color: ${isError ? theme.color.red1 : theme.color.gray4};
-        border: 1px solid ${theme.color.gray1};
-        outline: 1px solid ${theme.color.gray1};
+        border: 1px solid transparent;
+        outline: 1px solid transparent;
 
         &:focus {
-          background-color: ${theme.color.gray1};
+          background-color: transparent;
           outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray8};
         }
       `}
     `,
     unstyled: css`
       ${({ theme }) => css`
-        border: 1px solid ${theme.color.gray1};
+        border: 1px solid transparent;
         outline: 1px solid ${isError ? theme.color.red6 : theme.color.gray1};
       `}
     `,
     underlined: css`
       ${({ theme }) => css`
-        border: 1px solid ${theme.color.gray1};
+        border: 1px solid transparent;
         border-bottom: 1px solid ${isError ? theme.color.red6 : theme.color.gray6};
         border-radius: 0;
-        outline: 1px solid ${theme.color.gray1};
+        outline: 1px solid transparent;
       `}
     `,
   };
@@ -139,6 +139,7 @@ const S = {
   }>`
     border: none;
     border-radius: 4px;
+    background-color: transparent;
 
     ${({ $size }) => genSizeStyle($size)};
     ${({ $variant, $isError }) => genVariantStyle($variant, $isError)};

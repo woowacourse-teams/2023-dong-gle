@@ -24,7 +24,7 @@ const App = () => {
         </ErrorBoundary>
         <ToastContainer />
       </ToastProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {PRODUCT_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 };

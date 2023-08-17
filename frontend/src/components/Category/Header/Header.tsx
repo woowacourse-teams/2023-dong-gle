@@ -40,7 +40,7 @@ const Header = () => {
           type='text'
           variant='underlined'
           size='small'
-          placeholder='Add category ...'
+          placeholder='추가할 카테고리'
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}

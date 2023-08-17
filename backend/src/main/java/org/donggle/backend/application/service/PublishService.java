@@ -51,8 +51,8 @@ public class PublishService {
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final Blog blog = findBlog(publishRequest);
-        final Writing writing = findWriting(writingId);
         final Member member = findMember(memberId);
+        final Writing writing = findWriting(member.getId(), writingId);
 
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
@@ -127,8 +127,8 @@ public class PublishService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
-    private Writing findWriting(final Long writingId) {
-        return writingRepository.findById(writingId)
+    private Writing findWriting(final Long memberId, final Long writingId) {
+        return writingRepository.findByMemberIdAndId(writingId, memberId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 

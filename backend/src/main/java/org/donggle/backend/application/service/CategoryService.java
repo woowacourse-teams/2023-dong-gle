@@ -42,7 +42,6 @@ public class CategoryService {
     private final WritingRepository writingRepository;
 
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
-        //TODO: member checking
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());
         validateCategoryName(categoryName);
@@ -67,9 +66,9 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryListResponse findAll(final Long memberId) {
-        //TODO: member checking
-        final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
-        final List<Category> sortedCategories = sortCategory(categories, findBasicCategoryByMemberId(memberId));
+        final Member findMember = findMember(memberId);
+        final List<Category> categories = categoryRepository.findAllByMemberId(findMember.getId());
+        final List<Category> sortedCategories = sortCategory(categories, findBasicCategoryByMemberId(findMember.getId()));
         final List<CategoryResponse> categoryResponses = sortedCategories.stream()
                 .map(CategoryResponse::of)
                 .toList();
@@ -92,8 +91,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
-        //TODO: member checking
-        final Category findCategory = findCategory(categoryId);
+        final Category findCategory = findCategory(memberId, categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
         if (findWritings.isEmpty()) {
             return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
@@ -130,8 +128,8 @@ public class CategoryService {
     }
 
     public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
-        //TODO: member checking
-        final Category findCategory = findCategory(categoryId);
+        final Member findMember = findMember(memberId);
+        final Category findCategory = findCategory(findMember.getId(), categoryId);
         validateBasicCategory(memberId, findCategory);
 
         final CategoryName categoryName = new CategoryName(request.categoryName());
@@ -141,8 +139,8 @@ public class CategoryService {
     }
 
     public void removeCategory(final Long memberId, final Long categoryId) {
-        //TODO: member checking
-        final Category findCategory = findCategory(categoryId);
+        final Member findMember = findMember(memberId);
+        final Category findCategory = findCategory(findMember.getId(), categoryId);
         validateBasicCategory(memberId, findCategory);
         transferToBasicCategory(memberId, findCategory);
         deleteCategory(findCategory);
@@ -175,11 +173,12 @@ public class CategoryService {
     }
 
     public void modifyCategoryOrder(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
+        final Member member = findMember(memberId);
         final Long nextCategoryId = request.nextCategoryId();
-        final Category source = findCategory(categoryId);
-        validateBasicCategory(memberId, source);
+        final Category source = findCategory(member.getId(), categoryId);
+        validateBasicCategory(member.getId(), source);
         deleteCategoryOrder(source);
-        addCategoryOrder(nextCategoryId, source, memberId);
+        addCategoryOrder(nextCategoryId, source, member.getId());
     }
 
     private void deleteCategoryOrder(final Category category) {
@@ -198,7 +197,7 @@ public class CategoryService {
         }
         preCategory.changeNextCategory(category);
         if (nextCategoryId != LAST_WRITING_FLAG) {
-            final Category nextCategory = findCategory(nextCategoryId);
+            final Category nextCategory = findCategory(memberId, nextCategoryId);
             category.changeNextCategory(nextCategory);
         }
     }
@@ -236,8 +235,8 @@ public class CategoryService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
-    private Category findCategory(final Long categoryId) {
-        return categoryRepository.findById(categoryId)
+    private Category findCategory(final Long memberId, final Long categoryId) {
+        return categoryRepository.findByIdAndMemberId(categoryId, memberId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 }

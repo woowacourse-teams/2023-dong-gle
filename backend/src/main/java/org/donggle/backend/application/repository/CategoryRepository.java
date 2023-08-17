@@ -24,4 +24,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select c from Category c " +
             "where c.nextCategory.id = :categoryId")
     Optional<Category> findPreCategoryByCategoryId(@Param("categoryId") final Long categoryId);
+
+    Optional<Category> findByIdAndMemberId(final Long categoryId, final Long memberId);
 }

@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service.vendor.tistory;
 
-import lombok.extern.slf4j.Slf4j;
 import org.donggle.backend.application.service.vendor.exception.VendorApiInternalServerError;
 import org.donggle.backend.application.service.vendor.tistory.dto.TistoryBlogInfoResponseWrapper;
 import org.donggle.backend.application.service.vendor.tistory.dto.TistoryBlogResponse;
@@ -15,9 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.donggle.backend.application.service.vendor.exception.VendorApiException.handle4xxException;
 
-@Slf4j
 public class TistoryApiService {
-    public static final String PLATFORM_NAME = "Tistory";
+    private static final String PLATFORM_NAME = "Tistory";
     private static final String TISTORY_URL = "https://www.tistory.com/apis";
 
     private final WebClient webClient;

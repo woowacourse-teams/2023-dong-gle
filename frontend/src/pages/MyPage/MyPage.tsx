@@ -13,7 +13,7 @@ const MyPage = () => {
   return (
     <S.Section>
       <S.Title>마이 페이지</S.Title>
-      <S.Container>
+      <S.Container $isLoading={isLoading}>
         {data && !isLoading ? (
           <>
             <Profile name={data.name} />
@@ -46,8 +46,10 @@ const S = {
     font-size: 4rem;
   `,
 
-  Container: styled.div`
+  Container: styled.div<{ $isLoading: boolean }>`
     display: flex;
+    justify-content: ${({ $isLoading }) => ($isLoading ? 'center' : 'none')};
+    align-items: ${({ $isLoading }) => ($isLoading ? 'center' : 'none')};
     width: 100%;
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};

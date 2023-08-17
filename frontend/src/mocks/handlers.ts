@@ -4,6 +4,7 @@ import { trashHandlers } from './handlers/trash';
 import { writingHandlers } from './handlers/writing';
 import { loginHandlers } from './handlers/login';
 import { memberHandlers } from './handlers/member';
+import { connectionsHandlers } from './handlers/connections';
 
 export const handlers = [
   ...writingHandlers,
@@ -12,4 +13,5 @@ export const handlers = [
   ...loginHandlers,
   ...trashHandlers,
   ...memberHandlers,
+  ...connectionsHandlers,
 ];

@@ -6,9 +6,9 @@ import org.donggle.backend.domain.member.MemberCredentials;
 public record MemberPageResponse(
         Long id,
         String name,
-        TistoryConnectionResponse tistoryConnection,
-        NotionConnectionResponse notionConnection,
-        MediumConnectionResponse mediumConnection
+        TistoryConnectionResponse tistory,
+        NotionConnectionResponse notion,
+        MediumConnectionResponse medium
 ) {
     public static MemberPageResponse of(final Member member, final MemberCredentials memberCredentials) {
         return new MemberPageResponse(

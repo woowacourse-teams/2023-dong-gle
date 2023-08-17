@@ -37,10 +37,10 @@ class MemberServiceTest {
         assertAll(
                 () -> Assertions.assertThat(memberPage.id()).isEqualTo(member.getId()),
                 () -> Assertions.assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
-                () -> Assertions.assertThat(memberPage.tistoryConnection().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.tistoryConnection().blogName()).isNull(),
-                () -> Assertions.assertThat(memberPage.notionConnection().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.mediumConnection().isConnected()).isEqualTo(false)
+                () -> Assertions.assertThat(memberPage.tistory().isConnected()).isEqualTo(false),
+                () -> Assertions.assertThat(memberPage.tistory().blogName()).isNull(),
+                () -> Assertions.assertThat(memberPage.notion().isConnected()).isEqualTo(false),
+                () -> Assertions.assertThat(memberPage.medium().isConnected()).isEqualTo(false)
         );
     }
 
@@ -58,10 +58,10 @@ class MemberServiceTest {
         assertAll(
                 () -> Assertions.assertThat(memberPage.id()).isEqualTo(member.getId()),
                 () -> Assertions.assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
-                () -> Assertions.assertThat(memberPage.tistoryConnection().isConnected()).isEqualTo(true),
-                () -> Assertions.assertThat(memberPage.tistoryConnection().blogName()).isEqualTo("test"),
-                () -> Assertions.assertThat(memberPage.notionConnection().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.mediumConnection().isConnected()).isEqualTo(false)
+                () -> Assertions.assertThat(memberPage.tistory().isConnected()).isEqualTo(true),
+                () -> Assertions.assertThat(memberPage.tistory().blogName()).isEqualTo("test"),
+                () -> Assertions.assertThat(memberPage.notion().isConnected()).isEqualTo(false),
+                () -> Assertions.assertThat(memberPage.medium().isConnected()).isEqualTo(false)
         );
     }
 }

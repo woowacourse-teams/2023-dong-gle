@@ -33,7 +33,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
             <S.Text>{writing.title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={() => deleteWritings([writingId])} />
+            <DeleteButton onClick={() => deleteWritings([writing.id])} />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}

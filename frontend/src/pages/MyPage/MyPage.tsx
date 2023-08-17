@@ -54,14 +54,6 @@ const S = {
     border-top: 1px solid ${({ theme }) => theme.color.gray5};
   `,
 
-  ProfileWrapper: styled.div`
-    width: 30%;
-    height: 100%;
-    padding: 4rem 0;
-    background-color: ${({ theme }) => theme.color.gray2};
-    border-right: 1px solid ${({ theme }) => theme.color.gray5};
-  `,
-
   ContentContainer: styled.div`
     display: flex;
     flex-direction: column;

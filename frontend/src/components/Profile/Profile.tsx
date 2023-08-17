@@ -22,7 +22,7 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
-    width: 30%;
+    width: 25%;
     height: 100%;
     padding: 4rem 0;
     border-right: 1px solid ${({ theme }) => theme.color.gray5};

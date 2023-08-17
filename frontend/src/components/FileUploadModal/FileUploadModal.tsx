@@ -6,8 +6,8 @@ import { styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { useParams } from 'react-router-dom';
-import { useIsNotionConnected } from './useIsNotionConnected';
 import { usePageNavigate } from 'hooks/usePageNavigate';
+import { useMember } from 'hooks/queries/useMember';
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +19,7 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
     useFileUploadModal({ closeModal, categoryId });
   const { goMyPage } = usePageNavigate();
-  const isConnected = useIsNotionConnected();
+  const { notion } = useMember();
 
   return (
     <Modal
@@ -42,7 +42,7 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
               <S.ItemTitle>내 컴퓨터에서 가져오기</S.ItemTitle>
               <FileUploader accept='.md' height='15rem' onFileSelect={uploadOnServer} />
             </S.Item>
-            {isConnected ? (
+            {notion && notion.isConnected ? (
               <>
                 <S.Item>
                   <S.ItemTitle>노션에서 가져오기</S.ItemTitle>

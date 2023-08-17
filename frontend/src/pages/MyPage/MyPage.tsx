@@ -1,16 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { getMemberInfo } from 'apis/member';
 import Button from 'components/@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
+import { useMember } from 'hooks/queries/useMember';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
-import { MemberResponse } from 'types/apis/member';
 
 const MyPage = () => {
-  const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
+  const { isLoading, name, tistory, medium, notion } = useMember();
   const { goSpacePage } = usePageNavigate();
+
+  if (!name || !tistory || !medium || !notion) return null;
 
   return (
     <S.Section>
@@ -21,11 +21,11 @@ const MyPage = () => {
         </Button>
       </S.Header>
       <S.Container $isLoading={isLoading}>
-        {data && !isLoading ? (
+        {!isLoading ? (
           <>
-            <Profile name={data.name} />
+            <Profile name={name} />
             <S.ContentContainer>
-              <ConnectionSection tistory={data.tistory} medium={data.medium} notion={data.notion} />
+              <ConnectionSection tistory={tistory} medium={medium} notion={notion} />
             </S.ContentContainer>
           </>
         ) : (

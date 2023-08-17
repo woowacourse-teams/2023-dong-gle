@@ -2,19 +2,24 @@ import Button from 'components/@common/Button/Button';
 import { ErrorBoundaryFallbackProps } from 'components/ErrorBoundary/ErrorBoundary';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
+import { useTokenError } from './useTokenError';
+import { useEffect, useLayoutEffect } from 'react';
 
 const ErrorPage = ({ status, title, message, onResetError }: ErrorBoundaryFallbackProps) => {
-  const { goIntroducePage, goSpacePage } = usePageNavigate();
+  const { goIntroducePage } = usePageNavigate();
+  const { handleTokenError } = useTokenError();
 
   const handleGoIntroducePage = () => {
     onResetError?.();
     goIntroducePage();
   };
 
-  const handleGoSpacePage = () => {
-    onResetError?.();
-    goSpacePage();
-  };
+  useLayoutEffect(() => {
+    if (status === 401) {
+      onResetError?.();
+      handleTokenError();
+    }
+  }, []);
 
   return (
     <S.Container>
@@ -23,15 +28,9 @@ const ErrorPage = ({ status, title, message, onResetError }: ErrorBoundaryFallba
         <p>요청하신 페이지를 찾을 수 없습니다.</p>
         <p>{message}</p>
       </S.ErrorMessageContainer>
-      {status === 401 ? (
-        <Button variant='text' onClick={handleGoIntroducePage}>
-          로그인 하기
-        </Button>
-      ) : (
-        <Button variant='text' onClick={handleGoSpacePage}>
-          스페이스로 돌아가기
-        </Button>
-      )}
+      <Button variant='text' onClick={handleGoIntroducePage}>
+        돌아가기
+      </Button>
     </S.Container>
   );
 };

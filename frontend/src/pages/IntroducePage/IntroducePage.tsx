@@ -3,9 +3,15 @@ import LoginModal from 'components/Modal/LoginModal/LoginModal';
 import { useModal } from 'hooks/@common/useModal';
 import { styled } from 'styled-components';
 import donggleExample from 'assets/icons/donggle-example.png';
+import { Navigate } from 'react-router-dom';
+import { useAuthToken } from 'hooks/useAuthToken';
+import { PATH } from 'constants/path';
 
 const IntroducePage = () => {
+  const { authToken } = useAuthToken();
   const { isOpen, openModal, closeModal } = useModal();
+
+  if (authToken) return <Navigate to={`${PATH.space}`} />;
 
   return (
     <S.Container>
@@ -22,7 +28,7 @@ const IntroducePage = () => {
           <S.AbsoluteDiv>
             <BlurBackgroundIcon />
           </S.AbsoluteDiv>
-          <h1 style={{ textAlign: 'center' }}>
+          <h1>
             동글에서 블로그 글을
             <br /> 간편하게 포스팅 하세요
           </h1>
@@ -73,6 +79,7 @@ const S = {
 
     h1 {
       font-size: 4rem;
+      text-align: center;
     }
     p {
       font-size: 2rem;

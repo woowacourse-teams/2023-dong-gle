@@ -33,5 +33,6 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    z-index: 10;
   `,
 };

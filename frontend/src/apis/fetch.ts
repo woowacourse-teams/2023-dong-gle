@@ -9,9 +9,7 @@ const provideAuth = (request: RequestInit) => {
     ...request,
     headers: {
       ...request.headers,
-      Authorization: `Bearer ${JSON.parse(
-        localStorage.getItem('accessToken') ?? JSON.stringify(''),
-      )}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken') ?? ''}`,
     },
   };
 };

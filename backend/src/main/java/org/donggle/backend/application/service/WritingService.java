@@ -25,6 +25,7 @@ import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.content.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
+import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
@@ -60,7 +61,6 @@ public class WritingService {
     private final CategoryRepository categoryRepository;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
-        //TODO: member checking
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
             throw new InvalidFileFormatException(originalFilename);
@@ -84,12 +84,11 @@ public class WritingService {
     }
 
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
-        // TODO : authentication 후 member 객체 가져오도록 수정
-        // TODO : MemberCredential에서 값 못찾을 경우 예외던지기
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(request.categoryId());
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
-        final String notionToken = memberCredentials.getNotionToken();
+        final String notionToken = memberCredentials.getNotionToken()
+                .orElseThrow(NotionNotConnectedException::new);
         final NotionApiService notionApiService = new NotionApiService();
 
         final String blockId = request.blockId();

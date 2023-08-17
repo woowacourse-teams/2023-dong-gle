@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.common.BaseEntity;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -60,6 +61,34 @@ public class MemberCredentials extends BaseEntity {
 
     public void updateNotionToken(final String notionToken) {
         this.notionToken = notionToken;
+    }
+
+    public boolean isTistoryConnected() {
+        return getTistoryToken().isPresent() && getTistoryBlogName().isPresent();
+    }
+
+    public boolean isMediumConnected() {
+        return getMediumToken().isPresent();
+    }
+
+    public boolean isNotionConnected() {
+        return getNotionToken().isPresent();
+    }
+
+    public Optional<String> getTistoryToken() {
+        return Optional.ofNullable(tistoryToken);
+    }
+
+    public Optional<String> getTistoryBlogName() {
+        return Optional.ofNullable(tistoryBlogName);
+    }
+
+    public Optional<String> getMediumToken() {
+        return Optional.ofNullable(mediumToken);
+    }
+
+    public Optional<String> getNotionToken() {
+        return Optional.ofNullable(notionToken);
     }
 
     @Override

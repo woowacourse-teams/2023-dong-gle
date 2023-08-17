@@ -40,7 +40,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .order(1);
 
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
-                .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**")
+                .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**", "/auth/**")
                 .order(2);
 
         registry.addInterceptor(new RefreshTokenAuthInterceptor(jwtTokenProvider, tokenRepository))

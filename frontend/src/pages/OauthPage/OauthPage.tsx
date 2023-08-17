@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { postOauthLogin } from 'apis/login';
-import { OauthPlatforms, getRedirectURL } from 'constants/components/oauth';
+import { OauthPlatforms, getOauthRedirectURL } from 'constants/components/oauth';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -35,7 +35,7 @@ const OauthPage = () => {
       platform,
       body: {
         code,
-        redirect_uri: getRedirectURL(platform),
+        redirect_uri: getOauthRedirectURL(platform),
       },
     });
   }, []);

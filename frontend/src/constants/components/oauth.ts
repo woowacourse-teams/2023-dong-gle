@@ -6,4 +6,5 @@ export enum OauthPlatforms {
 
 const domainURL = process.env.DOMAIN_URL;
 export const getOauthURL = (platform: OauthPlatforms) => `${baseURL}/oauth/login/${platform}`;
-export const getRedirectURL = (platform: OauthPlatforms) => `${domainURL}/oauth/login/${platform}`;
+export const getOauthRedirectURL = (platform: OauthPlatforms) =>
+  `${domainURL}/oauth/login/${platform}`;

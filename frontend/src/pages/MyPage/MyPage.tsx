@@ -1,21 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMemberInfo } from 'apis/member';
+import Button from 'components/@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MemberResponse } from 'types/apis/member';
 
 const MyPage = () => {
   const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
-
-  if (isLoading) return <Spinner />;
+  const { goSpacePage } = usePageNavigate();
 
   return (
     <S.Section>
-      <S.Title>마이 페이지</S.Title>
-      <S.Container>
-        {data ? (
+      <S.Header>
+        <S.Title>마이 페이지</S.Title>
+        <Button variant='secondary' size='small' onClick={goSpacePage}>
+          스페이스로 가기
+        </Button>
+      </S.Header>
+      <S.Container $isLoading={isLoading}>
+        {data && !isLoading ? (
           <>
             <Profile name={data.name} />
             <S.ContentContainer>
@@ -23,7 +29,7 @@ const MyPage = () => {
             </S.ContentContainer>
           </>
         ) : (
-          <>새로고침을 해주세요.</>
+          <Spinner size={60} thickness={8} />
         )}
       </S.Container>
     </S.Section>
@@ -38,28 +44,28 @@ const S = {
     height: 100vh;
   `,
 
+  Header: styled.header`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+  `,
+
   Title: styled.h1`
     display: flex;
     align-items: center;
     height: 12rem;
-    padding: 0 8rem;
-
+    padding-left: 4rem;
     font-size: 4rem;
   `,
 
-  Container: styled.div`
+  Container: styled.div<{ $isLoading: boolean }>`
     display: flex;
+    justify-content: ${({ $isLoading }) => ($isLoading ? 'center' : 'none')};
+    align-items: ${({ $isLoading }) => ($isLoading ? 'center' : 'none')};
     width: 100%;
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};
-  `,
-
-  ProfileWrapper: styled.div`
-    width: 30%;
-    height: 100%;
-    padding: 4rem 0;
-    background-color: ${({ theme }) => theme.color.gray2};
-    border-right: 1px solid ${({ theme }) => theme.color.gray5};
   `,
 
   ContentContainer: styled.div`

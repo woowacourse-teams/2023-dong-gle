@@ -1,49 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
-import { postOauthLogin } from 'apis/login';
-import { OauthPlatforms, getOauthRedirectURL } from 'constants/components/oauth';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { useLoginOauth } from './useLoginOauth';
 
 const OauthPage = () => {
-  const { goIntroducePage, goSpacePage } = usePageNavigate();
-  const onError = () => {
-    alert('에러: 로그인을 실패했습니다.');
-    goIntroducePage();
-  };
-  const { mutate } = useMutation(postOauthLogin, {
-    onSuccess: ({ accessToken }) => {
-      localStorage.setItem('accessToken', JSON.stringify(accessToken));
-      goSpacePage();
-    },
-    onError,
-  });
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const { loginOauth } = useLoginOauth();
 
-  useEffect(() => {
-    const code = searchParams.get('code');
-    const platform = location.pathname.split('/').pop();
-
-    const isOauthPlatform = (platform: string | undefined): platform is OauthPlatforms => {
-      return platform ? platform in OauthPlatforms : false;
-    };
-
-    if (!isOauthPlatform(platform) || !code) {
-      onError();
-      return;
-    }
-
-    mutate({
-      platform,
-      body: {
-        code,
-        redirect_uri: getOauthRedirectURL(platform),
-      },
-    });
-  }, []);
+  useEffect(loginOauth, []);
 
   return (
     <S.SpinnerContainer>

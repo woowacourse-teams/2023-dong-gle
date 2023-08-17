@@ -7,7 +7,9 @@ import org.donggle.backend.domain.writing.block.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.block.ImageBlock;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class HtmlRenderer {
@@ -105,7 +107,8 @@ public class HtmlRenderer {
         }
         return bufferText.toString()
                 .replaceAll("\\n", "&NewLine;")
-                .replaceAll("    ", "&Tab;");
+                .replaceAll("    ", "&Tab;")
+                .replaceAll("\\t", "&Tab;");
     }
 
     private void convertToEscapeLetter(final char letter, final StringBuffer bufferText) {
@@ -120,59 +123,58 @@ public class HtmlRenderer {
 
     private String renderList(final List<NormalBlock> blocks) {
         final StringBuilder result = new StringBuilder();
-        final NormalBlock firstBlock = blocks.get(0);
-        final NormalBlock endBlock = blocks.get(blocks.size() - 1);
+        final Deque<String> ends = new ArrayDeque<>();
 
-        addFirstHtmlType(firstBlock, result);
-        addInnerHtmlType(blocks, result);
-        addEndHtmlType(endBlock, result);
+        NormalBlock preBlock = blocks.get(0);
+        final HtmlType preHtmlType = HtmlType.findByBlockType(preBlock.getBlockType());
+        result.append(preHtmlType.getStartTag());
+        result.append(HtmlType.LIST.getStartTag())
+                .append(htmlStyleRenderer.render(preBlock.getRawTextValue(), preBlock.getStyles()))
+                .append(HtmlType.LIST.getEndTag());
+
+        ends.push(preHtmlType.getEndTag());
+        int currentDepth = preBlock.getDepthValue();
+
+        int blockSize = blocks.size();
+        for (int i = 1; i < blockSize; i++) {
+            final NormalBlock currentBlock = blocks.get(i);
+            final HtmlType currentHtmlType = HtmlType.findByBlockType(currentBlock.getBlockType());
+            final int depthDifference = currentDepth - currentBlock.getDepthValue();
+
+            if (depthDifference < 0) {
+                result.append(currentHtmlType.getStartTag());
+                currentDepth += 1;
+                ends.addLast(currentHtmlType.getEndTag());
+            }
+            if (depthDifference > 0) {
+                for (int j = 0; j < depthDifference; j++) {
+                    result.append(ends.removeLast());
+                    currentDepth = currentDepth - depthDifference;
+                }
+                if ((preBlock.getBlockType() != currentBlock.getBlockType()) && !ends.isEmpty()) {
+                    result.append(ends.removeLast());
+                    result.append(currentHtmlType.getStartTag());
+                }
+                ends.addLast(currentHtmlType.getEndTag());
+            }
+            if (depthDifference == 0) {
+                if (preBlock.getBlockType() != currentBlock.getBlockType()) {
+                    result.append(ends.removeLast());
+                    result.append(currentHtmlType.getStartTag());
+                    ends.addLast(currentHtmlType.getEndTag());
+                }
+            }
+            result.append(HtmlType.LIST.getStartTag())
+                    .append(htmlStyleRenderer.render(preBlock.getRawTextValue(), preBlock.getStyles()))
+                    .append(HtmlType.LIST.getEndTag());
+            preBlock = currentBlock;
+        }
+
+        while (!ends.isEmpty()) {
+            result.append(ends.removeLast());
+        }
 
         return result.toString();
-    }
-
-    private void addFirstHtmlType(final NormalBlock block, final StringBuilder result) {
-        final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
-        result.append(htmlType.getStartTag());
-    }
-
-    private void addInnerHtmlType(final List<NormalBlock> blocks, final StringBuilder result) {
-        final int blockSize = blocks.size();
-
-        for (int i = 0; i < blockSize - 1; i++) {
-            final NormalBlock currentBlock = blocks.get(i);
-            final NormalBlock nextBlock = blocks.get(i + 1);
-
-            result.append(renderLine(currentBlock, nextBlock));
-        }
-    }
-
-    private String renderLine(final NormalBlock block, final NormalBlock nextBlock) {
-        final String rawText = htmlStyleRenderer.render(block.getRawTextValue(), block.getStyles());
-        final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag();
-
-        if (block.getDepthValue() > nextBlock.getDepthValue()) {
-            final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
-            return line + htmlType.getEndTag();
-        }
-
-        if (block.getDepthValue() == nextBlock.getDepthValue()) {
-            if (block.getBlockType().equals(nextBlock.getBlockType())) {
-                return line;
-            }
-            final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
-            final HtmlType nextHtmlType = HtmlType.findByBlockType(nextBlock.getBlockType());
-            return line + htmlType.getEndTag() + nextHtmlType.getStartTag();
-        }
-
-        final HtmlType nextHtmlType = HtmlType.findByBlockType(nextBlock.getBlockType());
-        return line + nextHtmlType.getStartTag();
-    }
-
-    private void addEndHtmlType(final NormalBlock block, final StringBuilder result) {
-        final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
-        final String rawText = htmlStyleRenderer.render(block.getRawTextValue(), block.getStyles());
-        final String line = HtmlType.LIST.getStartTag() + rawText + HtmlType.LIST.getEndTag() + htmlType.getEndTag();
-        result.append(line);
     }
 
     private String renderImage(final ImageBlock block) {

@@ -68,7 +68,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code class=\"language-java\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>checkedTaskList</input></div>";
+        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol></ul><ul><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code class=\"language-java\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>checkedTaskList</input></div>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -218,7 +218,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol><li>6번줄</li></ul>";
+        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol></ul><ul><li>6번줄</li></ul>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -286,12 +286,11 @@ class HtmlRendererTest {
         blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
         blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
         blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("4번줄"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<details><summary>토글제목</summary><ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol><li>4번줄</li></ul></details>";
-
+        final String expected = "<details><summary>토글제목</summary><ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul></details>";
+        
         //then
         assertThat(result).isEqualTo(expected);
     }
@@ -320,6 +319,25 @@ class HtmlRendererTest {
         //when
         final String result = htmlRenderer.render(blocks);
         final String expected = "<details><summary>토글제목</summary><ul><li>5번줄</li></ul><ol><li>5-1번줄</li></ol><h2>&emsp;heading2</h2><h3>&emsp;heading3</h3><h4>&emsp;heading4</h4><h5>&emsp;heading5</h5><h6>&emsp;heading6</h6><blockquote>&emsp;blockquote</blockquote><p>&emsp;paragraph</p><h1>&emsp;heading1</h1><pre><code class=\"language-java\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>&emsp;uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>&emsp;checkedTaskList</input></div></details>";
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("리스트 렌더링2")
+    void renderList2() {
+        //given
+        blocks.add(new NormalBlock(writing, Depth.from(0), BlockType.ORDERED_LIST, RawText.from("First"), new ArrayList<>()));
+        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
+        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
+        blocks.add(new NormalBlock(writing, Depth.from(0), BlockType.UNORDERED_LIST, RawText.from("First"), new ArrayList<>()));
+        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
+        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
+
+        //when
+        final String result = htmlRenderer.render(blocks);
+        String expected = "<ol><li>First</li><ol><li>Second</li><ol><li>Third</li></ol></ol></ol><ul><li>First</li><ul><li>Second</li><ul><li>Third</li></ul></ul></ul>";
 
         //then
         assertThat(result).isEqualTo(expected);

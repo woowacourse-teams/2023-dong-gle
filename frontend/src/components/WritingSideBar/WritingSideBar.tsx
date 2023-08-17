@@ -57,6 +57,10 @@ const WritingSideBar = () => {
     },
   ];
 
+  useEffect(() => {
+    selectCurrentTab(TabKeys.WritingProperty);
+  }, [writingId]);
+
   return (
     <S.SidebarContainer>
       <S.MenuTabList role='tablist'>

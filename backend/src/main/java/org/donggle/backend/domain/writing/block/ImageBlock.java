@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.writing.block;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -26,12 +28,38 @@ public class ImageBlock extends Block {
         this.imageCaption = imageCaption;
     }
 
+    public ImageBlock(final Writing writing, final Depth depth, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(writing, depth, blockType);
+        this.imageUrl = imageUrl;
+        this.imageCaption = imageCaption;
+    }
+
     public String getImageUrlValue() {
         return imageUrl.getImageUrl();
     }
 
     public String getImageCaptionValue() {
         return imageCaption.getImageCaption();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final ImageBlock that = (ImageBlock) o;
+        return Objects.equals(imageUrl, that.imageUrl) && Objects.equals(imageCaption, that.imageCaption);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), imageUrl, imageCaption);
     }
 
     @Override

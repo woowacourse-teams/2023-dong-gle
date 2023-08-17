@@ -6,6 +6,7 @@ import OauthPage from 'pages/OauthPage/OauthPage';
 import IntroducePage from 'pages/IntroducePage/IntroducePage';
 import Layout from 'pages/Layout/Layout';
 import { PATH } from 'constants/path';
+import ErrorPage from 'pages/ErrorPage/ErrorPage';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import MyPage from 'pages/MyPage/MyPage';
 import ConnectionPage from 'pages/ConnectionPage/ConnectionPage';
@@ -53,6 +54,10 @@ export const Router = () => {
           ],
         },
       ],
+    },
+    {
+      path: '*',
+      element: <ErrorPage status={404} title='' message='' />,
     },
   ]);
 

@@ -28,7 +28,7 @@ const S = {
   Container: styled.div`
     position: fixed;
     left: 50%;
-    bottom: 3rem;
+    bottom: 5rem;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;

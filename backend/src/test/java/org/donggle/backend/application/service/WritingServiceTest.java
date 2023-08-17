@@ -6,6 +6,7 @@ import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
+import org.donggle.backend.ui.response.WritingResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,23 @@ class WritingServiceTest {
         assertAll(
                 () -> assertThat(response.writings()).hasSize(1),
                 () -> assertThat(response.categoryName()).isEqualTo("기본")
+        );
+    }
+
+    @Test
+    @DisplayName("휴지통의 글을 조회하는 테스트")
+    void findWritingAndTrashedWriting() {
+        //given
+        final Writing writing = writingRepository.findById(1L).get();
+        writing.moveToTrash();
+
+        //when
+        final WritingResponse response = writingService.findWriting(1L, 1L);
+
+        //then
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("테스트 글"),
+                () -> assertThat(response.categoryId()).isEqualTo(writing.getCategory().getId())
         );
     }
 }

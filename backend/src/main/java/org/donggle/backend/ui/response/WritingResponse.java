@@ -5,9 +5,10 @@ import org.donggle.backend.domain.writing.Writing;
 public record WritingResponse(
         Long id,
         String title,
-        String content
+        String content,
+        Long categoryId
 ) {
     public static WritingResponse of(final Writing writing, final String content) {
-        return new WritingResponse(writing.getId(), writing.getTitleValue(), content);
+        return new WritingResponse(writing.getId(), writing.getTitleValue(), content, writing.getCategory().getId());
     }
 }

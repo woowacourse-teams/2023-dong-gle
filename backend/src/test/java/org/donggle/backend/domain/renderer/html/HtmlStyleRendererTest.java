@@ -117,6 +117,37 @@ class HtmlStyleRendererTest {
 
         //then
         assertThat(result).isEqualTo(expected);
+    }
 
+    @Test
+    @DisplayName("strike through 테스트")
+    void renderStrikeThrough() {
+        //given
+        final String rawText = "가나다라마바사안녕";
+        final List<Style> styles = new ArrayList<>();
+        styles.add(new Style(new StyleRange(2, 6), StyleType.STRIKETHROUGH));
+
+        //when
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "가나<s>다라마바사</s>안녕";
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("underline 테스트")
+    void renderUnderline() {
+        //given
+        final String rawText = "가나다라마바사안녕";
+        final List<Style> styles = new ArrayList<>();
+        styles.add(new Style(new StyleRange(2, 6), StyleType.UNDERLINE));
+
+        //when
+        final String result = htmlStyleRenderer.render(rawText, styles);
+        final String expected = "가나<u>다라마바사</u>안녕";
+
+        //then
+        assertThat(result).isEqualTo(expected);
     }
 }

@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/auth")
 public class AuthController {
+    private static final int ONE_SECOND = 1000;
 
     private final int cookieTime;
 
@@ -24,7 +25,7 @@ public class AuthController {
     public AuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final int cookieTime,
                           final AuthService authService
     ) {
-        this.cookieTime = cookieTime;
+        this.cookieTime = cookieTime / ONE_SECOND;
         this.authService = authService;
     }
 

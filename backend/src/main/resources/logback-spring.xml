@@ -17,7 +17,7 @@
     <springProfile name="prod,dev">
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
         <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/warn.log</file>
+            <file>logs/warn/warn.log</file>
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>WARN</level>
                 <onMatch>ACCEPT</onMatch>
@@ -28,7 +28,7 @@
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/warn/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>logs/warn/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>
@@ -36,7 +36,7 @@
         </appender>
 
         <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/error.log</file>
+            <file>logs/error/error.log</file>
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>ERROR</level>
                 <onMatch>ACCEPT</onMatch>
@@ -47,7 +47,7 @@
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/error/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>logs/error/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>
@@ -55,7 +55,7 @@
         </appender>
 
         <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/application.log</file>
+            <file>logs/application/application.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>
             </filter>
@@ -64,7 +64,7 @@
                 <charset>utf8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>logs/history/application/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>logs/application/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>

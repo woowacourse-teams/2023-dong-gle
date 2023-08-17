@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class KakaoOAuthController {
+    private static final int ONE_SECOND = 1000;
 
     private final int cookieTime;
 
@@ -25,7 +26,7 @@ public class KakaoOAuthController {
     public KakaoOAuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final int cookieTime,
                                 final KakaoOAuthService kakaoOAuthService
     ) {
-        this.cookieTime = cookieTime;
+        this.cookieTime = cookieTime / ONE_SECOND;
         this.kakaoOAuthService = kakaoOAuthService;
     }
 

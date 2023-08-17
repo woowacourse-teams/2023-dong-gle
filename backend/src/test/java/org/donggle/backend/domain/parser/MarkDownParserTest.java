@@ -8,15 +8,15 @@ import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.content.Block;
-import org.donggle.backend.domain.writing.content.CodeBlock;
-import org.donggle.backend.domain.writing.content.Depth;
-import org.donggle.backend.domain.writing.content.ImageBlock;
-import org.donggle.backend.domain.writing.content.ImageCaption;
-import org.donggle.backend.domain.writing.content.ImageUrl;
-import org.donggle.backend.domain.writing.content.Language;
-import org.donggle.backend.domain.writing.content.NormalBlock;
-import org.donggle.backend.domain.writing.content.RawText;
+import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.CodeBlock;
+import org.donggle.backend.domain.writing.block.Depth;
+import org.donggle.backend.domain.writing.block.ImageBlock;
+import org.donggle.backend.domain.writing.block.ImageCaption;
+import org.donggle.backend.domain.writing.block.ImageUrl;
+import org.donggle.backend.domain.writing.block.Language;
+import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.donggle.backend.domain.writing.block.RawText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -166,6 +166,119 @@ class MarkDownParserTest {
             assertAll(
                     () -> assertThat(resultContent.getDepthValue()).isEqualTo(expected1.getDepthValue()),
                     () -> assertThat(resultContent.getRawTextValue()).isEqualTo(expected1.getRawTextValue())
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("HorizontalRules 파싱을 테스트한다.")
+    class ParseHorizontalRules {
+        @Test
+        @DisplayName("기본적인 Horizontal Rules")
+        void parseHorizontalRules() {
+            //given
+            final String text = "---\n___\n***\n";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES)
+            );
+        }
+
+        @Test
+        @DisplayName("여러개의 Horizontal Rules 파싱 테스트")
+        void parseHorizontalRulesAdditional() {
+            //given
+            final String text = "------------\n______________\n**************";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.HORIZONTAL_RULES)
+            );
+        }
+
+        @Test
+        @DisplayName("Horizontal Rules 예외상황 파싱 테스트")
+        void parseHorizontalRulesException() {
+            //given
+            final String text = "-----안녕안녕-------\n___안녕\n***안***";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+
+            //then
+            assertAll(
+                    () -> assertThat(result.get(0).getBlockType()).isEqualTo(BlockType.PARAGRAPH),
+                    () -> assertThat(result.get(1).getBlockType()).isEqualTo(BlockType.PARAGRAPH),
+                    () -> assertThat(result.get(2).getBlockType()).isEqualTo(BlockType.PARAGRAPH)
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("task list 파싱을 테스트한다.")
+    class ParseTaskList {
+        @Test
+        @DisplayName("checked task list 파싱 테스트")
+        void parseCheckedTaskList() {
+            //given
+            final String text = "- [x] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.CHECKED_TASK_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("unchecked task list 파싱 테스트")
+        void parseUnCheckedTaskList() {
+            //given
+            final String text = "- [ ] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNCHECKED_TASK_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("unchecked task list 파싱 예외 테스트")
+        void parseUnCheckedTaskListException() {
+            //given
+            final String text = "- [a] 안녕하세요. **동글**입니다.";
+
+            //when
+            List<Block> result = markDownParser.parse(text);
+            NormalBlock normalBlock = (NormalBlock) result.get(0);
+
+            //then
+            assertAll(
+                    () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNORDERED_LIST),
+                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("[a] 안녕하세요. 동글입니다.")
             );
         }
     }

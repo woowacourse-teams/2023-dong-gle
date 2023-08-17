@@ -45,7 +45,7 @@ public record RichText(String plainText, String href, Annotations annotations) {
         }
         return styles;
     }
-    
+
     private List<Style> buildStyles(int offset) {
         final List<Style> styles = new ArrayList<>();
         if (!Objects.equals(href, "null")) {
@@ -62,6 +62,12 @@ public record RichText(String plainText, String href, Annotations annotations) {
         }
         if (annotations.code()) {
             styles.add(new Style(new StyleRange(offset, end), StyleType.CODE));
+        }
+        if (annotations.strikethrough()) {
+            styles.add(new Style(new StyleRange(offset, end), StyleType.STRIKETHROUGH));
+        }
+        if (annotations.underline()) {
+            styles.add(new Style(new StyleRange(offset, end), StyleType.UNDERLINE));
         }
         return styles;
     }

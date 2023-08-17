@@ -9,7 +9,9 @@ public enum StyleType {
     BOLD("(\\*\\*|\\_\\_)(.*?)(\\*\\*|\\_\\_)"),
     ITALIC("(\\*|\\_)(.*?)(\\*|\\_)"),
     CODE("(\\`)(.*?)(\\`)"),
-    LINK("(\\[)(.*)(\\]\\()(.*)(\\))");
+    LINK("(\\[)(.*)(\\]\\()(.*)(\\))"),
+    STRIKETHROUGH("(\\~\\~)(.*?)(\\~\\~)"),
+    UNDERLINE("\\n");
 
     private final Pattern pattern;
 

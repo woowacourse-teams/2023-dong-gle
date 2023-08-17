@@ -16,7 +16,7 @@ export const useLoginOauth = () => {
   };
   const { mutate: loginOauthMutation } = useMutation(loginOauthRequest, {
     onSuccess: ({ accessToken }) => {
-      localStorage.setItem('accessToken', JSON.stringify(accessToken));
+      localStorage.setItem('accessToken', accessToken);
       goSpacePage();
       toast.show({ type: 'success', message: '로그인을 성공했습니다' });
     },

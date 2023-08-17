@@ -5,6 +5,8 @@ import { useCategoryMutation } from '../useCategoryMutation';
 import { isValidCategoryName } from '../isValidCategoryName';
 import Input from 'components/@common/Input/Input';
 import { PlusIcon } from 'assets/icons';
+import { useToast } from 'hooks/@common/useToast';
+import { getErrorMessage } from 'utils/error';
 
 const Header = () => {
   const {
@@ -17,19 +19,24 @@ const Header = () => {
     setIsError,
   } = useUncontrolledInput();
   const { addCategory } = useCategoryMutation();
+  const toast = useToast();
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
-    if (e.key !== 'Enter') return;
+    try {
+      if (e.key !== 'Enter') return;
 
-    const categoryName = e.currentTarget.value.trim();
+      const categoryName = e.currentTarget.value.trim();
 
-    if (!isValidCategoryName(categoryName)) {
-      setIsError(true);
-      return;
+      if (!isValidCategoryName(categoryName)) {
+        setIsError(true);
+        throw new Error('카테고리 이름은 1자 이상 31자 미만으로 입력해주세요.');
+      }
+
+      resetInput();
+      addCategory({ categoryName: categoryName });
+    } catch (error) {
+      toast.show({ type: 'error', message: getErrorMessage(error), hasProgressBar: true });
     }
-
-    resetInput();
-    addCategory({ categoryName: categoryName });
   };
 
   return (

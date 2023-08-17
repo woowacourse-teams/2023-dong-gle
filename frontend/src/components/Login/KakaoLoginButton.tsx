@@ -1,11 +1,9 @@
 import { KakaoLoginIcon } from 'assets/icons';
-import { OauthPlatforms, getOauthURL, getOauthRedirectURL } from 'constants/components/oauth';
+import { OauthPlatforms, getOauthPlatformURL } from 'constants/components/oauth';
 
 const KakaoLoginButton = () => {
   const redirectToKakao = () => {
-    window.location.href = `${getOauthURL(OauthPlatforms.kakao)}?redirect_uri=${getOauthRedirectURL(
-      OauthPlatforms.kakao,
-    )}`;
+    window.location.href = getOauthPlatformURL(OauthPlatforms.kakao);
   };
 
   return (

@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import static org.donggle.backend.application.service.vendor.exception.VendorApiException.handle4xxException;
 
 public class TistoryApiService {
-    public static final String PLATFORM_NAME = "Tistory";
+    private static final String PLATFORM_NAME = "Tistory";
     private static final String TISTORY_URL = "https://www.tistory.com/apis";
 
     private final WebClient webClient;
@@ -56,6 +56,9 @@ public class TistoryApiService {
         final TistoryBlogInfoResponseWrapper blogInfo = webClient.get()
                 .uri(blogInfoUri)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> handle4xxException(clientResponse.statusCode().value(), PLATFORM_NAME))
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> clientResponse.bodyToMono(String.class)
+                        .map(e -> new VendorApiInternalServerError(PLATFORM_NAME)))
                 .bodyToMono(TistoryBlogInfoResponseWrapper.class)
                 .block();
         return blogInfo.tistory().item().blogs().stream()

@@ -1,17 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
 import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
-import { ConnectionPlatforms, getConnectionPlatformURL } from 'constants/components/myPage';
+import { ConnectionPlatforms } from 'constants/components/myPage';
 import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
-import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
-import {
-  disconnect as disconnectRequest,
-  storeMediumInfo as storeMediumInfoRequest,
-} from 'apis/connections';
 import { KeyboardEventHandler } from 'react';
+import { useConnect } from './useConnect';
 
 type Props = {
   tistory: TistoryConnection;
@@ -20,25 +15,23 @@ type Props = {
 };
 
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
-  const { inputRef, escapeInput, isInputOpen, openInput, resetInput } = useUncontrolledInput();
-  const { goMyPage } = usePageNavigate();
-  const { mutate: requestStoreMediumInfo } = useMutation(storeMediumInfoRequest, {
-    onSuccess: goMyPage,
-  });
-  const { mutate: requestDisconnect } = useMutation(disconnectRequest);
-
-  const redirect = (destination: ConnectionPlatforms) => {
-    window.location.href = getConnectionPlatformURL(destination);
-  };
-
-  const disconnect = (platform: ConnectionPlatforms) => requestDisconnect(platform);
+  const { inputRef, escapeInput, isInputOpen, openInput, resetInput, isError, setIsError } =
+    useUncontrolledInput();
+  const { requestStoreMediumInfo, redirect, disconnect } = useConnect();
 
   const storeMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
+    const token = e.currentTarget.value;
+
+    if (token.length === 0) {
+      setIsError(true);
+      return;
+    }
+
     resetInput();
     requestStoreMediumInfo({
-      token: e.currentTarget.value,
+      token,
     });
   };
 
@@ -82,6 +75,7 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 size='small'
                 placeholder='토큰을 입력해주세요'
                 ref={inputRef}
+                isError={isError}
                 onBlur={resetInput}
                 onKeyDown={escapeInput}
                 onKeyUp={storeMediumInfo}

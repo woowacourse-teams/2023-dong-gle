@@ -4,6 +4,9 @@ import { PencilIcon } from 'assets/icons';
 import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
 import { updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
 import { KeyboardEventHandler, useEffect, useRef } from 'react';
+import { getErrorMessage } from 'utils/error';
+import { useToast } from 'hooks/@common/useToast';
+import { validateWritingTitle } from 'utils/validators';
 
 type Props = {
   writingId: number;
@@ -28,20 +31,27 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
       queryClient.invalidateQueries(['writingsInCategory', categoryId]);
     },
   });
+  const toast = useToast();
 
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key !== 'Enter') return;
+    try {
+      if (e.key !== 'Enter') return;
 
-    const writingTitle = e.currentTarget.value;
+      const writingTitle = e.currentTarget.value.trim();
 
-    updateWritingTitle({
-      writingId,
-      body: {
-        title: writingTitle,
-      },
-    });
+      validateWritingTitle(writingTitle);
 
-    resetInput();
+      resetInput();
+
+      updateWritingTitle({
+        writingId,
+        body: {
+          title: writingTitle,
+        },
+      });
+    } catch (error) {
+      toast.show({ type: 'error', message: getErrorMessage(error) });
+    }
   };
 
   useEffect(() => {

@@ -2,11 +2,11 @@ import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
 import useUncontrolledInput from '../../../hooks/@common/useUncontrolledInput';
 import { useCategoryMutation } from '../useCategoryMutation';
-import { isValidCategoryName } from '../isValidCategoryName';
 import Input from 'components/@common/Input/Input';
 import { PlusIcon } from 'assets/icons';
 import { useToast } from 'hooks/@common/useToast';
 import { getErrorMessage } from 'utils/error';
+import { validateCategoryName } from 'utils/validators';
 
 const Header = () => {
   const {
@@ -27,14 +27,12 @@ const Header = () => {
 
       const categoryName = e.currentTarget.value.trim();
 
-      if (!isValidCategoryName(categoryName)) {
-        setIsError(true);
-        throw new Error('카테고리 이름은 1자 이상 31자 미만으로 입력해주세요.');
-      }
+      validateCategoryName(categoryName);
 
       resetInput();
       addCategory({ categoryName: categoryName });
     } catch (error) {
+      setIsError(true);
       toast.show({ type: 'error', message: getErrorMessage(error) });
     }
   };

@@ -26,9 +26,8 @@ export const Router = () => {
         <Route path={PATH.oauthPage} element={<OauthPage />} />
 
         <Route element={<PrivateRouter />}>
-          <Route path={PATH.myPage} element={<MyPage />}>
-            <Route path={PATH.connections} element={<ConnectionPage />} />
-          </Route>
+          <Route path={PATH.myPage} element={<MyPage />} />
+          <Route path={PATH.connections} element={<ConnectionPage />} />
 
           <Route path={PATH.space} element={<Layout />}>
             <Route path={PATH.writingPage} element={<WritingPage />} />

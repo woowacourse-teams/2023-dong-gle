@@ -26,13 +26,26 @@ public class MediumConnectionService {
     }
 
     public void saveAccessToken(final Long memberId, final AddTokenRequest addTokenRequest) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-        final String accessToken = addTokenRequest.token();
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
 
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+        memberCredentials.updateMediumToken(addTokenRequest.token());
+    }
+
+    public void deleteAccessToken(final Long memberId) {
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+
+        memberCredentials.deleteMediumConnection();
+    }
+
+    private MemberCredentials findMemberCredentials(final Member member) {
+        return memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
+    }
 
-        memberCredentials.updateMediumToken(accessToken);
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

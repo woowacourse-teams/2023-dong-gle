@@ -58,12 +58,9 @@ public class NotionConnectionService {
     }
 
     public void saveAccessToken(final Long memberId, final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
-
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .orElseThrow(NoSuchElementException::new);
 
         memberCredentials.updateNotionToken(accessToken);
     }
@@ -81,5 +78,22 @@ public class NotionConnectionService {
 
     private String base64Encode(final String value) {
         return java.util.Base64.getEncoder().encodeToString(value.getBytes());
+    }
+
+    public void deleteAccessToken(final Long memberId) {
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+
+        memberCredentials.deleteNotionConnection();
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
+
+    private MemberCredentials findMemberCredentials(final Member member) {
+        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

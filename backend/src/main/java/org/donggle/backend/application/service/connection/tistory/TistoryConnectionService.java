@@ -57,13 +57,11 @@ public class TistoryConnectionService {
     }
 
     public void saveAccessToken(final Long memberId, final OAuthAccessTokenRequest oAuthAccessTokenRequest) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
         final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(accessToken);
-
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .orElseThrow(NoSuchElementException::new);
 
         memberCredentials.updateTistory(accessToken, tistoryBlogName);
     }
@@ -87,5 +85,22 @@ public class TistoryConnectionService {
                 .queryParam("grant_type", "authorization_code")
                 .build()
                 .toUriString();
+    }
+
+    public void deleteAccessToken(final Long memberId) {
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = findMemberCredentials(member);
+
+        memberCredentials.deleteTistoryConnection();
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
+
+    private MemberCredentials findMemberCredentials(final Member member) {
+        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

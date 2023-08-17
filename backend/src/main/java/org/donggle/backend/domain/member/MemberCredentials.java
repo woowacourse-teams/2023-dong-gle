@@ -63,6 +63,19 @@ public class MemberCredentials extends BaseEntity {
         this.notionToken = notionToken;
     }
 
+    public void deleteTistoryConnection() {
+        this.tistoryToken = null;
+        this.tistoryBlogName = null;
+    }
+
+    public void deleteMediumConnection() {
+        this.mediumToken = null;
+    }
+
+    public void deleteNotionConnection() {
+        this.notionToken = null;
+    }
+
     public boolean isTistoryConnected() {
         return getTistoryToken().isPresent() && getTistoryBlogName().isPresent();
     }

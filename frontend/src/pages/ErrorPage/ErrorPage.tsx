@@ -4,11 +4,16 @@ import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 
 const ErrorPage = ({ status, title, message, onResetError }: ErrorBoundaryFallbackProps) => {
-  const { goHomePage } = usePageNavigate();
+  const { goIntroducePage, goSpacePage } = usePageNavigate();
 
-  const handleGoHomePage = () => {
+  const handleGoIntroducePage = () => {
     onResetError?.();
-    goHomePage();
+    goIntroducePage();
+  };
+
+  const handleGoSpacePage = () => {
+    onResetError?.();
+    goSpacePage();
   };
 
   return (
@@ -18,9 +23,15 @@ const ErrorPage = ({ status, title, message, onResetError }: ErrorBoundaryFallba
         <p>요청하신 페이지를 찾을 수 없습니다.</p>
         <p>{message}</p>
       </S.ErrorMessageContainer>
-      <Button variant='text' onClick={handleGoHomePage}>
-        스페이스로 돌아가기
-      </Button>
+      {status === 401 ? (
+        <Button variant='text' onClick={handleGoIntroducePage}>
+          로그인 하기
+        </Button>
+      ) : (
+        <Button variant='text' onClick={handleGoSpacePage}>
+          스페이스로 돌아가기
+        </Button>
+      )}
     </S.Container>
   );
 };

@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 export const usePageNavigate = () => {
   const navigate = useNavigate();
 
-  const goHomePage = () => navigate(NAVIGATE_PATH.homePage);
+  const goIntroducePage = () => navigate(NAVIGATE_PATH.introducePage);
+
+  const goSpacePage = () => navigate(NAVIGATE_PATH.spacePage);
 
   const goWritingTablePage = (categoryId: number) =>
     navigate(NAVIGATE_PATH.getWritingTablePage(categoryId));

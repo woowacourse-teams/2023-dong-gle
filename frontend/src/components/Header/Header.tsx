@@ -15,11 +15,11 @@ type Props = {
 
 const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive }: Props) => {
   const toast = useToast();
-  const { goHomePage } = usePageNavigate();
+  const { goIntroducePage } = usePageNavigate();
   const logout = useMutation(logoutAPI, {
     onSuccess: () => {
       localStorage.removeItem('accessToken');
-      goHomePage();
+      goIntroducePage();
       toast.show({ type: 'success', message: '로그아웃이 완료되었습니다.' });
     },
     onError: () => {

@@ -11,7 +11,8 @@ export const PATH = {
 } as const;
 
 export const NAVIGATE_PATH = {
-  homePage: `/${PATH.space}`,
+  introducePage: `/${PATH.introducePage}`,
+  spacePage: `/${PATH.space}`,
   getWritingTablePage: (categoryId: number) => `/${PATH.space}/writings/${categoryId}`,
   getWritingPage: (categoryId: number, writingId: number) =>
     `/${PATH.space}/writings/${categoryId}/${writingId}`,

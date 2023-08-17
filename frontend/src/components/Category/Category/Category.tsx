@@ -2,7 +2,7 @@ import { PencilIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
-import useCategoryInput from '../useCategoryInput';
+import useUncontrolledInput from '../../../hooks/@common/useUncontrolledInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
 import { isValidCategoryName } from '../isValidCategoryName';
@@ -25,7 +25,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
     resetInput,
     isError,
     setIsError,
-  } = useCategoryInput('');
+  } = useUncontrolledInput();
   const { patchCategory, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
   const toast = useToast();

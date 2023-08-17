@@ -1,6 +1,6 @@
 import { KeyboardEventHandler } from 'react';
 import { styled } from 'styled-components';
-import useCategoryInput from '../useCategoryInput';
+import useUncontrolledInput from '../../../hooks/@common/useUncontrolledInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import { isValidCategoryName } from '../isValidCategoryName';
 import Input from 'components/@common/Input/Input';
@@ -15,7 +15,7 @@ const Header = () => {
     resetInput,
     isError,
     setIsError,
-  } = useCategoryInput('');
+  } = useUncontrolledInput();
   const { addCategory } = useCategoryMutation();
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {

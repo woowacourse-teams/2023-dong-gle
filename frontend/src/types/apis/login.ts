@@ -1,9 +1,7 @@
-import { Platforms } from 'constants/apis/oauth';
-
-export type OauthPlatform = (typeof Platforms)[keyof typeof Platforms];
+import { OauthPlatforms } from 'constants/components/oauth';
 
 export type PostOauthLoginRequest = {
-  platform: OauthPlatform;
+  platform: OauthPlatforms;
   body: {
     code: string;
     redirect_uri: string;

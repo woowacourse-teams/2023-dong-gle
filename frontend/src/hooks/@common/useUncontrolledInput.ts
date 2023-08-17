@@ -1,6 +1,6 @@
-import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState } from 'react';
+import { KeyboardEventHandler, useEffect, useRef, useState } from 'react';
 
-const useCategoryInput = (initialValue: string) => {
+const useUncontrolledInput = () => {
   const [isError, setIsError] = useState(false);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,4 +35,4 @@ const useCategoryInput = (initialValue: string) => {
   };
 };
 
-export default useCategoryInput;
+export default useUncontrolledInput;

@@ -1,17 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMemberInfo } from 'apis/member';
+import Button from 'components/@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
+import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MemberResponse } from 'types/apis/member';
 
 const MyPage = () => {
   const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
+  const { goSpacePage } = usePageNavigate();
 
   return (
     <S.Section>
-      <S.Title>마이 페이지</S.Title>
+      <S.Header>
+        <S.Title>마이 페이지</S.Title>
+        <Button variant='secondary' size='small' onClick={goSpacePage}>
+          스페이스로 가기
+        </Button>
+      </S.Header>
       <S.Container $isLoading={isLoading}>
         {data && !isLoading ? (
           <>
@@ -36,12 +44,18 @@ const S = {
     height: 100vh;
   `,
 
+  Header: styled.header`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+  `,
+
   Title: styled.h1`
     display: flex;
     align-items: center;
     height: 12rem;
-    padding: 0 8rem;
-
+    padding-left: 4rem;
     font-size: 4rem;
   `,
 

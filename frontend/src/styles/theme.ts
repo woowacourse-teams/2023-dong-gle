@@ -5,7 +5,7 @@ const color = {
   tistory: '#FF5A4A',
   medium: '#000000',
 
-  spaceBackground: '#fbfbfb',
+  spaceBackground: '#fdfdfc',
   modalBackdrop: '#00000059',
 
   red1: '#fff1f0',

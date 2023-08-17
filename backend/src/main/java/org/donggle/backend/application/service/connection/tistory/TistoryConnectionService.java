@@ -2,12 +2,16 @@ package org.donggle.backend.application.service.connection.tistory;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.service.connection.tistory.dto.TistoryAccessTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.application.service.vendor.exception.VendorApiException;
 import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,8 +24,8 @@ import java.util.NoSuchElementException;
 public class TistoryConnectionService {
     private static final String AUTHORIZE_URL = "https://www.tistory.com/oauth/authorize";
     private static final String TOKEN_URL = "https://www.tistory.com/oauth/access_token";
-    public static final String CLIENT_ID = "client_id";
-    public static final String REDIRECT_URI = "redirect_uri";
+    private static final String CLIENT_ID = "client_id";
+    private static final String PLATFORM_NAME = "Tistory";
 
     private final String clientId;
     private final String clientSecret;
@@ -46,7 +50,7 @@ public class TistoryConnectionService {
     public String createAuthorizeRedirectUri(final String redirectUri) {
         return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
                 .queryParam(CLIENT_ID, clientId)
-                .queryParam(REDIRECT_URI, redirectUri)
+                .queryParam("redirect_uri", redirectUri)
                 .queryParam("response_type", "code")
                 .build()
                 .toUriString();
@@ -62,21 +66,24 @@ public class TistoryConnectionService {
         memberCredentials.updateTistory(accessToken, tistoryBlogName);
     }
 
-    private String getAccessToken(final String code, final String redirectUri) {
+    public String getAccessToken(final String code, final String redirectUri) {
         final String tokenUri = createTokenUri(redirectUri, code);
 
         return webClient.get()
                 .uri(tokenUri)
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> VendorApiException.handle4xxException(clientResponse.statusCode().value(), PLATFORM_NAME))
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> VendorApiException.handle5xxException(PLATFORM_NAME))
+                .bodyToMono(TistoryAccessTokenResponse.class)
+                .block().access_token();
     }
 
-    private String createTokenUri(final String redirectUri, final String code) {
+    public String createTokenUri(final String redirectUri, final String code) {
         return UriComponentsBuilder.fromUriString(TOKEN_URL)
-                .queryParam(CLIENT_ID, clientId)
+                .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
-                .queryParam(REDIRECT_URI, redirectUri)
+                .queryParam("redirect_uri", redirectUri)
                 .queryParam("code", code)
                 .queryParam("grant_type", "authorization_code")
                 .build()

@@ -5,11 +5,13 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.connection.notion.dto.NotionTokenRequest;
 import org.donggle.backend.application.service.connection.notion.dto.NotionTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.application.service.vendor.exception.VendorApiException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class NotionConnectionService {
     private static final String GRANT_TYPE = "authorization_code";
     private static final String RESPONSE_TYPE = "code";
     private static final String OWNER = "user";
+    private static final String PLATFORM_NAME = "Notion";
 
     private final String clientId;
     private final String clientSecret;
@@ -57,19 +60,20 @@ public class NotionConnectionService {
         final Member member = findMember(memberId);
         final MemberCredentials memberCredentials = findMemberCredentials(member);
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
-
         memberCredentials.updateNotionToken(accessToken);
     }
 
     private String getAccessToken(final String code, final String redirectUri) {
         return Objects.requireNonNull(webClient.post()
-                .uri(TOKEN_URL)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + base64Encode(clientId + ":" + clientSecret))
-                .bodyValue(new NotionTokenRequest(GRANT_TYPE, code, redirectUri))
-                .retrieve()
+                        .uri(TOKEN_URL)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + base64Encode(clientId + ":" + clientSecret))
+                        .bodyValue(new NotionTokenRequest(GRANT_TYPE, code, redirectUri))
+                        .retrieve()
+                        .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> VendorApiException.handle4xxException(clientResponse.statusCode().value(), PLATFORM_NAME))
+                        .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> VendorApiException.handle5xxException(PLATFORM_NAME)))
                 .bodyToMono(NotionTokenResponse.class)
-                .block()).access_token();
+                .block().access_token();
     }
 
     private String base64Encode(final String value) {

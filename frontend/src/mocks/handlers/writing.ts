@@ -19,7 +19,7 @@ export const writingHandlers = [
         ctx.status(200),
         ctx.json<GetWritingResponse>({
           id: writingId,
-          title: '테스트 글 제목',
+          title: '동글을 소개합니다 🎉',
           content: writingContentMock,
         }),
       );

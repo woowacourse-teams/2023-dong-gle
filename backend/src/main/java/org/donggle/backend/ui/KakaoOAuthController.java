@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class KakaoOAuthController {
-
     private static final int ONE_SECOND = 1000;
+
     private final int cookieTime;
 
     private final KakaoOAuthService kakaoOAuthService;

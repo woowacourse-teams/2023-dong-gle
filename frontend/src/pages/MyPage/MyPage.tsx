@@ -6,9 +6,6 @@ import Profile from 'components/Profile/Profile';
 import { styled } from 'styled-components';
 import { MemberResponse } from 'types/apis/member';
 
-// TODO
-// - [ ] 블로그 연결/해제 기능 구현하기
-
 const MyPage = () => {
   const { data, isLoading } = useQuery<MemberResponse>(['member'], getMemberInfo);
 

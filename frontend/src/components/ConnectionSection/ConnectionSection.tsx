@@ -1,5 +1,6 @@
 import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
+import { ConnectionPlatforms, getConnectionPlatformURL } from 'constants/components/myPage';
 import { styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
 
@@ -10,6 +11,10 @@ type Props = {
 };
 
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
+  const redirect = (destination: ConnectionPlatforms) => {
+    window.location.href = getConnectionPlatformURL(destination);
+  };
+
   return (
     <>
       <S.ConnectionContainer>
@@ -23,7 +28,11 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
             {tistory.isConnected ? (
               <Button size='small'>해제하기</Button>
             ) : (
-              <Button variant='secondary' size='small'>
+              <Button
+                variant='secondary'
+                size='small'
+                onClick={() => redirect(ConnectionPlatforms.tistory)}
+              >
                 연결하기
               </Button>
             )}
@@ -54,7 +63,11 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
             {notion.isConnected ? (
               <Button size='small'>해제하기</Button>
             ) : (
-              <Button variant='secondary' size='small'>
+              <Button
+                variant='secondary'
+                size='small'
+                onClick={() => redirect(ConnectionPlatforms.notion)}
+              >
                 연결하기
               </Button>
             )}

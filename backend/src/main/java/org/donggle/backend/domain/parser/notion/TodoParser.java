@@ -10,7 +10,7 @@ public record TodoParser(List<RichText> richTexts, boolean checked) implements N
     public static TodoParser from(final NotionBlockNode blockNode) {
         final JsonNode blockProperties = blockNode.getBlockProperties();
         final List<RichText> richTexts = RichText.parseRichTexts(blockProperties, "rich_text");
-        boolean checked = blockProperties.get("checked").asBoolean();
+        final boolean checked = blockProperties.get("checked").asBoolean();
         return new TodoParser(richTexts, checked);
     }
 

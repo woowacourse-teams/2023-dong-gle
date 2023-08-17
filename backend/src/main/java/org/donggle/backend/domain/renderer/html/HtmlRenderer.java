@@ -110,20 +110,11 @@ public class HtmlRenderer {
 
     private void convertToEscapeLetter(final char letter, final StringBuffer bufferText) {
         switch (letter) {
-            case '<':
-                bufferText.append("&lt;");
-                break;
-            case '>':
-                bufferText.append("&gt;");
-                break;
-            case '&':
-                bufferText.append("&amp;");
-                break;
-            case '"':
-                bufferText.append("&quot;");
-                break;
-            default:
-                bufferText.append(letter);
+            case '<' -> bufferText.append("&lt;");
+            case '>' -> bufferText.append("&gt;");
+            case '&' -> bufferText.append("&amp;");
+            case '"' -> bufferText.append("&quot;");
+            default -> bufferText.append(letter);
         }
     }
 

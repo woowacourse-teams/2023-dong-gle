@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +40,26 @@ public class ImageBlock extends Block {
 
     public String getImageCaptionValue() {
         return imageCaption.getImageCaption();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final ImageBlock that = (ImageBlock) o;
+        return Objects.equals(imageUrl, that.imageUrl) && Objects.equals(imageCaption, that.imageCaption);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), imageUrl, imageCaption);
     }
 
     @Override

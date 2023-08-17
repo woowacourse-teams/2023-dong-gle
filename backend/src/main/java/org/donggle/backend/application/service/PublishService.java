@@ -128,7 +128,7 @@ public class PublishService {
     }
 
     private Writing findWriting(final Long memberId, final Long writingId) {
-        return writingRepository.findByMemberIdAndId(writingId, memberId)
+        return writingRepository.findByMemberIdAndId(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 

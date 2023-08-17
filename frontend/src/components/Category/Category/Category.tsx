@@ -5,10 +5,10 @@ import { styled } from 'styled-components';
 import useUncontrolledInput from '../../../hooks/@common/useUncontrolledInput';
 import { useCategoryMutation } from '../useCategoryMutation';
 import Input from 'components/@common/Input/Input';
-import { isValidCategoryName } from '../isValidCategoryName';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useToast } from 'hooks/@common/useToast';
 import { getErrorMessage } from 'utils/error';
+import { validateCategoryName } from 'utils/validators';
 
 type Props = {
   categoryId: number;
@@ -36,10 +36,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 
       const categoryName = e.currentTarget.value.trim();
 
-      if (!isValidCategoryName(categoryName)) {
-        setIsError(true);
-        throw new Error('카테고리 이름은 1자 이상 31자 미만으로 입력해주세요.');
-      }
+      validateCategoryName(categoryName);
 
       patchCategory({
         categoryId,
@@ -50,6 +47,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 
       resetInput();
     } catch (error) {
+      setIsError(true);
       toast.show({ type: 'error', message: getErrorMessage(error) });
     }
   };

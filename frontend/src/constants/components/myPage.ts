@@ -2,6 +2,7 @@ import { baseURL, domainURL } from 'constants/apis/url';
 
 export enum ConnectionPlatforms {
   tistory = 'tistory',
+  medium = 'medium',
   notion = 'notion',
 }
 

@@ -7,7 +7,10 @@ import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
-import { storeMediumInfo } from 'apis/connections';
+import {
+  disconnect as disconnectRequest,
+  storeMediumInfo as storeMediumInfoRequest,
+} from 'apis/connections';
 import { KeyboardEventHandler } from 'react';
 
 type Props = {
@@ -19,18 +22,22 @@ type Props = {
 const ConnectionSection = ({ tistory, medium, notion }: Props) => {
   const { inputRef, escapeInput, isInputOpen, openInput, resetInput } = useUncontrolledInput();
   const { goMyPage } = usePageNavigate();
-  const { mutate } = useMutation(storeMediumInfo, {
+  const { mutate: requestStoreMediumInfo } = useMutation(storeMediumInfoRequest, {
     onSuccess: goMyPage,
   });
+  const { mutate: requestDisconnect } = useMutation(disconnectRequest);
 
   const redirect = (destination: ConnectionPlatforms) => {
     window.location.href = getConnectionPlatformURL(destination);
   };
 
-  const requestStoreMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
+  const disconnect = (platform: ConnectionPlatforms) => requestDisconnect(platform);
+
+  const storeMediumInfo: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return;
 
-    mutate({
+    resetInput();
+    requestStoreMediumInfo({
       token: e.currentTarget.value,
     });
   };
@@ -46,7 +53,9 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
               <S.PlatformTitle>티스토리</S.PlatformTitle>
             </S.IconContainer>
             {tistory.isConnected ? (
-              <Button size='small'>해제하기</Button>
+              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.tistory)}>
+                해제하기
+              </Button>
             ) : (
               <Button
                 variant='secondary'
@@ -63,7 +72,9 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
               <S.PlatformTitle>미디움</S.PlatformTitle>
             </S.IconContainer>
             {medium.isConnected ? (
-              <Button size='small'>해제하기</Button>
+              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.medium)}>
+                해제하기
+              </Button>
             ) : isInputOpen ? (
               <Input
                 type='text'
@@ -73,7 +84,7 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 ref={inputRef}
                 onBlur={resetInput}
                 onKeyDown={escapeInput}
-                onKeyUp={requestStoreMediumInfo}
+                onKeyUp={storeMediumInfo}
                 aria-label='미디움 토큰 입력 창'
               />
             ) : (
@@ -93,7 +104,9 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
               <S.PlatformTitle>노션</S.PlatformTitle>
             </S.IconContainer>
             {notion.isConnected ? (
-              <Button size='small'>해제하기</Button>
+              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.notion)}>
+                해제하기
+              </Button>
             ) : (
               <Button
                 variant='secondary'

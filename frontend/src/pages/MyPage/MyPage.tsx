@@ -48,8 +48,6 @@ const S = {
 
   Container: styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};

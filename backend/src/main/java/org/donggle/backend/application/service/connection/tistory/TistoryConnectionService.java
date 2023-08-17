@@ -43,17 +43,13 @@ public class TistoryConnectionService {
         this.webClient = WebClient.create();
     }
 
-    public String createAuthorizeRedirectUri(final Long memberId, final String redirectUri) {
-        final boolean memberExists = memberRepository.existsById(memberId);
-        if (memberExists) {
-            return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
-                    .queryParam(CLIENT_ID, clientId)
-                    .queryParam(REDIRECT_URI, redirectUri)
-                    .queryParam("response_type", "code")
-                    .build()
-                    .toUriString();
-        }
-        throw new MemberNotFoundException(memberId);
+    public String createAuthorizeRedirectUri(final String redirectUri) {
+        return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
+                .queryParam(CLIENT_ID, clientId)
+                .queryParam(REDIRECT_URI, redirectUri)
+                .queryParam("response_type", "code")
+                .build()
+                .toUriString();
     }
 
     public void saveAccessToken(final Long memberId, final OAuthAccessTokenRequest oAuthAccessTokenRequest) {

@@ -27,10 +27,9 @@ public class ConnectionController {
 
     @GetMapping("/tistory")
     public ResponseEntity<Void> connectionsRedirectTistory(
-            @AuthenticationPrincipal final Long memberId,
             @RequestParam final String redirect_uri
     ) {
-        final String redirectUri = tistoryConnectService.createAuthorizeRedirectUri(memberId, redirect_uri);
+        final String redirectUri = tistoryConnectService.createAuthorizeRedirectUri(redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)
@@ -56,10 +55,9 @@ public class ConnectionController {
 
     @GetMapping("/notion")
     public ResponseEntity<Void> connectionsRedirectNotion(
-            @AuthenticationPrincipal final Long memberId,
             @RequestParam final String redirect_uri
     ) {
-        final String redirectUri = notionConnectionService.createRedirectUri(memberId, redirect_uri);
+        final String redirectUri = notionConnectionService.createRedirectUri(redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)

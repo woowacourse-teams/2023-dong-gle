@@ -43,18 +43,14 @@ public class NotionConnectionService {
         this.webClient = WebClient.create();
     }
 
-    public String createRedirectUri(final Long memberId, final String redirectUri) {
-        final boolean memberExists = memberRepository.existsById(memberId);
-        if (memberExists) {
-            return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
-                    .queryParam("client_id", clientId)
-                    .queryParam("redirect_uri", redirectUri)
-                    .queryParam("response_type", RESPONSE_TYPE)
-                    .queryParam("owner", OWNER)
-                    .build()
-                    .toUriString();
-        }
-        throw new MemberNotFoundException(memberId);
+    public String createRedirectUri(final String redirectUri) {
+        return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
+                .queryParam("client_id", clientId)
+                .queryParam("redirect_uri", redirectUri)
+                .queryParam("response_type", RESPONSE_TYPE)
+                .queryParam("owner", OWNER)
+                .build()
+                .toUriString();
     }
 
     public void saveAccessToken(final Long memberId, final OAuthAccessTokenRequest oAuthAccessTokenRequest) {

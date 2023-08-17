@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -71,14 +70,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorWrapper> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn("Exception from handleMethodArgumentNotValidException = ", e);
-        final Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            final String fieldName = ((FieldError) error).getField();
-            final String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
+        final String errorFields = e.getBindingResult().getAllErrors().stream()
+                .map(error -> ((FieldError) error).getField())
+                .collect(Collectors.joining(", "));
+        final String hint = "요청 바디가 잘못되었습니다. 요청 바디 필드를 다시 확인해주세요.";
+        final ErrorWrapper errors = new ErrorWrapper(
+                ErrorContent.of(errorFields, hint, HttpStatus.BAD_REQUEST.value())
+        );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);

@@ -10,7 +10,7 @@ public record MemberPageResponse(
         NotionConnectionResponse notionConnection,
         MediumConnectionResponse mediumConnection
 ) {
-    public static MemberPageResponse from(final Member member, final MemberCredentials memberCredentials) {
+    public static MemberPageResponse of(final Member member, final MemberCredentials memberCredentials) {
         return new MemberPageResponse(
                 member.getId(),
                 member.getMemberName().getName(),

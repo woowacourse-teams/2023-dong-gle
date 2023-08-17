@@ -15,7 +15,7 @@ public class TistoryNotConnectedException extends BusinessException {
 
     @Override
     public String getHint() {
-        return "티스토리 연동을 먼저 해주세요.";
+        return "티스토리 연동을 해주세요.";
     }
 
     @Override

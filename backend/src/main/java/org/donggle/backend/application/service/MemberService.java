@@ -19,11 +19,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 
+    @Transactional(readOnly = true)
     public MemberPageResponse findMemberPage(final Long memberId) {
         final Member foundMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember)
                 .orElseThrow(NoSuchElementException::new);
-        return MemberPageResponse.from(foundMember, foundMemberCredentials);
+        return MemberPageResponse.of(foundMember, foundMemberCredentials);
     }
 }

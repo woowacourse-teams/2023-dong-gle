@@ -105,7 +105,8 @@ public class HtmlRenderer {
         }
         return bufferText.toString()
                 .replaceAll("\\n", "&NewLine;")
-                .replaceAll("    ", "&Tab;");
+                .replaceAll("    ", "&Tab;")
+                .replaceAll("\\t", "&Tab;");
     }
 
     private void convertToEscapeLetter(final char letter, final StringBuffer bufferText) {

@@ -5,6 +5,7 @@ import { useToast } from 'hooks/@common/useToast';
 import { useState } from 'react';
 import { PublishWritingArgs } from 'types/apis/writings';
 import { Blog, PublishingPropertyData } from 'types/domain';
+import { HttpError } from 'utils/apis/HttpError';
 
 type Args = {
   selectCurrentTab: (tabKey: TabKeys) => void;
@@ -23,8 +24,8 @@ export const usePublishingPropertySection = ({ selectCurrentTab }: Args) => {
       selectCurrentTab(TabKeys.WritingProperty);
       toast.show({ type: 'success', message: '글 발행에 성공했습니다.' });
     },
-    onError: () => {
-      toast.show({ type: 'error', message: '글 발행에 실패했습니다.' });
+    onError: (error) => {
+      if (error instanceof HttpError) toast.show({ type: 'error', message: error.message });
     },
   });
 

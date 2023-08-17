@@ -31,12 +31,12 @@ public class MarkDownStyleParser {
                         final String caption = matcher.group(CAPTION_GROUP_INDEX);
                         final String url = matcher.group(URL_GROUP_INDEX);
 
-                        final int startIndex = removedStyleTypeText.indexOf(caption, currentIndex);
-                        final int endIndex = startIndex + matchedText.length() - 1;
+                        final int startIndex = removedStyleTypeText.indexOf(url, currentIndex);
+                        final int endIndex = startIndex + url.length() - 1;
                         final Style style = new Style(new StyleRange(startIndex, endIndex), styleType);
                         styles.add(style);
                         currentIndex = startIndex + 1;
-                        matchedText = url;
+                        matchedText = caption;
                     }
                     final int startIndex = removedStyleTypeText.indexOf(matchedText, currentIndex);
                     final int endIndex = startIndex + matchedText.length() - 1;

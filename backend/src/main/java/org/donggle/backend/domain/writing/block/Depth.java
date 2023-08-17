@@ -1,4 +1,4 @@
-package org.donggle.backend.domain.writing.content;
+package org.donggle.backend.domain.writing.block;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,16 +11,22 @@ import java.util.Objects;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RawText {
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String rawText;
+public class Depth {
+    public static final int INITIAL_VALUE = 0;
 
-    private RawText(final String rawText) {
-        this.rawText = rawText;
+    @Column(nullable = false)
+    private int depth;
+
+    private Depth(final int depth) {
+        this.depth = depth;
     }
 
-    public static RawText from(final String rawText) {
-        return new RawText(rawText);
+    public static Depth empty() {
+        return new Depth(INITIAL_VALUE);
+    }
+
+    public static Depth from(final int depth) {
+        return new Depth(depth);
     }
 
     @Override
@@ -31,19 +37,19 @@ public class RawText {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final RawText rawText1 = (RawText) o;
-        return Objects.equals(rawText, rawText1.rawText);
+        final Depth depth1 = (Depth) o;
+        return depth == depth1.depth;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rawText);
+        return Objects.hash(depth);
     }
 
     @Override
     public String toString() {
-        return "RawText{" +
-                "rawText='" + rawText + '\'' +
+        return "Depth{" +
+                "depth=" + depth +
                 '}';
     }
 }

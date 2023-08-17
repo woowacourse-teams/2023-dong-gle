@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.content.Block;
-import org.donggle.backend.domain.writing.content.CodeBlock;
-import org.donggle.backend.domain.writing.content.Depth;
-import org.donggle.backend.domain.writing.content.ImageBlock;
-import org.donggle.backend.domain.writing.content.ImageCaption;
-import org.donggle.backend.domain.writing.content.ImageUrl;
-import org.donggle.backend.domain.writing.content.Language;
-import org.donggle.backend.domain.writing.content.NormalBlock;
-import org.donggle.backend.domain.writing.content.RawText;
+import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.CodeBlock;
+import org.donggle.backend.domain.writing.block.Depth;
+import org.donggle.backend.domain.writing.block.HorizontalRulesBlock;
+import org.donggle.backend.domain.writing.block.ImageBlock;
+import org.donggle.backend.domain.writing.block.ImageCaption;
+import org.donggle.backend.domain.writing.block.ImageUrl;
+import org.donggle.backend.domain.writing.block.Language;
+import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.donggle.backend.domain.writing.block.RawText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,6 +80,9 @@ public class MarkDownParser {
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
                 return new ImageBlock(writing, blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+            }
+            case HORIZONTAL_RULES -> {
+                return new HorizontalRulesBlock(writing, blockType, RawText.from(matcher.group(1)));
             }
             default -> {
                 final String removedBlockTypeText = matcher.replaceAll("");

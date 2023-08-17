@@ -23,7 +23,7 @@ import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.content.Block;
+import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;

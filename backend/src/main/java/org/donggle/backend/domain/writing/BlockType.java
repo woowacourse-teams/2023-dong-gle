@@ -15,10 +15,14 @@ public enum BlockType {
     HEADING5("^#{5}\\ "),
     HEADING6("^#{6}\\ "),
     BLOCKQUOTE("^>\\ "),
+    CHECKED_TASK_LIST("^- \\[x\\] "),
+    UNCHECKED_TASK_LIST("^- \\[ \\] "),
     UNORDERED_LIST("^-{1}\\ "),
     ORDERED_LIST("^[1-9][0-9]{0,4}\\.\\ "),
     CODE_BLOCK("^```([a-zA-Z]*)\\n([\\s\\S]*?)\\n```$"),
     IMAGE("\\!\\[(.*)\\]\\((.*)\\)"),
+    HORIZONTAL_RULES("^((?:\\* *){3,}|(?:- *){3,}|(?:_ *){3,})$"),
+    TOGGLE("^\\n$"),
     PARAGRAPH("");
 
     private final Pattern pattern;

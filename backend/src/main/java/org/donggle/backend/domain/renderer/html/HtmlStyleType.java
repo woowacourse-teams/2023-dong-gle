@@ -10,7 +10,9 @@ public enum HtmlStyleType {
     CODE("<code>", "</code>"),
     LINK("<a href=\"", "\">"),
     CAPTION("", "</a>"),
-    EMPTY_CAPTION_LINK("<a href=\"", "\"></a>");
+    EMPTY_CAPTION_LINK("<a href=\"", "\"></a>"),
+    STRIKETHROUGH("<s>", "</s>"),
+    UNDERLINE("<u>", "</u>");
 
     private final String startTag;
     private final String endTag;

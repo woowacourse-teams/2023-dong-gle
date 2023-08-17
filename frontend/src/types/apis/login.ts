@@ -7,3 +7,7 @@ export type PostOauthLoginRequest = {
     redirect_uri: string;
   };
 };
+
+export type PostOauthLoginResponse = {
+  accessToken: string;
+};

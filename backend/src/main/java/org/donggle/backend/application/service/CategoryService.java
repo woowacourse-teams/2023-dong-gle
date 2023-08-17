@@ -142,6 +142,13 @@ public class CategoryService {
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(findMember.getId(), categoryId);
         validateBasicCategory(memberId, findCategory);
+
+        List<Writing> trashedWritingInCategory = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashed(memberId, categoryId);
+        Category basicCategory = findBasicCategoryByMemberId(memberId);
+        for (Writing writing : trashedWritingInCategory) {
+            writing.changeCategory(basicCategory);
+        }
+
         transferToBasicCategory(memberId, findCategory);
         deleteCategory(findCategory);
     }

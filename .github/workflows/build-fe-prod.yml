@@ -37,7 +37,7 @@ jobs:
 
       - name: Build
         run: |
-          yarn build:dev
+          yarn build:prod
         working-directory: ${{ vars.FE_DIRECTORY }}
 
       - name: Login to Docker Hub

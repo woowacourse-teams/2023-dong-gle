@@ -14,7 +14,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
   const toast = useToast();
   const { goWritingPage } = usePageNavigate();
-  const selectedCategoryId = categoryId ?? 1;
+  const selectedCategoryId = categoryId ?? Number(localStorage.getItem('defaultCategoryId'));
   const queryClient = useQueryClient();
 
   const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {

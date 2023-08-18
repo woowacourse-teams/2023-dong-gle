@@ -91,9 +91,11 @@ public class HtmlRenderer {
         final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
         final String language = block.getLanguageValue();
         final String rawText = convertToEscape(block.getRawTextValue());
+        final String startTag = switch (language) {
+            case "plain text" -> htmlType.getStartTag().replace("${language}", "plaintext");
+            default -> htmlType.getStartTag().replace("${language}", language);
+        };
 
-        final String startTag = htmlType.getStartTag()
-                .replace("${language}", language);
 
         return startTag + rawText + htmlType.getEndTag();
     }
@@ -135,7 +137,7 @@ public class HtmlRenderer {
         ends.push(preHtmlType.getEndTag());
         int currentDepth = preBlock.getDepthValue();
 
-        int blockSize = blocks.size();
+        final int blockSize = blocks.size();
         for (int i = 1; i < blockSize; i++) {
             final NormalBlock currentBlock = blocks.get(i);
             final HtmlType currentHtmlType = HtmlType.findByBlockType(currentBlock.getBlockType());

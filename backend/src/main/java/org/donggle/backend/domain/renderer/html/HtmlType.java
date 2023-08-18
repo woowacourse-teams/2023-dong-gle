@@ -31,7 +31,7 @@ public enum HtmlType {
         this.endTag = endTag;
     }
 
-    public static HtmlType findByBlockType(BlockType blockType) {
+    public static HtmlType findByBlockType(final BlockType blockType) {
         return HtmlType.valueOf(blockType.name());
     }
 }

@@ -64,10 +64,7 @@ public class AuthService {
     }
 
     public void logout(final Long memberId) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
-        tokenRepository.deleteByMemberId(member.getId());
+        tokenRepository.deleteByMemberId(memberId);
     }
 
     private void synchronizeRefreshToken(final Member member, final String refreshToken) {

@@ -24,6 +24,7 @@ export const useCategoryMutation = () => {
   const { mutate: deleteCategory } = useMutation(deleteCategoryRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
+      queryClient.invalidateQueries(['writingsInCategory']);
     },
   });
 

@@ -46,6 +46,7 @@ module.exports = {
       utils: path.resolve(__dirname, 'src/utils'),
       routes: path.resolve(__dirname, 'src/routes'),
       contexts: path.resolve(__dirname, 'src/contexts'),
+      globalState: path.resolve(__dirname, 'src/globalState'),
     },
   },
   output: {

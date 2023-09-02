@@ -4085,6 +4085,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@yogjin/react-global-state-hook@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@yogjin/react-global-state-hook/-/react-global-state-hook-0.0.2.tgz#807f0265ba6686436bbe97a7d870d091fc4950d6"
+  integrity sha512-eT8TmHt7Ocu2z0O1FvJp+qW5/dBQBdICS/O6VsKANdIdlF/sydpCqsmRaiauvS3+bSE/z460fKRZwKtznjOJow==
+  dependencies:
+    react "^18.2.0"
+
 "@zxing/text-encoding@0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@zxing/text-encoding/-/text-encoding-0.9.0.tgz#fb50ffabc6c7c66a0c96b4c03e3d9be74864b70b"
@@ -9977,7 +9984,7 @@ react-router@6.14.2:
   dependencies:
     "@remix-run/router" "1.7.2"
 
-react@18.2.0:
+react@18.2.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

@@ -1,14 +1,11 @@
 import PublishingPropertySection from 'components/PublishingPropertySection/PublishingPropertySection';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import { css, styled } from 'styled-components';
-import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useEffect, useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
-import Button from 'components/@common/Button/Button';
-import { useParams } from 'react-router-dom';
 import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
 import { activeWritingInfoState } from 'globalState';
 

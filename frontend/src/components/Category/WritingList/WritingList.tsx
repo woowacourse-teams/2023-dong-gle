@@ -1,6 +1,5 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';

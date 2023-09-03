@@ -9,6 +9,8 @@ import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 import Button from 'components/@common/Button/Button';
 import { useParams } from 'react-router-dom';
+import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { activeWritingInfoState } from 'globalState';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -27,7 +29,8 @@ type Props = {
 };
 
 const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
 
@@ -39,7 +42,7 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
     {
       key: TabKeys.WritingProperty,
       label: <InfoIcon width={24} height={24} />,
-      content: <WritingPropertySection writingId={writingId} />,
+      content: writingId && <WritingPropertySection writingId={writingId} />,
     },
     ...(isPublishingSectionActive
       ? [
@@ -56,7 +59,7 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
           {
             key: TabKeys.PublishingProperty,
             label: 'PublishingProperty',
-            content: publishTo && (
+            content: publishTo && writingId && (
               <PublishingPropertySection
                 writingId={writingId}
                 publishTo={publishTo}

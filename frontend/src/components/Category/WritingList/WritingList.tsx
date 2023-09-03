@@ -5,6 +5,8 @@ import { styled } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeleteWritings } from './useDeleteWritings';
+import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { activeWritingInfoState } from 'globalState';
 
 type Props = {
   categoryId: number;
@@ -14,7 +16,8 @@ type Props = {
 const WritingList = ({ categoryId, isOpen }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const deleteWritings = useDeleteWritings();
 
   if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;

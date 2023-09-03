@@ -5,11 +5,14 @@ import { styled } from 'styled-components';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
 import { useDeletePermanentWritings } from 'components/TrashCanTable/useDeletePermanentWritings';
+import { activeWritingInfoState } from 'globalState';
+import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
 
 const DeletedWritingList = () => {
   const { deletedWritings } = useDeletedWritings();
   const { goWritingPage } = usePageNavigate();
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const deletePermanentWritings = useDeletePermanentWritings();
 
   if (!deletedWritings || deletedWritings?.length === 0)
@@ -35,7 +38,7 @@ const DeletedWritingList = () => {
             <S.Text>{deletedWriting.title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={() => deletePermanentWritings([writingId])} />
+            <DeleteButton onClick={() => writingId && deletePermanentWritings([writingId])} />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}

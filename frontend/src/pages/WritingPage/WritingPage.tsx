@@ -2,11 +2,12 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import WritingViewer from 'components/WritingViewer/WritingViewer';
 import { useEffect } from 'react';
-import { useSetGlobalState } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue, useSetGlobalState } from '@yogjin/react-global-state-hook';
 import { activeWritingInfoState } from 'globalState';
 
 const WritingPage = () => {
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const categoryId = Number(useParams()['categoryId']);
   const setActiveWritingInfo = useSetGlobalState(activeWritingInfoState);
   const location = useLocation();
@@ -16,9 +17,11 @@ const WritingPage = () => {
     const clearActiveWritingId = () => {
       setActiveWritingInfo?.(null);
     };
-    setActiveWritingInfo?.({ id: writingId, isDeleted: isDeletedWriting });
+    setActiveWritingInfo?.(writingId ? { id: writingId, isDeleted: isDeletedWriting } : null);
     return () => clearActiveWritingId();
   }, [isDeletedWriting]);
+
+  if (!writingId) return <div>존재하지 않는 글입니다.</div>;
 
   return (
     <WritingViewer

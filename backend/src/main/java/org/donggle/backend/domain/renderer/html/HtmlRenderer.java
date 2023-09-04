@@ -1,25 +1,25 @@
 package org.donggle.backend.domain.renderer.html;
 
+import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.block.ImageBlock;
 import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class HtmlRenderer {
     public static final String HTML_TAB = "&emsp;";
 
     private final HtmlStyleRenderer htmlStyleRenderer;
-
-    public HtmlRenderer(final HtmlStyleRenderer htmlStyleRenderer) {
-        this.htmlStyleRenderer = htmlStyleRenderer;
-    }
 
     public String render(final List<Block> blocks) {
         final StringBuilder result = new StringBuilder();

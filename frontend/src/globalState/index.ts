@@ -6,3 +6,5 @@ type ActiveWritingInfo = {
 };
 
 export const activeWritingInfoState = globalState<ActiveWritingInfo | null>(null);
+
+export const activeCategoryIdState = globalState<number | null>(null);

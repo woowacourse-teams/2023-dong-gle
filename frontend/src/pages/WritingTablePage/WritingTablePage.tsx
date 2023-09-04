@@ -1,18 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
+import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
 import { getDetailWritings } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
+import { activeCategoryIdState } from 'globalState';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 
 const WritingTablePage = () => {
-  const categoryId = Number(useParams()['categoryId']);
-  const { data } = useQuery(['detailWritings', categoryId], () => getDetailWritings(categoryId));
+  const activeCategoryId = useGlobalStateValue(activeCategoryIdState);
+
+  if (!activeCategoryId) return <div>카테고리가 존재하지 않습니다.</div>;
+
+  const { data } = useQuery(['detailWritings', activeCategoryId], () =>
+    getDetailWritings(activeCategoryId),
+  );
 
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-      <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
+      <WritingTable categoryId={activeCategoryId} writings={data?.writings ?? []} />
     </S.Article>
   );
 };

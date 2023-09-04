@@ -26,6 +26,7 @@ export const usePageNavigate = () => {
     writingId: number;
     isDeletedWriting?: boolean;
   }) => {
+    setActiveCategoryId(categoryId);
     setActiveWritingInfo({ id: writingId, isDeleted: isDeletedWriting });
     navigate(NAVIGATE_PATH.getWritingPage(categoryId, writingId));
   };

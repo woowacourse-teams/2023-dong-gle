@@ -3,7 +3,6 @@ import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
 import { getDetailWritings } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { activeCategoryIdState } from 'globalState';
-import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 

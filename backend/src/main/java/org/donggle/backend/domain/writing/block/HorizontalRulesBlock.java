@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
-import org.donggle.backend.domain.writing.Writing;
 
 import java.util.Objects;
 
@@ -19,13 +18,13 @@ public class HorizontalRulesBlock extends Block {
     @Embedded
     private RawText rawText;
 
-    public HorizontalRulesBlock(final Writing writing, final BlockType blockType, final RawText rawText) {
-        super(writing, Depth.empty(), blockType);
+    public HorizontalRulesBlock(final BlockType blockType, final RawText rawText) {
+        super(Depth.empty(), blockType);
         this.rawText = rawText;
     }
 
-    public HorizontalRulesBlock(final Writing writing, final Depth depth, final BlockType blockType, final RawText rawText) {
-        super(writing, depth, blockType);
+    public HorizontalRulesBlock(final Depth depth, final BlockType blockType, final RawText rawText) {
+        super(depth, blockType);
         this.rawText = rawText;
     }
 

@@ -1,7 +1,6 @@
 package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -41,7 +40,6 @@ import java.util.NoSuchElementException;
 public class PublishService {
     private final BlogRepository blogRepository;
     private final WritingRepository writingRepository;
-    private final BlockRepository blockRepository;
     private final BlogWritingRepository blogWritingRepository;
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
@@ -57,7 +55,7 @@ public class PublishService {
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
 
-        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
+        final List<Block> blocks = writing.getBlocks();
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
 
         final BlogWriting blogWriting = switch (blog.getBlogType()) {

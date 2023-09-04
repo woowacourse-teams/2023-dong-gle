@@ -41,30 +41,30 @@ class HtmlRendererTest {
     @DisplayName("전체 Block 렌더링")
     void render() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("4번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("6번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING1, RawText.from("heading1"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING2, RawText.from("heading2"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING3, RawText.from("heading3"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING4, RawText.from("heading4"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING5, RawText.from("heading5"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING6, RawText.from("heading6"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.PARAGRAPH, RawText.from("paragraph"), new ArrayList<>()));
-        blocks.add(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("plain text")));
-        blocks.add(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
-        blocks.add(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("***")));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNCHECKED_TASK_LIST, RawText.from("uncheckedTaskList"), List.of()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.CHECKED_TASK_LIST, RawText.from("checkedTaskList"), List.of()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("4번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("6번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING1, RawText.from("heading1"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING2, RawText.from("heading2"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING3, RawText.from("heading3"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING4, RawText.from("heading4"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING5, RawText.from("heading5"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING6, RawText.from("heading6"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from("paragraph"), new ArrayList<>()));
+        blocks.add(new CodeBlock(BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("plain text")));
+        blocks.add(new CodeBlock(BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
+        blocks.add(new HorizontalRulesBlock(BlockType.HORIZONTAL_RULES, RawText.from("***")));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNCHECKED_TASK_LIST, RawText.from("uncheckedTaskList"), List.of()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.CHECKED_TASK_LIST, RawText.from("checkedTaskList"), List.of()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -78,7 +78,7 @@ class HtmlRendererTest {
     @DisplayName("Heading1 렌더링")
     void renderHeading1() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING1, RawText.from("Heading1"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING1, RawText.from("Heading1"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -92,7 +92,7 @@ class HtmlRendererTest {
     @DisplayName("Heading2 렌더링")
     void renderHeading2() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING2, RawText.from("Heading2"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING2, RawText.from("Heading2"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -106,7 +106,7 @@ class HtmlRendererTest {
     @DisplayName("Heading3 렌더링")
     void renderHeading3() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING3, RawText.from("Heading3"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING3, RawText.from("Heading3"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -120,7 +120,7 @@ class HtmlRendererTest {
     @DisplayName("Heading4 렌더링")
     void renderHeading4() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING4, RawText.from("Heading4"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING4, RawText.from("Heading4"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -134,7 +134,7 @@ class HtmlRendererTest {
     @DisplayName("Heading5 렌더링")
     void renderHeading5() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING5, RawText.from("Heading5"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING5, RawText.from("Heading5"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -148,7 +148,7 @@ class HtmlRendererTest {
     @DisplayName("Heading6 렌더링")
     void renderHeading6() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.HEADING6, RawText.from("Heading6"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.HEADING6, RawText.from("Heading6"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -162,7 +162,7 @@ class HtmlRendererTest {
     @DisplayName("Blockquote 렌더링")
     void blockquote() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -176,7 +176,7 @@ class HtmlRendererTest {
     @DisplayName("CodeBlock 렌더링")
     void renderCodeBlock() {
         //given
-        blocks.add(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("java")));
+        blocks.add(new CodeBlock(BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("java")));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -190,7 +190,7 @@ class HtmlRendererTest {
     @DisplayName("CodeBlock escape 렌더링")
     void renderCodeBlock2() {
         //given
-        blocks.add(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
+        blocks.add(new CodeBlock(BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -204,17 +204,17 @@ class HtmlRendererTest {
     @DisplayName("리스트 렌더링")
     void renderList() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("4번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("6번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("4번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("6번줄"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -228,7 +228,7 @@ class HtmlRendererTest {
     @DisplayName("HorizontalRules 렌더링")
     void renderHorizontalRules() {
         //given
-        blocks.add(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("***")));
+        blocks.add(new HorizontalRulesBlock(BlockType.HORIZONTAL_RULES, RawText.from("***")));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -243,7 +243,7 @@ class HtmlRendererTest {
     void renderUnChekcedTaskList() {
         //given
         blocks.add(new NormalBlock(
-                writing, Depth.empty(),
+                Depth.empty(),
                 BlockType.UNCHECKED_TASK_LIST,
                 RawText.from("uncheckedTaskList"),
                 List.of()));
@@ -261,7 +261,7 @@ class HtmlRendererTest {
     void renderChekcedTaskList() {
         //given
         blocks.add(new NormalBlock(
-                writing, Depth.empty(),
+                Depth.empty(),
                 BlockType.CHECKED_TASK_LIST,
                 RawText.from("checkedTaskList"),
                 List.of()));
@@ -278,14 +278,14 @@ class HtmlRendererTest {
     @DisplayName("toggle 렌더링")
     void renderToggle() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.TOGGLE, RawText.from("토글제목"), List.of()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.TOGGLE, RawText.from("토글제목"), List.of()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("3-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("3-2번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-3번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.ORDERED_LIST, RawText.from("3-4번줄"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -299,22 +299,22 @@ class HtmlRendererTest {
     @DisplayName("toggle 렌더링2")
     void renderToggle2() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.empty(), BlockType.TOGGLE, RawText.from("토글제목"), List.of()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING2, RawText.from("heading2"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING3, RawText.from("heading3"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING4, RawText.from("heading4"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING5, RawText.from("heading5"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING6, RawText.from("heading6"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.PARAGRAPH, RawText.from("paragraph"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.HEADING1, RawText.from("heading1"), new ArrayList<>()));
-        blocks.add(new CodeBlock(writing, Depth.from(1), BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("java")));
-        blocks.add(new CodeBlock(writing, Depth.from(1), BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
-        blocks.add(new HorizontalRulesBlock(writing, Depth.from(1), BlockType.HORIZONTAL_RULES, RawText.from("***")));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNCHECKED_TASK_LIST, RawText.from("uncheckedTaskList"), List.of()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.CHECKED_TASK_LIST, RawText.from("checkedTaskList"), List.of()));
+        blocks.add(new NormalBlock(Depth.empty(), BlockType.TOGGLE, RawText.from("토글제목"), List.of()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("5번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("5-1번줄"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING2, RawText.from("heading2"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING3, RawText.from("heading3"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING4, RawText.from("heading4"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING5, RawText.from("heading5"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING6, RawText.from("heading6"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.BLOCKQUOTE, RawText.from("blockquote"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.PARAGRAPH, RawText.from("paragraph"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.HEADING1, RawText.from("heading1"), new ArrayList<>()));
+        blocks.add(new CodeBlock(Depth.from(1), BlockType.CODE_BLOCK, RawText.from("public void(){}"), Language.from("java")));
+        blocks.add(new CodeBlock(Depth.from(1), BlockType.CODE_BLOCK, RawText.from("<button>\n    <p>\"hihi&\"</p>\n</button>"), Language.from("java")));
+        blocks.add(new HorizontalRulesBlock(Depth.from(1), BlockType.HORIZONTAL_RULES, RawText.from("***")));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNCHECKED_TASK_LIST, RawText.from("uncheckedTaskList"), List.of()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.CHECKED_TASK_LIST, RawText.from("checkedTaskList"), List.of()));
 
         //when
         final String result = htmlRenderer.render(blocks);
@@ -328,12 +328,12 @@ class HtmlRendererTest {
     @DisplayName("리스트 렌더링2")
     void renderList2() {
         //given
-        blocks.add(new NormalBlock(writing, Depth.from(0), BlockType.ORDERED_LIST, RawText.from("First"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.ORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.ORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(0), BlockType.UNORDERED_LIST, RawText.from("First"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
-        blocks.add(new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(0), BlockType.ORDERED_LIST, RawText.from("First"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.ORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.ORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(0), BlockType.UNORDERED_LIST, RawText.from("First"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("Second"), new ArrayList<>()));
+        blocks.add(new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("Third"), new ArrayList<>()));
 
         //when
         final String result = htmlRenderer.render(blocks);

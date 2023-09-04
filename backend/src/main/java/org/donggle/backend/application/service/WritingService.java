@@ -1,7 +1,6 @@
 package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -17,7 +16,6 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
-import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.parser.notion.NotionParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
@@ -54,11 +52,12 @@ public class WritingService {
     private static final int LAST_WRITING_FLAG = -1;
 
     private final MemberRepository memberRepository;
-    private final BlockRepository blockRepository;
     private final WritingRepository writingRepository;
     private final BlogWritingRepository blogWritingRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final CategoryRepository categoryRepository;
+    private final MarkDownParser markDownParser;
+    private final NotionParser notionParser;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
         final String originalFilename = request.file().getOriginalFilename();
@@ -66,15 +65,13 @@ public class WritingService {
             throw new InvalidFileFormatException(originalFilename);
         }
         final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
+        final List<Block> blocks = markDownParser.parse(originalFileText);
 
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(findMember.getId(), request.categoryId());
-        final Writing writing = Writing.lastOf(findMember, new Title(findFileName(originalFilename)), findCategory);
+        final Writing writing = Writing.of(findMember, new Title(findFileName(originalFilename)), findCategory, blocks);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
-        final MarkDownParser markDownParser = new MarkDownParser(new MarkDownStyleParser(), savedWriting);
 
-        final List<Block> blocks = markDownParser.parse(originalFileText);
-        blockRepository.saveAll(blocks);
         return savedWriting.getId();
     }
 
@@ -91,17 +88,17 @@ public class WritingService {
                 .orElseThrow(NotionNotConnectedException::new);
         final NotionApiService notionApiService = new NotionApiService();
 
+
         final String blockId = request.blockId();
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
-        final String title = findTitle(parentBlockNode);
-        final Writing writing = Writing.lastOf(findMember, new Title(title), findCategory);
-        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
-        final NotionParser notionParser = new NotionParser(savedWriting);
-
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
         final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
-        blockRepository.saveAll(blocks);
-        return writing.getId();
+
+        final String title = findTitle(parentBlockNode);
+        final Writing writing = Writing.of(findMember, new Title(title), findCategory, blocks);
+        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
+
+        return savedWriting.getId();
     }
 
     private String findTitle(final NotionBlockNode parentBlockNode) {
@@ -130,8 +127,9 @@ public class WritingService {
     @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
         final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
+        //TODO : 확인해야해
         final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
-        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
+        final List<Block> blocks = writing.getBlocks();
         final String content = htmlRenderer.render(blocks);
         return WritingResponse.of(writing, content);
     }

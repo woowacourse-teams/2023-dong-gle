@@ -4,10 +4,7 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
-import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
-import org.donggle.backend.domain.writing.Title;
-import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.Depth;
@@ -21,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,16 +27,15 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
 class MarkDownParserTest {
+    @Autowired
     private MarkDownParser markDownParser;
-    private Writing writing;
 
     @BeforeEach
     void setUp() {
         final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Category category = Category.basic(member);
-        writing = Writing.lastOf(member, new Title("title"), category);
-        markDownParser = new MarkDownParser(new MarkDownStyleParser(), writing);
     }
 
     @Test
@@ -59,9 +57,9 @@ class MarkDownParserTest {
                 """;
 
         final List<Block> result = List.of(
-                new NormalBlock(writing, Depth.empty(), BlockType.PARAGRAPH, RawText.from("###안녕"), Collections.emptyList()),
-                new NormalBlock(writing, Depth.empty(), BlockType.PARAGRAPH, RawText.from("  안녕"), Collections.emptyList()),
-                new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from("나는 자바다"), Language.from("java"))
+                new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from("###안녕"), Collections.emptyList()),
+                new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from("  안녕"), Collections.emptyList()),
+                new CodeBlock(BlockType.CODE_BLOCK, RawText.from("나는 자바다"), Language.from("java"))
         );
 
         //when
@@ -76,7 +74,7 @@ class MarkDownParserTest {
     void parserImage() {
         //given
         final String text = "![imageName](www.naver.com)";
-        final ImageBlock expected = new ImageBlock(writing, BlockType.IMAGE, new ImageUrl("www.naver.com"), new ImageCaption("imageName"));
+        final ImageBlock expected = new ImageBlock(BlockType.IMAGE, new ImageUrl("www.naver.com"), new ImageCaption("imageName"));
 
         //when
         final List<Block> result = markDownParser.parse(text);
@@ -98,8 +96,8 @@ class MarkDownParserTest {
         void parseDepth() {
             //given
             final String text = "    - hello world\n        - hubcreator";
-            final NormalBlock expected1 = new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
-            final NormalBlock expected2 = new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
+            final NormalBlock expected1 = new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
+            final NormalBlock expected2 = new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
 
             //when
             final List<Block> result = markDownParser.parse(text);
@@ -116,8 +114,8 @@ class MarkDownParserTest {
         void parseDepth2() {
             //given
             final String text = "\t- hello world\n\t\t - hubcreator";
-            final NormalBlock expected1 = new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
-            final NormalBlock expected2 = new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
+            final NormalBlock expected1 = new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("hello world"), List.of());
+            final NormalBlock expected2 = new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("hubcreator"), List.of());
 
             //when
             final List<Block> result = markDownParser.parse(text);
@@ -134,10 +132,10 @@ class MarkDownParserTest {
         void parseDepthWithListMixed() {
             //given
             final String text = "- depth1\n\t- depth2\n    \t- depth3\n    \t    - depth4";
-            final NormalBlock expected1 = new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1"), List.of());
-            final NormalBlock expected2 = new NormalBlock(writing, Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("depth2"), List.of());
-            final NormalBlock expected3 = new NormalBlock(writing, Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("depth3"), List.of());
-            final NormalBlock expected4 = new NormalBlock(writing, Depth.from(3), BlockType.UNORDERED_LIST, RawText.from("depth4"), List.of());
+            final NormalBlock expected1 = new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1"), List.of());
+            final NormalBlock expected2 = new NormalBlock(Depth.from(1), BlockType.UNORDERED_LIST, RawText.from("depth2"), List.of());
+            final NormalBlock expected3 = new NormalBlock(Depth.from(2), BlockType.UNORDERED_LIST, RawText.from("depth3"), List.of());
+            final NormalBlock expected4 = new NormalBlock(Depth.from(3), BlockType.UNORDERED_LIST, RawText.from("depth4"), List.of());
 
             //when
             final List<Block> result = markDownParser.parse(text);
@@ -156,7 +154,7 @@ class MarkDownParserTest {
         void parseDepthWithListMixed2() {
             //given
             final String text = "- depth1    hel\tlo\n";
-            final NormalBlock expected1 = new NormalBlock(writing, Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1    hel\tlo"), List.of());
+            final NormalBlock expected1 = new NormalBlock(Depth.empty(), BlockType.UNORDERED_LIST, RawText.from("depth1    hel\tlo"), List.of());
 
             //when
             final List<Block> result = markDownParser.parse(text);
@@ -241,7 +239,7 @@ class MarkDownParserTest {
             //then
             assertAll(
                     () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.CHECKED_TASK_LIST),
-                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getDepthValue()).isZero(),
                     () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
             );
         }
@@ -259,7 +257,7 @@ class MarkDownParserTest {
             //then
             assertAll(
                     () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNCHECKED_TASK_LIST),
-                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getDepthValue()).isZero(),
                     () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("안녕하세요. 동글입니다.")
             );
         }
@@ -277,7 +275,7 @@ class MarkDownParserTest {
             //then
             assertAll(
                     () -> assertThat(normalBlock.getBlockType()).isEqualTo(BlockType.UNORDERED_LIST),
-                    () -> assertThat(normalBlock.getDepthValue()).isEqualTo(0),
+                    () -> assertThat(normalBlock.getDepthValue()).isZero(),
                     () -> assertThat(normalBlock.getRawTextValue()).isEqualTo("[a] 안녕하세요. 동글입니다.")
             );
         }

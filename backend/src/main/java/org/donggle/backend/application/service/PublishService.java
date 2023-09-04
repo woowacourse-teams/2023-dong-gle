@@ -21,7 +21,6 @@ import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
-import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.MediumNotConnectedException;
@@ -43,9 +42,9 @@ public class PublishService {
     private final BlogWritingRepository blogWritingRepository;
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
-    private final MediumApiService mediumApiService = new MediumApiService();
-    private final TistoryApiService tistoryApiService = new TistoryApiService();
-
+    private final MediumApiService mediumApiService;
+    private final TistoryApiService tistoryApiService;
+    private final HtmlRenderer htmlRenderer;
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final Blog blog = findBlog(publishRequest);
@@ -56,7 +55,7 @@ public class PublishService {
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
 
         final List<Block> blocks = writing.getBlocks();
-        final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
+        final String content = htmlRenderer.render(blocks);
 
         final BlogWriting blogWriting = switch (blog.getBlogType()) {
             case MEDIUM -> createBlogWritingAfterMediumPublish(publishRequest, member, blog, writing, content);

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RefreshTokenProviderTest {
-
     private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(
             "wjdgustmdwjdgustmdwjdgustmdwjsadasdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd",
             600000,

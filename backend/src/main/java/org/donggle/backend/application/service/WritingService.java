@@ -58,6 +58,7 @@ public class WritingService {
     private final CategoryRepository categoryRepository;
     private final MarkDownParser markDownParser;
     private final NotionParser notionParser;
+    private final HtmlRenderer htmlRenderer;
 
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
         final String originalFilename = request.file().getOriginalFilename();
@@ -126,8 +127,6 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
-        final HtmlRenderer htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
-        //TODO : 확인해야해
         final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
         final List<Block> blocks = writing.getBlocks();
         final String content = htmlRenderer.render(blocks);

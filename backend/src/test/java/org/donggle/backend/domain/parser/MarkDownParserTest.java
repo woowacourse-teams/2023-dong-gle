@@ -1,9 +1,7 @@
 package org.donggle.backend.domain.parser;
 
-import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
+import org.donggle.backend.domain.parser.markdown.MarkDownStyleParser;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
@@ -18,8 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,15 +23,12 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
 class MarkDownParserTest {
-    @Autowired
     private MarkDownParser markDownParser;
 
     @BeforeEach
     void setUp() {
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
-        final Category category = Category.basic(member);
+        markDownParser = new MarkDownParser(new MarkDownStyleParser());
     }
 
     @Test

@@ -34,10 +34,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class NotionParserTest {
-    @Autowired
     private NotionParser notionParser;
+
+    @BeforeEach
+    void setUp() {
+        notionParser = new NotionParser();
+    }
 
     @Test
     @DisplayName("Paragraph타입 BlockNode로부터 NormalBlock을 생성한다.")

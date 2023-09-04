@@ -1,11 +1,6 @@
 package org.donggle.backend.domain.renderer.html;
 
-import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.writing.BlockType;
-import org.donggle.backend.domain.writing.Title;
-import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.Depth;
@@ -26,15 +21,10 @@ class HtmlRendererTest {
     private HtmlRenderer htmlRenderer;
     private List<Block> blocks;
 
-    private Writing writing;
-
     @BeforeEach
     void setUp() {
         htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         blocks = new ArrayList<>();
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
-        final Category category = Category.basic(member);
-        writing = Writing.lastOf(member, new Title("title"), category);
     }
 
     @Test

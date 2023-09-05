@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,15 +24,16 @@ public class Member extends BaseEntity {
     @NotNull
     @Embedded
     private MemberName memberName;
-    private Long kakaoId;
+    @Column(unique = true)
+    private Long socialId;
 
-    private Member(final MemberName memberName, final Long kakaoId) {
+    private Member(final MemberName memberName, final Long socialId) {
         this.memberName = memberName;
-        this.kakaoId = kakaoId;
+        this.socialId = socialId;
     }
 
-    public static Member createByKakao(final MemberName memberName, final Long kakaoId) {
-        return new Member(memberName, kakaoId);
+    public static Member createByKakao(final MemberName memberName, final Long socialId) {
+        return new Member(memberName, socialId);
     }
 
     @Override

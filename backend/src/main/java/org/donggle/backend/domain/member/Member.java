@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_UNIQUE", columnNames = "socialId"))
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,7 @@ public class Member extends BaseEntity {
     @NotNull
     @Embedded
     private MemberName memberName;
-    @Column(unique = true)
+    @Column(name = "SOCIAL_ID_UNIQUE", unique = true)
     private Long socialId;
 
     private Member(final MemberName memberName, final Long socialId) {

@@ -15,8 +15,10 @@ import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.exception.business.JoinDuplicateException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.TokenResponse;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,7 +38,7 @@ public class AuthService {
 
     public TokenResponse login(final String socialType, final OAuthAccessTokenRequest request) {
         final UserInfo userInfo = oauthClients.requestUserInfo(SocialType.from(socialType), request.code(), request.redirect_uri());
-        final Member loginMember = memberRepository.findByKakaoId(userInfo.socialId())
+        final Member loginMember = memberRepository.findBySocialId(userInfo.socialId())
                 .orElseGet(() -> initializeMember(userInfo));
         return createTokens(loginMember);
     }
@@ -46,13 +48,17 @@ public class AuthService {
     }
 
     private Member initializeMember(final UserInfo userInfo) {
-        final Member newMember = memberRepository.save(userInfo.toMember());
-        final Category basicCategory = Category.basic(newMember);
-        final MemberCredentials basic = MemberCredentials.basic(newMember);
-
-        categoryRepository.save(basicCategory);
-        memberCredentialsRepository.save(basic);
-        return newMember;
+        Member member = userInfo.toMember();
+        final Category basicCategory = Category.basic(member);
+        final MemberCredentials basic = MemberCredentials.basic(member);
+        try {
+            member = memberRepository.save(member);
+            categoryRepository.save(basicCategory);
+            memberCredentialsRepository.save(basic);
+        } catch (final DuplicateKeyException e) {
+            throw new JoinDuplicateException(userInfo.socialType().name());
+        }
+        return member;
     }
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {

@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @GetMapping("/oauth/login/{socialType}/redirect")
-    public ResponseEntity<Void> oauthRedirectKakao(
+    public ResponseEntity<Void> createRedirect(
             @PathVariable final String socialType,
             @RequestParam final String redirect_uri
     ) {
@@ -45,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/oauth/login/{socialType}")
-    public ResponseEntity<AccessTokenResponse> oauthRedirectKakao(
+    public ResponseEntity<AccessTokenResponse> login(
             @PathVariable final String socialType,
             @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
     ) {

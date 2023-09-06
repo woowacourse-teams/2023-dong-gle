@@ -10,6 +10,7 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.common.BaseEntity;
 
 import java.util.Objects;
@@ -90,6 +91,16 @@ public class MemberCredentials extends BaseEntity {
 
     public Optional<String> getTistoryToken() {
         return Optional.ofNullable(tistoryToken);
+    }
+
+    public Optional<String> getBlogToken(final BlogType blogType) {
+        if (BlogType.TISTORY.equals(blogType)) {
+            return Optional.ofNullable(tistoryToken);
+        }
+        if (BlogType.MEDIUM.equals(blogType)) {
+            return Optional.ofNullable(tistoryToken);
+        }
+        return Optional.empty();
     }
 
     public Optional<String> getTistoryBlogName() {

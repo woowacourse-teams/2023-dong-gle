@@ -5,7 +5,7 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.connection.tistory.dto.TistoryAccessTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.application.service.vendor.exception.VendorApiException;
-import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
+import org.donggle.backend.application.service.vendor.tistory.TistoryApiClient;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -32,13 +32,13 @@ public class TistoryConnectionService {
     private final WebClient webClient;
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final MemberRepository memberRepository;
-    private final TistoryApiService tistoryApiService;
+    private final TistoryApiClient tistoryApiService;
 
     public TistoryConnectionService(@Value("${tistory_client_id}") final String clientId,
                                     @Value("${tistory_client_secret}") final String clientSecret,
                                     final MemberCredentialsRepository memberCredentialsRepository,
                                     final MemberRepository memberRepository,
-                                    final TistoryApiService tistoryApiService) {
+                                    final TistoryApiClient tistoryApiService) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.memberCredentialsRepository = memberCredentialsRepository;

@@ -13,12 +13,12 @@ import java.util.Objects;
 import static org.donggle.backend.application.service.oauth.kakao.SocialType.KAKAO;
 
 @Component
-public class KakaoOauth2UserInfoClient {
+public class KakaoOauthUserInfoClient {
 
     private static final String PROFILE_URL = "https://kapi.kakao.com/v2/user/me";
     private final WebClient webClient;
 
-    public KakaoOauth2UserInfoClient() {
+    public KakaoOauthUserInfoClient() {
         this.webClient = WebClient.create();
     }
 

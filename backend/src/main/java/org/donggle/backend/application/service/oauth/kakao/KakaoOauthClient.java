@@ -4,13 +4,13 @@ import org.donggle.backend.application.service.oauth.kakao.dto.UserInfo;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KakaoOauth2Client implements OauthClient {
+public class KakaoOauthClient implements OauthClient {
 
-    private final KakaoOauth2TokenClient tokenClient;
-    private final KakaoOauth2UserInfoClient userInfoClient;
+    private final KakaoOauthTokenClient tokenClient;
+    private final KakaoOauthUserInfoClient userInfoClient;
 
-    public KakaoOauth2Client(final KakaoOauth2TokenClient tokenClient,
-                             final KakaoOauth2UserInfoClient userInfoClient
+    public KakaoOauthClient(final KakaoOauthTokenClient tokenClient,
+                            final KakaoOauthUserInfoClient userInfoClient
     ) {
         this.tokenClient = tokenClient;
         this.userInfoClient = userInfoClient;

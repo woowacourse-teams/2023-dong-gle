@@ -48,7 +48,7 @@ public class AESEncryptionUtil {
         }
     }
 
-    public static IvParameterSpec getIVSecureRandom(final String algorithm) {
+    private static IvParameterSpec getIVSecureRandom(final String algorithm) {
         final SecureRandom random;
         try {
             random = SecureRandom.getInstanceStrong();

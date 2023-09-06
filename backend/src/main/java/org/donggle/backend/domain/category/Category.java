@@ -49,7 +49,7 @@ public class Category {
     public static Category of(final CategoryName categoryName, final Member member) {
         return new Category(categoryName, null, member);
     }
-    
+
     public String getCategoryNameValue() {
         return categoryName.getName();
     }
@@ -81,15 +81,5 @@ public class Category {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", categoryName=" + categoryName +
-                ", nextCategory=" + nextCategory +
-                ", member=" + member +
-                '}';
     }
 }

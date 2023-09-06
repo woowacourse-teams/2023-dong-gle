@@ -6,7 +6,7 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.service.oauth.kakao.OauthClients;
+import org.donggle.backend.application.service.oauth.kakao.LoginClients;
 import org.donggle.backend.application.service.oauth.kakao.SocialType;
 import org.donggle.backend.application.service.oauth.kakao.dto.UserInfo;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
-    private final OauthClients oauthClients;
+    private final LoginClients oauthClients;
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;

@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Component
-public class KakaoOauthTokenClient {
+public class KakaoLoginTokenClient {
 
     private static final String AUTHORIZE_URL = "https://kauth.kakao.com/oauth/authorize";
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
@@ -23,7 +23,7 @@ public class KakaoOauthTokenClient {
     private final String kakaoClientSecret;
     private final WebClient webClient;
 
-    public KakaoOauthTokenClient(
+    public KakaoLoginTokenClient(
             @Value("${kakao_client_id}") final String kakaoClientId,
             @Value("${kakao_client_secret}") final String kakaoClientSecret
     ) {

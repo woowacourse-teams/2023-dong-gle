@@ -1,7 +1,7 @@
 package org.donggle.backend.application.config;
 
-import org.donggle.backend.application.service.oauth.kakao.OauthClient;
-import org.donggle.backend.application.service.oauth.kakao.OauthClients;
+import org.donggle.backend.application.service.oauth.kakao.LoginClient;
+import org.donggle.backend.application.service.oauth.kakao.LoginClients;
 import org.donggle.backend.application.service.vendor.medium.MediumApiService;
 import org.donggle.backend.application.service.vendor.notion.NotionApiService;
 import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;
@@ -28,7 +28,7 @@ public class VendorConfiguration {
     }
 
     @Bean
-    public OauthClients oAuth2Clients(final Set<OauthClient> clients) {
-        return new OauthClients(clients);
+    public LoginClients loginClients(final Set<LoginClient> clients) {
+        return new LoginClients(clients);
     }
 }

@@ -1,6 +1,8 @@
 package org.donggle.backend.application.service.oauth.kakao;
 
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.service.oauth.LoginClient;
+import org.donggle.backend.application.service.oauth.SocialType;
 import org.donggle.backend.application.service.oauth.kakao.dto.UserInfo;
 import org.springframework.stereotype.Component;
 

@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static org.donggle.backend.application.service.oauth.kakao.SocialType.KAKAO;
+import static org.donggle.backend.application.service.oauth.SocialType.KAKAO;
 
 @Component
 public class KakaoLoginUserInfoClient {

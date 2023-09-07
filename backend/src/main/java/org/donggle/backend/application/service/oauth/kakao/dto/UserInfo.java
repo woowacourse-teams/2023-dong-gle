@@ -1,6 +1,6 @@
 package org.donggle.backend.application.service.oauth.kakao.dto;
 
-import org.donggle.backend.application.service.oauth.kakao.SocialType;
+import org.donggle.backend.application.service.oauth.SocialType;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
 

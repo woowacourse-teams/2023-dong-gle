@@ -32,7 +32,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/oauth/login/{socialType}/redirect")
+    @GetMapping("/login/{socialType}/redirect")
     public ResponseEntity<Void> createRedirect(
             @PathVariable final String socialType,
             @RequestParam final String redirect_uri
@@ -44,7 +44,7 @@ public class AuthController {
                 .build();
     }
 
-    @PostMapping("/oauth/login/{socialType}")
+    @PostMapping("/login/{socialType}")
     public ResponseEntity<AccessTokenResponse> login(
             @PathVariable final String socialType,
             @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest

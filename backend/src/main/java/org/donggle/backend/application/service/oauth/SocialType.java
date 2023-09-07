@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.oauth.kakao;
+package org.donggle.backend.application.service.oauth;
 
 import java.util.Arrays;
 

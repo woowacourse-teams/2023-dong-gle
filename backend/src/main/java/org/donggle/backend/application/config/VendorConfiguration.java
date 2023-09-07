@@ -1,7 +1,7 @@
 package org.donggle.backend.application.config;
 
-import org.donggle.backend.application.service.oauth.kakao.LoginClient;
-import org.donggle.backend.application.service.oauth.kakao.LoginClients;
+import org.donggle.backend.application.service.oauth.LoginClient;
+import org.donggle.backend.application.service.oauth.LoginClients;
 import org.donggle.backend.application.service.vendor.medium.MediumApiService;
 import org.donggle.backend.application.service.vendor.notion.NotionApiService;
 import org.donggle.backend.application.service.vendor.tistory.TistoryApiService;

@@ -22,10 +22,10 @@ public class LoginClients {
         return client.createRedirectUri(redirectUri);
     }
 
-    public UserInfo requestUserInfo(final SocialType socialType, final String code, final String redirectUri) {
+    public UserInfo findUserInfo(final SocialType socialType, final String code, final String redirectUri) {
         final LoginClient client = getClient(socialType);
         final String accessToken = client.requestToken(code, redirectUri);
-        return client.requestUserInfo(accessToken);
+        return client.findUserInfo(accessToken);
     }
 
     private LoginClient getClient(final SocialType socialType) {

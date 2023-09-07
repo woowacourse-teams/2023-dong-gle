@@ -1,20 +1,15 @@
 package org.donggle.backend.application.service.oauth.kakao;
 
+import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.oauth.kakao.dto.UserInfo;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class KakaoLoginClient implements LoginClient {
 
     private final KakaoLoginTokenClient tokenClient;
     private final KakaoLoginUserInfoClient userInfoClient;
-
-    public KakaoLoginClient(final KakaoLoginTokenClient tokenClient,
-                            final KakaoLoginUserInfoClient userInfoClient
-    ) {
-        this.tokenClient = tokenClient;
-        this.userInfoClient = userInfoClient;
-    }
 
     @Override
     public String createRedirectUri(final String redirectUri) {
@@ -27,7 +22,7 @@ public class KakaoLoginClient implements LoginClient {
     }
 
     @Override
-    public UserInfo requestUserInfo(final String accessToken) {
+    public UserInfo findUserInfo(final String accessToken) {
         return userInfoClient.request(accessToken);
     }
 

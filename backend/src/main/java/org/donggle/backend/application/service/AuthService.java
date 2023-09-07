@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -20,6 +19,7 @@ import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -32,12 +32,16 @@ public class AuthService {
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final CategoryRepository categoryRepository;
 
+    @Transactional(readOnly = true)
     public String createAuthorizeRedirectUri(final String socialType, final String redirect_uri) {
         return oauthClients.redirectUri(SocialType.from(socialType), redirect_uri);
     }
 
     public TokenResponse login(final String socialType, final OAuthAccessTokenRequest request) {
-        final UserInfo userInfo = oauthClients.requestUserInfo(SocialType.from(socialType), request.code(), request.redirect_uri());
+        final UserInfo userInfo = oauthClients.findUserInfo(
+                SocialType.from(socialType),
+                request.code(),
+                request.redirect_uri());
         final Member loginMember = memberRepository.findBySocialId(userInfo.socialId())
                 .orElseGet(() -> initializeMember(userInfo));
         return createTokens(loginMember);

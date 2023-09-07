@@ -7,7 +7,7 @@ public interface LoginClient {
 
     String requestToken(final String authCode, final String redirectUri);
 
-    UserInfo requestUserInfo(final String accessToken);
+    UserInfo findUserInfo(final String accessToken);
 
     SocialType getSocialType();
 }

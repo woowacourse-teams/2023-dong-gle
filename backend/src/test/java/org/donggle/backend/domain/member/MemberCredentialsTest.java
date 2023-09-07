@@ -43,9 +43,10 @@ class MemberCredentialsTest {
         //given
         final MemberCredentials memberCredentials = memberCredentialsRepository.save(MemberCredentials.basic(null));
 
-
         //when
         memberCredentials.updateNotionToken("test");
+        memberCredentialsRepository.flush();
+        entityManager.clear();
 
         //then
         final String notionToken = memberCredentialsRepository

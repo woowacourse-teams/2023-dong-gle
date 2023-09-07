@@ -26,6 +26,7 @@ tistory_client_secret: tistory_client_secret
 notion_client_id: notion_client_id
 notion_client_secret: notion_client_secret
 encrypt_secret_key: encryptsecretkey
+encrypt_iv: encryptivparamet
 ---
 spring:
   config:

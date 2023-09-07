@@ -7,7 +7,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.Base64;
 
 @Component
@@ -17,9 +16,9 @@ public class AESEncryptionUtil {
     private final SecretKeySpec secretKey;
     private final IvParameterSpec iv;
 
-    public AESEncryptionUtil(@Value("${encrypt_secret_key}") final String secretKey) {
+    public AESEncryptionUtil(@Value("${encrypt_secret_key}") final String secretKey, @Value("${encrypt_iv}") final String iv) {
         this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
-        this.iv = getIVSecureRandom(ALGORITHM);
+        this.iv = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
     }
 
     public String encrypt(final String data) {
@@ -43,18 +42,6 @@ public class AESEncryptionUtil {
             final Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
             return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedData)));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static IvParameterSpec getIVSecureRandom(final String algorithm) {
-        final SecureRandom random;
-        try {
-            random = SecureRandom.getInstanceStrong();
-            final byte[] iv = new byte[Cipher.getInstance(algorithm).getBlockSize()];
-            random.nextBytes(iv);
-            return new IvParameterSpec(iv);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

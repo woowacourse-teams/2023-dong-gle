@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
         this.socialId = socialId;
     }
 
-    public static Member createByKakao(final MemberName memberName, final Long socialId) {
+    public static Member of(final MemberName memberName, final Long socialId) {
         return new Member(memberName, socialId);
     }
 

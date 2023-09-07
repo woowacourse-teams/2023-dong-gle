@@ -35,7 +35,7 @@ class NotionParserTest {
 
     @BeforeEach
     void setUp() {
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
+        final Member member = Member.of(new MemberName("동그리"), 1L);
         final Category category = Category.basic(member);
         writing = Writing.lastOf(member, new Title("title"), category);
     }

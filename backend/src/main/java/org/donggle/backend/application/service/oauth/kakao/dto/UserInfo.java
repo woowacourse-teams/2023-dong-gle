@@ -10,7 +10,7 @@ public record UserInfo(
         String nickname
 ) {
     public Member toMember() {
-        return Member.createByKakao(
+        return Member.of(
                 new MemberName(nickname),
                 socialId
         );

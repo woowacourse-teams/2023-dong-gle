@@ -32,7 +32,7 @@ class HtmlRendererTest {
     void setUp() {
         htmlRenderer = new HtmlRenderer(new HtmlStyleRenderer());
         blocks = new ArrayList<>();
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
+        final Member member = Member.of(new MemberName("동그리"), 1L);
         final Category category = Category.basic(member);
         writing = Writing.lastOf(member, new Title("title"), category);
     }
@@ -290,7 +290,7 @@ class HtmlRendererTest {
         //when
         final String result = htmlRenderer.render(blocks);
         final String expected = "<details><summary>토글제목</summary><ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul></details>";
-        
+
         //then
         assertThat(result).isEqualTo(expected);
     }
@@ -337,7 +337,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        String expected = "<ol><li>First</li><ol><li>Second</li><ol><li>Third</li></ol></ol></ol><ul><li>First</li><ul><li>Second</li><ul><li>Third</li></ul></ul></ul>";
+        final String expected = "<ol><li>First</li><ol><li>Second</li><ol><li>Third</li></ol></ol></ol><ul><li>First</li><ul><li>Second</li><ul><li>Third</li></ul></ul></ul>";
 
         //then
         assertThat(result).isEqualTo(expected);

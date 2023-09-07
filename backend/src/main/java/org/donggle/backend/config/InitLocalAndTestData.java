@@ -50,7 +50,7 @@ public class InitLocalAndTestData implements CommandLineRunner {
 
         @Transactional
         public void init() {
-            final Member savedMember = memberRepository.save(Member.createByKakao(new MemberName("동그리"), 1L));
+            final Member savedMember = memberRepository.save(Member.of(new MemberName("동그리"), 1L));
 
             final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
 

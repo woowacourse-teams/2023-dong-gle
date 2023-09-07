@@ -35,7 +35,7 @@ class BlockTest {
     @DisplayName("block과 content save 테스트")
     void blockSave() {
         //given
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
+        final Member member = Member.of(new MemberName("동그리"), 1L);
         final Member savedMember = memberRepository.save(member);
         final Category basicCategory = categoryRepository.findById(1L).get();
         final Writing writing = Writing.lastOf(savedMember, new Title("title"), basicCategory);

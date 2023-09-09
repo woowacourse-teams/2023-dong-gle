@@ -7,8 +7,7 @@ import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useMember } from 'hooks/queries/useMember';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
-import { activeCategoryIdState } from 'globalState';
+import useActiveCategoryId from 'globalState/useActiveCategoryId';
 
 type Props = {
   isOpen: boolean;
@@ -16,7 +15,7 @@ type Props = {
 };
 
 const FileUploadModal = ({ isOpen, closeModal }: Props) => {
-  const activeCategoryId = useGlobalStateValue(activeCategoryIdState);
+  const [activeCategoryId, _] = useActiveCategoryId();
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
     useFileUploadModal({ closeModal, categoryId: activeCategoryId });
   const { goMyPage } = usePageNavigate();

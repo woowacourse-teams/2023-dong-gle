@@ -6,7 +6,7 @@ import { ChangeEventHandler, useState } from 'react';
 import { getErrorMessage } from 'utils/error';
 
 type Args = {
-  categoryId: number | null;
+  categoryId: number;
   closeModal: () => void;
 };
 
@@ -14,7 +14,6 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const [inputValue, setInputValue] = useState('');
   const toast = useToast();
   const { goWritingPage } = usePageNavigate();
-  const selectedCategoryId = categoryId ?? Number(localStorage.getItem('defaultCategoryId'));
   const queryClient = useQueryClient();
 
   const { mutate: uploadNotion, isLoading: isNotionUploadLoading } = useMutation(addNotionWriting, {
@@ -35,15 +34,15 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
   const onFileUploadSuccess = (headers: Headers) => {
     const writingId = headers.get('Location')?.split('/').pop();
-    queryClient.invalidateQueries(['writingsInCategory', selectedCategoryId]);
-    goWritingPage({ categoryId: selectedCategoryId, writingId: Number(writingId) });
+    queryClient.invalidateQueries(['writingsInCategory', categoryId]);
+    goWritingPage({ categoryId, writingId: Number(writingId) });
     closeModal();
   };
 
   const uploadOnServer = (selectedFile: FormData | null) => {
     if (!selectedFile) return;
 
-    selectedFile.append('categoryId', JSON.stringify(selectedCategoryId));
+    selectedFile.append('categoryId', JSON.stringify(categoryId));
 
     uploadFile(selectedFile);
   };
@@ -64,7 +63,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
 
       uploadNotion({
         blockId: blockId,
-        categoryId: selectedCategoryId,
+        categoryId,
       });
     } catch (error) {
       alert(getErrorMessage(error));

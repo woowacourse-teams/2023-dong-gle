@@ -1,12 +1,13 @@
 import DOMPurify from 'dompurify';
-import hljs from 'highlight.js';
-import { useEffect, useRef } from 'react';
+import Prism from 'prismjs';
+import { useEffect } from 'react';
 import { styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import WritingTitle from './WritingTitle/WritingTitle';
+import 'prismjs/themes/prism.css';
 
 type Props = {
   writingId: number;
@@ -18,7 +19,30 @@ const WritingViewer = ({ writingId, categoryId, isDeletedWriting }: Props) => {
   const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
 
   useEffect(() => {
-    hljs.highlightAll();
+    if (!data?.content) return;
+
+    const importPrism = async () => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data.content, 'text/html');
+
+      const codeElements = doc.querySelectorAll('code[class^="language-"]');
+      const languages = Array.from(codeElements)
+        .map((element) => {
+          const match = element.className.match(/language-(\w+)/);
+          return match ? match[1] : null;
+        })
+        .filter(Boolean);
+
+      await Promise.all(
+        languages.map((language) => import(`prismjs/components/prism-${language}`)),
+      );
+    };
+
+    const highlightCode = () => {
+      Prism.highlightAll();
+    };
+
+    importPrism().then(highlightCode);
   }, [data]);
 
   if (isLoading) {

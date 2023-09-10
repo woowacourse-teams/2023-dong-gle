@@ -154,6 +154,7 @@ const S = {
 
     pre > code {
       color: inherit;
+      background-color: transparent;
     }
 
     img {

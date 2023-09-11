@@ -14,7 +14,7 @@ import org.donggle.backend.auth.RefreshToken;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
-import org.donggle.backend.exception.business.JoinDuplicateException;
+import org.donggle.backend.exception.business.DuplicatedMemberException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.dao.DuplicateKeyException;
@@ -60,7 +60,7 @@ public class AuthService {
             categoryRepository.save(basicCategory);
             memberCredentialsRepository.save(basic);
         } catch (final DuplicateKeyException e) {
-            throw new JoinDuplicateException(userInfo.socialType().name());
+            throw new DuplicatedMemberException(userInfo.socialType().name());
         }
         return member;
     }

@@ -2,11 +2,11 @@ package org.donggle.backend.exception.business;
 
 import org.springframework.http.HttpStatus;
 
-public class JoinDuplicateException extends BusinessException {
+public class DuplicatedMemberException extends BusinessException {
     private static final String MESSAGE = "이미 존재하는 회원 입니다.";
     private final String categoryName;
 
-    public JoinDuplicateException(final String categoryName) {
+    public DuplicatedMemberException(final String categoryName) {
         super(MESSAGE);
         this.categoryName = categoryName;
     }

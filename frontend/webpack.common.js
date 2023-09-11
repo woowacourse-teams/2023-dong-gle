@@ -20,7 +20,10 @@ module.exports = {
       },
       {
         test: /\.(png|webp|avif)$/i,
-        type: 'asset/inline',
+        type: 'asset',
+        generator: {
+          filename: 'static/[name][ext]',
+        },
       },
     ],
   },

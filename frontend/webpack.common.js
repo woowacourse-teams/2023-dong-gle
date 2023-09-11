@@ -42,7 +42,7 @@ module.exports = {
     },
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     publicPath: '/',
@@ -50,6 +50,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
+      hash: true,
     }),
     new webpack.DefinePlugin({
       PRODUCT_ENV: JSON.stringify(process.env.NODE_ENV),

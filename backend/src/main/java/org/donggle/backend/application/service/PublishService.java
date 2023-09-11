@@ -53,7 +53,7 @@ public class PublishService {
         final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
         final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
         final PublishResponse response = blogClients.publish(blogType, tags, content, accessToken, writing.getTitleValue());
-        blogWritingRepository.save(new BlogWriting(blog, writing, response.bateTime(), response.tags()));
+        blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags()));
     }
 
     private void checkWritingAlreadyPublished(final BlogWriting publishedBlog, final BlogType blogType, final Writing writing) {

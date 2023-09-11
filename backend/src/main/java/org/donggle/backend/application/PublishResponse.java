@@ -7,7 +7,7 @@ import java.util.List;
 
 @Builder
 public record PublishResponse(
-        LocalDateTime bateTime,
+        LocalDateTime dateTime,
         List<String> tags
 ) {
 }

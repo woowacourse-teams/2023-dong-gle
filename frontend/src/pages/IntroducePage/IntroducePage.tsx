@@ -3,6 +3,8 @@ import LoginModal from 'components/Modal/LoginModal/LoginModal';
 import { useModal } from 'hooks/@common/useModal';
 import { styled } from 'styled-components';
 import donggleExample from 'assets/icons/donggle-example.png';
+import donggleExampleWebp from 'assets/icons/donggle-example-webp.webp';
+import donggleExampleAvif from 'assets/icons/donggle-example-avif.avif';
 import { Navigate } from 'react-router-dom';
 import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
@@ -34,7 +36,11 @@ const IntroducePage = () => {
           </h1>
           <p>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</p>
           <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
-          <img width={600} src={donggleExample} />
+          <picture>
+            <source width={600} srcSet={donggleExampleAvif} />
+            <source width={600} srcSet={donggleExampleWebp} />
+            <img width={600} src={donggleExample} />
+          </picture>
         </S.Introduce>
       </S.Content>
     </S.Container>

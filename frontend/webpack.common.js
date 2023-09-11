@@ -19,9 +19,8 @@ module.exports = {
         use: ['@svgr/webpack', 'url-loader'],
       },
       {
-        test: /\.png$/i,
-        issuer: /\.[jt]sx?$/,
-        use: ['url-loader'],
+        test: /\.(png|webp|avif)$/i,
+        type: 'asset/inline',
       },
     ],
   },

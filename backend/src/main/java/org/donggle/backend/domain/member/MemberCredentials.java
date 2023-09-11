@@ -98,7 +98,7 @@ public class MemberCredentials extends BaseEntity {
             return Optional.ofNullable(tistoryToken);
         }
         if (BlogType.MEDIUM.equals(blogType)) {
-            return Optional.ofNullable(tistoryToken);
+            return Optional.ofNullable(mediumToken);
         }
         return Optional.empty();
     }

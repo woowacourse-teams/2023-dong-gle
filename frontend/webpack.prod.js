@@ -7,4 +7,9 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'hidden-source-map',
   plugins: [new Dotenv({ path: './.env.production' }), new CompressionPlugin()],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 });

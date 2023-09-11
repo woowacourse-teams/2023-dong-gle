@@ -45,6 +45,7 @@ module.exports = merge(common, {
           },
         },
       }),
+      '...',
     ],
     splitChunks: {
       chunks: 'all',

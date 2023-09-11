@@ -2,7 +2,7 @@ import { BlurBackgroundIcon, DonggleIcon } from 'assets/icons';
 import LoginModal from 'components/Modal/LoginModal/LoginModal';
 import { useModal } from 'hooks/@common/useModal';
 import { styled } from 'styled-components';
-import donggleExample from 'assets/icons/donggle-example.png';
+import donggleExamplePng from 'assets/icons/donggle-example-png.png';
 import donggleExampleWebp from 'assets/icons/donggle-example-webp.webp';
 import donggleExampleAvif from 'assets/icons/donggle-example-avif.avif';
 import { Navigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const IntroducePage = () => {
           <picture>
             <source width={600} srcSet={donggleExampleAvif} />
             <source width={600} srcSet={donggleExampleWebp} />
-            <img width={600} src={donggleExample} />
+            <img width={600} src={donggleExamplePng} />
           </picture>
         </S.Introduce>
       </S.Content>
@@ -59,7 +59,7 @@ const S = {
     flex: 1;
     display: flex;
     flex-direction: column;
-    img {
+    picture {
       border-radius: 4px;
       box-shadow:
         rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
@@ -68,7 +68,7 @@ const S = {
       z-index: 2;
     }
 
-    img:hover {
+    picture:hover {
       transition: 0.4s all;
       transform: scale(1.1);
     }

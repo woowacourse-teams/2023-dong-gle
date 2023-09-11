@@ -34,6 +34,17 @@ module.exports = merge(common, {
           },
         },
       }),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.svgoMinify,
+          options: {
+            encodeOptions: {
+              multipass: true,
+              plugins: ['preset-default'],
+            },
+          },
+        },
+      }),
     ],
     splitChunks: {
       chunks: 'all',

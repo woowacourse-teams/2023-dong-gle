@@ -34,7 +34,7 @@ public record TistoryGetWritingResponseWrapper(
     public PublishResponse toPublishResponse() {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return PublishResponse.builder()
-                .bateTime(LocalDateTime.parse(tistory.item().date, formatter))
+                .dateTime(LocalDateTime.parse(tistory.item().date, formatter))
                 .tags(tistory.item().tags.tags())
                 .build();
     }

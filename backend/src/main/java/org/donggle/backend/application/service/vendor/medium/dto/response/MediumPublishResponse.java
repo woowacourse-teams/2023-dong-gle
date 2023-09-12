@@ -24,7 +24,7 @@ public record MediumPublishResponse(
     ) {
         public PublishResponse toPublishResponse() {
             return PublishResponse.builder()
-                    .bateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishedAt), ZoneId.systemDefault()))
+                    .dateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishedAt), ZoneId.systemDefault()))
                     .tags(tags)
                     .build();
         }

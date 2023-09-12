@@ -3,12 +3,14 @@ package org.donggle.backend.config;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
+import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
@@ -44,10 +46,14 @@ public class InitLocalAndTestData implements CommandLineRunner {
         private final MemberRepository memberRepository;
         private final WritingRepository writingRepository;
         private final CategoryRepository categoryRepository;
+        private final MemberCredentialsRepository credentialsRepository;
 
         @Transactional
         public void init() {
             final Member savedMember = memberRepository.save(Member.of(new MemberName("동그리"), 1L));
+            final MemberCredentials credentials = credentialsRepository.save(MemberCredentials.basic(savedMember));
+            credentials.updateTistory("핑크헙크", "헙크");
+            credentials.updateMediumToken("핑크토리");
 
             final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
 

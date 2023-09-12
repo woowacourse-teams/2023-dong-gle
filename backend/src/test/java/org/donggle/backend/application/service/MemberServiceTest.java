@@ -4,6 +4,7 @@ import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class MemberServiceTest {
     @DisplayName("회원 페이지 조회 - 아무것도 연결되어있지 않은 회원")
     void findMemberPage() {
         //given
-        final Member member = memberRepository.findById(1L).get();
+        final Member member = memberRepository.save(Member.of(new MemberName("토리"), 1234L));
         final MemberCredentials savedMemberCredentials = memberCredentialsRepository.save(MemberCredentials.basic(member));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(member.getId());
@@ -49,7 +50,7 @@ class MemberServiceTest {
     void findMemberPage2() {
         //given
         final Member member = memberRepository.findById(1L).get();
-        final MemberCredentials savedMemberCredentials = memberCredentialsRepository.save(MemberCredentials.basic(member));
+        final MemberCredentials savedMemberCredentials = memberCredentialsRepository.findById(1L).get();
         savedMemberCredentials.updateTistory("test", "test");
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(member.getId());
@@ -61,7 +62,7 @@ class MemberServiceTest {
                 () -> assertThat(memberPage.tistory().isConnected()).isTrue(),
                 () -> assertThat(memberPage.tistory().blogName()).isEqualTo("test"),
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
-                () -> assertThat(memberPage.medium().isConnected()).isFalse()
+                () -> assertThat(memberPage.medium().isConnected()).isTrue()
         );
     }
 }

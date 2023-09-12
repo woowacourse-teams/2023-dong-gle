@@ -7,14 +7,6 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'hidden-source-map',
   plugins: [new Dotenv({ path: './.env.production' })],
-  module: {
-    rules: [
-      {
-        test: /\.(jpe?g|png)$/i,
-        type: 'asset',
-      },
-    ],
-  },
   optimization: {
     minimizer: [
       '...',

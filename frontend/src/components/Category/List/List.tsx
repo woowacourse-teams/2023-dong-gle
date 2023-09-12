@@ -5,23 +5,21 @@ import Item from '../Item/Item';
 const List = () => {
   const { categories } = useCategories();
 
+  if (!categories) return null;
+
   return (
-    <>
-      {categories ? (
-        <Accordion>
-          {categories.map((category, index) => {
-            return (
-              <Item
-                key={category.id}
-                categoryId={category.id}
-                categoryName={category.categoryName}
-                isDefaultCategory={Boolean(index === 0)}
-              />
-            );
-          })}
-        </Accordion>
-      ) : null}
-    </>
+    <Accordion>
+      {categories.map((category, index) => {
+        return (
+          <Item
+            key={category.id}
+            categoryId={category.id}
+            categoryName={category.categoryName}
+            isDefaultCategory={Boolean(index === 0)}
+          />
+        );
+      })}
+    </Accordion>
   );
 };
 

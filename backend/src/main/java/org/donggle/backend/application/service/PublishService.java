@@ -2,7 +2,6 @@ package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.PublishResponse;
-import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;

@@ -10,14 +10,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/i,
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-          {
-            loader: 'ts-loader',
-          },
-        ],
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
@@ -60,7 +53,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
-      hash: true,
     }),
     new webpack.DefinePlugin({
       PRODUCT_ENV: JSON.stringify(process.env.NODE_ENV),

@@ -88,7 +88,6 @@ public class WritingService {
                 .orElseThrow(NotionNotConnectedException::new);
         final NotionApiService notionApiService = new NotionApiService();
 
-
         final String blockId = request.blockId();
         final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
         final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
@@ -120,7 +119,8 @@ public class WritingService {
     }
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingModifyRequest request) {
-        final Writing findWriting = findWritingById(memberId, writingId);
+        final Writing findWriting = findWritingById(writingId);
+        validateAuthorization(memberId, findWriting);
         findWriting.updateTitle(new Title(request.title()));
     }
 
@@ -180,11 +180,10 @@ public class WritingService {
     public void modifyWritingOrder(final Long memberId, final Long writingId, final WritingModifyRequest request) {
         final Long nextWritingId = request.nextWritingId();
         final Long targetCategoryId = request.targetCategoryId();
-
-        final Writing source = findWritingById(memberId, writingId);
+        final Writing source = findWritingById(writingId);
+        validateAuthorization(memberId, source);
         deleteWritingOrder(source);
         addWritingOrder(memberId, targetCategoryId, nextWritingId, source);
-
         changeCategory(memberId, targetCategoryId, source);
     }
 
@@ -209,8 +208,15 @@ public class WritingService {
             preWriting.changeNextWriting(writing);
         }
         if (nextWritingId != LAST_WRITING_FLAG) {
-            final Writing nextWriting = findWritingById(memberId, nextWritingId);
+            final Writing nextWriting = findWritingById(nextWritingId);
+            validateAuthorization(memberId, nextWriting);
             writing.changeNextWriting(nextWriting);
+        }
+    }
+
+    private void validateAuthorization(final Long memberId, final Writing writing) {
+        if (!writing.isOwnedBy(memberId)) {
+            throw new WritingNotFoundException(writing.getId());
         }
     }
 
@@ -246,8 +252,8 @@ public class WritingService {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    private Writing findWritingById(final Long memberId, final Long writingId) {
-        return writingRepository.findByMemberIdAndId(memberId, writingId)
+    private Writing findWritingById(final Long writingId) {
+        return writingRepository.findById(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 

@@ -1,8 +1,8 @@
 package org.donggle.backend.auth.exception;
 
-import org.donggle.backend.exception.authentication.AuthenticationException;
+import org.donggle.backend.exception.authentication.UnAuthenticationException;
 
-public class InvalidRefreshTokenException extends AuthenticationException {
+public class InvalidRefreshTokenException extends UnAuthenticationException {
     public InvalidRefreshTokenException() {
         super(null);
     }

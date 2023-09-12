@@ -49,7 +49,10 @@ public class PublishService {
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final Blog blog = findBlog(publishRequest);
         final Member member = findMember(memberId);
-        final Writing writing = findWriting(member.getId(), writingId);
+        final Writing writing = writingRepository.findByIdWithBlocks(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+
+        validateAuthorization(member.getId(), writing);
 
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
@@ -114,6 +117,12 @@ public class PublishService {
                 .build();
     }
 
+    private void validateAuthorization(final Long memberId, final Writing writing) {
+        if (!writing.isOwnedBy(memberId)) {
+            throw new WritingNotFoundException(writing.getId());
+        }
+    }
+
     private MemberCredentials findMemberCredentials(final Member member) {
         return memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
@@ -122,11 +131,6 @@ public class PublishService {
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
-    }
-
-    private Writing findWriting(final Long memberId, final Long writingId) {
-        return writingRepository.findByMemberIdAndId(memberId, writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 
     private Blog findBlog(final PublishRequest publishRequest) {

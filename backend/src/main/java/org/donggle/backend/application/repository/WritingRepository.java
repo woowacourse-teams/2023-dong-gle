@@ -25,8 +25,8 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "where w.nextWriting.id = :writingId")
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
 
-    @EntityGraph(attributePaths = "blocks")
-    Optional<Writing> findByMemberIdAndId(final Long memberId, final Long writingId);
+    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
 
     @Query(value = "select * from writing w " +
             "where w.member_id = :memberId and " +

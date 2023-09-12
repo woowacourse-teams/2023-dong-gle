@@ -107,6 +107,10 @@ public class Writing extends BaseEntity {
         changeNextWritingNull();
     }
 
+    public boolean isOwnedBy(final Long memberId) {
+        return getMember().getId().equals(memberId);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

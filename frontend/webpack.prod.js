@@ -17,22 +17,7 @@ module.exports = merge(common, {
   },
   optimization: {
     minimizer: [
-      new ImageMinimizerPlugin({
-        minimizer: {
-          implementation: ImageMinimizerPlugin.sharpMinify,
-          options: {
-            encodeOptions: {
-              webp: {
-                lossless: true,
-              },
-              avif: {
-                lossless: true,
-              },
-              png: {},
-            },
-          },
-        },
-      }),
+      '...',
       new ImageMinimizerPlugin({
         minimizer: {
           implementation: ImageMinimizerPlugin.svgoMinify,
@@ -44,7 +29,6 @@ module.exports = merge(common, {
           },
         },
       }),
-      '...',
     ],
     splitChunks: {
       chunks: 'all',

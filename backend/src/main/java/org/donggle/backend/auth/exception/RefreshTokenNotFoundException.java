@@ -1,8 +1,8 @@
 package org.donggle.backend.auth.exception;
 
-import org.donggle.backend.exception.authentication.AuthenticationException;
+import org.donggle.backend.exception.authentication.UnAuthenticationException;
 
-public class RefreshTokenNotFoundException extends AuthenticationException {
+public class RefreshTokenNotFoundException extends UnAuthenticationException {
     public RefreshTokenNotFoundException() {
         super(null);
     }

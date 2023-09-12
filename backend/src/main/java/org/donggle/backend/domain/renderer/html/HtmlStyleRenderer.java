@@ -2,12 +2,14 @@ package org.donggle.backend.domain.renderer.html;
 
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleType;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class HtmlStyleRenderer {
     public String render(final String rawText, final List<Style> styles) {
         final Map<Integer, List<String>> startTags = new LinkedHashMap<>();

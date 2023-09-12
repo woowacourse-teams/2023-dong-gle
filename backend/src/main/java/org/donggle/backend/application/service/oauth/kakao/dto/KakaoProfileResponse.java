@@ -1,11 +1,32 @@
 package org.donggle.backend.application.service.oauth.kakao.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.donggle.backend.application.service.oauth.SocialType;
+
+import static org.donggle.backend.application.service.oauth.kakao.dto.KakaoProfileResponse.KakaoAccount.Profile;
+
 public record KakaoProfileResponse(
         Long id,
-        String connected_at,
-        KakaoAccountResponse kakao_account
+        @JsonProperty("kakao_account") KakaoAccount kakaoAccount
 ) {
-    public String getNickname() {
-        return this.kakao_account.profile().nickname();
+
+    public UserInfo toUserInfo() {
+        final Profile profile = kakaoAccount.profile;
+        return new UserInfo(
+                id,
+                SocialType.KAKAO,
+                profile.nickname
+        );
+    }
+
+    public record KakaoAccount(
+            Profile profile
+    ) {
+
+        public record Profile(
+                String nickname
+        ) {
+
+        }
     }
 }

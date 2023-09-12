@@ -171,7 +171,7 @@ class MarkDownParserTest {
             final String text = "---\n___\n***\n";
 
             //when
-            List<Block> result = markDownParser.parse(text);
+            final List<Block> result = markDownParser.parse(text);
 
             //then
             assertAll(
@@ -188,7 +188,7 @@ class MarkDownParserTest {
             final String text = "------------\n______________\n**************";
 
             //when
-            List<Block> result = markDownParser.parse(text);
+            final List<Block> result = markDownParser.parse(text);
 
             //then
             assertAll(
@@ -205,7 +205,7 @@ class MarkDownParserTest {
             final String text = "-----안녕안녕-------\n___안녕\n***안***";
 
             //when
-            List<Block> result = markDownParser.parse(text);
+            final List<Block> result = markDownParser.parse(text);
 
             //then
             assertAll(
@@ -226,8 +226,8 @@ class MarkDownParserTest {
             final String text = "- [x] 안녕하세요. **동글**입니다.";
 
             //when
-            List<Block> result = markDownParser.parse(text);
-            NormalBlock normalBlock = (NormalBlock) result.get(0);
+            final List<Block> result = markDownParser.parse(text);
+            final NormalBlock normalBlock = (NormalBlock) result.get(0);
 
             //then
             assertAll(
@@ -244,8 +244,8 @@ class MarkDownParserTest {
             final String text = "- [ ] 안녕하세요. **동글**입니다.";
 
             //when
-            List<Block> result = markDownParser.parse(text);
-            NormalBlock normalBlock = (NormalBlock) result.get(0);
+            final List<Block> result = markDownParser.parse(text);
+            final NormalBlock normalBlock = (NormalBlock) result.get(0);
 
             //then
             assertAll(
@@ -262,8 +262,8 @@ class MarkDownParserTest {
             final String text = "- [a] 안녕하세요. **동글**입니다.";
 
             //when
-            List<Block> result = markDownParser.parse(text);
-            NormalBlock normalBlock = (NormalBlock) result.get(0);
+            final List<Block> result = markDownParser.parse(text);
+            final NormalBlock normalBlock = (NormalBlock) result.get(0);
 
             //then
             assertAll(

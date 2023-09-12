@@ -1,7 +1,6 @@
 package org.donggle.backend.config;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
@@ -17,7 +16,6 @@ import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.Depth;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
@@ -45,7 +43,6 @@ public class InitLocalAndTestData implements CommandLineRunner {
         private final BlogRepository blogRepository;
         private final MemberRepository memberRepository;
         private final WritingRepository writingRepository;
-        private final BlockRepository blockRepository;
         private final CategoryRepository categoryRepository;
 
         @Transactional
@@ -57,22 +54,20 @@ public class InitLocalAndTestData implements CommandLineRunner {
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
-            final Writing savedWriting = writingRepository.save(Writing.lastOf(
+            writingRepository.save(Writing.of(
                     savedMember,
                     new Title("테스트 글"),
-                    savedCategory
-            ));
-
-            final Block savedBlock = blockRepository.save(
-                    new NormalBlock(
-                            savedWriting,
-                            Depth.from(1),
-                            BlockType.PARAGRAPH,
-                            RawText.from("테스트 글입니다."),
-                            List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
+                    savedCategory,
+                    List.of(
+                            new NormalBlock(
+                                    Depth.from(1),
+                                    BlockType.PARAGRAPH,
+                                    RawText.from("테스트 글입니다."),
+                                    List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
+                                    )
                             )
                     )
-            );
+            ));
         }
     }
 }

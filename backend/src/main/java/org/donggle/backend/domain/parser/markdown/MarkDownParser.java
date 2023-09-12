@@ -3,7 +3,6 @@ package org.donggle.backend.domain.parser.markdown;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
-import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.Depth;
@@ -14,6 +13,7 @@ import org.donggle.backend.domain.writing.block.ImageUrl;
 import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 @RequiredArgsConstructor
 public class MarkDownParser {
     private static final String BLOCK_SPLIT_REGEX = "(?s)(```.*?```).*?|(.*?)(?=```|\\z)";
@@ -32,7 +33,6 @@ public class MarkDownParser {
     private static final int SPACE_GROUP_INDEX = 2;
 
     private final MarkDownStyleParser markDownStyleParser;
-    private final Writing writing;
 
     public List<Block> parse(final String text) {
         return splitBlocks(text).stream()
@@ -75,20 +75,20 @@ public class MarkDownParser {
 
         switch (blockType) {
             case CODE_BLOCK -> {
-                return new CodeBlock(writing, blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
+                return new CodeBlock(blockType, RawText.from(matcher.group(2)), Language.from(matcher.group(1)));
             }
             case IMAGE -> {
                 // TODO: image regex 이전 plainText가 들어오는 경우 처리 로직 추가하기
-                return new ImageBlock(writing, blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
+                return new ImageBlock(blockType, new ImageUrl(matcher.group(2)), new ImageCaption(matcher.group(1)));
             }
             case HORIZONTAL_RULES -> {
-                return new HorizontalRulesBlock(writing, blockType, RawText.from(matcher.group(1)));
+                return new HorizontalRulesBlock(blockType, RawText.from(matcher.group(1)));
             }
             default -> {
                 final String removedBlockTypeText = matcher.replaceAll("");
                 final String removedStyleTypeText = markDownStyleParser.removeStyles(removedBlockTypeText);
                 final List<Style> styles = markDownStyleParser.extractStyles(removedBlockTypeText, removedStyleTypeText);
-                return new NormalBlock(writing, depth, blockType, RawText.from(removedStyleTypeText), styles);
+                return new NormalBlock(depth, blockType, RawText.from(removedStyleTypeText), styles);
             }
         }
     }

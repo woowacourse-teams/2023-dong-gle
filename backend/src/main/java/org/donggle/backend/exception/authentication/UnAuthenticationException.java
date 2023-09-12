@@ -2,12 +2,12 @@ package org.donggle.backend.exception.authentication;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class AuthenticationException extends RuntimeException {
-    public AuthenticationException(final String message) {
+public abstract class UnAuthenticationException extends RuntimeException {
+    public UnAuthenticationException(final String message) {
         super(message);
     }
 
-    public AuthenticationException(final String message, final Throwable cause) {
+    public UnAuthenticationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

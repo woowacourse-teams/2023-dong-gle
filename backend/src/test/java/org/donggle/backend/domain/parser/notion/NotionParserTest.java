@@ -25,19 +25,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NotionParserTest {
-    private Writing writing;
+    private NotionParser notionParser;
 
     @BeforeEach
     void setUp() {
-        final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
-        final Category category = Category.basic(member);
-        writing = Writing.lastOf(member, new Title("title"), category);
+        notionParser = new NotionParser();
     }
 
     @Test
@@ -46,7 +48,6 @@ class NotionParserTest {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("paragraph", false);
         final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -56,7 +57,7 @@ class NotionParserTest {
         final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNode);
         final String rawText = blockParser.parseRawText();
         final List<Style> styles = blockParser.parseStyles();
-        final NormalBlock expected = new NormalBlock(writing, Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
+        final NormalBlock expected = new NormalBlock(Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
         assertThat(blocks)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt", "styles")
@@ -69,7 +70,6 @@ class NotionParserTest {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("code", false);
         final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -82,7 +82,7 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new CodeBlock(writing, BlockType.CODE_BLOCK, RawText.from(rawText), Language.from(blockParser.language())));
+                .isEqualTo(new CodeBlock(BlockType.CODE_BLOCK, RawText.from(rawText), Language.from(blockParser.language())));
     }
 
     @Test
@@ -91,7 +91,6 @@ class NotionParserTest {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("image", false);
         final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -105,7 +104,7 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new ImageBlock(writing, BlockType.IMAGE, new ImageUrl(url), new ImageCaption(caption)));
+                .isEqualTo(new ImageBlock(BlockType.IMAGE, new ImageUrl(url), new ImageCaption(caption)));
     }
 
     @Test
@@ -114,7 +113,6 @@ class NotionParserTest {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("bookmark", false);
         final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -124,7 +122,6 @@ class NotionParserTest {
         final BookmarkParser bookmarkParser = BookmarkParser.from(notionBlockNode);
         final String rawText = bookmarkParser.parseRawText();
         final NormalBlock expected = new NormalBlock(
-                writing,
                 Depth.from(0),
                 BlockType.PARAGRAPH,
                 RawText.from(rawText), List.of(
@@ -134,7 +131,7 @@ class NotionParserTest {
 
         final NormalBlock normalBlock = (NormalBlock) block;
         final List<Style> styles = normalBlock.getStyles();
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(normalBlock)
                         .usingRecursiveComparison()
                         .ignoringFields("id", "createdAt", "updatedAt", "styles")
@@ -151,7 +148,6 @@ class NotionParserTest {
     void createHorizontalRulesBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("divider", false);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -161,7 +157,7 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new HorizontalRulesBlock(writing, BlockType.HORIZONTAL_RULES, RawText.from("---")));
+                .isEqualTo(new HorizontalRulesBlock(BlockType.HORIZONTAL_RULES, RawText.from("---")));
     }
 
     @Test
@@ -169,8 +165,6 @@ class NotionParserTest {
     void createTaskListBLockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("checked_todo", true);
-        System.out.println("jsonNode = " + jsonNode);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -180,7 +174,7 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new NormalBlock(writing, Depth.empty(), BlockType.CHECKED_TASK_LIST, RawText.from("checked todo"), List.of()));
+                .isEqualTo(new NormalBlock(Depth.empty(), BlockType.CHECKED_TASK_LIST, RawText.from("checked todo"), List.of()));
     }
 
     @Test
@@ -188,8 +182,6 @@ class NotionParserTest {
     void createTaskListBLockFromBlockNode2() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("unchecked_todo", true);
-        System.out.println("jsonNode = " + jsonNode);
-        final NotionParser notionParser = new NotionParser(writing);
         final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
 
         //when
@@ -199,6 +191,6 @@ class NotionParserTest {
         assertThat(block)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
-                .isEqualTo(new NormalBlock(writing, Depth.empty(), BlockType.UNCHECKED_TASK_LIST, RawText.from("unchecked todo"), List.of()));
+                .isEqualTo(new NormalBlock(Depth.empty(), BlockType.UNCHECKED_TASK_LIST, RawText.from("unchecked todo"), List.of()));
     }
 }

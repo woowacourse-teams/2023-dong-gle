@@ -1,6 +1,5 @@
 package org.donggle.backend.domain.writing;
 
-import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
@@ -17,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -27,8 +28,6 @@ class BlockTest {
     @Autowired
     private WritingRepository writingRepository;
     @Autowired
-    private BlockRepository blockRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
 
     @Test
@@ -38,16 +37,15 @@ class BlockTest {
         final Member member = Member.createByKakao(new MemberName("동그리"), 1L);
         final Member savedMember = memberRepository.save(member);
         final Category basicCategory = categoryRepository.findById(1L).get();
-        final Writing writing = Writing.lastOf(savedMember, new Title("title"), basicCategory);
+        final Block codeBlock = new CodeBlock(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
+        final Writing writing = Writing.of(savedMember, new Title("title"), basicCategory, List.of(codeBlock));
         final Writing savedWriting = writingRepository.save(writing);
-        final Block codeBlock = new CodeBlock(savedWriting, BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));
 
         //when
-        final Block savedBlock = blockRepository.save(codeBlock);
-        blockRepository.flush();
+        final Writing findWriting = writingRepository.findById(savedWriting.getId()).get();
+        final Block findBlock = findWriting.getBlocks().get(0);
 
         //then
-        final Block findBlock = blockRepository.findById(savedBlock.getId()).get();
-        assertThat(findBlock).isEqualTo(savedBlock);
+        assertThat(findBlock).isEqualTo(codeBlock);
     }
 }

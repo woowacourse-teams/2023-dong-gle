@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.support;
+package org.donggle.backend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlogRepository;

@@ -1,5 +1,6 @@
 package org.donggle.backend.auth;
 
+import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

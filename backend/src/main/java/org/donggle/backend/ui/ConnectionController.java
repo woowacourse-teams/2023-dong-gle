@@ -1,12 +1,12 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.connection.medium.MediumConnectionService;
-import org.donggle.backend.application.service.connection.notion.NotionConnectionService;
-import org.donggle.backend.application.service.connection.tistory.TistoryConnectionService;
-import org.donggle.backend.application.service.request.AddTokenRequest;
+import org.donggle.backend.infrastructure.client.medium.MediumConnectionClient;
+import org.donggle.backend.infrastructure.client.notion.NotionConnectionClient;
+import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
+import org.donggle.backend.application.service.request.TokenAddRequest;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/connections")
 public class ConnectionController {
-    private final TistoryConnectionService tistoryConnectService;
-    private final NotionConnectionService notionConnectionService;
-    private final MediumConnectionService mediumConnectionService;
+    private final TistoryConnectionClient tistoryConnectService;
+    private final NotionConnectionClient notionConnectionService;
+    private final MediumConnectionClient mediumConnectionClient;
 
     @GetMapping("/tistory/redirect")
     public ResponseEntity<Void> connectionsRedirectTistory(
@@ -84,9 +84,9 @@ public class ConnectionController {
     @PostMapping("/medium")
     public ResponseEntity<Void> connectionAddMedium(
             @AuthenticationPrincipal final Long memberId,
-            @RequestBody final AddTokenRequest addTokenRequest
+            @RequestBody final TokenAddRequest addTokenRequest
     ) {
-        mediumConnectionService.saveAccessToken(memberId, addTokenRequest);
+        mediumConnectionClient.saveAccessToken(memberId, addTokenRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -94,7 +94,7 @@ public class ConnectionController {
     public ResponseEntity<Void> connectionsDisconnectMedium(
             @AuthenticationPrincipal final Long memberId
     ) {
-        mediumConnectionService.deleteAccessToken(memberId);
+        mediumConnectionClient.deleteAccessToken(memberId);
         return ResponseEntity.ok().build();
     }
 }

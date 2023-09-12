@@ -1,7 +1,7 @@
 package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.PublishResponse;
+import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -9,6 +9,7 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.Blog;
+import org.donggle.backend.domain.blog.BlogClients;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Member;

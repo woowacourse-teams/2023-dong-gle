@@ -1,8 +1,8 @@
 package org.donggle.backend.auth.exception;
 
-import org.donggle.backend.exception.authentication.AuthenticationException;
+import org.donggle.backend.exception.authentication.UnAuthenticationException;
 
-public class InvalidAuthorizationHeaderTypeException extends AuthenticationException {
+public class InvalidAuthorizationHeaderTypeException extends UnAuthenticationException {
     private final String authorizationHeader;
     
     public InvalidAuthorizationHeaderTypeException(final String authorizationHeader) {

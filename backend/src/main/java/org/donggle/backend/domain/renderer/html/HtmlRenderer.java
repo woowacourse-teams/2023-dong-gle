@@ -1,25 +1,25 @@
 package org.donggle.backend.domain.renderer.html;
 
+import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.HorizontalRulesBlock;
 import org.donggle.backend.domain.writing.block.ImageBlock;
 import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class HtmlRenderer {
     public static final String HTML_TAB = "&emsp;";
 
     private final HtmlStyleRenderer htmlStyleRenderer;
-
-    public HtmlRenderer(final HtmlStyleRenderer htmlStyleRenderer) {
-        this.htmlStyleRenderer = htmlStyleRenderer;
-    }
 
     public String render(final List<Block> blocks) {
         final StringBuilder result = new StringBuilder();
@@ -91,9 +91,11 @@ public class HtmlRenderer {
         final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
         final String language = block.getLanguageValue();
         final String rawText = convertToEscape(block.getRawTextValue());
+        final String startTag = switch (language) {
+            case "plain text" -> htmlType.getStartTag().replace("${language}", "plaintext");
+            default -> htmlType.getStartTag().replace("${language}", language);
+        };
 
-        final String startTag = htmlType.getStartTag()
-                .replace("${language}", language);
 
         return startTag + rawText + htmlType.getEndTag();
     }
@@ -135,7 +137,7 @@ public class HtmlRenderer {
         ends.push(preHtmlType.getEndTag());
         int currentDepth = preBlock.getDepthValue();
 
-        int blockSize = blocks.size();
+        final int blockSize = blocks.size();
         for (int i = 1; i < blockSize; i++) {
             final NormalBlock currentBlock = blocks.get(i);
             final HtmlType currentHtmlType = HtmlType.findByBlockType(currentBlock.getBlockType());

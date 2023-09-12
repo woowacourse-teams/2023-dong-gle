@@ -167,13 +167,14 @@ public class WritingService {
         return copy.get(0);
     }
 
-    private List<Writing> sortWriting(final List<Writing> writings, Writing targetWriting) {
+    private List<Writing> sortWriting(final List<Writing> writings, final Writing firstWriting) {
         final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
         for (final Writing writing : writings) {
             writingMap.put(writing, writing.getNextWriting());
         }
         final List<Writing> sortedWritings = new ArrayList<>();
-        sortedWritings.add(targetWriting);
+        sortedWritings.add(firstWriting);
+        Writing targetWriting = firstWriting;
         while (Objects.nonNull(targetWriting.getNextWriting())) {
             targetWriting = writingMap.get(targetWriting);
             sortedWritings.add(targetWriting);

@@ -5,6 +5,7 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
 import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
+import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +26,12 @@ public class TrashService {
 
     public void trashWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndId(memberId, writingId)
-                        .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
+                .map(writingId -> {
+                    final Writing findWriting = writingRepository.findById(writingId)
+                            .orElseThrow(() -> new DeleteWritingNotFoundException(writingId));
+                    validateAuthorization(memberId, findWriting);
+                    return findWriting;
+                })
                 .forEach(writing -> {
                     final Writing nextWriting = writing.getNextWriting();
                     writing.moveToTrash();
@@ -58,5 +63,11 @@ public class TrashService {
                             writing.restore();
                         }
                 );
+    }
+
+    private void validateAuthorization(final Long memberId, final Writing writing) {
+        if (!writing.isOwnedBy(memberId)) {
+            throw new WritingNotFoundException(writing.getId());
+        }
     }
 }

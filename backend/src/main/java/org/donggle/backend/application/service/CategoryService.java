@@ -136,6 +136,7 @@ public class CategoryService {
         validateBasicCategory(basicCategory, findCategory);
         final CategoryName categoryName = new CategoryName(request.categoryName());
         validateCategoryName(categoryName);
+
         findCategory.changeName(categoryName);
     }
 

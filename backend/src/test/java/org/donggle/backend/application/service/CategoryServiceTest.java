@@ -26,8 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;
@@ -122,6 +122,7 @@ class CategoryServiceTest {
         final Category secondCategory = categoryRepository.findById(secondId).get();
         writingRepository.findById(1L).get()
                 .changeCategory(secondCategory);
+        writingRepository.delete(writingRepository.findById(1L).get());
 
         //when
         categoryService.removeCategory(1L, secondId);
@@ -130,7 +131,7 @@ class CategoryServiceTest {
         categoryRepository.flush();
         writingRepository.flush();
 
-        final Writing writing = writingRepository.findById(1L).get();
+        final Writing writing = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(1L, 1L).get(0);
 
         //then
         assertAll(

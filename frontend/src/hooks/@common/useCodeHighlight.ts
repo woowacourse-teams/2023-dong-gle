@@ -2,20 +2,15 @@ import { useEffect } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
+const prismLanguageFromCodeTagRegex = /<code class="language-(\w+)">/g;
+
 const useCodeHighlight = (htmlDOMString?: string) => {
   useEffect(() => {
     if (!htmlDOMString) return;
     const importPrism = async () => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlDOMString, 'text/html');
-
-      const codeElements = doc.querySelectorAll('code[class^="language-"]');
-      const languages = Array.from(codeElements)
-        .map((element) => {
-          const match = element.className.match(/language-(\w+)/);
-          return match ? match[1] : null;
-        })
-        .filter(Boolean);
+      const languages = Array.from(htmlDOMString.matchAll(prismLanguageFromCodeTagRegex)).map(
+        (match) => match[1],
+      );
 
       await Promise.all(
         languages.map((language) => import(`prismjs/components/prism-${language}`)),

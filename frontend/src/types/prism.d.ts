@@ -61,6 +61,7 @@ declare module 'prismjs/components/prism-ini';
 declare module 'prismjs/components/prism-io';
 declare module 'prismjs/components/prism-j';
 declare module 'prismjs/components/prism-java';
+declare module 'prismjs/components/prism-javascript';
 declare module 'prismjs/components/prism-jolie';
 declare module 'prismjs/components/prism-json';
 declare module 'prismjs/components/prism-julia';

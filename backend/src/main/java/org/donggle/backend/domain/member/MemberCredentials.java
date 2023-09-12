@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.member;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.util.Encrypt;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -26,8 +28,11 @@ public class MemberCredentials extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+    @Convert(converter = Encrypt.class)
     private String notionToken;
+    @Convert(converter = Encrypt.class)
     private String mediumToken;
+    @Convert(converter = Encrypt.class)
     private String tistoryToken;
     private String tistoryBlogName;
 

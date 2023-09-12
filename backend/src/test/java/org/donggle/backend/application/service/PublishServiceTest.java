@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 class PublishServiceTest {
     @Autowired
     private PublishService publishService;

@@ -15,7 +15,6 @@ import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
-import org.donggle.backend.domain.renderer.html.HtmlStyleRenderer;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.TistoryNotConnectedException;
@@ -33,16 +32,20 @@ import java.util.NoSuchElementException;
 public class PublishService {
     private final BlogRepository blogRepository;
     private final WritingRepository writingRepository;
-    private final BlockRepository blockRepository;
     private final BlogWritingRepository blogWritingRepository;
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
+    private final HtmlRenderer htmlRenderer;
     private final BlogClients blogClients;
 
     public void publishWriting(final Long memberId, final Long writingId, final PublishRequest publishRequest) {
         final Blog blog = findBlog(publishRequest);
         final Member member = findMember(memberId);
-        final Writing writing = findWriting(member.getId(), writingId);
+        final Writing writing = writingRepository.findByIdWithBlocks(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+
+        validateAuthorization(member.getId(), writing);
+
         final BlogType blogType = BlogType.from(publishRequest.publishTo());
         final List<String> tags = publishRequest.tags();
         final MemberCredentials memberCredentials = findMemberCredentials(member);
@@ -50,8 +53,10 @@ public class PublishService {
                 .orElseThrow(TistoryNotConnectedException::new);
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
         publishedBlogs.forEach(publishedBlog -> checkWritingAlreadyPublished(publishedBlog, blog.getBlogType(), writing));
-        final List<Block> blocks = blockRepository.findAllByWritingId(writingId);
-        final String content = new HtmlRenderer(new HtmlStyleRenderer()).render(blocks);
+
+        final List<Block> blocks = writing.getBlocks();
+        final String content = htmlRenderer.render(blocks);
+
         final PublishResponse response = blogClients.publish(blogType, tags, content, accessToken, writing.getTitleValue());
         blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags()));
     }
@@ -73,9 +78,10 @@ public class PublishService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
-    private Writing findWriting(final Long memberId, final Long writingId) {
-        return writingRepository.findByMemberIdAndId(memberId, writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    private void validateAuthorization(final Long memberId, final Writing writing) {
+        if (!writing.isOwnedBy(memberId)) {
+            throw new WritingNotFoundException(writing.getId());
+        }
     }
 
     private Blog findBlog(final PublishRequest publishRequest) {

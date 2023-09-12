@@ -2,7 +2,7 @@ package org.donggle.backend.ui.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.donggle.backend.application.service.vendor.exception.VendorApiException;
-import org.donggle.backend.exception.authentication.AuthenticationException;
+import org.donggle.backend.exception.authentication.UnAuthenticationException;
 import org.donggle.backend.exception.business.BusinessException;
 import org.donggle.backend.exception.notfound.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorWrapper> handleAuthenticationException(final AuthenticationException e) {
+    @ExceptionHandler(UnAuthenticationException.class)
+    public ResponseEntity<ErrorWrapper> handleAuthenticationException(final UnAuthenticationException e) {
         log.warn("Exception from handleAuthenticationException = ", e);
         final ErrorWrapper errorWrapper = new ErrorWrapper(
                 ErrorContent.of(e.getMessage(), e.getHint(), e.getErrorCode())

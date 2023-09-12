@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.writing.BlockType;
-import org.donggle.backend.domain.writing.Writing;
 
 import java.util.Objects;
 
@@ -22,14 +21,14 @@ public class ImageBlock extends Block {
     @Embedded
     private ImageCaption imageCaption;
 
-    public ImageBlock(final Writing writing, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
-        super(writing, Depth.empty(), blockType);
+    public ImageBlock(final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(Depth.empty(), blockType);
         this.imageUrl = imageUrl;
         this.imageCaption = imageCaption;
     }
 
-    public ImageBlock(final Writing writing, final Depth depth, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
-        super(writing, depth, blockType);
+    public ImageBlock(final Depth depth, final BlockType blockType, final ImageUrl imageUrl, final ImageCaption imageCaption) {
+        super(depth, blockType);
         this.imageUrl = imageUrl;
         this.imageCaption = imageCaption;
     }

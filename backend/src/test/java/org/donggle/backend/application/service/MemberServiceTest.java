@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.domain.member.Member;
@@ -12,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 class MemberServiceTest {
     @Autowired
     private MemberService memberService;
@@ -35,12 +35,12 @@ class MemberServiceTest {
 
         //then
         assertAll(
-                () -> Assertions.assertThat(memberPage.id()).isEqualTo(member.getId()),
-                () -> Assertions.assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
-                () -> Assertions.assertThat(memberPage.tistory().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.tistory().blogName()).isNull(),
-                () -> Assertions.assertThat(memberPage.notion().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.medium().isConnected()).isEqualTo(false)
+                () -> assertThat(memberPage.id()).isEqualTo(member.getId()),
+                () -> assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
+                () -> assertThat(memberPage.tistory().isConnected()).isFalse(),
+                () -> assertThat(memberPage.tistory().blogName()).isNull(),
+                () -> assertThat(memberPage.notion().isConnected()).isFalse(),
+                () -> assertThat(memberPage.medium().isConnected()).isFalse()
         );
     }
 
@@ -56,12 +56,12 @@ class MemberServiceTest {
 
         //then
         assertAll(
-                () -> Assertions.assertThat(memberPage.id()).isEqualTo(member.getId()),
-                () -> Assertions.assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
-                () -> Assertions.assertThat(memberPage.tistory().isConnected()).isEqualTo(true),
-                () -> Assertions.assertThat(memberPage.tistory().blogName()).isEqualTo("test"),
-                () -> Assertions.assertThat(memberPage.notion().isConnected()).isEqualTo(false),
-                () -> Assertions.assertThat(memberPage.medium().isConnected()).isEqualTo(false)
+                () -> assertThat(memberPage.id()).isEqualTo(member.getId()),
+                () -> assertThat(memberPage.name()).isEqualTo(member.getMemberName().getName()),
+                () -> assertThat(memberPage.tistory().isConnected()).isTrue(),
+                () -> assertThat(memberPage.tistory().blogName()).isEqualTo("test"),
+                () -> assertThat(memberPage.notion().isConnected()).isFalse(),
+                () -> assertThat(memberPage.medium().isConnected()).isFalse()
         );
     }
 }

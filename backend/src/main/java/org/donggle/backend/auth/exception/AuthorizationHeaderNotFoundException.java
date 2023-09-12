@@ -1,8 +1,8 @@
 package org.donggle.backend.auth.exception;
 
-import org.donggle.backend.exception.authentication.AuthenticationException;
+import org.donggle.backend.exception.authentication.UnAuthenticationException;
 
-public class AuthorizationHeaderNotFoundException extends AuthenticationException {
+public class AuthorizationHeaderNotFoundException extends UnAuthenticationException {
     public AuthorizationHeaderNotFoundException() {
         super(null);
     }

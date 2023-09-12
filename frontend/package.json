@@ -14,7 +14,9 @@
     "build-storybook": "storybook build",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test:e2e": "start-server-and-test start http://localhost:3000 cy:run"
+    "test:e2e": "start-server-and-test start http://localhost:3000 cy:run",
+    "preanalyze": "yarn build:prod",
+    "analyze": "webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes gzip"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.32.6",
@@ -76,6 +78,7 @@
     "typescript": "5.1.6",
     "url-loader": "^4.1.1",
     "webpack": "5.88.1",
+    "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "4.15.1"
   },

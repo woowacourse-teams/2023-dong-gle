@@ -13,18 +13,6 @@ services:
       - /home/ubuntu/logs/:/logs/
     environment:
       - SPRING_PROFILES_ACTIVE
-      - DB_URL
-      - DB_USERNAME
-      - DB_PASSWORD
-      - KAKAO_CLIENT_ID
-      - KAKAO_CLIENT_SECRET
-      - TISTORY_CLIENT_ID
-      - TISTORY_CLIENT_SECRET
-      - NOTION_CLIENT_ID
-      - NOTION_CLIENT_SECRET
-      - JWT_SECRET_KEY
-      - ACCESS_TOKEN_EXPIRE_LENGTH
-      - REFRESH_TOKEN_EXPIRE_LENGTH
 
   nginx:
     container_name: nginx

@@ -9,8 +9,8 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
-import org.donggle.backend.application.service.vendor.notion.NotionApiService;
-import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
+import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
@@ -86,11 +86,11 @@ public class WritingService {
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
         final String notionToken = memberCredentials.getNotionToken()
                 .orElseThrow(NotionNotConnectedException::new);
-        final NotionApiService notionApiService = new NotionApiService();
+        final NotionApiClient notionApiService = new NotionApiClient();
 
         final String blockId = request.blockId();
-        final NotionBlockNode parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
-        final List<NotionBlockNode> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
+        final NotionBlockNodeResponse parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
+        final List<NotionBlockNodeResponse> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
         final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
 
         final String title = findTitle(parentBlockNode);
@@ -100,7 +100,7 @@ public class WritingService {
         return savedWriting.getId();
     }
 
-    private String findTitle(final NotionBlockNode parentBlockNode) {
+    private String findTitle(final NotionBlockNodeResponse parentBlockNode) {
         return parentBlockNode.getBlockProperties().get("title").asText();
     }
 

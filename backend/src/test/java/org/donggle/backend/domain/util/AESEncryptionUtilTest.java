@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.util;
 
+import org.donggle.backend.domain.encryption.AESEncryptionUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

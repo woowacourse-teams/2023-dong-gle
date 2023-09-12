@@ -2,7 +2,7 @@ package org.donggle.backend.ui;
 
 import org.donggle.backend.application.service.AuthService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.AccessTokenResponse;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;

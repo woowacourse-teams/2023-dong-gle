@@ -1,10 +1,10 @@
 package org.donggle.backend.config;
 
-import org.donggle.backend.application.BlogClient;
-import org.donggle.backend.application.service.BlogClients;
-import org.donggle.backend.application.service.oauth.LoginClient;
-import org.donggle.backend.application.service.oauth.LoginClients;
-import org.donggle.backend.application.service.vendor.notion.NotionApiService;
+import org.donggle.backend.application.client.BlogClient;
+import org.donggle.backend.application.client.LoginClient;
+import org.donggle.backend.domain.blog.BlogClients;
+import org.donggle.backend.domain.oauth.LoginClients;
+import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +23,7 @@ public class VendorConfiguration {
     }
 
     @Bean
-    public NotionApiService notionApiService() {
-        return new NotionApiService();
+    public NotionApiClient notionApiService() {
+        return new NotionApiClient();
     }
 }

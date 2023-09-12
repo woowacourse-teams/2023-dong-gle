@@ -12,8 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.blog.BlogType;
-import org.donggle.backend.domain.common.BaseEntity;
-import org.donggle.backend.domain.util.Encrypt;
+import org.donggle.backend.domain.BaseEntity;
+import org.donggle.backend.domain.encryption.Encrypt;
 
 import java.util.Objects;
 import java.util.Optional;

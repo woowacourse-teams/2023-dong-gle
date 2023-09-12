@@ -18,7 +18,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.BaseEntity;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.block.Block;
 import org.hibernate.annotations.SQLDelete;

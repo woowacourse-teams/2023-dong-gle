@@ -2,9 +2,9 @@ package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.TrashService;
-import org.donggle.backend.application.service.request.DeleteWritingsRequest;
-import org.donggle.backend.application.service.request.RestoreWritingsRequest;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.application.service.request.WritingsDeleteRequest;
+import org.donggle.backend.application.service.request.WritingsRestoreRequest;
+import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class TrashController {
 
     @PostMapping
     public ResponseEntity<Void> trashDeleteWritings(@AuthenticationPrincipal final Long memberId,
-                                                    @RequestBody final DeleteWritingsRequest request) {
+                                                    @RequestBody final WritingsDeleteRequest request) {
         if (request.isPermanentDelete()) {
             trashService.deleteWritings(memberId, request.writingIds());
         } else {
@@ -38,7 +38,7 @@ public class TrashController {
 
     @PostMapping("/restore")
     public ResponseEntity<Void> trashRestoreWritings(@AuthenticationPrincipal final Long memberId,
-                                                     @RequestBody final RestoreWritingsRequest request) {
+                                                     @RequestBody final WritingsRestoreRequest request) {
         trashService.restoreWritings(memberId, request.writingIds());
         return ResponseEntity.ok().build();
     }

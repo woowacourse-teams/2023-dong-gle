@@ -1,16 +1,11 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
-import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
-import org.donggle.backend.domain.writing.Title;
-import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.Depth;
@@ -21,13 +16,9 @@ import org.donggle.backend.domain.writing.block.ImageUrl;
 import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -47,14 +38,14 @@ class NotionParserTest {
     void createNormalBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("paragraph", false);
-        final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final NotionBlockNodeResponse notionBlockNodeResponse = new NotionBlockNodeResponse(jsonNode, 0);
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block blocks = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block blocks = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNode);
+        final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNodeResponse);
         final String rawText = blockParser.parseRawText();
         final List<Style> styles = blockParser.parseStyles();
         final NormalBlock expected = new NormalBlock(Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
@@ -69,14 +60,14 @@ class NotionParserTest {
     void createCodeBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("code", false);
-        final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final NotionBlockNodeResponse notionBlockNodeResponse = new NotionBlockNodeResponse(jsonNode, 0);
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final CodeBlockParser blockParser = CodeBlockParser.from(notionBlockNode);
+        final CodeBlockParser blockParser = CodeBlockParser.from(notionBlockNodeResponse);
         final String rawText = blockParser.parseRawText();
 
         assertThat(block)
@@ -90,14 +81,14 @@ class NotionParserTest {
     void createImageBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("image", false);
-        final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final NotionBlockNodeResponse notionBlockNodeResponse = new NotionBlockNodeResponse(jsonNode, 0);
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final ImageParser imageParser = ImageParser.from(notionBlockNode);
+        final ImageParser imageParser = ImageParser.from(notionBlockNodeResponse);
         final String url = imageParser.url();
         final String caption = imageParser.parseCaption();
 
@@ -112,14 +103,14 @@ class NotionParserTest {
     void createBookmarkBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("bookmark", false);
-        final NotionBlockNode notionBlockNode = new NotionBlockNode(jsonNode, 0);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final NotionBlockNodeResponse notionBlockNodeResponse = new NotionBlockNodeResponse(jsonNode, 0);
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final BookmarkParser bookmarkParser = BookmarkParser.from(notionBlockNode);
+        final BookmarkParser bookmarkParser = BookmarkParser.from(notionBlockNodeResponse);
         final String rawText = bookmarkParser.parseRawText();
         final NormalBlock expected = new NormalBlock(
                 Depth.from(0),
@@ -148,10 +139,10 @@ class NotionParserTest {
     void createHorizontalRulesBlockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("divider", false);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
         assertThat(block)
@@ -165,10 +156,10 @@ class NotionParserTest {
     void createTaskListBLockFromBlockNode() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("checked_todo", true);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
         assertThat(block)
@@ -182,10 +173,10 @@ class NotionParserTest {
     void createTaskListBLockFromBlockNode2() {
         //given
         final JsonNode jsonNode = NotionBlockJsonBuilder.buildJsonBody("unchecked_todo", true);
-        final List<NotionBlockNode> notionBlockNodes = List.of(new NotionBlockNode(jsonNode, 0));
+        final List<NotionBlockNodeResponse> notionBlockNodeResponses = List.of(new NotionBlockNodeResponse(jsonNode, 0));
 
         //when
-        final Block block = notionParser.parseBody(notionBlockNodes).get(0);
+        final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
         assertThat(block)

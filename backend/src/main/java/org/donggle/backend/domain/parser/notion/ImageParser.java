@@ -1,14 +1,14 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 
 import java.util.List;
 import java.util.Objects;
 
 public record ImageParser(List<RichText> caption, String url) {
 
-    public static ImageParser from(final NotionBlockNode blockNode) {
+    public static ImageParser from(final NotionBlockNodeResponse blockNode) {
         final JsonNode blockProperties = blockNode.getBlockProperties();
         final List<RichText> caption = RichText.parseRichTexts(blockProperties, "caption");
         final String type = blockProperties.get("type").asText();

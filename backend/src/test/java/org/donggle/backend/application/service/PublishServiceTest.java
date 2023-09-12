@@ -35,9 +35,11 @@ class PublishServiceTest {
     @DisplayName("중복 발행 금지 예외")
     void alreadyPublishedException() {
         //given
+
         final Blog blog = blogRepository.findByBlogType(BlogType.MEDIUM).orElseThrow();
         final Writing writing = writingRepository.findById(1L).orElseThrow();
         blogWritingRepository.save(new BlogWriting(blog, writing, LocalDateTime.now(), null));
+
 
         //when
         //then

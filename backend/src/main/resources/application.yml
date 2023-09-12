@@ -25,35 +25,3 @@ tistory_client_id: tistory_client_id
 tistory_client_secret: tistory_client_secret
 notion_client_id: notion_client_id
 notion_client_secret: notion_client_secret
----
-spring:
-  config:
-    activate:
-      on-profile: dev, prod
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: none
-security:
-  jwt:
-    token:
-      secret-key: ${JWT_SECRET_KEY}
-      access-token-expire-length: ${ACCESS_TOKEN_EXPIRE_LENGTH}
-      refresh-token-expire-length: ${REFRESH_TOKEN_EXPIRE_LENGTH}
-kakao_client_id: ${KAKAO_CLIENT_ID}
-kakao_client_secret: ${KAKAO_CLIENT_SECRET}
-tistory_client_id: ${TISTORY_CLIENT_ID}
-tistory_client_secret: ${TISTORY_CLIENT_SECRET}
-notion_client_id: ${NOTION_CLIENT_ID}
-notion_client_secret: ${NOTION_CLIENT_SECRET}
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  jpa:
-    hibernate:
-      ddl-auto: create

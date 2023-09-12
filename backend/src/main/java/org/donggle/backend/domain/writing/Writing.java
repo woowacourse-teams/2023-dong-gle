@@ -50,7 +50,7 @@ public class Writing extends BaseEntity {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "writing_id", nullable = false, updatable = false)
     private List<Block> blocks = new ArrayList<>();
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "next_writing_id")
     private Writing nextWriting;
     @NotNull

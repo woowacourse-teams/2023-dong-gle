@@ -1,4 +1,4 @@
-package org.donggle.backend.application.config;
+package org.donggle.backend.config;
 
 import org.donggle.backend.application.BlogClient;
 import org.donggle.backend.application.service.BlogClients;

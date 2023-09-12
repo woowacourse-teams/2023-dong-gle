@@ -1,4 +1,4 @@
-package org.donggle.backend.config;
+package org.donggle.backend.application.service.support;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlogRepository;
@@ -14,17 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitDevData implements CommandLineRunner {
     private final InitService initService;
-    
+
     @Override
     public void run(final String... args) {
         initService.init();
     }
-    
+
     @Component
     @RequiredArgsConstructor
     public static class InitService {
         private final BlogRepository blogRepository;
-        
+
         @Transactional
         public void init() {
             blogRepository.save(new Blog(BlogType.MEDIUM));

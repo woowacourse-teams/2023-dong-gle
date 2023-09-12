@@ -1,4 +1,4 @@
-package org.donggle.backend.ui.config;
+package org.donggle.backend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;

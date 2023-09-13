@@ -6,22 +6,14 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.application.service.request.MarkdownUploadRequest;
-import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
-import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
-import org.donggle.backend.domain.parser.markdown.MarkDownParser;
-import org.donggle.backend.domain.parser.notion.NotionParser;
-import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
-import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -30,12 +22,9 @@ import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
-import org.donggle.backend.ui.response.WritingResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -55,21 +44,11 @@ public class WritingService {
     private final BlogWritingRepository blogWritingRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final CategoryRepository categoryRepository;
-    private final MarkDownParser markDownParser;
-    private final NotionParser notionParser;
-    private final HtmlRenderer htmlRenderer;
 
-    public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
-        final String originalFilename = request.file().getOriginalFilename();
-        if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
-            throw new InvalidFileFormatException(originalFilename);
-        }
-        final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
-        final List<Block> blocks = markDownParser.parse(originalFileText);
-
+    public Long saveByFile(final Long memberId, final Long categoryId, final String title, final List<Block> blocks) {
         final Member findMember = findMember(memberId);
-        final Category findCategory = findCategory(findMember.getId(), request.categoryId());
-        final Writing writing = Writing.of(findMember, new Title(findFileName(originalFilename)), findCategory, blocks);
+        final Category findCategory = findCategory(findMember.getId(), categoryId);
+        final Writing writing = Writing.of(findMember, new Title(findFileName(title)), findCategory, blocks);
         final Writing savedWriting = saveAndGetWriting(findCategory, writing);
 
         return savedWriting.getId();
@@ -80,31 +59,16 @@ public class WritingService {
         return originalFilename.substring(0, endIndex);
     }
 
-    public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
+    public MemberCategoryNotionInfo getMemberCategoryNotionInfo(final Long memberId, final Long categoryId) {
         final Member findMember = findMember(memberId);
-        final Category findCategory = findCategory(findMember.getId(), request.categoryId());
+        final Category category = findCategory(memberId, categoryId);
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
         final String notionToken = memberCredentials.getNotionToken()
                 .orElseThrow(NotionNotConnectedException::new);
-        final NotionApiClient notionApiService = new NotionApiClient();
-
-        final String blockId = request.blockId();
-        final NotionBlockNodeResponse parentBlockNode = notionApiService.retrieveParentBlockNode(blockId, notionToken);
-        final List<NotionBlockNodeResponse> bodyBlockNodes = notionApiService.retrieveBodyBlockNodes(parentBlockNode, notionToken);
-        final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
-
-        final String title = findTitle(parentBlockNode);
-        final Writing writing = Writing.of(findMember, new Title(title), findCategory, blocks);
-        final Writing savedWriting = saveAndGetWriting(findCategory, writing);
-
-        return savedWriting.getId();
+        return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }
 
-    private String findTitle(final NotionBlockNodeResponse parentBlockNode) {
-        return parentBlockNode.getBlockProperties().get("title").asText();
-    }
-
-    private Writing saveAndGetWriting(final Category findCategory, final Writing writing) {
+    public Writing saveAndGetWriting(final Category findCategory, final Writing writing) {
         if (isNotEmptyCategory(findCategory)) {
             final Writing lastWriting = findLastWritingInCategory(findCategory.getId());
             final Writing savedWriting = writingRepository.save(writing);
@@ -118,18 +82,15 @@ public class WritingService {
         return writingRepository.countByCategoryId(category.getId()) != 0;
     }
 
-    public void modifyWritingTitle(final Long memberId, final Long writingId, final WritingModifyRequest request) {
+    public void modifyWritingTitle(final Long memberId, final Long writingId, final Title title) {
         final Writing findWriting = findWritingById(writingId);
         validateAuthorization(memberId, findWriting);
-        findWriting.updateTitle(new Title(request.title()));
+        findWriting.updateTitle(title);
     }
 
     @Transactional(readOnly = true)
-    public WritingResponse findWriting(final Long memberId, final Long writingId) {
-        final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
-        final List<Block> blocks = writing.getBlocks();
-        final String content = htmlRenderer.render(blocks);
-        return WritingResponse.of(writing, content);
+    public Writing findWriting(final Long memberId, final Long writingId) {
+        return findWritingAndTrashedWriting(memberId, writingId);
     }
 
     @Transactional(readOnly = true)

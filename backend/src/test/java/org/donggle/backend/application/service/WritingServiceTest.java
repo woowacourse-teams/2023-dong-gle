@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service;
 
+import org.donggle.backend.application.WritingContentService;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.domain.writing.Title;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 class WritingServiceTest {
     @Autowired
-    private WritingService writingService;
+    private WritingContentService writingService;
     @Autowired
     private WritingRepository writingRepository;
 

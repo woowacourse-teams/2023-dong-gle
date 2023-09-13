@@ -12,12 +12,16 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 @Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_UNIQUE", columnNames = "socialId"))
 public class Member extends BaseEntity {
     @Id
@@ -27,6 +31,7 @@ public class Member extends BaseEntity {
     @Embedded
     private MemberName memberName;
     private Long socialId;
+    boolean isDeleted = false;
 
     private Member(final MemberName memberName, final Long socialId) {
         this.memberName = memberName;

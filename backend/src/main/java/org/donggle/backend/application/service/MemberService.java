@@ -21,10 +21,19 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberPageResponse findMemberPage(final Long memberId) {
-        final Member foundMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember)
+        final Member findMember = findMember(memberId);
+        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember)
                 .orElseThrow(NoSuchElementException::new);
-        return MemberPageResponse.of(foundMember, foundMemberCredentials);
+        return MemberPageResponse.of(findMember, foundMemberCredentials);
+    }
+
+    public void deleteMember(final Long memberId) {
+        final Member findMember = findMember(memberId);
+        memberRepository.delete(findMember);
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

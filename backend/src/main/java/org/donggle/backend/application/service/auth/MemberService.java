@@ -13,10 +13,13 @@ import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.DuplicatedMemberException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
+import org.donggle.backend.ui.response.MemberPageResponse;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -57,6 +60,15 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         return createTokens(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPageResponse findMemberPage(final Long memberId) {
+        final Member foundMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember)
+                .orElseThrow(NoSuchElementException::new);
+        return MemberPageResponse.of(foundMember, foundMemberCredentials);
     }
 
     private TokenResponse createTokens(final Member loginMember) {

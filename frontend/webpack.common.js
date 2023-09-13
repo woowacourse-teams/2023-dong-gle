@@ -23,6 +23,10 @@ module.exports = {
         issuer: /\.[jt]sx?$/,
         use: ['url-loader'],
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {

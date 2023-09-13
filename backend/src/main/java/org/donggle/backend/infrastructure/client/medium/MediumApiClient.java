@@ -54,6 +54,7 @@ public class MediumApiClient implements BlogClient {
         return MediumRequestBody.builder()
                 .title(titleValue)
                 .content(content)
+                .contentFormat("html")
                 .tags(tags)
                 .build();
     }

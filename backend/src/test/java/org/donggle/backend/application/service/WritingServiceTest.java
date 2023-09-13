@@ -1,8 +1,8 @@
 package org.donggle.backend.application.service;
 
-import org.donggle.backend.application.WritingContentService;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.application.service.writing.WritingContentService;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;

@@ -1,8 +1,6 @@
-package org.donggle.backend.application;
+package org.donggle.backend.application.service.writing;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.MemberCategoryNotionInfo;
-import org.donggle.backend.application.service.WritingService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;

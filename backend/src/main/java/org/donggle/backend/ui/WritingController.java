@@ -2,12 +2,12 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.WritingContentService;
 import org.donggle.backend.application.service.blog.BlogService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.application.service.writing.WritingContentService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;

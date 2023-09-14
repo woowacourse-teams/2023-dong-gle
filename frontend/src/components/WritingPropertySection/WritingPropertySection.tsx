@@ -49,17 +49,19 @@ const WritingPropertySection = ({ writingId }: Props) => {
                           {BLOG_ICON[blogName]} {BLOG_KOREAN[blogName]}
                         </S.PropertyName>
                       </S.PropertyRow>
-                      <S.PropertyRow>
-                        <S.PropertyName>
-                          <HyperlinkIcon width={10} height={10} />
-                          발행 링크
-                        </S.PropertyName>
-                        <S.PropertyValue>
-                          <S.BlogLink href={publishedUrl} target='_blank' rel='external'>
-                            블로그로 이동하기
-                          </S.BlogLink>
-                        </S.PropertyValue>
-                      </S.PropertyRow>
+                      {publishedUrl ? (
+                        <S.PropertyRow>
+                          <S.PropertyName>
+                            <HyperlinkIcon width={10} height={10} />
+                            발행 링크
+                          </S.PropertyName>
+                          <S.PropertyValue>
+                            <S.BlogLink href={publishedUrl} target='_blank' rel='external'>
+                              블로그로 이동하기
+                            </S.BlogLink>
+                          </S.PropertyValue>
+                        </S.PropertyRow>
+                      ) : null}
                       <S.PropertyRow>
                         <S.PropertyName>
                           <CalendarIcon width={12} height={12} />

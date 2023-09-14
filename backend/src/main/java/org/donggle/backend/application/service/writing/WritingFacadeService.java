@@ -27,7 +27,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class WritingContentService {
+public class WritingFacadeService {
     private static final String MD_FORMAT = ".md";
 
     private final WritingService writingService;

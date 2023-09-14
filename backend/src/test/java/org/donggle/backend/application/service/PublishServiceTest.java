@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.application.service.blog.BlogService;
+import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class PublishServiceTest {
     @Autowired
-    private BlogService blogService;
+    private PublishFacadeService blogService;
     @Autowired
     private WritingRepository writingRepository;
     @Autowired

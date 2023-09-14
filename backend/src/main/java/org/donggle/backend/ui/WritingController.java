@@ -2,12 +2,12 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.blog.BlogService;
+import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
-import org.donggle.backend.application.service.writing.WritingContentService;
+import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
@@ -30,15 +30,15 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("/writings")
 public class WritingController {
-    private final WritingContentService writingContentService;
-    private final BlogService blogService;
+    private final WritingFacadeService writingFacadeService;
+    private final PublishFacadeService blogService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> writingAdd(
             @AuthenticationPrincipal final Long memberId,
             @Valid final MarkdownUploadRequest request
     ) throws IOException {
-        final Long writingId = writingContentService.uploadMarkDownFile(memberId, request);
+        final Long writingId = writingFacadeService.uploadMarkDownFile(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 
@@ -47,7 +47,7 @@ public class WritingController {
             @AuthenticationPrincipal final Long memberId,
             @Valid @RequestBody final NotionUploadRequest request
     ) {
-        final Long writingId = writingContentService.uploadNotionPage(memberId, request);
+        final Long writingId = writingFacadeService.uploadNotionPage(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
     }
 
@@ -56,7 +56,7 @@ public class WritingController {
             @AuthenticationPrincipal final Long memberId,
             @PathVariable final Long writingId
     ) {
-        final WritingResponse response = writingContentService.findWriting(memberId, writingId);
+        final WritingResponse response = writingFacadeService.findWriting(memberId, writingId);
         return ResponseEntity.ok(response);
     }
 
@@ -67,9 +67,9 @@ public class WritingController {
             @RequestBody final WritingModifyRequest request
     ) {
         if (request.title() != null) {
-            writingContentService.modifyWritingTitle(memberId, writingId, request);
+            writingFacadeService.modifyWritingTitle(memberId, writingId, request);
         } else if (request.nextWritingId() != null && request.targetCategoryId() != null) {
-            writingContentService.modifyWritingOrder(memberId, writingId, request);
+            writingFacadeService.modifyWritingOrder(memberId, writingId, request);
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -81,7 +81,7 @@ public class WritingController {
             @AuthenticationPrincipal final Long memberId,
             @PathVariable final Long writingId
     ) {
-        final WritingPropertiesResponse response = writingContentService.findWritingProperties(memberId, writingId);
+        final WritingPropertiesResponse response = writingFacadeService.findWritingProperties(memberId, writingId);
         return ResponseEntity.ok(response);
     }
 
@@ -90,7 +90,7 @@ public class WritingController {
             @AuthenticationPrincipal final Long memberId,
             @RequestParam final Long categoryId
     ) {
-        final WritingListWithCategoryResponse response = writingContentService.findWritingListByCategoryId(memberId, categoryId);
+        final WritingListWithCategoryResponse response = writingFacadeService.findWritingListByCategoryId(memberId, categoryId);
         return ResponseEntity.ok(response);
     }
 

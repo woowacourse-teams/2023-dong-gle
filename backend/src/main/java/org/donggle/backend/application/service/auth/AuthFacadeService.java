@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthFacadeService {
-    private final LoginClients oauthClients;
-    private final AuthService authService;
+    private final LoginClients oauthClients; //APi
+    private final AuthService authService; //
 
     public String createAuthorizeRedirectUri(final String socialType, final String redirect_uri) {
         return oauthClients.redirectUri(SocialType.from(socialType), redirect_uri);

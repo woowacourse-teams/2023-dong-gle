@@ -13,6 +13,7 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.business.TistoryNotConnectedException;
+import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
@@ -46,7 +47,8 @@ public class PublishService {
                 .orElseThrow(TistoryNotConnectedException::new);
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
 
-        return new PublishWritingRequest(blog, publishedBlogs, writing, accessToken);
+        checkWritingAlreadyPublished(publishedBlogs, blog.getBlogType(), writing);
+        return new PublishWritingRequest(blog, writing, accessToken);
     }
 
     public void saveProperties(final Blog blog, final Writing writing, final PublishResponse response) {
@@ -62,6 +64,16 @@ public class PublishService {
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
+
+    private void checkWritingAlreadyPublished(final List<BlogWriting> publishedBlogs, final BlogType blogType, final Writing writing) {
+        final boolean isAlreadyPublished = publishedBlogs.stream()
+                .anyMatch(blogWriting -> blogWriting.isSameBlogType(blogType)
+                        && writing.getUpdatedAt().isBefore(blogWriting.getPublishedAt()));
+
+        if (isAlreadyPublished) {
+            throw new WritingAlreadyPublishedException(writing.getId(), blogType);
+        }
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {

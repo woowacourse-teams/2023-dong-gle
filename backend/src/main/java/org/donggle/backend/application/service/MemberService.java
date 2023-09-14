@@ -29,6 +29,7 @@ public class MemberService {
 
     public void deleteMember(final Long memberId) {
         final Member findMember = findMember(memberId);
+        findMember.updateDeletedAt();
         memberRepository.delete(findMember);
     }
 

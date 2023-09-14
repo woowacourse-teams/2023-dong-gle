@@ -15,6 +15,7 @@ import org.donggle.backend.domain.BaseEntity;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -31,7 +32,8 @@ public class Member extends BaseEntity {
     @Embedded
     private MemberName memberName;
     private Long socialId;
-    boolean isDeleted = false;
+    private boolean isDeleted = false;
+    private LocalDateTime deletedAt;
 
     private Member(final MemberName memberName, final Long socialId) {
         this.memberName = memberName;
@@ -40,6 +42,10 @@ public class Member extends BaseEntity {
 
     public static Member of(final MemberName memberName, final Long socialId) {
         return new Member(memberName, socialId);
+    }
+
+    public void updateDeletedAt() {
+        this.deletedAt = LocalDateTime.now();
     }
 
     @Override

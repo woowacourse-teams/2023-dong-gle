@@ -2,6 +2,7 @@ package org.donggle.backend.application.service;
 
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 class WritingServiceTest {
     @Autowired
-    private WritingService writingService;
+    private WritingFacadeService writingService;
     @Autowired
     private WritingRepository writingRepository;
 

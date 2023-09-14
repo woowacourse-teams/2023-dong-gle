@@ -1,9 +1,9 @@
 package org.donggle.backend.infrastructure.client.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.donggle.backend.domain.parser.notion.NotionBlockType;
 import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
-import org.donggle.backend.domain.parser.notion.NotionBlockType;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -61,6 +61,10 @@ public class NotionApiClient {
         }
 
         return bodyBlockNodes;
+    }
+
+    public String findTitle(final NotionBlockNodeResponse parentBlockNode) {
+        return parentBlockNode.getBlockProperties().get("title").asText();
     }
 
     private void processNotionBlockNode(

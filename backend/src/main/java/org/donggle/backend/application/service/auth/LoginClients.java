@@ -1,6 +1,7 @@
-package org.donggle.backend.domain.oauth;
+package org.donggle.backend.application.service.auth;
 
 import org.donggle.backend.application.client.LoginClient;
+import org.donggle.backend.domain.oauth.SocialType;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 
 import java.util.EnumMap;
@@ -9,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public class LoginClients {
-
     private final Map<SocialType, LoginClient> clients;
 
     public LoginClients(final Set<LoginClient> clients) {

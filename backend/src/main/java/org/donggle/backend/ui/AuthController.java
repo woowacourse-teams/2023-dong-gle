@@ -1,6 +1,6 @@
 package org.donggle.backend.ui;
 
-import org.donggle.backend.application.service.AuthService;
+import org.donggle.backend.application.service.auth.AuthFacadeService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.AccessTokenResponse;
@@ -24,12 +24,12 @@ public class AuthController {
     private static final int ONE_SECOND = 1000;
 
     private final int cookieTime;
-    private final AuthService authService;
+    private final AuthFacadeService authFacadeService;
 
     public AuthController(@Value("${security.jwt.token.refresh-token-expire-length}") final int cookieTime,
-                          final AuthService authService) {
+                          final AuthFacadeService authFacadeService) {
         this.cookieTime = cookieTime / ONE_SECOND;
-        this.authService = authService;
+        this.authFacadeService = authFacadeService;
     }
 
     @GetMapping("/login/{socialType}/redirect")
@@ -37,7 +37,7 @@ public class AuthController {
             @PathVariable final String socialType,
             @RequestParam final String redirect_uri
     ) {
-        final String redirectUri = authService.createAuthorizeRedirectUri(socialType, redirect_uri);
+        final String redirectUri = authFacadeService.createAuthorizeRedirectUri(socialType, redirect_uri);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, redirectUri)
@@ -49,7 +49,7 @@ public class AuthController {
             @PathVariable final String socialType,
             @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
     ) {
-        final TokenResponse response = authService.login(socialType, oAuthAccessTokenRequest);
+        final TokenResponse response = authFacadeService.login(socialType, oAuthAccessTokenRequest);
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
 
         return ResponseEntity
@@ -60,13 +60,13 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal final Long memberId) {
-        authService.logout(memberId);
+        authFacadeService.logout(memberId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/token/refresh")
     public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId) {
-        final TokenResponse response = authService.reissueAccessTokenAndRefreshToken(memberId);
+        final TokenResponse response = authFacadeService.reissueAccessTokenAndRefreshToken(memberId);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
 

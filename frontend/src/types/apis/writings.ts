@@ -31,6 +31,7 @@ export type PublishedDetail = {
   blogName: Blog;
   publishedAt: Date;
   tags: string[];
+  publishedUrl: string;
 };
 
 export type Writing = {

@@ -42,11 +42,13 @@ export const writingHandlers = [
               blogName: 'MEDIUM',
               publishedAt: new Date('2023-07-11T06:55:46.922Z'),
               tags: ['개발', '네트워크', '서버'],
+              publishedUrl: 'https://medium.com/',
             },
             {
               blogName: 'TISTORY',
               publishedAt: new Date('2023-06-11T06:55:46.922Z'),
               tags: ['프로그래밍', 'CS'],
+              publishedUrl: 'https://www.tistory.com/',
             },
           ],
         }),

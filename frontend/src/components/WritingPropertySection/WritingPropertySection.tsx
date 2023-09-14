@@ -1,6 +1,6 @@
-import { Fragment, ReactElement } from 'react';
+import { Fragment } from 'react';
 import { getWritingProperties } from 'apis/writings';
-import { CalendarIcon, TagIcon } from 'assets/icons';
+import { CalendarIcon, HyperlinkIcon, TagIcon } from 'assets/icons';
 import Tag from 'components/@common/Tag/Tag';
 import { styled } from 'styled-components';
 import { dateFormatter } from 'utils/date';
@@ -40,34 +40,53 @@ const WritingPropertySection = ({ writingId }: Props) => {
           <S.Info>
             <S.InfoTitle>발행 정보</S.InfoTitle>
             <S.InfoContent>
-              {writingInfo.publishedDetails.map(({ blogName, publishedAt, tags }, index) => {
-                return (
-                  <Fragment key={index}>
-                    <S.PropertyRow>
-                      <S.PropertyName>
-                        {BLOG_ICON[blogName]} {BLOG_KOREAN[blogName]}
-                      </S.PropertyName>
-                      <S.PropertyValue>
-                        {dateFormatter(publishedAt, 'YYYY/MM/DD HH:MM')}
-                      </S.PropertyValue>
-                    </S.PropertyRow>
-                    <S.PropertyRow>
-                      <S.PropertyName>
-                        <TagIcon width={12} height={12} />
-                        태그
-                      </S.PropertyName>
-                      <S.PropertyValue>
-                        {tags.map((tag) => (
-                          <Tag key={tag} removable={false}>
-                            {tag}
-                          </Tag>
-                        ))}
-                      </S.PropertyValue>
-                    </S.PropertyRow>
-                    <S.Spacer />
-                  </Fragment>
-                );
-              })}
+              {writingInfo.publishedDetails.map(
+                ({ blogName, publishedAt, tags, publishedUrl }, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <S.PropertyRow>
+                        <S.PropertyName>
+                          {BLOG_ICON[blogName]} {BLOG_KOREAN[blogName]}
+                        </S.PropertyName>
+                      </S.PropertyRow>
+                      <S.PropertyRow>
+                        <S.PropertyName>
+                          <HyperlinkIcon width={10} height={10} />
+                          발행 링크
+                        </S.PropertyName>
+                        <S.PropertyValue>
+                          <S.BlogLink href={publishedUrl} target='_blank' rel='external'>
+                            블로그로 이동하기
+                          </S.BlogLink>
+                        </S.PropertyValue>
+                      </S.PropertyRow>
+                      <S.PropertyRow>
+                        <S.PropertyName>
+                          <CalendarIcon width={12} height={12} />
+                          발행일
+                        </S.PropertyName>
+                        <S.PropertyValue>
+                          {dateFormatter(publishedAt, 'YYYY/MM/DD HH:MM')}
+                        </S.PropertyValue>
+                      </S.PropertyRow>
+                      <S.PropertyRow>
+                        <S.PropertyName>
+                          <TagIcon width={12} height={12} />
+                          태그
+                        </S.PropertyName>
+                        <S.PropertyValue>
+                          {tags.map((tag) => (
+                            <Tag key={tag} removable={false}>
+                              {tag}
+                            </Tag>
+                          ))}
+                        </S.PropertyValue>
+                      </S.PropertyRow>
+                      <S.Spacer />
+                    </Fragment>
+                  );
+                },
+              )}
             </S.InfoContent>
           </S.Info>
         )}
@@ -142,5 +161,10 @@ const S = {
   `,
   Spacer: styled.div`
     height: 0.8rem;
+  `,
+
+  BlogLink: styled.a`
+    color: ${({ theme }) => theme.color.gray12};
+    font-weight: 500;
   `,
 };

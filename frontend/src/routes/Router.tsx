@@ -12,6 +12,7 @@ import Layout from 'pages/Layout/Layout';
 import ErrorPage from 'pages/ErrorPage/ErrorPage';
 import MyPage from 'pages/MyPage/MyPage';
 import ConnectionPage from 'pages/ConnectionPage/ConnectionPage';
+import WritingPage from 'pages/WritingPage/WritingPage';
 import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
 import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import PrivateRouter from './PrivateRouter';
@@ -19,7 +20,6 @@ import PrivateRouter from './PrivateRouter';
 import { Suspense, lazy } from 'react';
 
 const IntroducePage = lazy(() => import('pages/IntroducePage/IntroducePage'));
-const WritingPage = lazy(() => import('pages/WritingPage/WritingPage'));
 
 export const Router = () => {
   const browserRouter = createBrowserRouter(

@@ -38,7 +38,7 @@ class PublishServiceTest {
 
         final Blog blog = blogRepository.findByBlogType(BlogType.MEDIUM).orElseThrow();
         final Writing writing = writingRepository.findById(1L).orElseThrow();
-        blogWritingRepository.save(new BlogWriting(blog, writing, LocalDateTime.now(), null));
+        blogWritingRepository.save(new BlogWriting(blog, writing, LocalDateTime.now(), null, null));
 
 
         //when

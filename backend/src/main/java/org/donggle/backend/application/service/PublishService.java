@@ -1,7 +1,6 @@
 package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.application.repository.BlogRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -22,6 +21,7 @@ import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
+import org.donggle.backend.ui.response.PublishResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class PublishService {
         final String content = htmlRenderer.render(blocks);
 
         final PublishResponse response = blogClients.publish(blogType, tags, content, accessToken, writing.getTitleValue());
-        blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags()));
+        blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags(), response.url()));
     }
 
     private void checkWritingAlreadyPublished(final BlogWriting publishedBlog, final BlogType blogType, final Writing writing) {

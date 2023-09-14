@@ -26,6 +26,7 @@ public record MediumPublishResponse(
             return PublishResponse.builder()
                     .dateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishedAt), ZoneId.systemDefault()))
                     .tags(tags)
+                    .url(url)
                     .build();
         }
     }

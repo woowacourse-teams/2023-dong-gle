@@ -1,4 +1,5 @@
 import Modal from 'components/@common/Modal/Modal';
+import { useMemberDelete } from 'hooks/queries/member/useMemberDelete';
 import { styled } from 'styled-components';
 
 type Props = {
@@ -7,6 +8,12 @@ type Props = {
 };
 
 const DeleteAccountModal = ({ isOpen, closeModal }: Props) => {
+  const deleteMember = useMemberDelete();
+
+  const deleteAccount = () => {
+    deleteMember.mutate();
+  };
+
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
       <S.Container>
@@ -16,7 +23,7 @@ const DeleteAccountModal = ({ isOpen, closeModal }: Props) => {
           <p>정말 탈퇴하시겠습니까?</p>
         </S.Content>
         <S.ButtonContainer>
-          <S.DeleteAccountButton onClick={() => {}}>탈퇴</S.DeleteAccountButton>
+          <S.DeleteAccountButton onClick={deleteAccount}>탈퇴</S.DeleteAccountButton>
           <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
         </S.ButtonContainer>
       </S.Container>

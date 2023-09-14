@@ -16,7 +16,6 @@ import java.util.NoSuchElementException;
 @Transactional
 @RequiredArgsConstructor
 public class MemberService {
-
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 

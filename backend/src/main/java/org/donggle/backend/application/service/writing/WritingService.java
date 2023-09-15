@@ -7,6 +7,7 @@ import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
+import org.donggle.backend.domain.OrderStatus;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
@@ -31,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,6 +40,7 @@ import java.util.Objects;
 public class WritingService {
     private static final String MD_FORMAT = ".md";
     private static final int LAST_WRITING_FLAG = -1;
+    private static final int FIRST_WRITING_INDEX = 0;
 
     private final MemberRepository memberRepository;
     private final WritingRepository writingRepository;
@@ -72,9 +75,11 @@ public class WritingService {
         if (isNotEmptyCategory(findCategory)) {
             final Writing lastWriting = findLastWritingInCategory(findCategory.getId());
             final Writing savedWriting = writingRepository.save(writing);
-            lastWriting.changeNextWriting(savedWriting);
+            lastWriting.changeNextWritingId(savedWriting.getId());
+            savedWriting.changeNextWritingId(OrderStatus.END.getStatusValue());
             return savedWriting;
         }
+        writing.changeNextWritingId(OrderStatus.END.getStatusValue());
         return writingRepository.save(writing);
     }
 
@@ -107,36 +112,43 @@ public class WritingService {
         if (findWritings.isEmpty()) {
             return WritingListWithCategoryResponse.of(findCategory, Collections.emptyList());
         }
-        final Writing firstWriting = findFirstWriting(findWritings);
-        final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
-        final List<WritingDetailResponse> writingDetailResponses = sortedWriting.stream()
+        final Long firstWritingId = findFirstWritingId(findWritings);
+        final List<Long> sortWritingIds = sortWriting(findWritings, firstWritingId);
+        final Map<Long, Writing> wiritingMap = findWritings.stream()
+                .collect(Collectors.toMap(Writing::getId, writing -> writing));
+        final List<Writing> sortWriting = sortWritingIds.stream()
+                .map(wiritingMap::get)
+                .toList();
+        final List<WritingDetailResponse> writingDetailResponses = sortWriting.stream()
                 .map(writing -> WritingDetailResponse.of(writing, convertToPublishedDetailResponses(writing.getId())))
                 .toList();
         return WritingListWithCategoryResponse.of(findCategory, writingDetailResponses);
     }
 
-    private Writing findFirstWriting(final List<Writing> findWritings) {
-        final List<Writing> copy = new ArrayList<>(findWritings);
-        final List<Writing> nextWritings = findWritings.stream()
-                .map(Writing::getNextWriting)
+    private Long findFirstWritingId(final List<Writing> findWritings) {
+        final List<Long> copy = new ArrayList<>(findWritings.stream()
+                .map(Writing::getId)
+                .toList());
+        final List<Long> nextWritings = findWritings.stream()
+                .map(Writing::getNextId)
                 .toList();
         copy.removeAll(nextWritings);
-        return copy.get(0);
+        return copy.get(FIRST_WRITING_INDEX);
     }
 
-    private List<Writing> sortWriting(final List<Writing> writings, final Writing firstWriting) {
-        final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
+    private List<Long> sortWriting(final List<Writing> writings, final Long firstWritingId) {
+        final Map<Long, Long> writingMap = new LinkedHashMap<>();
         for (final Writing writing : writings) {
-            writingMap.put(writing, writing.getNextWriting());
+            writingMap.put(writing.getId(), writing.getNextId());
         }
-        final List<Writing> sortedWritings = new ArrayList<>();
-        sortedWritings.add(firstWriting);
-        Writing targetWriting = firstWriting;
-        while (Objects.nonNull(targetWriting.getNextWriting())) {
-            targetWriting = writingMap.get(targetWriting);
-            sortedWritings.add(targetWriting);
+        final List<Long> sortedWritingIds = new ArrayList<>();
+        sortedWritingIds.add(firstWritingId);
+        Long targetWritingId = firstWritingId;
+        while (!Objects.equals(writingMap.get(targetWritingId), OrderStatus.END.getStatusValue())) {
+            targetWritingId = writingMap.get(targetWritingId);
+            sortedWritingIds.add(targetWritingId);
         }
-        return sortedWritings;
+        return sortedWritingIds;
     }
 
     public void modifyWritingOrder(final Long memberId, final Long writingId, final WritingModifyRequest request) {
@@ -150,12 +162,12 @@ public class WritingService {
     }
 
     private void deleteWritingOrder(final Writing writing) {
-        final Writing nextWriting = writing.getNextWriting();
-        writing.changeNextWritingNull();
+        final Long nextWritingId = writing.getNextId();
+        writing.changeNextWritingId(null);
 
         if (isNotFirstWriting(writing.getId())) {
             final Writing preWriting = findPreWriting(writing.getId());
-            preWriting.changeNextWriting(nextWriting);
+            preWriting.changeNextWritingId(nextWritingId);
         }
     }
 
@@ -167,12 +179,12 @@ public class WritingService {
             } else {
                 preWriting = findPreWriting(nextWritingId);
             }
-            preWriting.changeNextWriting(writing);
+            preWriting.changeNextWritingId(writing.getId());
         }
         if (nextWritingId != LAST_WRITING_FLAG) {
             final Writing nextWriting = findWritingById(nextWritingId);
             validateAuthorization(memberId, nextWriting);
-            writing.changeNextWriting(nextWriting);
+            writing.changeNextWritingId(nextWritingId);
         }
     }
 
@@ -183,7 +195,7 @@ public class WritingService {
     }
 
     private boolean isNotFirstWriting(final Long writingId) {
-        return writingRepository.countByNextWritingId(writingId) != 0;
+        return writingRepository.countByNextId(writingId) != 0;
     }
 
     private void changeCategory(final Long memberId, final Long categoryId, final Writing writing) {

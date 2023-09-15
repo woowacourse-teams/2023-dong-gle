@@ -6,6 +6,7 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
+import org.donggle.backend.domain.OrderStatus;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
@@ -29,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -97,36 +99,43 @@ public class CategoryService {
         if (findWritings.isEmpty()) {
             return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
         }
-        final Writing firstWriting = findFirstWriting(findWritings);
-        final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
-        final List<WritingSimpleResponse> writingSimpleResponses = sortedWriting.stream()
+        final Long firstWritingId = findFirstWritingId(findWritings);
+        final List<Long> sortWritingIds = sortWriting(findWritings, firstWritingId);
+        final Map<Long, Writing> wiritingMap = findWritings.stream()
+                .collect(Collectors.toMap(Writing::getId, writing -> writing));
+        final List<Writing> sortWriting = sortWritingIds.stream()
+                .map(wiritingMap::get)
+                .toList();
+        final List<WritingSimpleResponse> writingSimpleResponses = sortWriting.stream()
                 .map(WritingSimpleResponse::from)
                 .toList();
         return CategoryWritingsResponse.of(findCategory, writingSimpleResponses);
     }
 
-    private Writing findFirstWriting(final List<Writing> findWritings) {
-        final List<Writing> copy = new ArrayList<>(findWritings);
-        final List<Writing> nextWritings = findWritings.stream()
-                .map(Writing::getNextWriting)
+    private List<Long> sortWriting(final List<Writing> writings, final Long firstWritingId) {
+        final Map<Long, Long> writingMap = new LinkedHashMap<>();
+        for (final Writing writing : writings) {
+            writingMap.put(writing.getId(), writing.getNextId());
+        }
+        final List<Long> sortedWritingIds = new ArrayList<>();
+        sortedWritingIds.add(firstWritingId);
+        Long targetWritingId = firstWritingId;
+        while (!Objects.equals(writingMap.get(targetWritingId), OrderStatus.END.getStatusValue())) {
+            targetWritingId = writingMap.get(targetWritingId);
+            sortedWritingIds.add(targetWritingId);
+        }
+        return sortedWritingIds;
+    }
+
+    private Long findFirstWritingId(final List<Writing> findWritings) {
+        final List<Long> copy = new ArrayList<>(findWritings.stream()
+                .map(Writing::getId)
+                .toList());
+        final List<Long> nextWritings = findWritings.stream()
+                .map(Writing::getNextId)
                 .toList();
         copy.removeAll(nextWritings);
         return copy.get(FIRST_WRITING_INDEX);
-    }
-
-    private List<Writing> sortWriting(final List<Writing> findWritings, final Writing firstWriting) {
-        final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
-        for (final Writing findWriting : findWritings) {
-            writingMap.put(findWriting, findWriting.getNextWriting());
-        }
-        final List<Writing> sortedWriting = new ArrayList<>();
-        sortedWriting.add(firstWriting);
-        Writing targetWriting = firstWriting;
-        while (Objects.nonNull(targetWriting.getNextWriting())) {
-            targetWriting = writingMap.get(targetWriting);
-            sortedWriting.add(targetWriting);
-        }
-        return sortedWriting;
     }
 
     public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
@@ -156,10 +165,10 @@ public class CategoryService {
     private void transferToBasicCategory(final Category basicCategory, final Category findCategory) {
         if (haveWritingsCategory(findCategory)) {
             final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
-            final Writing firstWritingInCategory = findFirstWriting(findWritings);
+            final Long firstWritingId = findFirstWritingId(findWritings);
             if (haveWritingsCategory(basicCategory)) {
                 final Writing lastWritingInBasicCategory = findLastWritingInCategory(basicCategory);
-                lastWritingInBasicCategory.changeNextWriting(firstWritingInCategory);
+                lastWritingInBasicCategory.changeNextWritingId(firstWritingId);
             }
             findWritings.forEach(writing -> writing.changeCategory(basicCategory));
         }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.domain.OrderStatus;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Title;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,15 +42,15 @@ class TrashServiceTest {
         final Writing writing1 = writingRepository.findById(1L).get();
         final Member member = memberRepository.findById(1L).get();
         final Category category = categoryRepository.findFirstByMemberId(1L).get();
-        final Writing writing2 = Writing.lastOf(member, new Title("test2"), category);
-        final Writing writing3 = Writing.lastOf(member, new Title("test3"), category);
-        final Writing writing4 = Writing.lastOf(member, new Title("test4"), category);
+        final Writing writing2 = lastOf(member, new Title("test2"), category);
+        final Writing writing3 = lastOf(member, new Title("test3"), category);
+        final Writing writing4 = lastOf(member, new Title("test4"), category);
         writingRepository.save(writing2);
         writingRepository.save(writing3);
         writingRepository.save(writing4);
-        writing1.changeNextWriting(writing2);
-        writing2.changeNextWriting(writing3);
-        writing3.changeNextWriting(writing4);
+        writing1.changeNextWritingId(writing2.getId());
+        writing2.changeNextWritingId(writing3.getId());
+        writing3.changeNextWritingId(writing4.getId());
     }
 
     @Test
@@ -62,12 +64,7 @@ class TrashServiceTest {
         final TrashResponse trashResponse = trashService.findTrashedWritingList(1L);
 
         //then
-        assertAll(
-                () -> assertThat(trashResponse.writings()).hasSize(1),
-                () -> assertThat(trashResponse.writings()).usingRecursiveComparison()
-                        .comparingOnlyFields("id")
-                        .isEqualTo(writing.getId())
-        );
+        assertAll(() -> assertThat(trashResponse.writings()).hasSize(1), () -> assertThat(trashResponse.writings()).usingRecursiveComparison().comparingOnlyFields("id").isEqualTo(writing.getId()));
     }
 
     @Test
@@ -79,10 +76,7 @@ class TrashServiceTest {
 
         //then
         final List<Writing> writings = writingRepository.findAllByCategoryId(1L);
-        assertAll(
-                () -> assertThat(writings).hasSize(3),
-                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
-        );
+        assertAll(() -> assertThat(writings).hasSize(3), () -> assertThat(writings.get(0).getNextId()).isEqualTo(writings.get(1).getId()));
     }
 
     @Test
@@ -90,7 +84,7 @@ class TrashServiceTest {
     void changeOrderOfTrashedWritingsLast() {
         //given
         final Writing writing = writingRepository.findById(4L).get();
-        
+
         //when
         trashService.trashWritings(1L, List.of(writing.getId()));
 
@@ -98,7 +92,7 @@ class TrashServiceTest {
         final List<Writing> writings = writingRepository.findAllByCategoryId(1L);
         assertAll(
                 () -> assertThat(writings).hasSize(3),
-                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
+                () -> assertThat(writings.get(0).getNextId()).isEqualTo(writings.get(1).getId())
         );
     }
 
@@ -112,18 +106,15 @@ class TrashServiceTest {
 
         //then
         final List<Writing> writings = writingRepository.findAllByCategoryId(1L);
-        assertAll(
-                () -> assertThat(writings).hasSize(3),
-                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
-        );
+        assertAll(() -> assertThat(writings).hasSize(3), () -> assertThat(writings.get(0).getNextId()).isEqualTo(writings.get(1).getId()));
     }
 
     @Test
     @DisplayName("글을 삭제한다.")
     void deleteWritings() {
         //given
-
         //when
+        trashService.trashWritings(1L, List.of(1L));
         trashService.deleteWritings(1L, List.of(1L));
 
         //then
@@ -143,10 +134,10 @@ class TrashServiceTest {
         //then
         final List<Writing> writings = writingRepository.findAllByCategoryId(1L);
         final Optional<Writing> restoredWriting = writingRepository.findById(1L);
-        assertAll(
-                () -> assertThat(restoredWriting).isNotEmpty(),
-                () -> assertThat(writings).hasSize(4),
-                () -> assertThat(restoredWriting.get().getNextWriting()).isNull()
-        );
+        assertAll(() -> assertThat(restoredWriting).isNotEmpty(), () -> assertThat(writings).hasSize(4), () -> assertThat(restoredWriting.get().getNextId()).isEqualTo(OrderStatus.END.getStatusValue()));
+    }
+
+    public Writing lastOf(final Member member, final Title title, final Category category) {
+        return Writing.of(member, title, category, Collections.emptyList());
     }
 }

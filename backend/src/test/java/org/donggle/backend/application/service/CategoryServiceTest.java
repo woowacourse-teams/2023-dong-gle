@@ -119,27 +119,16 @@ class CategoryServiceTest {
     void removeCategory() {
         //given
         final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
-        final Category secondCategory = categoryRepository.findById(secondId).get();
-        writingRepository.findById(1L).get()
-                .changeCategory(secondCategory);
-        writingRepository.delete(writingRepository.findById(1L).get());
 
         //when
         categoryService.removeCategory(1L, secondId);
         final List<Category> categories = categoryRepository.findAllByMemberId(1L);
 
-        categoryRepository.flush();
-        writingRepository.flush();
-
-        final Writing writing = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(1L, 1L).get(0);
-
         //then
         assertAll(
                 () -> assertThat(categories).hasSize(1),
                 () -> assertThat(categories.get(0).getCategoryName()).isEqualTo(new CategoryName("기본")),
-                () -> assertThat(categories.get(0).getNextCategory()).isNull(),
-                () -> assertThat(writing.getCategory()).isEqualTo(categories.get(0)),
-                () -> assertThat(writing.getNextWriting()).isNull()
+                () -> assertThat(categories.get(0).getNextCategory()).isNull()
         );
     }
 

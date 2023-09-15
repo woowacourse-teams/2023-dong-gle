@@ -1,7 +1,6 @@
 package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.writing.Writing;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,15 +13,15 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     int countByCategoryId(Long id);
 
-    int countByNextWritingId(Long nextWritingId);
+    int countByNextId(Long nextWritingId);
 
     @Query("select w from Writing w " +
             "where w.category.id = :categoryId and " +
-            "w.nextWriting is null")
+            "w.nextId = -1")
     Optional<Writing> findLastWritingByCategoryId(@Param("categoryId") final Long categoryId);
 
     @Query("select w from Writing w " +
-            "where w.nextWriting.id = :writingId")
+            "where w.nextId = :writingId")
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
 
     @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
@@ -32,6 +31,11 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "where w.member_id = :memberId and " +
             "w.status = 'TRASHED'", nativeQuery = true)
     List<Writing> findAllByMemberIdAndStatusIsTrashed(@Param("memberId") final Long memberId);
+
+    @Query(value = "select * from writing w " +
+            "where w.member_id = :memberId and " +
+            "w.status = 'TRASHED' IN (:writingIds)", nativeQuery = true)
+    List<Writing> findTrashedWritingsByIds(@Param("memberId") final Long memberId, @Param("writingIds") final List<Long> writingIds);
 
     @Query(value = "select * from writing w " +
             "where w.member_id = :memberId and " +
@@ -50,4 +54,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.id = :writingId and " +
             "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeleted(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+
+    @Query(value = "update writing " +
+            "set next_writing_id = newWritingId " +
+            "where id = lastWritingId ", nativeQuery = true)
+    void updateNextId(Long lastWritingId, Long newWritingId);
 }

@@ -6,6 +6,7 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.domain.OrderStatus;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.category.Category;
@@ -60,7 +61,7 @@ public class InitLocalAndTestData implements CommandLineRunner {
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
-            writingRepository.save(Writing.of(
+            final Writing savedWriting = writingRepository.save(Writing.of(
                     savedMember,
                     new Title("테스트 글"),
                     savedCategory,
@@ -74,6 +75,7 @@ public class InitLocalAndTestData implements CommandLineRunner {
                             )
                     )
             ));
+            savedWriting.changeNextWritingId(OrderStatus.END.getStatusValue());
         }
     }
 }

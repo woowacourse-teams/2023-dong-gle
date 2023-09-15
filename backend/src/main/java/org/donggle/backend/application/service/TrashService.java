@@ -2,9 +2,9 @@ package org.donggle.backend.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
-import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.stereotype.Service;
@@ -33,36 +33,28 @@ public class TrashService {
                     return findWriting;
                 })
                 .forEach(writing -> {
-                    final Writing nextWriting = writing.getNextWriting();
+                    final Long nextWritingId = writing.getNextId();
                     writing.moveToTrash();
                     writingRepository.findPreWritingByWritingId(writing.getId())
-                            .ifPresent(preWriting -> preWriting.changeNextWriting(nextWriting));
+                            .ifPresent(preWriting -> preWriting.changeNextWritingId(nextWritingId));
                 });
     }
 
     public void deleteWritings(final Long memberId, final List<Long> writingIds) {
-        writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
-                        .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
-                .forEach(writing -> {
-                    final Writing nextWriting = writing.getNextWriting();
-                    writing.changeNextWritingNull();
-                    writingRepository.delete(writing);
-                    writingRepository.findPreWritingByWritingId(writing.getId())
-                            .ifPresent(preWriting -> preWriting.changeNextWriting(nextWriting));
-                });
+        final List<Writing> trashedWritings = writingRepository.findTrashedWritingsByIds(memberId, writingIds);
+        writingRepository.deleteAll(trashedWritings);
     }
 
     public void restoreWritings(final Long memberId, final List<Long> writingIds) {
-        writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsTrashed(memberId, writingId)
-                        .orElseThrow(() -> new RestoreWritingNotFoundException(writingId)))
-                .forEach(writing -> {
-                            writingRepository.findLastWritingByCategoryId(writing.getCategory().getId())
-                                    .ifPresent(lastWriting -> lastWriting.changeNextWriting(writing));
-                            writing.restore();
-                        }
-                );
+        final List<Writing> trashedWritings = writingRepository.findTrashedWritingsByIds(memberId, writingIds);
+        for (final Writing trashedWriting : trashedWritings) {
+            final Category category = trashedWriting.getCategory();
+            if (writingRepository.findLastWritingByCategoryId(category.getId()).isPresent()) {
+                final Writing writing = writingRepository.findLastWritingByCategoryId(category.getId()).get();
+                writing.changeNextWritingId(trashedWriting.getId());
+            }
+            trashedWriting.restore();
+        }
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {

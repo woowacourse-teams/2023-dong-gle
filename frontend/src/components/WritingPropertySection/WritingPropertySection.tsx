@@ -49,14 +49,14 @@ const WritingPropertySection = ({ writingId }: Props) => {
                           {BLOG_ICON[blogName]} {BLOG_KOREAN[blogName]}
                         </S.PropertyName>
                       </S.PropertyRow>
-                      {Boolean(publishedUrl) && ( // 해당 기능 추가 이전에 발행된 글에 대응하는 로직입니다. 이전에 발행된 글들은 발행 링크가 없고, 재발행 이외에는 받아 올 수 있는 방법이 없어서 불가피하게 해당 코드를 작성했습니다.
+                      {publishedUrl && ( // 해당 기능 추가 이전에 발행된 글에 대응하는 로직입니다. 이전에 발행된 글들은 발행 링크가 없고, 재발행 이외에는 받아 올 수 있는 방법이 없어서 불가피하게 해당 코드를 작성했습니다.
                         <S.PropertyRow>
                           <S.PropertyName>
                             <HyperlinkIcon width={10} height={10} />
                             발행 링크
                           </S.PropertyName>
                           <S.PropertyValue>
-                            <S.BlogLink href={publishedUrl!} target='_blank' rel='external'>
+                            <S.BlogLink href={publishedUrl} target='_blank' rel='external'>
                               블로그로 이동하기
                             </S.BlogLink>
                           </S.PropertyValue>

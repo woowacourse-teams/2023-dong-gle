@@ -5,6 +5,9 @@ import { styled } from 'styled-components';
 import donggleExamplePng from 'assets/icons/donggle-example-png.png';
 import donggleExampleWebp from 'assets/icons/donggle-example-webp.webp';
 import donggleExampleAvif from 'assets/icons/donggle-example-avif.avif';
+import donggleExamplePng2X from 'assets/icons/donggle-example-png-2x.png';
+import donggleExampleWebp2X from 'assets/icons/donggle-example-webp-2x.webp';
+import donggleExampleAvif2X from 'assets/icons/donggle-example-avif-2x.avif';
 import { Navigate } from 'react-router-dom';
 import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
@@ -37,9 +40,21 @@ const IntroducePage = () => {
           <p>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</p>
           <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
           <picture>
-            <source width={600} srcSet={donggleExampleAvif} />
-            <source width={600} srcSet={donggleExampleWebp} />
-            <img width={600} src={donggleExamplePng} />
+            <source
+              type='image/avif'
+              style={{ width: '600px' }}
+              srcSet={`${donggleExampleAvif}, ${donggleExampleAvif2X} 2x`}
+            />
+            <source
+              type='image/webp'
+              style={{ width: '600px' }}
+              srcSet={`${donggleExampleWebp}, ${donggleExampleWebp2X} 2x`}
+            />
+            <img
+              src={donggleExamplePng}
+              style={{ width: '600px' }}
+              srcSet={`${donggleExamplePng}, ${donggleExamplePng2X} 2x`}
+            />
           </picture>
         </S.Introduce>
       </S.Content>

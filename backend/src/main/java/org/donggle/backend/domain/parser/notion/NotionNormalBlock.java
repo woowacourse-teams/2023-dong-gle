@@ -4,7 +4,7 @@ import org.donggle.backend.domain.writing.Style;
 
 import java.util.List;
 
-public interface NotionNormalBlockParser {
+public interface NotionNormalBlock {
     String parseRawText();
 
     List<Style> parseStyles();

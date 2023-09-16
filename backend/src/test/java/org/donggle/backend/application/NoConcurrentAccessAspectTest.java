@@ -1,7 +1,6 @@
 package org.donggle.backend.application;
 
 import org.donggle.backend.application.repository.CategoryRepository;
-import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +26,6 @@ public class NoConcurrentAccessAspectTest {
     private CategoryService categoryService;
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private MemberRepository memberRepository;
 
     private static final int THREAD_COUNT = 10;
 

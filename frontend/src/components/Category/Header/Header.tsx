@@ -66,11 +66,15 @@ export default Header;
 
 const S = {
   Header: styled.header`
+    position: sticky;
+    top: 0;
+    z-index: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 3.6rem;
     padding: 0.8rem;
+    background-color: ${({ theme }) => theme.color.spaceBackground};
     font-size: 1.2rem;
     font-weight: 400;
   `,

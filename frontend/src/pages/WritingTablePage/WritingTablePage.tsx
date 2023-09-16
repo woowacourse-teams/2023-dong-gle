@@ -1,19 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useSetGlobalState } from '@yogjin/react-global-state-hook';
 import { getDetailWritings } from 'apis/writings';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { activeCategoryIdState } from 'globalState';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 
 const WritingTablePage = () => {
-  const activeCategoryId = useGlobalStateValue(activeCategoryIdState);
+  const setActiveCategoryId = useSetGlobalState(activeCategoryIdState);
+  const {
+    state: { categoryId: activeCategoryId },
+  } = useLocation();
 
   if (!activeCategoryId) return <div>카테고리가 존재하지 않습니다.</div>;
 
   const { data } = useQuery(['detailWritings', activeCategoryId], () =>
     getDetailWritings(activeCategoryId),
   );
+
+  useEffect(() => {
+    setActiveCategoryId(activeCategoryId);
+    return () => setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
+  }, []);
 
   return (
     <S.Article>

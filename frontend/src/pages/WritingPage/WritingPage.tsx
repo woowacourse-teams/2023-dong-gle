@@ -11,9 +11,6 @@ const WritingPage = () => {
     state: { categoryId, writingId, isDeletedWriting },
   } = useLocation();
 
-  if (!writingId) return <div>존재하지 않는 글입니다.</div>;
-  if (!categoryId) return <div>존재하지 않는 카테고리입니다.</div>;
-
   useEffect(() => {
     setActiveWritingInfo({ id: writingId, isDeleted: isDeletedWriting });
     setActiveCategoryId(categoryId);
@@ -22,6 +19,9 @@ const WritingPage = () => {
       setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
     };
   }, [categoryId, writingId, isDeletedWriting]);
+
+  if (!writingId) return <div>존재하지 않는 글입니다.</div>;
+  if (!categoryId) return <div>존재하지 않는 카테고리입니다.</div>;
 
   return (
     <WritingViewer

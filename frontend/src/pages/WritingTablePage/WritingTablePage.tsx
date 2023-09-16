@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSetGlobalState } from '@yogjin/react-global-state-hook';
 import { getDetailWritings } from 'apis/writings';
+import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { activeCategoryIdState } from 'globalState';
 import { useEffect } from 'react';
@@ -14,9 +15,7 @@ const WritingTablePage = () => {
     state: { categoryId: activeCategoryId },
   } = useLocation();
 
-  if (!activeCategoryId) return <div>카테고리가 존재하지 않습니다.</div>;
-
-  const { data } = useQuery(['detailWritings', activeCategoryId], () =>
+  const { data, isLoading } = useQuery(['detailWritings', activeCategoryId], () =>
     getDetailWritings(activeCategoryId),
   );
 
@@ -25,10 +24,25 @@ const WritingTablePage = () => {
     return () => setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
   }, [activeCategoryId]);
 
+  if (isLoading) {
+    return (
+      <S.LoadingContainer>
+        <Spinner size={60} thickness={4} />
+        <h1>카테고리 내 글을 불러오는 중입니다 ...</h1>
+      </S.LoadingContainer>
+    );
+  }
+
+  if (!activeCategoryId) return <div>카테고리가 존재하지 않습니다.</div>;
+
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-      <WritingTable categoryId={activeCategoryId} writings={data?.writings ?? []} />
+      {data?.writings && data.writings.length > 0 ? (
+        <WritingTable categoryId={activeCategoryId} writings={data?.writings ?? []} />
+      ) : (
+        <S.AddWritingText>카테고리에 글을 추가해주세요😊</S.AddWritingText>
+      )}
     </S.Article>
   );
 };
@@ -46,7 +60,21 @@ const S = {
     margin-bottom: 5rem;
   `,
 
+  AddWritingText: styled.p`
+    font-size: 1.5rem;
+  `,
+
   SidebarSection: styled.section`
     ${sidebarStyle}
+  `,
+
+  LoadingContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    max-width: 100%;
+    height: 100%;
   `,
 };

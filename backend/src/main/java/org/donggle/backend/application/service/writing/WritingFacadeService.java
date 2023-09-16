@@ -1,6 +1,7 @@
 package org.donggle.backend.application.service.writing;
 
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.NoConcurrentExecution;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
@@ -35,6 +36,7 @@ public class WritingFacadeService {
     private final NotionParser notionParser;
     private final HtmlRenderer htmlRenderer;
 
+    @NoConcurrentExecution
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
@@ -46,6 +48,7 @@ public class WritingFacadeService {
         return writingService.saveByFile(memberId, request.categoryId(), originalFilename, blocks);
     }
 
+    @NoConcurrentExecution
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
         final NotionApiClient notionApiService = new NotionApiClient();
         final MemberCategoryNotionInfo memberCategoryNotionInfo = writingService.getMemberCategoryNotionInfo(memberId, request.categoryId());

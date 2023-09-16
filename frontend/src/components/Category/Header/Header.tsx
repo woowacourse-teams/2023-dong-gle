@@ -8,7 +8,11 @@ import { useToast } from 'hooks/@common/useToast';
 import { getErrorMessage } from 'utils/error';
 import { validateCategoryName } from 'utils/validators';
 
-const Header = () => {
+type Props = {
+  onCategoryAdded: () => void;
+};
+
+const Header = ({ onCategoryAdded }: Props) => {
   const {
     inputRef,
     escapeInput: escapeAddCategory,
@@ -18,7 +22,7 @@ const Header = () => {
     isError,
     setIsError,
   } = useUncontrolledInput();
-  const { addCategory } = useCategoryMutation();
+  const { addCategory } = useCategoryMutation(onCategoryAdded);
   const toast = useToast();
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {

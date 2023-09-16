@@ -5,13 +5,23 @@ import {
   updateCategoryOrder as updateCategoryOrderRequest,
   deleteCategory as deleteCategoryRequest,
 } from 'apis/category';
+import { useToast } from 'hooks/@common/useToast';
+import { getErrorMessage } from 'utils/error';
 
-export const useCategoryMutation = () => {
+export const useCategoryMutation = (onCategoryAdded?: () => void) => {
   const queryClient = useQueryClient();
+  const toast = useToast();
 
   const { mutate: addCategory } = useMutation(addCategoryRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['categories']);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['categories']);
+
+      setTimeout(() => {
+        onCategoryAdded?.();
+      });
+    },
+    onError: (error) => {
+      toast.show({ type: 'error', message: getErrorMessage(error) });
     },
   });
 

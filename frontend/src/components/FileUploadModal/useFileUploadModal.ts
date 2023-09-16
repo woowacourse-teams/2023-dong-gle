@@ -35,7 +35,7 @@ export const useFileUploadModal = ({ categoryId, closeModal }: Args) => {
   const onFileUploadSuccess = (headers: Headers) => {
     const writingId = headers.get('Location')?.split('/').pop();
     queryClient.invalidateQueries(['writingsInCategory', categoryId]);
-    goWritingPage({ categoryId, writingId: Number(writingId) });
+    goWritingPage({ categoryId, writingId: Number(writingId), isDeletedWriting: false });
     closeModal();
   };
 

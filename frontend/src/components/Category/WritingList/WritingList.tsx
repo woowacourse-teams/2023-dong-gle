@@ -27,7 +27,9 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
         <S.Item key={writing.id} $isClicked={writingId === writing.id}>
           <S.Button
             aria-label={`${writing.title}글 메인화면에 열기`}
-            onClick={() => goWritingPage({ categoryId, writingId: writing.id })}
+            onClick={() =>
+              goWritingPage({ categoryId, writingId: writing.id, isDeletedWriting: false })
+            }
           >
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />

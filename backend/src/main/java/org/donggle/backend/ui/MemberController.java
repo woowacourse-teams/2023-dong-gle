@@ -2,7 +2,7 @@ package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.MemberService;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

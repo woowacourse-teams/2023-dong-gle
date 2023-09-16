@@ -1,12 +1,12 @@
 package org.donggle.backend.auth;
 
+import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RefreshTokenProviderTest {
-
     private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(
             "wjdgustmdwjdgustmdwjdgustmdwjsadasdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd",
             600000,

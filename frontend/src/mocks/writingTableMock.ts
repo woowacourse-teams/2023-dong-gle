@@ -12,10 +12,12 @@ export const getWritingTableMock = (categoryId: number): GetDetailWritingsRespon
         {
           blogName: 'MEDIUM',
           publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          publishedUrl: 'https://medium.com/',
         },
         {
           blogName: 'TISTORY',
           publishedAt: new Date('2023-06-11T06:55:46.922Z'),
+          publishedUrl: 'https://www.tistory.com/',
         },
       ],
     },
@@ -27,6 +29,7 @@ export const getWritingTableMock = (categoryId: number): GetDetailWritingsRespon
         {
           blogName: 'MEDIUM',
           publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          publishedUrl: 'https://medium.com/',
         },
       ],
     },

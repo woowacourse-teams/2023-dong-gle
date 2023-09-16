@@ -1,6 +1,6 @@
 package org.donggle.backend.application.repository;
 
-import org.donggle.backend.auth.RefreshToken;
+import org.donggle.backend.domain.auth.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

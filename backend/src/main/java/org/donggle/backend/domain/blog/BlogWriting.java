@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.BaseEntity;
 import org.donggle.backend.domain.writing.Writing;
 
 import java.time.LocalDateTime;

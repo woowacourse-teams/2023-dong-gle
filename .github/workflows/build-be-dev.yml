@@ -17,6 +17,9 @@ jobs:
     steps:
     ## jdk setting
     - uses: actions/checkout@v3
+      with:
+        submodules: true
+        token: ${{ secrets.SUBMODULE_TOKEN }}
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:

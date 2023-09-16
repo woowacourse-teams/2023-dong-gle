@@ -75,13 +75,14 @@ public class CategoryService {
         return CategoryListResponse.from(categoryResponses);
     }
 
-    private List<Category> sortCategory(final List<Category> categories, Category targetCategory) {
+    private List<Category> sortCategory(final List<Category> categories, final Category basicCategory) {
         final Map<Category, Category> categoryMap = new LinkedHashMap<>();
         for (final Category category : categories) {
             categoryMap.put(category, category.getNextCategory());
         }
         final List<Category> sortedCategories = new ArrayList<>();
-        sortedCategories.add(targetCategory);
+        sortedCategories.add(basicCategory);
+        Category targetCategory = basicCategory;
         while (Objects.nonNull(targetCategory.getNextCategory())) {
             targetCategory = categoryMap.get(targetCategory);
             sortedCategories.add(targetCategory);
@@ -113,13 +114,14 @@ public class CategoryService {
         return copy.get(FIRST_WRITING_INDEX);
     }
 
-    private List<Writing> sortWriting(final List<Writing> findWritings, Writing targetWriting) {
+    private List<Writing> sortWriting(final List<Writing> findWritings, final Writing firstWriting) {
         final Map<Writing, Writing> writingMap = new LinkedHashMap<>();
         for (final Writing findWriting : findWritings) {
             writingMap.put(findWriting, findWriting.getNextWriting());
         }
         final List<Writing> sortedWriting = new ArrayList<>();
-        sortedWriting.add(targetWriting);
+        sortedWriting.add(firstWriting);
+        Writing targetWriting = firstWriting;
         while (Objects.nonNull(targetWriting.getNextWriting())) {
             targetWriting = writingMap.get(targetWriting);
             sortedWriting.add(targetWriting);
@@ -130,8 +132,8 @@ public class CategoryService {
     public void modifyCategoryName(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(findMember.getId(), categoryId);
-        validateBasicCategory(memberId, findCategory);
-
+        final Category basicCategory = findBasicCategoryByMemberId(memberId);
+        validateBasicCategory(basicCategory, findCategory);
         final CategoryName categoryName = new CategoryName(request.categoryName());
         validateCategoryName(categoryName);
 
@@ -141,20 +143,17 @@ public class CategoryService {
     public void removeCategory(final Long memberId, final Long categoryId) {
         final Member findMember = findMember(memberId);
         final Category findCategory = findCategory(findMember.getId(), categoryId);
-        validateBasicCategory(memberId, findCategory);
-
-        final List<Writing> trashedWritingInCategory = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(memberId, categoryId);
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
+        validateBasicCategory(basicCategory, findCategory);
+        final List<Writing> trashedWritingInCategory = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(memberId, categoryId);
         for (final Writing writing : trashedWritingInCategory) {
             writing.changeCategory(basicCategory);
         }
-
-        transferToBasicCategory(memberId, findCategory);
+        transferToBasicCategory(basicCategory, findCategory);
         deleteCategory(findCategory);
     }
 
-    private void transferToBasicCategory(final Long memberId, final Category findCategory) {
-        final Category basicCategory = findBasicCategoryByMemberId(memberId);
+    private void transferToBasicCategory(final Category basicCategory, final Category findCategory) {
         if (haveWritingsCategory(findCategory)) {
             final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
             final Writing firstWritingInCategory = findFirstWriting(findWritings);
@@ -183,7 +182,8 @@ public class CategoryService {
         final Member member = findMember(memberId);
         final Long nextCategoryId = request.nextCategoryId();
         final Category source = findCategory(member.getId(), categoryId);
-        validateBasicCategory(member.getId(), source);
+        final Category basicCategory = findBasicCategoryByMemberId(member.getId());
+        validateBasicCategory(basicCategory, source);
         deleteCategoryOrder(source);
         addCategoryOrder(nextCategoryId, source, member.getId());
     }
@@ -209,9 +209,7 @@ public class CategoryService {
         }
     }
 
-    private void validateBasicCategory(final Long memberId, final Category category) {
-        final Category basicCategory = categoryRepository.findFirstByMemberId(memberId)
-                .orElseThrow(IllegalStateException::new);
+    private void validateBasicCategory(final Category basicCategory, final Category category) {
         if (basicCategory.equals(category)) {
             throw new InvalidBasicCategoryException(category.getId());
         }

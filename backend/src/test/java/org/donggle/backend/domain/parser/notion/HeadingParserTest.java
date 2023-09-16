@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ class HeadingParserTest {
         final JsonNode jsonNode = buildJsonBody("heading_1", false);
 
         //when
-        final NotionNormalBlockParser blockParser = HeadingParser.from(new NotionBlockNode(jsonNode, 0));
+        final NotionNormalBlockParser blockParser = HeadingParser.from(new NotionBlockNodeResponse(jsonNode, 0));
 
         //then
         assertThat(blockParser.parseRawText()).isEqualTo("heading");

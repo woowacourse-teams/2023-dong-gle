@@ -1,8 +1,7 @@
 package org.donggle.backend.domain.parser.notion;
 
-import org.donggle.backend.application.service.vendor.notion.dto.NotionBlockNode;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.domain.writing.BlockType;
-import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
 import org.donggle.backend.domain.writing.block.Depth;
@@ -13,18 +12,19 @@ import org.donggle.backend.domain.writing.block.ImageUrl;
 import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
+import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Component
 public class NotionParser {
-    private final Map<NotionBlockType, Function<NotionBlockNode, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new HashMap<>();
-    private final Writing writing;
+    private final Map<NotionBlockType, Function<NotionBlockNodeResponse, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new EnumMap<>(NotionBlockType.class);
 
-    public NotionParser(final Writing writing) {
+    public NotionParser() {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalBlock(notionBlockNode, BookmarkParser.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalBlock(notionBlockNode, CalloutParser.from(notionBlockNode), BlockType.BLOCKQUOTE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlock(notionBlockNode, CodeBlockParser.from(notionBlockNode)));
@@ -39,43 +39,42 @@ public class NotionParser {
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.TOGGLE, notionBlockNode -> createNormalBlock(notionBlockNode, DefaultBlockParser.from(notionBlockNode), BlockType.TOGGLE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.IMAGE, notionBlockNode -> createImageBlock(notionBlockNode, ImageParser.from(notionBlockNode)));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.DIVIDER, notionBlockNode -> createHorizontalBlock(notionBlockNode));
-        this.writing = writing;
     }
 
-    private Optional<Block> createNormalBlock(final NotionBlockNode notionBlockNode, final NotionNormalBlockParser blockParser, final BlockType blockType) {
-        return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
+    private Optional<Block> createNormalBlock(final NotionBlockNodeResponse notionBlockNodeResponse, final NotionNormalBlockParser blockParser, final BlockType blockType) {
+        return Optional.of(new NormalBlock(Depth.from(notionBlockNodeResponse.depth()), blockType, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
-    private Optional<Block> createCodeBlock(final NotionBlockNode notionBlockNode, final CodeBlockParser blockParser) {
-        return Optional.of(new CodeBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
+    private Optional<Block> createCodeBlock(final NotionBlockNodeResponse notionBlockNodeResponse, final CodeBlockParser blockParser) {
+        return Optional.of(new CodeBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.CODE_BLOCK, RawText.from(blockParser.parseRawText()), Language.from(blockParser.language())));
     }
 
-    private Optional<Block> createImageBlock(final NotionBlockNode notionBlockNode, final ImageParser blockParser) {
-        return Optional.of(new ImageBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
+    private Optional<Block> createImageBlock(final NotionBlockNodeResponse notionBlockNodeResponse, final ImageParser blockParser) {
+        return Optional.of(new ImageBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
     }
 
-    private Optional<Block> createHorizontalBlock(final NotionBlockNode notionBlockNode) {
-        return Optional.of(new HorizontalRulesBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.HORIZONTAL_RULES, RawText.from("---")));
+    private Optional<Block> createHorizontalBlock(final NotionBlockNodeResponse notionBlockNodeResponse) {
+        return Optional.of(new HorizontalRulesBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.HORIZONTAL_RULES, RawText.from("---")));
     }
 
-    private Optional<Block> createTaskListBLock(final NotionBlockNode notionBlockNode, final TodoParser blockParser) {
+    private Optional<Block> createTaskListBLock(final NotionBlockNodeResponse notionBlockNodeResponse, final TodoParser blockParser) {
         if (blockParser.checked()) {
-            return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.CHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
+            return Optional.of(new NormalBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.CHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
         }
-        return Optional.of(new NormalBlock(writing, Depth.from(notionBlockNode.depth()), BlockType.UNCHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
+        return Optional.of(new NormalBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.UNCHECKED_TASK_LIST, RawText.from(blockParser.parseRawText()), blockParser.parseStyles()));
     }
 
-    public List<Block> parseBody(final List<NotionBlockNode> notionBlockNodes) {
-        return notionBlockNodes.stream()
+    public List<Block> parseBody(final List<NotionBlockNodeResponse> notionBlockNodeResponses) {
+        return notionBlockNodeResponses.stream()
                 .map(this::createContentFromBlockNode)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
     }
 
-    private Optional<Block> createContentFromBlockNode(final NotionBlockNode notionBlockNode) {
+    private Optional<Block> createContentFromBlockNode(final NotionBlockNodeResponse notionBlockNodeResponse) {
         return NOTION_BLOCK_TYPE_MAP
-                .getOrDefault(notionBlockNode.getBlockType(), unused -> Optional.empty())
-                .apply(notionBlockNode);
+                .getOrDefault(notionBlockNodeResponse.getBlockType(), unused -> Optional.empty())
+                .apply(notionBlockNodeResponse);
     }
 }

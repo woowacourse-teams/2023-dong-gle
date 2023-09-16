@@ -17,12 +17,10 @@ public class MDCInterceptor implements HandlerInterceptor {
                              final Object handler) {
         final String requestId = UUID.randomUUID().toString();
         final String requestUrl = request.getRequestURI();
-//        final String userAgent = request.getHeader("User-Agent");
         final String clientIP = getClientIP(request);
         
         MDC.put("requestId", requestId);
         MDC.put("requestUrl", requestUrl);
-//        MDC.put("userAgent", userAgent);
         MDC.put("clientIP", clientIP);
         
         return true;

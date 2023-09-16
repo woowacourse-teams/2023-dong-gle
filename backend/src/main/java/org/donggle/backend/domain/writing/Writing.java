@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.writing;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,17 +11,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.BaseEntity;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.writing.block.Block;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -41,26 +47,34 @@ public class Writing extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "writing_id", nullable = false, updatable = false)
+    private List<Block> blocks = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "next_writing_id")
     private Writing nextWriting;
     @NotNull
     @Enumerated(EnumType.STRING)
     private WritingStatus status = WritingStatus.ACTIVE;
 
-    private Writing(final Member member, final Title title, final Category category, final Writing nextWriting) {
+    private Writing(final Member member,
+                    final Title title,
+                    final Category category,
+                    final List<Block> blocks,
+                    final Writing nextWriting) {
         this.member = member;
         this.title = title;
         this.category = category;
+        this.blocks = blocks;
         this.nextWriting = nextWriting;
     }
 
     public static Writing lastOf(final Member member, final Title title, final Category category) {
-        return new Writing(member, title, category, null);
+        return new Writing(member, title, category, Collections.emptyList(), null);
     }
 
-    public static Writing of(final Member member, final Title title, final Category category, final Writing nextWriting) {
-        return new Writing(member, title, category, nextWriting);
+    public static Writing of(final Member member, final Title title, final Category category, final List<Block> blocks) {
+        return new Writing(member, title, category, blocks, null);
     }
 
     public void updateTitle(final Title title) {
@@ -93,8 +107,8 @@ public class Writing extends BaseEntity {
         changeNextWritingNull();
     }
 
-    public boolean isOwner(final Long memberId) {
-        return this.member.getId().equals(memberId);
+    public boolean isOwnedBy(final Long memberId) {
+        return getMember().getId().equals(memberId);
     }
 
     @Override
@@ -121,7 +135,9 @@ public class Writing extends BaseEntity {
                 ", member=" + member +
                 ", title=" + title +
                 ", category=" + category +
+                ", blocks=" + blocks +
                 ", nextWriting=" + nextWriting +
+                ", status=" + status +
                 '}';
     }
 }

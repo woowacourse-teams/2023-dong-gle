@@ -26,8 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;

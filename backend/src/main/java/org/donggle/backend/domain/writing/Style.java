@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.BaseEntity;
 
 import java.util.Objects;
 

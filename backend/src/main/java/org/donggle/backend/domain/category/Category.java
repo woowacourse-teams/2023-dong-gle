@@ -29,7 +29,7 @@ public class Category {
     @NotNull
     @Embedded
     private CategoryName categoryName;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "next_category_id")
     private Category nextCategory;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,7 +49,6 @@ public class Category {
     public static Category of(final CategoryName categoryName, final Member member) {
         return new Category(categoryName, null, member);
     }
-
 
     public String getCategoryNameValue() {
         return categoryName.getName();
@@ -82,15 +81,5 @@ public class Category {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", categoryName=" + categoryName +
-                ", nextCategory=" + nextCategory +
-                ", member=" + member +
-                '}';
     }
 }

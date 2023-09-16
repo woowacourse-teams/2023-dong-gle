@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
-import org.donggle.backend.auth.support.AuthenticationPrincipal;
+import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.springframework.http.ResponseEntity;

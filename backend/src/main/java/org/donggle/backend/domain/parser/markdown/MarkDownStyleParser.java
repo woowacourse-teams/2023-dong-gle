@@ -3,6 +3,7 @@ package org.donggle.backend.domain.parser.markdown;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
+@Component
 public class MarkDownStyleParser {
     private static final int INNER_GROUP_INDEX = 2;
     private static final int CAPTION_GROUP_INDEX = 2;

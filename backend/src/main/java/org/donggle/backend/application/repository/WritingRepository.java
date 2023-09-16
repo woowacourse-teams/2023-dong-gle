@@ -1,6 +1,7 @@
 package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.writing.Writing;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,8 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "where w.nextWriting.id = :writingId")
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
 
-    Optional<Writing> findByMemberIdAndId(final Long memberId, final Long writingId);
+    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
 
     @Query(value = "select * from writing w " +
             "where w.member_id = :memberId and " +

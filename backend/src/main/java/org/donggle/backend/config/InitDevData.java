@@ -14,17 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitDevData implements CommandLineRunner {
     private final InitService initService;
-    
+
     @Override
     public void run(final String... args) {
         initService.init();
     }
-    
+
     @Component
     @RequiredArgsConstructor
     public static class InitService {
         private final BlogRepository blogRepository;
-        
+
         @Transactional
         public void init() {
             blogRepository.save(new Blog(BlogType.MEDIUM));

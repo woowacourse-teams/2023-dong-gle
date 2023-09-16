@@ -40,9 +40,9 @@ class TrashServiceTest {
         final Writing writing1 = writingRepository.findById(1L).get();
         final Member member = memberRepository.findById(1L).get();
         final Category category = categoryRepository.findFirstByMemberId(1L).get();
-        final Writing writing2 = Writing.of(member, new Title("test2"), category, null);
-        final Writing writing3 = Writing.of(member, new Title("test3"), category, null);
-        final Writing writing4 = Writing.of(member, new Title("test4"), category, null);
+        final Writing writing2 = Writing.lastOf(member, new Title("test2"), category);
+        final Writing writing3 = Writing.lastOf(member, new Title("test3"), category);
+        final Writing writing4 = Writing.lastOf(member, new Title("test4"), category);
         writingRepository.save(writing2);
         writingRepository.save(writing3);
         writingRepository.save(writing4);

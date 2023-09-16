@@ -1,12 +1,11 @@
 import DOMPurify from 'dompurify';
-import hljs from 'highlight.js';
-import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import WritingTitle from './WritingTitle/WritingTitle';
+import useCodeHighlight from 'hooks/@common/useCodeHighlight';
 
 type Props = {
   writingId: number;
@@ -16,10 +15,7 @@ type Props = {
 
 const WritingViewer = ({ writingId, categoryId, isDeletedWriting }: Props) => {
   const { data, isLoading } = useQuery(['writings', writingId], () => getWriting(writingId));
-
-  useEffect(() => {
-    hljs.highlightAll();
-  }, [data]);
+  useCodeHighlight(data?.content);
 
   if (isLoading) {
     return (
@@ -154,6 +150,7 @@ const S = {
 
     pre > code {
       color: inherit;
+      background-color: transparent;
     }
 
     img {

@@ -5,17 +5,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.donggle.backend.domain.common.BaseEntity;
+import org.donggle.backend.domain.BaseEntity;
 
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_UNIQUE", columnNames = "socialId"))
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,15 +26,15 @@ public class Member extends BaseEntity {
     @NotNull
     @Embedded
     private MemberName memberName;
-    private Long kakaoId;
+    private Long socialId;
 
-    private Member(final MemberName memberName, final Long kakaoId) {
+    private Member(final MemberName memberName, final Long socialId) {
         this.memberName = memberName;
-        this.kakaoId = kakaoId;
+        this.socialId = socialId;
     }
 
-    public static Member createByKakao(final MemberName memberName, final Long kakaoId) {
-        return new Member(memberName, kakaoId);
+    public static Member of(final MemberName memberName, final Long socialId) {
+        return new Member(memberName, socialId);
     }
 
     @Override

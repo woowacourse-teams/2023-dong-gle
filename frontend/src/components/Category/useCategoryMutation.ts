@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   addCategory as addCategoryRequest,
-  patchCategory as patchCategoryRequest,
+  updateCategoryTitle as updateCategoryTitleRequest,
+  updateCategoryOrder as updateCategoryOrderRequest,
   deleteCategory as deleteCategoryRequest,
 } from 'apis/category';
 
@@ -14,7 +15,14 @@ export const useCategoryMutation = () => {
     },
   });
 
-  const { mutate: patchCategory } = useMutation(patchCategoryRequest, {
+  const { mutate: updateCategoryTitle } = useMutation(updateCategoryTitleRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categories']);
+      queryClient.invalidateQueries(['detailWritings']);
+    },
+  });
+
+  const { mutate: updateCategoryOrder } = useMutation(updateCategoryOrderRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
       queryClient.invalidateQueries(['detailWritings']);
@@ -28,5 +36,5 @@ export const useCategoryMutation = () => {
     },
   });
 
-  return { addCategory, patchCategory, deleteCategory };
+  return { addCategory, updateCategoryTitle, updateCategoryOrder, deleteCategory };
 };

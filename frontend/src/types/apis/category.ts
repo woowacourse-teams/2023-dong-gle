@@ -17,12 +17,12 @@ export type GetCategoryDetailResponse = {
   writings: CategoryWriting[] | null;
 } & CategoryResponse;
 
-export type PatchCategory = {
-  categoryName?: string;
-  nextCategoryId?: number;
+export type UpdateCategoryTitleArgs = {
+  categoryId: number;
+  body: AddCategoriesRequest;
 };
 
-export type PatchCategoryArgs = {
+export type UpdateCategoryOrderArgs = {
   categoryId: number;
-  body: PatchCategory;
+  body: { nextCategoryId: number };
 };

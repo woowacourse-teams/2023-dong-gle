@@ -50,3 +50,11 @@ export type UpdateWritingTitleArgs = {
   writingId: number;
   body: Pick<Writing, 'title'>;
 };
+
+export type UpdateWritingOrderArgs = {
+  writingId: number;
+  body: {
+    targetCategoryId: number;
+    nextWritingId: number;
+  };
+};

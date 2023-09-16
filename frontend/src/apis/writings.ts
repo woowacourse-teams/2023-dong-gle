@@ -8,6 +8,7 @@ import type {
   GetWritingResponse,
   PublishWritingArgs,
   UpdateWritingTitleArgs,
+  UpdateWritingOrderArgs,
 } from 'types/apis/writings';
 
 // 글 생성(글 업로드): POST
@@ -46,4 +47,8 @@ export const getDetailWritings = (categoryId: number): Promise<GetDetailWritings
 
 // 글 제목 변경: PATCH
 export const updateWritingTitle = ({ writingId, body }: UpdateWritingTitleArgs) =>
+  http.patch(`${writingURL}/${writingId}`, { json: body });
+
+// 글 제목 순서 변경: PATCH
+export const updateWritingOrder = ({ writingId, body }: UpdateWritingOrderArgs) =>
   http.patch(`${writingURL}/${writingId}`, { json: body });

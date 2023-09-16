@@ -1,7 +1,7 @@
 import Accordion from 'components/@common/Accordion/Accordion';
 import { useCategories } from './useCategories';
 import Item from '../Item/Item';
-import { useDragAndDrop } from 'hooks/@common/useDragAndDrop';
+import { useDragAndDrop } from 'components/Category/useDragAndDrop';
 import styled, { css } from 'styled-components';
 import { useEffect } from 'react';
 import { LAST_DRAG_SECTION_ID } from 'constants/drag';

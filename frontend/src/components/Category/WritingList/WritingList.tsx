@@ -54,7 +54,7 @@ const S = {
     background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray4};
 
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray4};
+      background-color: ${({ theme }) => theme.color.gray3};
 
       div {
         display: flex;

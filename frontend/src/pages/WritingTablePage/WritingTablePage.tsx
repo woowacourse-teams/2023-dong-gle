@@ -23,7 +23,7 @@ const WritingTablePage = () => {
   useEffect(() => {
     setActiveCategoryId(activeCategoryId);
     return () => setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
-  }, []);
+  }, [activeCategoryId]);
 
   return (
     <S.Article>

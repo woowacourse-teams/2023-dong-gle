@@ -17,7 +17,10 @@ const WritingPage = () => {
   useEffect(() => {
     setActiveWritingInfo({ id: writingId, isDeleted: isDeletedWriting });
     setActiveCategoryId(categoryId);
-    return () => setActiveWritingInfo(null);
+    return () => {
+      setActiveWritingInfo(null);
+      setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
+    };
   }, [categoryId, writingId, isDeletedWriting]);
 
   return (

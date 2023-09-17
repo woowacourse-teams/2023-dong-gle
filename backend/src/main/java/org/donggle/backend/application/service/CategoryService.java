@@ -44,7 +44,7 @@ public class CategoryService {
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());
-        validateCategoryName(categoryName);
+        validateCategoryName(memberId, categoryName);
         final Category category = Category.of(categoryName, findMember);
         final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
@@ -52,8 +52,8 @@ public class CategoryService {
         return savedCategory.getId();
     }
 
-    private void validateCategoryName(final CategoryName categoryName) {
-        if (categoryRepository.existsByCategoryName(categoryName)) {
+    private void validateCategoryName(final Long memberId, final CategoryName categoryName) {
+        if (categoryRepository.existsByMemberIdAndCategoryName(memberId, categoryName)) {
             throw new DuplicateCategoryNameException(categoryName.getName());
         }
         if (categoryName.isBlank()) {
@@ -135,7 +135,7 @@ public class CategoryService {
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
         validateBasicCategory(basicCategory, findCategory);
         final CategoryName categoryName = new CategoryName(request.categoryName());
-        validateCategoryName(categoryName);
+        validateCategoryName(memberId, categoryName);
 
         findCategory.changeName(categoryName);
     }

@@ -19,7 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findFirstByMemberId(final Long memberId);
 
-    boolean existsByCategoryName(final CategoryName categoryName);
+    boolean existsByMemberIdAndCategoryName(final Long memberId, final CategoryName categoryName);
 
     @Query("select c from Category c " +
             "where c.nextCategory.id = :categoryId")

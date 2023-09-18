@@ -20,8 +20,11 @@ import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -174,6 +177,12 @@ public class WritingService {
             validateAuthorization(memberId, nextWriting);
             writing.changeNextWriting(nextWriting);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        return writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
+                .map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {

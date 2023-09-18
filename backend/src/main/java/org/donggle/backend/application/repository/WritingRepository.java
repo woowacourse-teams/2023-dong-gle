@@ -1,7 +1,8 @@
 package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.writing.Writing;
-import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,4 +51,7 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.id = :writingId and " +
             "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeleted(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+
+    @Query(countQuery = "select count(w) from Writing w where w.member.id = :memberId")
+    Page<Writing> findByMemberIdOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
 }

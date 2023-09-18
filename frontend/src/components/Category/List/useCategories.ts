@@ -1,4 +1,4 @@
-import { useSetGlobalState } from '@yogjin/react-global-state-hook';
+import { useSetGlobalState } from '@yogjin/react-global-state';
 import { useQuery } from '@tanstack/react-query';
 import { getCategories } from 'apis/category';
 import { useEffect } from 'react';

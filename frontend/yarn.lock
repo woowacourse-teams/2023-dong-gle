@@ -4085,12 +4085,13 @@
   dependencies:
     tslib "^2.4.0"
 
-"@yogjin/react-global-state-hook@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@yogjin/react-global-state-hook/-/react-global-state-hook-0.0.2.tgz#807f0265ba6686436bbe97a7d870d091fc4950d6"
-  integrity sha512-eT8TmHt7Ocu2z0O1FvJp+qW5/dBQBdICS/O6VsKANdIdlF/sydpCqsmRaiauvS3+bSE/z460fKRZwKtznjOJow==
+"@yogjin/react-global-state@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@yogjin/react-global-state/-/react-global-state-0.0.3.tgz#11119efc97e91d134838cf4273b8ca8a4e7debd4"
+  integrity sha512-TPH7EW9tPCEzwfbiHCOeRxBzbR+xn54Uwk5IoPIfZH5zBH3IvFAiSO4k2yRz/SWANCE2QXll5zo+Wauz1H6ubw==
   dependencies:
     react "^18.2.0"
+    react-dom "^18.2.0"
 
 "@zxing/text-encoding@0.9.0":
   version "0.9.0"
@@ -9922,7 +9923,7 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
-react-dom@18.2.0:
+react-dom@18.2.0, react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==

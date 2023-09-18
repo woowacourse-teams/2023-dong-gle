@@ -21,7 +21,7 @@
   "dependencies": {
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.32.6",
-    "@yogjin/react-global-state-hook": "^0.0.2",
+    "@yogjin/react-global-state": "^0.0.3",
     "dompurify": "^3.0.5",
     "highlight.js": "^11.8.0",
     "prismjs": "^1.29.0",

@@ -7,8 +7,7 @@ import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useMember } from 'hooks/queries/useMember';
-import useActiveCategoryId from 'globalState/useActiveCategoryId';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeCategoryIdState } from 'globalState';
 
 type Props = {

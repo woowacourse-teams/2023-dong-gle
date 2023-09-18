@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSetGlobalState } from '@yogjin/react-global-state-hook';
+import { useSetGlobalState } from '@yogjin/react-global-state';
 import { getDetailWritings } from 'apis/writings';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';

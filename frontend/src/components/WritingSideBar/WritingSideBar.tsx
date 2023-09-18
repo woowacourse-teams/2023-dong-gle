@@ -6,7 +6,7 @@ import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useEffect, useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
 
 export enum TabKeys {

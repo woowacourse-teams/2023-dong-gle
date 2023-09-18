@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeleteWritings } from './useDeleteWritings';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
 
 type Props = {

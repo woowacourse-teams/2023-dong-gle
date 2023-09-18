@@ -1,6 +1,6 @@
 import WritingViewer from 'components/WritingViewer/WritingViewer';
 import { useEffect } from 'react';
-import { useSetGlobalState } from '@yogjin/react-global-state-hook';
+import { useSetGlobalState } from '@yogjin/react-global-state';
 import { activeCategoryIdState, activeWritingInfoState } from 'globalState';
 import { useLocation } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { globalState } from '@yogjin/react-global-state-hook';
+import { globalState } from '@yogjin/react-global-state';
 
 type ActiveWritingInfo = {
   id: number;

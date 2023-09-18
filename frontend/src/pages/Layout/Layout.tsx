@@ -11,7 +11,7 @@ import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
 import TrashCan from 'components/TrashCan/TrashCan';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
 
 const Layout = () => {

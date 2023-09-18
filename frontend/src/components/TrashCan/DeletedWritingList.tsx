@@ -5,7 +5,7 @@ import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
 import { useDeletePermanentWritings } from 'components/TrashCanTable/useDeletePermanentWritings';
 import { activeWritingInfoState } from 'globalState';
-import { useGlobalStateValue } from '@yogjin/react-global-state-hook';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 
 const DeletedWritingList = () => {
   const { deletedWritings } = useDeletedWritings();

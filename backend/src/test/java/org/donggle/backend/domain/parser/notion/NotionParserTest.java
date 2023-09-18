@@ -16,22 +16,20 @@ import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
 class NotionParserTest {
+    @Autowired
     private NotionParser notionParser;
-
-    @BeforeEach
-    void setUp() {
-        notionParser = new NotionParser();
-    }
 
     @Test
     @DisplayName("Paragraph타입 BlockNode로부터 NormalBlock을 생성한다.")

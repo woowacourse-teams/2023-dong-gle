@@ -1,5 +1,6 @@
 package org.donggle.backend.domain.parser.notion;
 
+import org.donggle.backend.domain.parser.event.NotionImageUploader;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
@@ -22,9 +23,11 @@ import java.util.function.Function;
 
 @Component
 public class NotionParser {
+    private final NotionImageUploader notionImageUploader;
     private final Map<NotionBlockType, Function<NotionBlockNodeResponse, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new EnumMap<>(NotionBlockType.class);
 
-    public NotionParser() {
+    public NotionParser(final NotionImageUploader notionImageUploader) {
+        this.notionImageUploader = notionImageUploader;
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalBlock(notionBlockNode, NotionBookmark.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalBlock(notionBlockNode, NotionCallout.from(notionBlockNode), BlockType.BLOCKQUOTE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlock(notionBlockNode, NotionCodeBlock.from(notionBlockNode)));
@@ -50,6 +53,10 @@ public class NotionParser {
     }
 
     private Optional<Block> createImageBlock(final NotionBlockNodeResponse notionBlockNodeResponse, final NotionImage blockParser) {
+        if (blockParser.fileType() == FileType.FILE) {
+            final String uploadedUrl = notionImageUploader.upload(blockParser.url());
+            return Optional.of(new ImageBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.IMAGE, new ImageUrl(uploadedUrl), new ImageCaption(blockParser.parseCaption())));
+        }
         return Optional.of(new ImageBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));
     }
 

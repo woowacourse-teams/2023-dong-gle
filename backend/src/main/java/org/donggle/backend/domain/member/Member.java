@@ -21,7 +21,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET is_deleted = true, deleted_at = now() WHERE id = ?")
 @Where(clause = "is_deleted = false")
 @Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_UNIQUE", columnNames = "socialId"))
 public class Member extends BaseEntity {
@@ -42,10 +42,6 @@ public class Member extends BaseEntity {
 
     public static Member of(final MemberName memberName, final Long socialId) {
         return new Member(memberName, socialId);
-    }
-
-    public void updateDeletedAt() {
-        this.deletedAt = LocalDateTime.now();
     }
 
     @Override

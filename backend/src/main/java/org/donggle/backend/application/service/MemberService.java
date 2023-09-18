@@ -21,16 +21,15 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberPageResponse findMemberPage(final Long memberId) {
-        final Member findMember = findMember(memberId);
-        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember)
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
-        return MemberPageResponse.of(findMember, foundMemberCredentials);
+        return MemberPageResponse.of(member, memberCredentials);
     }
 
     public void deleteMember(final Long memberId) {
-        final Member findMember = findMember(memberId);
-        findMember.updateDeletedAt();
-        memberRepository.delete(findMember);
+        final Member member = findMember(memberId);
+        memberRepository.delete(member);
     }
 
     private Member findMember(final Long memberId) {

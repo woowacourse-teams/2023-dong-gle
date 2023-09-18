@@ -15,7 +15,7 @@ class NotionImageTest {
         //given
         final NotionImage notionImage = new NotionImage(List.of(
                 new RichText("caption", "null", Annotations.empty())
-        ), "a.com");
+        ), "a.com", FileType.EXTERNAL);
         //when
         final String caption = notionImage.parseCaption();
 

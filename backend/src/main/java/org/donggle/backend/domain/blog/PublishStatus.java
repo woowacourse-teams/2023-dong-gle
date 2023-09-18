@@ -11,7 +11,6 @@ public enum PublishStatus {
     PROTECT(1, "unlisted");
 
     private final int tistory;
-
     private final String medium;
 
     PublishStatus(final int tistory, final String medium) {

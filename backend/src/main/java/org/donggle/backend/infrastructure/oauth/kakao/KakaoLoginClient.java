@@ -3,7 +3,7 @@ package org.donggle.backend.infrastructure.oauth.kakao;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.client.LoginClient;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
+import org.donggle.backend.infrastructure.oauth.kakao.dto.response.SocialUserInfo;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,7 +24,7 @@ public class KakaoLoginClient implements LoginClient {
     }
 
     @Override
-    public UserInfo findUserInfo(final String accessToken) {
+    public SocialUserInfo findUserInfo(final String accessToken) {
         return userInfoClient.request(accessToken);
     }
 

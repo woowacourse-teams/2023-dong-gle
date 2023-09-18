@@ -36,7 +36,7 @@ class PublishServiceTest {
     @DisplayName("중복 발행 금지 예외")
     void alreadyPublishedException() {
         //given
-        final PublishRequest medium = new PublishRequest("MEDIUM", null);
+        final PublishRequest medium = new PublishRequest(null, null, null, null, null);
         final Blog blog = blogRepository.findByBlogType(BlogType.MEDIUM).orElseThrow();
         final Writing writing = writingRepository.findById(1L).orElseThrow();
         blogWritingRepository.save(new BlogWriting(blog, writing, LocalDateTime.now(), null));
@@ -44,6 +44,6 @@ class PublishServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> blogService.publishWriting(1L, 1L, medium)).isInstanceOf(WritingAlreadyPublishedException.class).hasMessageContaining("이미 발행된 글입니다.");
+        assertThatThrownBy(() -> blogService.publishWriting(1L, 1L, BlogType.MEDIUM, medium)).isInstanceOf(WritingAlreadyPublishedException.class).hasMessageContaining("이미 발행된 글입니다.");
     }
 }

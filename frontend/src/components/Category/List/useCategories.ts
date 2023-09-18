@@ -11,6 +11,7 @@ export const useCategories = () => {
   useEffect(() => {
     if (!data) return;
 
+    localStorage.setItem('defaultCategoryId', String(data.categories[0].id));
     setActiveCategoryIdState(data.categories[0].id);
   }, [data]);
 

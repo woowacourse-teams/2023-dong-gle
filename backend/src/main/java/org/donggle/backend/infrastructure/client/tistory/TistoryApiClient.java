@@ -15,6 +15,7 @@ import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryBlo
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCategoryListResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryPublishWritingResponseWrapper;
+import org.donggle.backend.infrastructure.client.tistory.util.TistoryApiParameter;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.ui.response.TistoryCategoryListResposne;
 import org.springframework.http.HttpStatusCode;
@@ -70,12 +71,8 @@ public class TistoryApiClient implements BlogClient {
                 .build();
     }
 
-    public TistoryPublishRequest makePublishRequest(
-            final String accessToken,
-            final String titleValue,
-            final String content,
-            final List<String> tags
-    ) {
+    public TistoryPublishRequest makePublishRequest(final String accessToken, final String titleValue,
+                                                    final String content, final List<String> tags) {
         return TistoryPublishRequest.builder()
                 .access_token(accessToken)
                 .blogName(getDefaultTistoryBlogName(accessToken))
@@ -87,22 +84,13 @@ public class TistoryApiClient implements BlogClient {
     }
 
     public TistoryCategoryListResposne findCategory(final Long memberId) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .orElseThrow(NoSuchElementException::new);
-        final String accessToken = memberCredentials.getBlogToken(TISTORY)
-                .orElseThrow(TistoryNotConnectedException::new);
-        final String blogName = memberCredentials.getTistoryBlogName()
-                .orElseThrow(TistoryNotConnectedException::new);
-
+        final MemberCredentials memberCredentials = getMemberCredentials(memberId);
         final String categoryListUri = UriComponentsBuilder.fromUriString("/category/list")
-                .queryParam("access_token", accessToken)
-                .queryParam("output", "json")
-                .queryParam("blogName", blogName)
+                .queryParam(TistoryApiParameter.ACCESS_TOKEN.parameter(), memberCredentials.getTistoryToken())
+                .queryParam(TistoryApiParameter.OUTPUT.parameter(), "json")
+                .queryParam(TistoryApiParameter.BLOG_NAME.parameter(), memberCredentials.getTistoryBlogName())
                 .build()
                 .toUriString();
-
         final TistoryCategoryListResponseWrapper categoryList = webClient.get()
                 .uri(categoryListUri)
                 .retrieve()
@@ -111,18 +99,27 @@ public class TistoryApiClient implements BlogClient {
                         .map(e -> new ClientInternalServerError(PLATFORM_NAME)))
                 .bodyToMono(TistoryCategoryListResponseWrapper.class)
                 .block();
-
         return new TistoryCategoryListResposne(
                 categoryList.tistory().item().categories().stream()
                         .map(category -> new TistoryCategoryListResposne.TistoryCategoryResponse(category.id(), category.name()))
                         .toList());
     }
 
+    private MemberCredentials getMemberCredentials(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
+        if (memberCredentials.isTistoryConnected()) {
+            throw new TistoryNotConnectedException();
+        }
+        return memberCredentials;
+    }
+
     public String getDefaultTistoryBlogName(final String accessToken) {
-        final String blogInfoUri = UriComponentsBuilder.fromUriString(TISTORY_URL)
-                .path("/blog/info")
-                .queryParam("access_token", accessToken)
-                .queryParam("output", "json")
+        final String blogInfoUri = UriComponentsBuilder.fromUriString("/blog/info")
+                .queryParam(TistoryApiParameter.ACCESS_TOKEN.parameter(), accessToken)
+                .queryParam(TistoryApiParameter.OUTPUT.parameter(), "json")
                 .build()
                 .toUriString();
         final TistoryBlogNameResponse blogInfo = webClient.get()
@@ -142,10 +139,10 @@ public class TistoryApiClient implements BlogClient {
 
     public TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
         final String publishPropertyUri = UriComponentsBuilder.fromUriString("/post/read")
-                .queryParam("access_token", request.access_token())
-                .queryParam("blogName", request.blogName())
-                .queryParam("postId", request.postId())
-                .queryParam("output", "json")
+                .queryParam(TistoryApiParameter.ACCESS_TOKEN.parameter(), request.access_token())
+                .queryParam(TistoryApiParameter.BLOG_NAME.parameter(), request.blogName())
+                .queryParam(TistoryApiParameter.POST_ID.parameter(), request.postId())
+                .queryParam(TistoryApiParameter.OUTPUT.parameter(), "json")
                 .build()
                 .toUriString();
         return webClient.get()

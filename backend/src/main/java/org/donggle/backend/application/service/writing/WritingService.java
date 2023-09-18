@@ -103,6 +103,11 @@ public class WritingService {
     public Writing findWriting(final Long memberId, final Long writingId) {
         final Writing writing = writingRepository.findByMemberId(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
+        findStyleByNomalBlocks(writing);
+        return writing;
+    }
+
+    private void findStyleByNomalBlocks(final Writing writing) {
         final List<Block> blocks = writing.getBlocks();
         final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
         final List<NormalBlock> normalBlocks = blocks.stream()
@@ -110,7 +115,6 @@ public class WritingService {
                 .map(NormalBlock.class::cast)
                 .toList();
         writingRepository.findStylesForBlocks(normalBlocks);
-        return writing;
     }
 
     @Transactional(readOnly = true)

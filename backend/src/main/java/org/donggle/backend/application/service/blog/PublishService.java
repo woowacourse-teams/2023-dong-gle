@@ -47,13 +47,7 @@ public class PublishService {
         final Member member = findMember(memberId);
         final Writing writing = writingRepository.findByMemberId(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
-        final List<Block> blocks = writing.getBlocks();
-        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
-        final List<NormalBlock> normalBlocks = blocks.stream()
-                .filter(block -> !notNormalType.contains(block.getBlockType()))
-                .map(NormalBlock.class::cast)
-                .toList();
-        writingRepository.findStylesForBlocks(normalBlocks);
+        findStylesByNomalBlocks(writing);
 
         validateAuthorization(member.getId(), writing);
 
@@ -64,6 +58,16 @@ public class PublishService {
 
         checkWritingAlreadyPublished(publishedBlogs, blog.getBlogType(), writing);
         return new PublishWritingRequest(blog, writing, accessToken);
+    }
+
+    private void findStylesByNomalBlocks(final Writing writing) {
+        final List<Block> blocks = writing.getBlocks();
+        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
+        final List<NormalBlock> normalBlocks = blocks.stream()
+                .filter(block -> !notNormalType.contains(block.getBlockType()))
+                .map(NormalBlock.class::cast)
+                .toList();
+        writingRepository.findStylesForBlocks(normalBlocks);
     }
 
     public void saveProperties(final Blog blog, final Writing writing, final PublishResponse response) {

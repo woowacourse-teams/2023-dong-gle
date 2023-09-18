@@ -55,11 +55,11 @@ public class TistoryApiClient implements BlogClient {
         return TistoryPublishPropertyRequest.builder()
                 .access_token(accessToken)
                 .postId(postId)
-                .blogName(getDefaultTistoryBlogName(accessToken))
+                .blogName(findDefaultBlogName(accessToken))
                 .build();
     }
 
-    public TistoryPublishRequest makePublishRequest(
+    private TistoryPublishRequest makePublishRequest(
             final String accessToken,
             final String titleValue,
             final String content,
@@ -69,7 +69,7 @@ public class TistoryApiClient implements BlogClient {
         if (publishStatus == PublishStatus.PROTECT) {
             return TistoryPublishRequest.builder()
                     .access_token(accessToken)
-                    .blogName(getDefaultTistoryBlogName(accessToken))
+                    .blogName(findDefaultBlogName(accessToken))
                     .output("json")
                     .title(titleValue)
                     .content(content)
@@ -82,7 +82,7 @@ public class TistoryApiClient implements BlogClient {
         }
         return TistoryPublishRequest.builder()
                 .access_token(accessToken)
-                .blogName(getDefaultTistoryBlogName(accessToken))
+                .blogName(findDefaultBlogName(accessToken))
                 .output("json")
                 .title(titleValue)
                 .content(content)
@@ -105,7 +105,7 @@ public class TistoryApiClient implements BlogClient {
         return publishTime;
     }
 
-    public String getDefaultTistoryBlogName(final String access_token) {
+    public String findDefaultBlogName(final String access_token) {
         final String blogInfoUri = UriComponentsBuilder.fromUriString(TISTORY_URL)
                 .path("/blog/info")
                 .queryParam("access_token", access_token)
@@ -127,7 +127,7 @@ public class TistoryApiClient implements BlogClient {
                 .orElseThrow();
     }
 
-    public TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
+    private TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
         final String publishPropertyUri = UriComponentsBuilder.fromUriString("/post/read")
                 .queryParam("access_token", request.access_token())
                 .queryParam("blogName", request.blogName())

@@ -5,10 +5,9 @@ import org.donggle.backend.application.service.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CountDownLatch;
@@ -17,10 +16,11 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @SpringBootTest
 @Transactional
-@ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class NoConcurrentAccessAspectTest {
     @Autowired
     private CategoryService categoryService;

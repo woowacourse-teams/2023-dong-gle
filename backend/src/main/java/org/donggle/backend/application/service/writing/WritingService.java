@@ -11,9 +11,11 @@ import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -33,6 +35,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.donggle.backend.domain.writing.BlockType.CODE_BLOCK;
+import static org.donggle.backend.domain.writing.BlockType.HORIZONTAL_RULES;
+import static org.donggle.backend.domain.writing.BlockType.IMAGE;
 
 @Service
 @Transactional
@@ -92,7 +101,16 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public Writing findWriting(final Long memberId, final Long writingId) {
-        return findWritingAndTrashedWriting(memberId, writingId);
+        final Writing writing = writingRepository.findByMemberId(memberId, writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        final List<Block> blocks = writing.getBlocks();
+        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
+        final List<NormalBlock> normalBlocks = blocks.stream()
+                .filter(block -> !notNormalType.contains(block.getBlockType()))
+                .map(NormalBlock.class::cast)
+                .toList();
+        writingRepository.findStylesForBlocks(normalBlocks);
+        return writing;
     }
 
     @Transactional(readOnly = true)
@@ -111,10 +129,26 @@ public class WritingService {
         }
         final Writing firstWriting = findFirstWriting(findWritings);
         final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
-        final List<WritingDetailResponse> writingDetailResponses = sortedWriting.stream()
-                .map(writing -> WritingDetailResponse.of(writing, convertToPublishedDetailResponses(writing.getId())))
+        final Map<Writing, List<BlogWriting>> blogWritings = blogWritingRepository.findWithFetch(sortedWriting)
+                .stream()
+                .collect(Collectors.groupingBy(BlogWriting::getWriting));
+
+        final List<WritingDetailResponse> responses = sortedWriting.stream()
+                .map(writing -> {
+                    final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing))
+                            .orElse(Collections.emptyList())
+                            .stream()
+                            .map(blogWriting -> new PublishedDetailResponse(
+                                    blogWriting.getBlogTypeValue(),
+                                    blogWriting.getPublishedAt(),
+                                    blogWriting.getTags())
+                            )
+                            .toList();
+                    return WritingDetailResponse.of(writing, publishedDetailResponses);
+                })
                 .toList();
-        return WritingListWithCategoryResponse.of(findCategory, writingDetailResponses);
+
+        return WritingListWithCategoryResponse.of(findCategory, responses);
     }
 
     private Writing findFirstWriting(final List<Writing> findWritings) {

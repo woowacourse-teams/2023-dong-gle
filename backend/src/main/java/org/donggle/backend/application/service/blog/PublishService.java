@@ -52,7 +52,7 @@ public class PublishService {
     }
 
     public void saveProperties(final Blog blog, final Writing writing, final PublishResponse response) {
-        blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags()));
+        blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags(), response.url()));
     }
 
 

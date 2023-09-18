@@ -9,7 +9,7 @@ public record PublishRequest(
         List<String> tags,
         String publishStatus,
         String password,
-        Long categoryId,
+        String categoryId,
         String publishTime
 ) {
     public static PublishRequest tistory(final PublishRequest publishRequest) {

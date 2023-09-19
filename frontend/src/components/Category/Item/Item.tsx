@@ -32,9 +32,10 @@ const Item = ({
   const decideDraggingTarget = () => {
     const isCategoryDragOverTarget =
       dragOverIndexList.length === 1 && categoryId === dragOverIndexList[0];
+    const isWritingDragOverTarget =
+      isCategoryDragOverTarget && dragOverIndexList.length !== draggingIndexList.length;
 
-    if (isCategoryDragOverTarget && dragOverIndexList.length !== draggingIndexList.length)
-      return 'writing';
+    if (isWritingDragOverTarget) return 'writing';
     if (isCategoryDragOverTarget) return 'category';
     return 'none';
   };

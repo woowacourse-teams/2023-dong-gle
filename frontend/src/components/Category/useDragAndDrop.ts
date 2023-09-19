@@ -15,7 +15,9 @@ export const useDragAndDrop = () => {
   const handleDragStart =
     (...ids: number[]): DragEventHandler =>
     (e) => {
-      if (e.currentTarget === e.target) setDraggingIndexList(ids);
+      e.stopPropagation();
+
+      setDraggingIndexList(ids);
     };
 
   // 드래그 하고 있는 대상이 드래그 가능한 영역에 들어올 때.

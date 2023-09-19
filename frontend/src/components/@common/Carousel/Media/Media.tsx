@@ -46,7 +46,8 @@ const CommonMediaStyles = `
 `;
 
 const S = {
-  Media: styled.div`
+  Media: styled.li`
+    flex: 0 0 auto;
     ${CommonMediaStyles}
 
     picture {

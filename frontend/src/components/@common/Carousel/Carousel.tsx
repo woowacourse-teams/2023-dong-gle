@@ -20,7 +20,11 @@ const Carousel = ({ medias, width = '640px', height = '360px' }: Props) => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
       />
-      <Media media={medias[activeIndex]} />
+      <S.MediaAnimationContainer $translateX={`-${activeIndex * 100}%`}>
+        {medias.map((media, index) => (
+          <Media key={index} media={media} />
+        ))}
+      </S.MediaAnimationContainer>
       <PageNation
         direction='right'
         medias={medias}
@@ -37,6 +41,16 @@ const S = {
     position: relative;
     width: ${({ $width }) => $width};
     height: ${({ $height }) => $height};
+    overflow: hidden;
+  `,
+
+  MediaAnimationContainer: styled.ul<{ $translateX: string }>`
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    transition: all 0.5s ease-in-out;
+    transform: translateX(${({ $translateX }) => $translateX});
   `,
 };
 

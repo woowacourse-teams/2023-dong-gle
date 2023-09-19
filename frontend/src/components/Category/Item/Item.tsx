@@ -3,6 +3,7 @@ import { DragEvent, useState } from 'react';
 import Category from '../Category/Category';
 import WritingList from '../WritingList/WritingList';
 import styled, { css } from 'styled-components';
+import { INDEX_POSITION } from 'constants/drag';
 
 type Props = {
   categoryId: number;
@@ -31,7 +32,8 @@ const Item = ({
 
   const decideDraggingTarget = () => {
     const isCategoryDragOverTarget =
-      dragOverIndexList.length === 1 && categoryId === dragOverIndexList[0];
+      dragOverIndexList.length === 1 &&
+      categoryId === dragOverIndexList[INDEX_POSITION.CATEGORY_ID];
     const isWritingDragOverTarget =
       isCategoryDragOverTarget && dragOverIndexList.length !== draggingIndexList.length;
 

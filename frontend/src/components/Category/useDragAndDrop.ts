@@ -1,5 +1,5 @@
 import { useCategoryMutation } from 'components/Category/useCategoryMutation';
-import { LAST_DRAG_SECTION_ID } from 'constants/drag';
+import { INDEX_POSITION, LAST_DRAG_SECTION_ID } from 'constants/drag';
 import { useWritingOrderUpdate } from 'hooks/queries/writing/useWritingOrderUpdate';
 import { DragEventHandler, useState } from 'react';
 import { isSameArray } from 'utils/array';
@@ -38,7 +38,8 @@ export const useDragAndDrop = () => {
       // 기본 카테고리 위로는 순서 바꾸기 불가.
       if (
         isCategoryDragging &&
-        dragOverIndex[0] === Number(localStorage.getItem('defaultCategoryId'))
+        dragOverIndex[INDEX_POSITION.CATEGORY_ID] ===
+          Number(localStorage.getItem('defaultCategoryId'))
       ) {
         setDragOverIndexList([]);
         return;
@@ -54,9 +55,9 @@ export const useDragAndDrop = () => {
     // 카테고리 이동
     else if (isCategoryDragging) {
       updateCategoryOrder({
-        categoryId: draggingIndexList[0],
+        categoryId: draggingIndexList[INDEX_POSITION.CATEGORY_ID],
         body: {
-          nextCategoryId: dragOverIndexList[0],
+          nextCategoryId: dragOverIndexList[INDEX_POSITION.CATEGORY_ID],
         },
       });
     }
@@ -65,12 +66,14 @@ export const useDragAndDrop = () => {
     else if (isWritingDragging) {
       // 카테고리로 이동했을 때 마지막(-1)으로 이동시키기 위함.
       const nextWritingId =
-        dragOverIndexList.length === 1 ? LAST_DRAG_SECTION_ID : dragOverIndexList[1];
+        dragOverIndexList.length === 1
+          ? LAST_DRAG_SECTION_ID
+          : dragOverIndexList[INDEX_POSITION.WRITING_ID];
 
       updateWritingOrder.mutate({
-        writingId: draggingIndexList[1],
+        writingId: draggingIndexList[INDEX_POSITION.WRITING_ID],
         body: {
-          targetCategoryId: dragOverIndexList[0],
+          targetCategoryId: dragOverIndexList[INDEX_POSITION.CATEGORY_ID],
           nextWritingId,
         },
       });

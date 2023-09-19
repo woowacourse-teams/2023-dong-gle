@@ -6,7 +6,7 @@ import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeleteWritings } from './useDeleteWritings';
 import { DragEvent } from 'react';
-import { LAST_DRAG_SECTION_ID } from 'constants/drag';
+import { INDEX_POSITION, LAST_DRAG_SECTION_ID } from 'constants/drag';
 
 type Props = {
   categoryId: number;
@@ -33,7 +33,9 @@ const WritingList = ({
   const deleteWritings = useDeleteWritings();
 
   const isWritingDragOverTarget = (categoryId: number, writingId: number) =>
-    isWritingDragging && categoryId === dragOverIndexList[0] && writingId === dragOverIndexList[1];
+    isWritingDragging &&
+    categoryId === dragOverIndexList[INDEX_POSITION.CATEGORY_ID] &&
+    writingId === dragOverIndexList[INDEX_POSITION.WRITING_ID];
 
   if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;
 

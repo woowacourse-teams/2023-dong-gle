@@ -3,7 +3,7 @@ import { useCategories } from './useCategories';
 import Item from '../Item/Item';
 import { useDragAndDrop } from 'components/Category/useDragAndDrop';
 import styled, { css } from 'styled-components';
-import { LAST_DRAG_SECTION_ID } from 'constants/drag';
+import { INDEX_POSITION, LAST_DRAG_SECTION_ID } from 'constants/drag';
 
 const List = () => {
   const { categories } = useCategories();
@@ -39,7 +39,10 @@ const List = () => {
       })}
       <S.DragLastSection
         onDragEnter={handleDragEnter(LAST_DRAG_SECTION_ID)}
-        $isDragOverTarget={isCategoryDragging && dragOverIndexList[0] === LAST_DRAG_SECTION_ID}
+        $isDragOverTarget={
+          isCategoryDragging &&
+          dragOverIndexList[INDEX_POSITION.CATEGORY_ID] === LAST_DRAG_SECTION_ID
+        }
       />
     </Accordion>
   );

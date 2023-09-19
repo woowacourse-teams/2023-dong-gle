@@ -3,11 +3,11 @@ package org.donggle.backend.infrastructure.client.tistory;
 import org.donggle.backend.application.client.BlogClient;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
-import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.blog.PublishStatus;
 import org.donggle.backend.domain.member.MemberCredentials;
-import org.donggle.backend.exception.business.TistoryNotConnectedException;
-import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.exception.business.InvalidPublishRequestException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishRequest;
@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.donggle.backend.domain.blog.BlogType.TISTORY;
 import static org.donggle.backend.infrastructure.client.exception.ClientException.handle4xxException;
@@ -46,8 +46,8 @@ public class TistoryApiClient implements BlogClient {
     }
 
     @Override
-    public PublishResponse publish(final String accessToken, final String content, final List<String> tags, final String titleValue) {
-        final TistoryPublishRequest request = makePublishRequest(accessToken, titleValue, content, tags);
+    public PublishResponse publish(final String accessToken, final String content, final PublishRequest publishRequest, final String titleValue) {
+        final TistoryPublishRequest request = makePublishRequest(accessToken, titleValue, content, publishRequest);
         final TistoryPublishWritingResponseWrapper response = webClient.post()
                 .uri("/post/write?")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -66,19 +66,41 @@ public class TistoryApiClient implements BlogClient {
         return TistoryPublishPropertyRequest.builder()
                 .access_token(accessToken)
                 .postId(postId)
-                .blogName(getDefaultTistoryBlogName(accessToken))
+                .blogName(findDefaultBlogName(accessToken))
                 .build();
     }
 
-    public TistoryPublishRequest makePublishRequest(final String accessToken, final String titleValue,
-                                                    final String content, final List<String> tags) {
+    private TistoryPublishRequest makePublishRequest(
+            final String accessToken,
+            final String titleValue,
+            final String content,
+            final PublishRequest publishRequest
+    ) {
+        final PublishStatus publishStatus = PublishStatus.from(publishRequest.publishStatus());
+        if (publishStatus == PublishStatus.PROTECT) {
+            return TistoryPublishRequest.builder()
+                    .access_token(accessToken)
+                    .blogName(findDefaultBlogName(accessToken))
+                    .output("json")
+                    .title(titleValue)
+                    .content(content)
+                    .visibility(publishStatus.getTistory())
+                    .category(publishRequest.categoryId())
+                    .tag(String.join(",", publishRequest.tags()))
+                    .published(makePublishTime(publishRequest.publishTime()))
+                    .password(publishRequest.password())
+                    .build();
+        }
         return TistoryPublishRequest.builder()
                 .access_token(accessToken)
-                .blogName(getDefaultTistoryBlogName(accessToken))
+                .blogName(findDefaultBlogName(accessToken))
                 .output("json")
                 .title(titleValue)
                 .content(content)
-                .tag(String.join(",", tags))
+                .visibility(publishStatus.getTistory())
+                .category(publishRequest.categoryId())
+                .tag(String.join(",", publishRequest.tags()))
+                .published(makePublishTime(publishRequest.publishTime()))
                 .build();
     }
 
@@ -104,20 +126,22 @@ public class TistoryApiClient implements BlogClient {
                         .toList());
     }
 
-    private MemberCredentials getMemberCredentials(final Long memberId) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
-                .orElseThrow(NoSuchElementException::new);
-        if (memberCredentials.isTistoryConnected()) {
-            throw new TistoryNotConnectedException();
+    private String makePublishTime(final String publishTime) {
+        if (publishTime.isBlank()) {
+            return String.valueOf(LocalDateTime.now());
         }
-        return memberCredentials;
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        final LocalDateTime publishLocalDateTime = LocalDateTime.parse(publishTime, formatter);
+        if (publishLocalDateTime.isBefore(LocalDateTime.now())) {
+            throw new InvalidPublishRequestException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
+        }
+        return publishTime;
     }
 
-    public String getDefaultTistoryBlogName(final String accessToken) {
-        final String blogInfoUri = UriComponentsBuilder.fromUriString("/blog/info")
-                .queryParam("access_token", accessToken)
+    public String findDefaultBlogName(final String access_token) {
+        final String blogInfoUri = UriComponentsBuilder.fromUriString(TISTORY_URL)
+                .path("/blog/info")
+                .queryParam("access_token", access_token)
                 .queryParam("output", "json")
                 .build()
                 .toUriString();
@@ -136,7 +160,7 @@ public class TistoryApiClient implements BlogClient {
                 .orElseThrow();
     }
 
-    public TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
+    private TistoryGetWritingResponseWrapper findPublishProperty(final TistoryPublishPropertyRequest request) {
         final String publishPropertyUri = UriComponentsBuilder.fromUriString("/post/read")
                 .queryParam("access_token", request.access_token())
                 .queryParam("blogName", request.blogName())

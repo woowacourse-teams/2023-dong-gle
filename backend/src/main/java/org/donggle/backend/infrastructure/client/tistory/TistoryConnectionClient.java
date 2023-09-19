@@ -2,12 +2,12 @@ package org.donggle.backend.infrastructure.client.tistory;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
-import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryAccessTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.infrastructure.client.exception.ClientException;
+import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryAccessTokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -23,7 +23,6 @@ import java.util.NoSuchElementException;
 public class TistoryConnectionClient {
     private static final String AUTHORIZE_URL = "https://www.tistory.com/oauth/authorize";
     private static final String TOKEN_URL = "https://www.tistory.com/oauth/access_token";
-    private static final String CLIENT_ID = "client_id";
     private static final String PLATFORM_NAME = "Tistory";
 
     private final String clientId;
@@ -48,7 +47,7 @@ public class TistoryConnectionClient {
 
     public String createAuthorizeRedirectUri(final String redirectUri) {
         return UriComponentsBuilder.fromUriString(AUTHORIZE_URL)
-                .queryParam(CLIENT_ID, clientId)
+                .queryParam("client_id", clientId)
                 .queryParam("redirect_uri", redirectUri)
                 .queryParam("response_type", "code")
                 .build()
@@ -60,7 +59,7 @@ public class TistoryConnectionClient {
         final MemberCredentials memberCredentials = findMemberCredentials(member);
 
         final String accessToken = getAccessToken(oAuthAccessTokenRequest.code(), oAuthAccessTokenRequest.redirect_uri());
-        final String tistoryBlogName = tistoryApiService.getDefaultTistoryBlogName(accessToken);
+        final String tistoryBlogName = tistoryApiService.findDefaultBlogName(accessToken);
 
         memberCredentials.updateTistory(accessToken, tistoryBlogName);
     }

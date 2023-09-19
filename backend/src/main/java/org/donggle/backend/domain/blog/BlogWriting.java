@@ -34,12 +34,14 @@ public class BlogWriting extends BaseEntity {
     private LocalDateTime publishedAt;
     @ElementCollection
     private List<String> tags;
+    private String url;
 
-    public BlogWriting(final Blog blog, final Writing writing, final LocalDateTime publishedAt, final List<String> tags) {
+    public BlogWriting(final Blog blog, final Writing writing, final LocalDateTime publishedAt, final List<String> tags, final String url) {
         this.blog = blog;
         this.writing = writing;
         this.publishedAt = publishedAt;
         this.tags = tags;
+        this.url = url;
     }
 
     public String getBlogTypeValue() {

@@ -8,6 +8,7 @@ import java.util.List;
 @Builder
 public record PublishResponse(
         LocalDateTime dateTime,
-        List<String> tags
+        List<String> tags,
+        String url
 ) {
 }

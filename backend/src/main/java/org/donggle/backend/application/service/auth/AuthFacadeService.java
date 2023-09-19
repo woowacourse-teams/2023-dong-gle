@@ -3,7 +3,7 @@ package org.donggle.backend.application.service.auth;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
+import org.donggle.backend.infrastructure.oauth.kakao.dto.response.SocialUserInfo;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +18,11 @@ public class AuthFacadeService {
     }
 
     public TokenResponse login(final String socialType, final OAuthAccessTokenRequest request) {
-        final UserInfo userInfo = oauthClients.findUserInfo(
+        final SocialUserInfo socialUserInfo = oauthClients.findUserInfo(
                 SocialType.from(socialType),
                 request.code(),
                 request.redirect_uri());
-        return authService.login(userInfo);
+        return authService.login(socialUserInfo);
     }
 
     public void logout(final Long memberId) {

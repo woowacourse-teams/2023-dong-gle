@@ -1,9 +1,9 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.TrashService;
 import org.donggle.backend.application.service.request.WritingsDeleteRequest;
 import org.donggle.backend.application.service.request.WritingsRestoreRequest;
+import org.donggle.backend.application.service.trash.TrashService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.springframework.http.ResponseEntity;

@@ -3,10 +3,6 @@ package org.donggle.backend.ui.common;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
-import org.donggle.backend.ui.common.AuthInterceptor;
-import org.donggle.backend.ui.common.RefreshTokenAuthInterceptor;
-import org.donggle.backend.ui.common.TokenArgumentResolver;
-import org.donggle.backend.ui.common.MDCInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -24,16 +20,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final TokenRepository tokenRepository;
 
     @Override
-    public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .exposedHeaders(HttpHeaders.LOCATION)
-                .maxAge(3600);
-    }
-
-    @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(mdcInterceptor)
                 .addPathPatterns("/**")
@@ -41,12 +27,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
                 .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**", "/auth/**")
-                .excludePathPatterns("/connections/**/redirect", "/auth/login/**")
+                .excludePathPatterns("/connections/**/redirect", "/auth/login/**", "/auth/token/refresh")
                 .order(2);
 
         registry.addInterceptor(new RefreshTokenAuthInterceptor(jwtTokenProvider, tokenRepository))
-                .addPathPatterns("/token/refresh")
+                .addPathPatterns("/auth/token/refresh")
                 .order(3);
+    }
+
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .exposedHeaders(HttpHeaders.LOCATION)
+                .maxAge(3600);
     }
 
     @Override

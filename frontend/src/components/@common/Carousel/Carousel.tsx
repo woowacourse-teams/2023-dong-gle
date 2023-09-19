@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Media, { Media as MediaType } from './Media/Media';
 import PageNation from './PageNation/PageNation';
+import Indicator from './Indicator/Indicator';
 
 type Props = {
   medias: MediaType[];
@@ -31,6 +32,7 @@ const Carousel = ({ medias, width = '640px', height = '360px' }: Props) => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
       />
+      <Indicator length={medias.length} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
     </S.Carousel>
   );
 };

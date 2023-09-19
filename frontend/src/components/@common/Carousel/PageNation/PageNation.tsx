@@ -43,10 +43,10 @@ const S = {
     ${({ $direction }) =>
       $direction === 'left'
         ? css`
-            left: 8px;
+            left: 1rem;
           `
         : css`
-            right: 8px;
+            right: 1rem;
             svg {
               transform: rotate(180deg);
             }

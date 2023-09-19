@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Order
 public class NoConcurrentAccessAspect {
     public static final int MEMBER_ID_INDEX = 0;
+
     private final ConcurrentHashMap<Long, Lock> memberLock = new ConcurrentHashMap<>();
 
     @Around("@annotation(org.donggle.backend.application.NoConcurrentExecution)")

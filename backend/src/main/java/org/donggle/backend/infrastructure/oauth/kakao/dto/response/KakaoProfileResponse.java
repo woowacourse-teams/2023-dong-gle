@@ -10,9 +10,9 @@ public record KakaoProfileResponse(
         @JsonProperty("kakao_account") KakaoAccount kakaoAccount
 ) {
 
-    public UserInfo toUserInfo() {
+    public SocialUserInfo toUserInfo() {
         final Profile profile = kakaoAccount.profile;
-        return new UserInfo(
+        return new SocialUserInfo(
                 id,
                 SocialType.KAKAO,
                 profile.nickname

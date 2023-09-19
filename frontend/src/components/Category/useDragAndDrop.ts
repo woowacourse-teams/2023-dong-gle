@@ -1,4 +1,5 @@
 import { useCategoryMutation } from 'components/Category/useCategoryMutation';
+import { LAST_DRAG_SECTION_ID } from 'constants/drag';
 import { useWritingOrderUpdate } from 'hooks/queries/writing/useWritingOrderUpdate';
 import { DragEventHandler, useState } from 'react';
 import { isSameArray } from 'utils/array';
@@ -59,7 +60,8 @@ export const useDragAndDrop = () => {
     // 글 이동
     else if (isWritingDragging) {
       // 카테고리로 이동했을 때 마지막(-1)으로 이동시키기 위함.
-      const nextWritingId = dragOverIndexList.length === 1 ? -1 : dragOverIndexList[1];
+      const nextWritingId =
+        dragOverIndexList.length === 1 ? LAST_DRAG_SECTION_ID : dragOverIndexList[1];
 
       updateWritingOrder.mutate({
         writingId: draggingIndexList[1],

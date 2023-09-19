@@ -40,24 +40,25 @@ const Media = ({ media }: Props) => {
 
 export default Media;
 
+const CommonMediaStyles = `
+  width: 100%;
+  height: 100%;
+`;
+
 const S = {
   Media: styled.div`
-    width: 100%;
-    height: 100%;
+    ${CommonMediaStyles}
 
     picture {
-      width: 100%;
-      height: 100%;
+      ${CommonMediaStyles}
     }
 
     img {
-      width: 100%;
-      height: 100%;
+      ${CommonMediaStyles}
     }
 
     video {
-      width: 100%;
-      height: 100%;
+      ${CommonMediaStyles}
     }
   `,
 };

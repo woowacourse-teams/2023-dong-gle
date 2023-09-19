@@ -8,7 +8,7 @@ public record WritingHomeResponse(
         Long id,
         String title,
         CategoryInfo category,
-        List<PublishedDetailResponse> publish
+        List<PublishedDetailResponse> publishedDetails
 ) {
     public static WritingHomeResponse of(final Writing writing, final List<PublishedDetailResponse> responses) {
         return new WritingHomeResponse(

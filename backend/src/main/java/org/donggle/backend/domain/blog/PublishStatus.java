@@ -1,6 +1,7 @@
 package org.donggle.backend.domain.blog;
 
 import lombok.Getter;
+import org.donggle.backend.exception.business.InvalidPublishRequestException;
 
 import java.util.Arrays;
 
@@ -22,6 +23,6 @@ public enum PublishStatus {
         return Arrays.stream(PublishStatus.values())
                 .filter(status -> status.name().equalsIgnoreCase(publishStatus))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("발행 상태 정보가 잘못 입력되었습니다."));
+                .orElseThrow(() -> new InvalidPublishRequestException("발행 상태 정보가 잘못 입력되었습니다."));
     }
 }

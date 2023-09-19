@@ -4,6 +4,7 @@ import org.donggle.backend.application.client.BlogClient;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.PublishStatus;
+import org.donggle.backend.exception.business.InvalidPublishRequestException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishRequest;
@@ -76,7 +77,7 @@ public class TistoryApiClient implements BlogClient {
                     .visibility(publishStatus.getTistory())
                     .category(publishRequest.categoryId())
                     .tag(String.join(",", publishRequest.tags()))
-                    .published(makePublished(publishRequest.publishTime()))
+                    .published(makePublishTime(publishRequest.publishTime()))
                     .password(publishRequest.password())
                     .build();
         }
@@ -89,18 +90,18 @@ public class TistoryApiClient implements BlogClient {
                 .visibility(publishStatus.getTistory())
                 .category(publishRequest.categoryId())
                 .tag(String.join(",", publishRequest.tags()))
-                .published(makePublished(publishRequest.publishTime()))
+                .published(makePublishTime(publishRequest.publishTime()))
                 .build();
     }
 
-    private String makePublished(final String publishTime) {
+    private String makePublishTime(final String publishTime) {
         if (publishTime.isBlank()) {
             return String.valueOf(LocalDateTime.now());
         }
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
         final LocalDateTime publishLocalDateTime = LocalDateTime.parse(publishTime, formatter);
         if (publishLocalDateTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
+            throw new InvalidPublishRequestException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
         }
         return publishTime;
     }

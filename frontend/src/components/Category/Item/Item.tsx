@@ -13,8 +13,7 @@ type Props = {
   onDragStart: (...ids: number[]) => (e: DragEvent) => void;
   onDragEnter: (...ids: number[]) => (e: DragEvent) => void;
   onDragEnd: (e: DragEvent) => void;
-  isCategoryDrag: () => boolean;
-  isWritingDrag: () => boolean;
+  isWritingDragging: boolean;
 };
 
 const Item = ({
@@ -26,8 +25,7 @@ const Item = ({
   onDragStart,
   onDragEnter,
   onDragEnd,
-  isCategoryDrag,
-  isWritingDrag,
+  isWritingDragging,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,7 +66,7 @@ const Item = ({
             onDragStart={onDragStart}
             onDragEnter={onDragEnter}
             onDragEnd={onDragEnd}
-            isWritingDrag={isWritingDrag}
+            isWritingDragging={isWritingDragging}
           />
         </Accordion.Panel>
       </Accordion.Item>

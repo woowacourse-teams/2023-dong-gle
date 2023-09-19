@@ -34,7 +34,7 @@ export const useDragAndDrop = () => {
       }
 
       // 기본 카테고리 위로는 순서 바꾸기 불가.
-      if (isCategoryDrag() && dragOverIndex[0] === defaultCategoryId) {
+      if (isCategoryDragging && dragOverIndex[0] === defaultCategoryId) {
         setDragOverIndexList([]);
         return;
       }
@@ -47,7 +47,7 @@ export const useDragAndDrop = () => {
 
     if (draggingIndexList.length === 0 || dragOverIndexList.length === 0) return;
     // 카테고리 이동
-    else if (isCategoryDrag()) {
+    else if (isCategoryDragging) {
       updateCategoryOrder({
         categoryId: draggingIndexList[0],
         body: {
@@ -57,7 +57,7 @@ export const useDragAndDrop = () => {
     }
 
     // 글 이동
-    else if (isWritingDrag()) {
+    else if (isWritingDragging) {
       // 카테고리로 이동했을 때 마지막(-1)으로 이동시키기 위함.
       const nextWritingId = dragOverIndexList.length === 1 ? -1 : dragOverIndexList[1];
 
@@ -74,9 +74,9 @@ export const useDragAndDrop = () => {
     setDragOverIndexList([]);
   };
 
-  const isCategoryDrag = () => draggingIndexList.length === 1;
+  const isCategoryDragging = draggingIndexList.length === 1;
 
-  const isWritingDrag = () => draggingIndexList.length === 2;
+  const isWritingDragging = draggingIndexList.length === 2;
 
   return {
     setDefaultCategoryId,
@@ -85,7 +85,7 @@ export const useDragAndDrop = () => {
     handleDragStart,
     handleDragEnter,
     handleDragEnd,
-    isCategoryDrag,
-    isWritingDrag,
+    isCategoryDragging,
+    isWritingDragging,
   };
 };

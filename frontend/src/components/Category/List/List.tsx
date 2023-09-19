@@ -15,8 +15,8 @@ const List = () => {
     handleDragEnd,
     handleDragEnter,
     handleDragStart,
-    isCategoryDrag,
-    isWritingDrag,
+    isCategoryDragging,
+    isWritingDragging,
   } = useDragAndDrop();
 
   useEffect(() => {
@@ -39,14 +39,13 @@ const List = () => {
             onDragStart={handleDragStart}
             onDragEnter={handleDragEnter}
             onDragEnd={handleDragEnd}
-            isWritingDrag={isWritingDrag}
-            isCategoryDrag={isCategoryDrag}
+            isWritingDragging={isWritingDragging}
           />
         );
       })}
       <S.DragLastSection
         onDragEnter={handleDragEnter(LAST_DRAG_SECTION_ID)}
-        $isDragOverTarget={isCategoryDrag() && dragOverIndexList[0] === LAST_DRAG_SECTION_ID}
+        $isDragOverTarget={isCategoryDragging && dragOverIndexList[0] === LAST_DRAG_SECTION_ID}
       />
     </Accordion>
   );

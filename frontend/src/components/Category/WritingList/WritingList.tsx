@@ -15,7 +15,7 @@ type Props = {
   onDragStart: (...ids: number[]) => (e: DragEvent) => void;
   onDragEnter: (...ids: number[]) => (e: DragEvent) => void;
   onDragEnd: (e: DragEvent) => void;
-  isWritingDrag: () => boolean;
+  isWritingDragging: boolean;
 };
 
 const WritingList = ({
@@ -25,7 +25,7 @@ const WritingList = ({
   onDragStart,
   onDragEnter,
   onDragEnd,
-  isWritingDrag,
+  isWritingDragging,
 }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
@@ -33,7 +33,7 @@ const WritingList = ({
   const deleteWritings = useDeleteWritings();
 
   const isWritingDragOverTarget = (categoryId: number, writingId: number) =>
-    isWritingDrag() && categoryId === dragOverIndexList[0] && writingId === dragOverIndexList[1];
+    isWritingDragging && categoryId === dragOverIndexList[0] && writingId === dragOverIndexList[1];
 
   if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;
 

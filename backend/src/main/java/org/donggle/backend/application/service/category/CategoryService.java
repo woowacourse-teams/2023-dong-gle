@@ -70,7 +70,7 @@ public class CategoryService {
     public CategoryListResponse findAll(final Long memberId) {
         final Member findMember = findMember(memberId);
         final List<Category> categories = categoryRepository.findAllByMemberId(findMember.getId());
-        final List<Category> sortedCategories = sortCategory(categories, findBasicCategoryByMemberId(findMember.getId()));
+        final List<Category> sortedCategories = sortCategory(categories, findBasicCategory(categories));
         final List<CategoryResponse> categoryResponses = sortedCategories.stream()
                 .map(CategoryResponse::of)
                 .toList();
@@ -219,6 +219,13 @@ public class CategoryService {
 
     private Category findLastCategoryByMemberId(final Long memberId) {
         return categoryRepository.findLastCategoryByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    private Category findBasicCategory(final List<Category> categories) {
+        return categories.stream()
+                .filter(category -> category.getCategoryName().getName().equals("기본"))
+                .findFirst()
                 .orElseThrow(IllegalStateException::new);
     }
 

@@ -11,7 +11,10 @@ import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.exception.business.TistoryNotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
@@ -23,6 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+
+import static org.donggle.backend.domain.writing.BlockType.CODE_BLOCK;
+import static org.donggle.backend.domain.writing.BlockType.HORIZONTAL_RULES;
+import static org.donggle.backend.domain.writing.BlockType.IMAGE;
 
 @Service
 @Transactional
@@ -39,6 +47,7 @@ public class PublishService {
         final Member member = findMember(memberId);
         final Writing writing = writingRepository.findByIdWithBlocks(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
+        findStylesByNomalBlocks(writing);
 
         validateAuthorization(member.getId(), writing);
 
@@ -49,6 +58,16 @@ public class PublishService {
 
         checkWritingAlreadyPublished(publishedBlogs, blog.getBlogType(), writing);
         return new PublishWritingRequest(blog, writing, accessToken);
+    }
+
+    private void findStylesByNomalBlocks(final Writing writing) {
+        final List<Block> blocks = writing.getBlocks();
+        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
+        final List<NormalBlock> normalBlocks = blocks.stream()
+                .filter(block -> !notNormalType.contains(block.getBlockType()))
+                .map(NormalBlock.class::cast)
+                .toList();
+        writingRepository.findStylesForBlocks(normalBlocks);
     }
 
     public void saveProperties(final Blog blog, final Writing writing, final PublishResponse response) {

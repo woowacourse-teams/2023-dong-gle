@@ -64,7 +64,7 @@ public class WritingFacadeService {
     }
 
     public WritingResponse findWriting(final Long memberId, final Long writingId) {
-        final Writing writing = writingService.findWriting(memberId, writingId);
+        final Writing writing = writingService.findWritingWithBlocks(memberId, writingId);
         final String content = htmlRenderer.render(writing.getBlocks());
         return WritingResponse.of(writing, content);
     }

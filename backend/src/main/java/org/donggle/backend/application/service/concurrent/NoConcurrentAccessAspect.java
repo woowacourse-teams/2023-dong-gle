@@ -1,4 +1,4 @@
-package org.donggle.backend.application;
+package org.donggle.backend.application.service.concurrent;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,16 +12,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
+@Order
 @Aspect
 @Component
-@Order
 public class NoConcurrentAccessAspect {
     public static final int MEMBER_ID_INDEX = 0;
 
     private final ConcurrentHashMap<Long, Lock> memberLock = new ConcurrentHashMap<>();
 
-    @Around("@annotation(org.donggle.backend.application.NoConcurrentExecution)")
+    @Around("@annotation(org.donggle.backend.application.service.concurrent.NoConcurrentExecution)")
     public Object noConcurrentAccess(final ProceedingJoinPoint joinPoint) throws Throwable {
         final NoConcurrentExecution anno = getAnnotation(joinPoint);
         final Long memberId = (Long) joinPoint.getArgs()[MEMBER_ID_INDEX];
@@ -33,6 +32,9 @@ public class NoConcurrentAccessAspect {
             return joinPoint.proceed();
         } finally {
             lock.unlock();
+            if (memberLock.contains(memberId)) {
+                memberLock.remove(memberId);
+            }
         }
     }
 

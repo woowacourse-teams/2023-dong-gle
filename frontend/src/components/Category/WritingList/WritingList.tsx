@@ -88,7 +88,7 @@ const S = {
       $isDragOverTarget &&
       css`
         border-radius: 0;
-        border-top: 0.4rem solid #2383e26e;
+        border-top: 0.4rem solid ${({ theme }) => theme.color.dragArea};
       `};
     &:hover {
       background-color: ${({ theme }) => theme.color.gray3};
@@ -142,7 +142,7 @@ const S = {
     ${({ $isDragOverTarget }) =>
       $isDragOverTarget &&
       css`
-        background-color: #2383e26e;
+        background-color: ${({ theme }) => theme.color.dragArea};
       `};
   `,
 };

@@ -87,7 +87,7 @@ const S = {
       $draggingTarget === 'category' &&
       css`
         border-radius: 0;
-        border-top: 0.4rem solid #2383e26e;
+        border-top: 0.4rem solid ${({ theme }) => theme.color.dragArea};
       `}
 
     ${({ $draggingTarget }) =>
@@ -100,7 +100,7 @@ const S = {
           width: 100%;
           height: 100%;
           border-radius: 4px;
-          background-color: #2383e26e;
+          background-color: ${({ theme }) => theme.color.dragArea};
         }
       `}
   `,

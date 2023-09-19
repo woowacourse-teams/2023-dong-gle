@@ -60,7 +60,7 @@ const S = {
     ${({ $isDragOverTarget }) =>
       $isDragOverTarget &&
       css`
-        background-color: #2383e26e;
+        background-color: ${({ theme }) => theme.color.dragArea};
       `};
   `,
 };

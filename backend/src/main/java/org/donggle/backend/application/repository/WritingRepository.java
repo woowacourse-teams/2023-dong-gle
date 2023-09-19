@@ -51,13 +51,10 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeleted(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
 
-    @Query("""
-            SELECT w FROM Writing w 
-            LEFT JOIN FETCH w.blocks
-            WHERE w.member.id = :memberId 
-            AND w.id = :writingId
-            AND w.status != 'DELETED'
-            """)
+    @Query(value = "select * from writing as w " +
+            "where w.member_id = :memberId and " +
+            "w.id = :writingId and " +
+            "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeletedWithBlocks(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
 
     @Query("SELECT b FROM NormalBlock b LEFT JOIN FETCH b.styles WHERE b IN :blocks")

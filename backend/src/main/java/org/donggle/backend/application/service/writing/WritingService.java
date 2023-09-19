@@ -20,8 +20,6 @@ import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
-import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
@@ -142,11 +140,7 @@ public class WritingService {
                     final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing))
                             .orElse(Collections.emptyList())
                             .stream()
-                            .map(blogWriting -> new PublishedDetailResponse(
-                                    blogWriting.getBlogTypeValue(),
-                                    blogWriting.getPublishedAt(),
-                                    blogWriting.getTags())
-                            )
+                            .map(PublishedDetailResponse::of)
                             .toList();
                     return WritingDetailResponse.of(writing, publishedDetailResponses);
                 })

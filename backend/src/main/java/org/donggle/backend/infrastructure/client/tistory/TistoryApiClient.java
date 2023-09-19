@@ -6,8 +6,11 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.PublishStatus;
+import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.InvalidPublishRequestException;
+import org.donggle.backend.exception.business.TistoryNotConnectedException;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishRequest;
@@ -25,6 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
 
 import static org.donggle.backend.domain.blog.BlogType.TISTORY;
 import static org.donggle.backend.infrastructure.client.exception.ClientException.handle4xxException;
@@ -124,6 +128,17 @@ public class TistoryApiClient implements BlogClient {
                 categoryList.tistory().item().categories().stream()
                         .map(category -> new TistoryCategoryListResposne.TistoryCategoryResponse(category.id(), category.name()))
                         .toList());
+    }
+
+    private MemberCredentials getMemberCredentials(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
+                .orElseThrow(NoSuchElementException::new);
+        if (memberCredentials.isTistoryConnected()) {
+            throw new TistoryNotConnectedException();
+        }
+        return memberCredentials;
     }
 
     private String makePublishTime(final String publishTime) {

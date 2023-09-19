@@ -16,6 +16,7 @@ export const useCategoryMutation = (onCategoryAdded?: () => void) => {
     onSuccess: async () => {
       await queryClient.invalidateQueries(['categories']);
 
+      // 카테고리를 가져온 직후가 아닌 렌더링까지 완료 된 후 실행되기 위함.
       setTimeout(() => {
         onCategoryAdded?.();
       });

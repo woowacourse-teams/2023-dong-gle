@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
-import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
@@ -92,15 +91,5 @@ public class WritingController {
     ) {
         final WritingListWithCategoryResponse response = writingFacadeService.findWritingListByCategoryId(memberId, categoryId);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/{writingId}/publish")
-    public ResponseEntity<Void> writingPublish(
-            @AuthenticationPrincipal final Long memberId,
-            @PathVariable final Long writingId,
-            @Valid @RequestBody final PublishRequest request
-    ) {
-        blogService.publishWriting(memberId, writingId, request);
-        return ResponseEntity.ok().build();
     }
 }

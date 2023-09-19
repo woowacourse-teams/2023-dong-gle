@@ -12,7 +12,7 @@ public record TistoryPublishRequest(
         String title,
         String content,
         int visibility,
-        int category,
+        String category,
         String published,
         List<String> slogan,
         String tag,

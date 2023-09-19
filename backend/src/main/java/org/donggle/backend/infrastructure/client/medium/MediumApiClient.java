@@ -1,7 +1,9 @@
 package org.donggle.backend.infrastructure.client.medium;
 
 import org.donggle.backend.application.client.BlogClient;
+import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
+import org.donggle.backend.domain.blog.PublishStatus;
 import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
 import org.donggle.backend.infrastructure.client.medium.dto.request.MediumRequestBody;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Objects;
 
 import static org.donggle.backend.domain.blog.BlogType.MEDIUM;
@@ -33,8 +34,8 @@ public class MediumApiClient implements BlogClient {
     }
 
     @Override
-    public PublishResponse publish(final String accessToken, final String content, final List<String> tags, final String titleValue) {
-        final MediumRequestBody body = makePublishRequest(titleValue, content, tags);
+    public PublishResponse publish(final String accessToken, final String content, final PublishRequest publishRequest, final String titleValue) {
+        final MediumRequestBody body = makePublishRequest(titleValue, content, publishRequest);
         return webClient.post()
                 .uri("/users/{userId}/posts", getUserId(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
@@ -50,12 +51,13 @@ public class MediumApiClient implements BlogClient {
                 .block().data().toPublishResponse();
     }
 
-    private MediumRequestBody makePublishRequest(final String titleValue, final String content, final List<String> tags) {
+    private MediumRequestBody makePublishRequest(final String titleValue, final String content, final PublishRequest publishRequest) {
         return MediumRequestBody.builder()
                 .title(titleValue)
                 .content(content)
                 .contentFormat("html")
-                .tags(tags)
+                .tags(publishRequest.tags())
+                .publishStatus(PublishStatus.from(publishRequest.publishStatus()).getMedium())
                 .build();
     }
 

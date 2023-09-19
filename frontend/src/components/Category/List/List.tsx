@@ -3,13 +3,11 @@ import { useCategories } from './useCategories';
 import Item from '../Item/Item';
 import { useDragAndDrop } from 'components/Category/useDragAndDrop';
 import styled, { css } from 'styled-components';
-import { useEffect } from 'react';
 import { LAST_DRAG_SECTION_ID } from 'constants/drag';
 
 const List = () => {
   const { categories } = useCategories();
   const {
-    setDefaultCategoryId,
     draggingIndexList,
     dragOverIndexList,
     handleDragEnd,
@@ -18,10 +16,6 @@ const List = () => {
     isCategoryDragging,
     isWritingDragging,
   } = useDragAndDrop();
-
-  useEffect(() => {
-    if (categories) setDefaultCategoryId(categories[0].id);
-  }, [categories]);
 
   if (!categories) return null;
 

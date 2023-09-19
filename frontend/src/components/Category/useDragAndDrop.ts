@@ -9,7 +9,6 @@ export const useDragAndDrop = () => {
   const updateWritingOrder = useWritingOrderUpdate();
   const [draggingIndexList, setDraggingIndexList] = useState<number[]>([]);
   const [dragOverIndexList, setDragOverIndexList] = useState<number[]>([]);
-  const [defaultCategoryId, setDefaultCategoryId] = useState(-1);
 
   // 드래그 시작할 때.
   // 카테고리면 인수 1개(categoryId), 글이면 인수가 2개(categoryId, writingId).
@@ -35,7 +34,10 @@ export const useDragAndDrop = () => {
       }
 
       // 기본 카테고리 위로는 순서 바꾸기 불가.
-      if (isCategoryDragging && dragOverIndex[0] === defaultCategoryId) {
+      if (
+        isCategoryDragging &&
+        dragOverIndex[0] === Number(localStorage.getItem('defaultCategoryId'))
+      ) {
         setDragOverIndexList([]);
         return;
       }
@@ -81,7 +83,6 @@ export const useDragAndDrop = () => {
   const isWritingDragging = draggingIndexList.length === 2;
 
   return {
-    setDefaultCategoryId,
     draggingIndexList,
     dragOverIndexList,
     handleDragStart,

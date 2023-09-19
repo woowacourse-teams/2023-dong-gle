@@ -1,9 +1,10 @@
-package org.donggle.backend.application.service;
+package org.donggle.backend.application.service.category;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
@@ -41,6 +42,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
 
+    @NoConcurrentExecution
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());

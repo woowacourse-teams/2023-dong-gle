@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service;
+package org.donggle.backend.application.service.trash;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.WritingRepository;

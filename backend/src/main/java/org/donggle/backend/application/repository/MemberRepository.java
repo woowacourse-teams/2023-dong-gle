@@ -1,5 +1,6 @@
 package org.donggle.backend.application.repository;
 
+import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 

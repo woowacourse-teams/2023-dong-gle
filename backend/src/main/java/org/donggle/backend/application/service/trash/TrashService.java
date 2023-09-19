@@ -27,7 +27,7 @@ public class TrashService {
     public void trashWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
                 .map(writingId -> {
-                    final Writing findWriting = writingRepository.findById(writingId)
+                    final Writing findWriting = writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
                             .orElseThrow(() -> new DeleteWritingNotFoundException(writingId));
                     validateAuthorization(memberId, findWriting);
                     return findWriting;

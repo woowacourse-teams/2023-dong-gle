@@ -3,7 +3,6 @@ export { ReactComponent as CalendarIcon } from './calendar.svg';
 export { ReactComponent as PlusCircleIcon } from './plus-circle.svg';
 export { ReactComponent as SearchIcon } from './search.svg';
 export { ReactComponent as StatsIcon } from './stats.svg';
-export { ReactComponent as CheckSymbol } from './check-symbol.svg';
 export { ReactComponent as TagIcon } from './tag.svg';
 export { ReactComponent as LeftArrowHeadIcon } from './left-arrow-head.svg';
 export { ReactComponent as TistoryLogoIcon } from './tistory-logo.svg';
@@ -26,3 +25,4 @@ export { ReactComponent as DefaultUserProfileIcon } from './default-user-profile
 export { ReactComponent as NotionIcon } from './notion.svg';
 export { ReactComponent as DonggleIcon } from './donggle-logo.svg';
 export { ReactComponent as BlurBackgroundIcon } from './blur-background.svg';
+export { ReactComponent as HyperlinkIcon } from './hyperlink.svg';

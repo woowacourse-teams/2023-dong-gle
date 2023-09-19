@@ -2,7 +2,12 @@ import { BlurBackgroundIcon, DonggleIcon } from 'assets/icons';
 import LoginModal from 'components/Modal/LoginModal/LoginModal';
 import { useModal } from 'hooks/@common/useModal';
 import { styled } from 'styled-components';
-import donggleExample from 'assets/icons/donggle-example.png';
+import donggleExamplePng from 'assets/icons/donggle-example-png.png';
+import donggleExampleWebp from 'assets/icons/donggle-example-webp.webp';
+import donggleExampleAvif from 'assets/icons/donggle-example-avif.avif';
+import donggleExamplePng2X from 'assets/icons/donggle-example-png-2x.png';
+import donggleExampleWebp2X from 'assets/icons/donggle-example-webp-2x.webp';
+import donggleExampleAvif2X from 'assets/icons/donggle-example-avif-2x.avif';
 import { Navigate } from 'react-router-dom';
 import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
@@ -34,7 +39,23 @@ const IntroducePage = () => {
           </h1>
           <p>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</p>
           <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
-          <img width={600} src={donggleExample} />
+          <picture>
+            <source
+              type='image/avif'
+              style={{ width: '600px' }}
+              srcSet={`${donggleExampleAvif}, ${donggleExampleAvif2X} 2x`}
+            />
+            <source
+              type='image/webp'
+              style={{ width: '600px' }}
+              srcSet={`${donggleExampleWebp}, ${donggleExampleWebp2X} 2x`}
+            />
+            <img
+              src={donggleExamplePng}
+              style={{ width: '600px' }}
+              srcSet={`${donggleExamplePng}, ${donggleExamplePng2X} 2x`}
+            />
+          </picture>
         </S.Introduce>
       </S.Content>
     </S.Container>
@@ -53,7 +74,7 @@ const S = {
     flex: 1;
     display: flex;
     flex-direction: column;
-    img {
+    picture {
       border-radius: 4px;
       box-shadow:
         rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
@@ -62,7 +83,7 @@ const S = {
       z-index: 2;
     }
 
-    img:hover {
+    picture:hover {
       transition: 0.4s all;
       transform: scale(1.1);
     }

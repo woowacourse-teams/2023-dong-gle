@@ -4,18 +4,22 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import WritingPage from 'pages/WritingPage/WritingPage';
-import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
-import App from '../App';
-import OauthPage from 'pages/OauthPage/OauthPage';
-import IntroducePage from 'pages/IntroducePage/IntroducePage';
-import Layout from 'pages/Layout/Layout';
 import { PATH } from 'constants/path';
+import App from '../App';
+import Spinner from 'components/@common/Spinner/Spinner';
+import OauthPage from 'pages/OauthPage/OauthPage';
+import Layout from 'pages/Layout/Layout';
 import ErrorPage from 'pages/ErrorPage/ErrorPage';
-import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import MyPage from 'pages/MyPage/MyPage';
 import ConnectionPage from 'pages/ConnectionPage/ConnectionPage';
+import WritingPage from 'pages/WritingPage/WritingPage';
+import WritingTablePage from 'pages/WritingTablePage/WritingTablePage';
+import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import PrivateRouter from './PrivateRouter';
+
+import { Suspense, lazy } from 'react';
+
+const IntroducePage = lazy(() => import('pages/IntroducePage/IntroducePage'));
 
 export const Router = () => {
   const browserRouter = createBrowserRouter(
@@ -41,5 +45,9 @@ export const Router = () => {
     ),
   );
 
-  return <RouterProvider router={browserRouter} />;
+  return (
+    <Suspense fallback={<Spinner />}>
+      <RouterProvider router={browserRouter} />
+    </Suspense>
+  );
 };

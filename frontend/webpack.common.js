@@ -1,6 +1,6 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
@@ -19,9 +19,11 @@ module.exports = {
         use: ['@svgr/webpack', 'url-loader'],
       },
       {
-        test: /\.png$/i,
-        issuer: /\.[jt]sx?$/,
-        use: ['url-loader'],
+        test: /\.(png|webp|avif)$/i,
+        type: 'asset',
+        generator: {
+          filename: 'static/[name][ext]',
+        },
       },
       {
         test: /\.css$/,

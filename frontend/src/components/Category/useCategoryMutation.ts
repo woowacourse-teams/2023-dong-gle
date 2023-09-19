@@ -35,7 +35,6 @@ export const useCategoryMutation = (onCategoryAdded?: () => void) => {
   const { mutate: updateCategoryOrder } = useMutation(updateCategoryOrderRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
-      queryClient.invalidateQueries(['detailWritings']);
     },
   });
 

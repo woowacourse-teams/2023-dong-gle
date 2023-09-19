@@ -5,6 +5,7 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.TokenRepository;
+import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.domain.category.Category;
@@ -19,6 +20,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,10 +34,13 @@ public class AuthService {
 
 
     public TokenResponse login(final SocialUserInfo socialUserInfo) {
-        return memberRepository.findBySocialId(socialUserInfo.socialId())
-                .map(memberInfo -> new Member(memberInfo.id(), new MemberName(socialUserInfo.nickname()), memberInfo.socialId()))
-                .map(this::createTokens)
-                .orElse(createTokens(initializeMember(socialUserInfo)));
+        final Optional<MemberInfo> optionalMemberInfo = memberRepository.findBySocialId(socialUserInfo.socialId());
+        if (optionalMemberInfo.isPresent()) {
+            final MemberInfo memberInfo = optionalMemberInfo.get();
+            final Member member = new Member(memberInfo.id(), new MemberName(socialUserInfo.nickname()), memberInfo.socialId());
+            return createTokens(member);
+        }
+        return createTokens(initializeMember(socialUserInfo));
     }
 
     public void logout(final Long memberId) {

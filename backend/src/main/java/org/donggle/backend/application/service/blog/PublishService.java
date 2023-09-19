@@ -45,7 +45,7 @@ public class PublishService {
     public PublishWritingRequest findPublishWriting(final Long memberId, final Long writingId, final BlogType blogType) {
         final Blog blog = findBlog(blogType);
         final Member member = findMember(memberId);
-        final Writing writing = writingRepository.findByMemberId(memberId, writingId)
+        final Writing writing = writingRepository.findByIdWithBlocks(writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
         findStylesByNomalBlocks(writing);
 

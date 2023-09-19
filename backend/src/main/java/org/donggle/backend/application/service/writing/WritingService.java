@@ -100,8 +100,8 @@ public class WritingService {
     }
 
     @Transactional(readOnly = true)
-    public Writing findWriting(final Long memberId, final Long writingId) {
-        final Writing writing = writingRepository.findByMemberId(memberId, writingId)
+    public Writing findWritingWithBlocks(final Long memberId, final Long writingId) {
+        final Writing writing = writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeletedWithBlocks(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
         findStyleByNomalBlocks(writing);
         return writing;

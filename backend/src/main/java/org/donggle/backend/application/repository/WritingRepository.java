@@ -21,6 +21,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.nextWriting is null")
     Optional<Writing> findLastWritingByCategoryId(@Param("categoryId") final Long categoryId);
 
+    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
+
     @Query("select w from Writing w " +
             "where w.nextWriting.id = :writingId")
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
@@ -55,7 +58,7 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             AND w.id = :writingId
             AND w.status != 'DELETED'
             """)
-    Optional<Writing> findByMemberId(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+    Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeletedWithBlocks(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
 
     @Query("SELECT b FROM NormalBlock b LEFT JOIN FETCH b.styles WHERE b IN :blocks")
     List<NormalBlock> findStylesForBlocks(@Param("blocks") List<NormalBlock> blocks);

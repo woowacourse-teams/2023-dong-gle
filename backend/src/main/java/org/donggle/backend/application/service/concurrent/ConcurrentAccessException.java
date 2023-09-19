@@ -1,4 +1,4 @@
-package org.donggle.backend.application;
+package org.donggle.backend.application.service.concurrent;
 
 import org.springframework.http.HttpStatus;
 

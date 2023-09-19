@@ -2,7 +2,7 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.CategoryService;
+import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;

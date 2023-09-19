@@ -2,6 +2,7 @@ package org.donggle.backend.application.service;
 
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;

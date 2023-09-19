@@ -1,7 +1,7 @@
 package org.donggle.backend.application;
 
 import org.donggle.backend.application.repository.CategoryRepository;
-import org.donggle.backend.application.service.CategoryService;
+import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @SpringBootTest
 @Transactional
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public class NoConcurrentAccessAspectTest {
+class NoConcurrentAccessAspectTest {
     @Autowired
     private CategoryService categoryService;
     @Autowired

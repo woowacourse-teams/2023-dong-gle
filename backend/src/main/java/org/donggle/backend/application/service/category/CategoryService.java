@@ -1,10 +1,10 @@
-package org.donggle.backend.application.service;
+package org.donggle.backend.application.service.category;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.NoConcurrentExecution;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;

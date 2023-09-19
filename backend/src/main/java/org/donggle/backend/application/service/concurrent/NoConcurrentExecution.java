@@ -1,4 +1,4 @@
-package org.donggle.backend.application;
+package org.donggle.backend.application.service.concurrent;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;

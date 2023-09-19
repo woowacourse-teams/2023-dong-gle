@@ -42,7 +42,9 @@ export const useDragAndDrop = () => {
     };
 
   // 마우스를 놓는 순간 발생.
-  const handleDragEnd: DragEventHandler = () => {
+  const handleDragEnd: DragEventHandler = (e) => {
+    e.stopPropagation();
+
     if (draggingIndexList.length === 0 || dragOverIndexList.length === 0) return;
     // 카테고리 이동
     else if (isCategoryDrag()) {

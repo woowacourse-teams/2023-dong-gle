@@ -20,7 +20,7 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
   const { isLoading, inputValue, uploadOnServer, setNotionPageLink, uploadNotionWriting } =
     useFileUploadModal({
       closeModal,
-      categoryId: activeCategoryId ?? Number(localStorage.getItem('defaultCategoryId')),
+      categoryId: activeCategoryId,
     });
   const { goMyPage } = usePageNavigate();
   const { notion } = useMember();

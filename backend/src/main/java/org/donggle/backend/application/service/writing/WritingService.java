@@ -22,8 +22,11 @@ import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -207,6 +210,19 @@ public class WritingService {
             final Writing nextWriting = findWritingById(nextWritingId);
             validateAuthorization(memberId, nextWriting);
             writing.changeNextWriting(nextWriting);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        pagedWritings.forEach(writing -> validateWritingHomeResponse(writing, memberId));
+        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
+    }
+
+    private void validateWritingHomeResponse(final Writing writing, final Long memberId) {
+        if (!writing.getMember().getId().equals(memberId)) {
+            throw new MemberNotFoundException(memberId);
         }
     }
 

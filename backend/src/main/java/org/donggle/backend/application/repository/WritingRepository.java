@@ -2,6 +2,8 @@ package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,9 +22,6 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "where w.category.id = :categoryId and " +
             "w.nextWriting is null")
     Optional<Writing> findLastWritingByCategoryId(@Param("categoryId") final Long categoryId);
-
-    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
-    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
 
     @Query("select w from Writing w " +
             "where w.nextWriting.id = :writingId")
@@ -50,6 +49,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.id = :writingId and " +
             "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeleted(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+
+    @Query(countQuery = "select count(w) from Writing w where w.member.id = :memberId")
+    Page<Writing> findByMemberIdOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
 
     @Query(value = "select * from writing as w " +
             "where w.member_id = :memberId and " +

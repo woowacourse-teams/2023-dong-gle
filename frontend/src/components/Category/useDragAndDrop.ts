@@ -30,21 +30,17 @@ export const useDragAndDrop = () => {
       const dragOverIndex = ids.slice(0, draggingIndexList.length);
 
       // 원래 위치로는 순서 바꾸기 불가.
-      if (isSameArray(draggingIndexList, dragOverIndex)) {
-        setDragOverIndexList([]);
-        return;
-      }
+      const isSamePositionDrag = isSameArray(draggingIndexList, dragOverIndex);
 
       // 기본 카테고리 위로는 순서 바꾸기 불가.
-      if (
+      const isDefaultCategoryDrag =
         isCategoryDragging &&
         dragOverIndex[INDEX_POSITION.CATEGORY_ID] ===
-          Number(localStorage.getItem('defaultCategoryId'))
-      ) {
-        setDragOverIndexList([]);
-        return;
-      }
-      setDragOverIndexList(dragOverIndex);
+          Number(localStorage.getItem('defaultCategoryId'));
+
+      const isDragImpossible = isSamePositionDrag || isDefaultCategoryDrag;
+
+      setDragOverIndexList(isDragImpossible ? [] : dragOverIndex);
     };
 
   // 마우스를 놓는 순간 발생.

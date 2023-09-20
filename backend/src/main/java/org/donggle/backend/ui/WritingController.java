@@ -2,7 +2,6 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
@@ -30,7 +29,6 @@ import java.net.URI;
 @RequestMapping("/writings")
 public class WritingController {
     private final WritingFacadeService writingFacadeService;
-    private final PublishFacadeService blogService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> writingAdd(

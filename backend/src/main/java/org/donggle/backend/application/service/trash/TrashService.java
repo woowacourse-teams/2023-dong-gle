@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
+import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,8 +30,11 @@ public class TrashService {
     public void trashWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
                 .map(writingId -> {
-                    final Writing findWriting = writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
+                    final Writing findWriting = writingRepository.findByIdAndMemberId(memberId, writingId)
                             .orElseThrow(() -> new DeleteWritingNotFoundException(writingId));
+                    if (findWriting.getStatus() == DELETED) {
+                        throw new IllegalArgumentException();
+                    }
                     validateAuthorization(memberId, findWriting);
                     return findWriting;
                 })
@@ -42,9 +48,12 @@ public class TrashService {
 
     public void deleteWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
-                        .orElseThrow(() -> new DeleteWritingNotFoundException(writingId)))
+                .map(writingId -> writingRepository.findByIdAndMemberId(memberId, writingId)
+                        .orElseThrow(() -> new WritingNotFoundException(writingId)))
                 .forEach(writing -> {
+                    if (writing.getStatus() != TRASHED) {
+                        throw new IllegalArgumentException();
+                    }
                     final Writing nextWriting = writing.getNextWriting();
                     writing.changeNextWritingNull();
                     writingRepository.delete(writing);
@@ -55,9 +64,12 @@ public class TrashService {
 
     public void restoreWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByMemberIdAndWritingIdAndStatusIsTrashed(memberId, writingId)
+                .map(writingId -> writingRepository.findByIdAndMemberId(writingId, memberId)
                         .orElseThrow(() -> new RestoreWritingNotFoundException(writingId)))
                 .forEach(writing -> {
+                            if (writing.getStatus() != TRASHED) {
+                                throw new IllegalArgumentException();
+                            }
                             writingRepository.findLastWritingByCategoryId(writing.getCategory().getId())
                                     .ifPresent(lastWriting -> lastWriting.changeNextWriting(writing));
                             writing.restore();

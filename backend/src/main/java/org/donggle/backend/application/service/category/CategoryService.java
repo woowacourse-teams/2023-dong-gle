@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
+import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
+import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -95,7 +99,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
         final Category findCategory = findCategory(memberId, categoryId);
-        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
         if (findWritings.isEmpty()) {
             return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
         }
@@ -147,8 +151,8 @@ public class CategoryService {
         final Category findCategory = findCategory(findMember.getId(), categoryId);
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
         validateBasicCategory(basicCategory, findCategory);
-        final List<Writing> trashedWritingInCategory = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(memberId, categoryId);
-        for (final Writing writing : trashedWritingInCategory) {
+        final List<Writing> trashedAndDeletedWritingsInCategory = writingRepository.findAllByMemberIdAndCategoryIdInStatuses(memberId, categoryId, List.of(TRASHED, DELETED));
+        for (final Writing writing : trashedAndDeletedWritingsInCategory) {
             writing.changeCategory(basicCategory);
         }
         transferToBasicCategory(basicCategory, findCategory);
@@ -157,7 +161,7 @@ public class CategoryService {
 
     private void transferToBasicCategory(final Category basicCategory, final Category findCategory) {
         if (haveWritingsCategory(findCategory)) {
-            final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+            final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
             final Writing firstWritingInCategory = findFirstWriting(findWritings);
             if (haveWritingsCategory(basicCategory)) {
                 final Writing lastWritingInBasicCategory = findLastWritingInCategory(basicCategory);
@@ -168,7 +172,7 @@ public class CategoryService {
     }
 
     private boolean haveWritingsCategory(final Category category) {
-        return !writingRepository.findAllByCategoryId(category.getId()).isEmpty();
+        return !writingRepository.findAllByCategoryIdAndStatus(category.getId(), ACTIVE).isEmpty();
     }
 
     private void deleteCategory(final Category findCategory) {

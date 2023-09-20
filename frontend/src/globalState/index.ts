@@ -7,6 +7,5 @@ type ActiveWritingInfo = {
 
 export const activeWritingInfoState = globalState<ActiveWritingInfo | null>(null);
 
-export const activeCategoryIdState = globalState<number | null>(
-  Number(localStorage.getItem('defaultCategoryId')),
-);
+const initialActiveCategoryId = -1;
+export const activeCategoryIdState = globalState<number>(initialActiveCategoryId);

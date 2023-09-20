@@ -1,6 +1,6 @@
 import { globalState } from '@yogjin/react-global-state';
 
-type ActiveWritingInfo = {
+export type ActiveWritingInfo = {
   id: number;
   isDeleted: boolean;
 };

@@ -4,13 +4,13 @@ import { getDetailWritings } from 'apis/writings';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { activeCategoryIdState } from 'globalState';
+import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 
 const WritingTablePage = () => {
-  const setActiveCategoryId = useSetGlobalState(activeCategoryIdState);
   const {
     state: { categoryId },
   } = useLocation();
@@ -19,10 +19,7 @@ const WritingTablePage = () => {
     getDetailWritings(categoryId),
   );
 
-  useEffect(() => {
-    setActiveCategoryId(categoryId);
-    return () => setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
-  }, [categoryId]);
+  use활성화된카테고리설정(categoryId);
 
   if (isLoading) {
     return (

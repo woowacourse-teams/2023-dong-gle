@@ -12,17 +12,17 @@ import { sidebarStyle } from 'styles/layoutStyle';
 const WritingTablePage = () => {
   const setActiveCategoryId = useSetGlobalState(activeCategoryIdState);
   const {
-    state: { categoryId: activeCategoryId },
+    state: { categoryId },
   } = useLocation();
 
-  const { data, isLoading } = useQuery(['detailWritings', activeCategoryId], () =>
-    getDetailWritings(activeCategoryId),
+  const { data, isLoading } = useQuery(['detailWritings', categoryId], () =>
+    getDetailWritings(categoryId),
   );
 
   useEffect(() => {
-    setActiveCategoryId(activeCategoryId);
+    setActiveCategoryId(categoryId);
     return () => setActiveCategoryId(Number(localStorage.getItem('defaultCategoryId')));
-  }, [activeCategoryId]);
+  }, [categoryId]);
 
   if (isLoading) {
     return (
@@ -33,13 +33,13 @@ const WritingTablePage = () => {
     );
   }
 
-  if (!activeCategoryId) return <div>카테고리가 존재하지 않습니다.</div>;
+  if (!categoryId) return <div>카테고리가 존재하지 않습니다.</div>;
 
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
       {data?.writings && data.writings.length > 0 ? (
-        <WritingTable categoryId={activeCategoryId} writings={data?.writings ?? []} />
+        <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
       ) : (
         <S.AddWritingText>카테고리에 글을 추가해주세요😊</S.AddWritingText>
       )}

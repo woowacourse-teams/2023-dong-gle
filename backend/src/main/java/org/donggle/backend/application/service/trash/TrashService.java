@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
+import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
 import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
 
 @Service
@@ -30,9 +30,9 @@ public class TrashService {
     public void trashWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
                 .map(writingId -> {
-                    final Writing findWriting = writingRepository.findByIdAndMemberId(memberId, writingId)
+                    final Writing findWriting = writingRepository.findByIdAndMemberId(writingId, memberId)
                             .orElseThrow(() -> new DeleteWritingNotFoundException(writingId));
-                    if (findWriting.getStatus() == DELETED) {
+                    if (findWriting.getStatus() != ACTIVE) {
                         throw new IllegalArgumentException();
                     }
                     validateAuthorization(memberId, findWriting);
@@ -48,7 +48,7 @@ public class TrashService {
 
     public void deleteWritings(final Long memberId, final List<Long> writingIds) {
         writingIds.stream()
-                .map(writingId -> writingRepository.findByIdAndMemberId(memberId, writingId)
+                .map(writingId -> writingRepository.findByIdAndMemberId(writingId, memberId)
                         .orElseThrow(() -> new WritingNotFoundException(writingId)))
                 .forEach(writing -> {
                     if (writing.getStatus() != TRASHED) {

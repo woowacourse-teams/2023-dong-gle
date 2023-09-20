@@ -13,7 +13,16 @@ import java.util.Optional;
 public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     @Query("""
-            select w 
+            SELECT w FROM Writing w
+            LEFT JOIN FETCH w.blocks
+            WHERE w.member.id = :memberId
+            AND w.id = :id
+            AND w.status != 'DELETED'
+            """)
+    Optional<Writing> findByWithBlocks(@Param("id") final Long writingId, @Param("memberId") final Long memberId);
+
+    @Query("""
+            select w
             from Writing w
             where w.id = :id and
             w.member.id = :memberId and
@@ -22,10 +31,10 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
     Optional<Writing> findByIdAndMemberId(@Param("id") final Long writingId, @Param("memberId") final Long memberId);
 
     @Query("""
-            select w 
+            select w
             from Writing w
-            where w.member.id = :memberId and 
-            w.category.id = :categoryId and 
+            where w.member.id = :memberId and
+            w.category.id = :categoryId and
             w.status in (:statuses)
             """)
     List<Writing> findAllByMemberIdAndCategoryIdInStatuses(@Param("memberId") final Long memberId, @Param("categoryId") final Long categoryId, @Param("statuses") final List<WritingStatus> statuses);
@@ -43,9 +52,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
     List<Writing> findAllByMemberIdAndStatusIsTrashed(@Param("memberId") final Long memberId);
 
     @Query("""
-            select w 
-            from Writing w 
-            join fetch w.blocks 
+            select w
+            from Writing w
+            join fetch w.blocks
             where w.id = :writingId and
             w.status = 'ACTIVE'
             """)
@@ -55,9 +64,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
     List<NormalBlock> findStylesForBlocks(@Param("blocks") List<NormalBlock> blocks);
 
     @Query("""
-            select w 
-            from Writing w 
-            where w.category.id = :categoryId and 
+            select w
+            from Writing w
+            where w.category.id = :categoryId and
             w.status = 'ACTIVE' and
             w.nextWriting is null
             """)
@@ -65,8 +74,8 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     @Query("""
             select w
-            from Writing w 
-            where w.nextWriting.id = :writingId and 
+            from Writing w
+            where w.nextWriting.id = :writingId and
             w.status = 'ACTIVE'
             """)
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);

@@ -94,13 +94,16 @@ public class WritingService {
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final Title title) {
         final Writing findWriting = findWritingById(writingId);
+        if (findWriting.getStatus() != ACTIVE) {
+            throw new IllegalArgumentException();
+        }
         validateAuthorization(memberId, findWriting);
         findWriting.updateTitle(title);
     }
 
     @Transactional(readOnly = true)
     public Writing findWritingWithBlocks(final Long memberId, final Long writingId) {
-        final Writing writing = writingRepository.findByIdAndMemberId(writingId, memberId)
+        final Writing writing = writingRepository.findByWithBlocks(writingId, memberId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
         findStyleByNomalBlocks(writing);
         return writing;
@@ -232,18 +235,22 @@ public class WritingService {
     }
 
     private Writing findLastWritingInCategory(final Long categoryId) {
-        return writingRepository.findLastWritingByCategoryId(categoryId).orElseThrow(IllegalStateException::new);
+        return writingRepository.findLastWritingByCategoryId(categoryId)
+                .orElseThrow(IllegalStateException::new);
     }
 
     private Writing findWritingById(final Long writingId) {
-        return writingRepository.findById(writingId).orElseThrow(() -> new WritingNotFoundException(writingId));
+        return writingRepository.findById(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 
     private Writing findPreWriting(final Long writingId) {
-        return writingRepository.findPreWritingByWritingId(writingId).orElseThrow(() -> new WritingNotFoundException(writingId));
+        return writingRepository.findPreWritingByWritingId(writingId)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

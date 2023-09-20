@@ -19,14 +19,14 @@ const DeletedWritingList = () => {
 
   return (
     <ul>
-      {deletedWritings.map((deletedWriting) => (
-        <S.Item key={deletedWriting.id} $isClicked={writingId === deletedWriting.id}>
+      {deletedWritings.map(({ id, categoryId, title }) => (
+        <S.Item key={id} $isClicked={writingId === id}>
           <S.Button
-            aria-label={`${deletedWriting.title}글 메인화면에 열기`}
+            aria-label={`${title}글 메인화면에 열기`}
             onClick={() =>
               goWritingPage({
-                categoryId: deletedWriting.categoryId,
-                writingId: deletedWriting.id,
+                categoryId: categoryId,
+                writingId: id,
                 isDeletedWriting: true,
               })
             }
@@ -34,7 +34,7 @@ const DeletedWritingList = () => {
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />
             </S.IconWrapper>
-            <S.Text>{deletedWriting.title}</S.Text>
+            <S.Text>{title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
             <DeleteButton onClick={() => writingId && deletePermanentWritings([writingId])} />

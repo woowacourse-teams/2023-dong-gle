@@ -1,6 +1,7 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.donggle.backend.application.service.parse.NotionParseService;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 class NotionParserTest {
     @Autowired
-    private NotionParser notionParser;
+    private NotionParseService notionParser;
 
     @Test
     @DisplayName("Paragraph타입 BlockNode로부터 NormalBlock을 생성한다.")

@@ -1,6 +1,17 @@
-package org.donggle.backend.domain.parser.notion;
+package org.donggle.backend.application.service.parse;
 
-import org.donggle.backend.domain.parser.event.ImageUploader;
+import org.donggle.backend.application.client.FileHandlerClient;
+import org.donggle.backend.domain.parser.notion.FileType;
+import org.donggle.backend.domain.parser.notion.NotionBlockType;
+import org.donggle.backend.domain.parser.notion.NotionBookmark;
+import org.donggle.backend.domain.parser.notion.NotionCallout;
+import org.donggle.backend.domain.parser.notion.NotionCodeBlock;
+import org.donggle.backend.domain.parser.notion.NotionDefaultBlock;
+import org.donggle.backend.domain.parser.notion.NotionDivider;
+import org.donggle.backend.domain.parser.notion.NotionHeading;
+import org.donggle.backend.domain.parser.notion.NotionImage;
+import org.donggle.backend.domain.parser.notion.NotionNormalBlock;
+import org.donggle.backend.domain.parser.notion.NotionTodo;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.CodeBlock;
@@ -13,7 +24,7 @@ import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -21,13 +32,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Component
-public class NotionParser {
-    private final ImageUploader imageUploader;
+@Service
+public class NotionParseService {
+    private final FileHandlerClient fileHandlerClient;
     private final Map<NotionBlockType, Function<NotionBlockNodeResponse, Optional<Block>>> NOTION_BLOCK_TYPE_MAP = new EnumMap<>(NotionBlockType.class);
 
-    public NotionParser(final ImageUploader imageUploader) {
-        this.imageUploader = imageUploader;
+    public NotionParseService(final FileHandlerClient fileHandlerClient) {
+        this.fileHandlerClient = fileHandlerClient;
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.BOOKMARK, notionBlockNode -> createNormalBlock(notionBlockNode, NotionBookmark.from(notionBlockNode), BlockType.PARAGRAPH));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CALLOUT, notionBlockNode -> createNormalBlock(notionBlockNode, NotionCallout.from(notionBlockNode), BlockType.BLOCKQUOTE));
         NOTION_BLOCK_TYPE_MAP.put(NotionBlockType.CODE, notionBlockNode -> createCodeBlock(notionBlockNode, NotionCodeBlock.from(notionBlockNode)));
@@ -54,7 +65,7 @@ public class NotionParser {
 
     private Optional<Block> createImageBlock(final NotionBlockNodeResponse notionBlockNodeResponse, final NotionImage blockParser) {
         if (blockParser.fileType() == FileType.FILE) {
-            return imageUploader.syncUpload(blockParser.url())
+            return fileHandlerClient.syncUpload(blockParser.url())
                     .map(uploadedUrl -> new ImageBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.IMAGE, new ImageUrl(uploadedUrl), new ImageCaption(blockParser.parseCaption())));
         }
         return Optional.of(new ImageBlock(Depth.from(notionBlockNodeResponse.depth()), BlockType.IMAGE, new ImageUrl(blockParser.url()), new ImageCaption(blockParser.parseCaption())));

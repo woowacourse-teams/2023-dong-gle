@@ -31,6 +31,12 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
 
+  useEffect(() => {
+    selectCurrentTab(TabKeys.WritingProperty);
+  }, [writingId]);
+
+  if (!writingId) return;
+
   const selectPublishTo = (blog: Blog) => {
     setPublishTo(blog);
   };
@@ -39,7 +45,7 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
     {
       key: TabKeys.WritingProperty,
       label: <InfoIcon width={24} height={24} />,
-      content: writingId && <WritingPropertySection writingId={writingId} />,
+      content: <WritingPropertySection writingId={writingId} />,
     },
     ...(isPublishingSectionActive
       ? [
@@ -56,7 +62,7 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
           {
             key: TabKeys.PublishingProperty,
             label: 'PublishingProperty',
-            content: publishTo && writingId && (
+            content: publishTo && (
               <PublishingPropertySection
                 writingId={writingId}
                 publishTo={publishTo}
@@ -67,10 +73,6 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
         ]
       : []),
   ];
-
-  useEffect(() => {
-    selectCurrentTab(TabKeys.WritingProperty);
-  }, [writingId]);
 
   return (
     <S.SidebarContainer>

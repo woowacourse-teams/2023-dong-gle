@@ -14,6 +14,7 @@ const DeletedWritingList = () => {
   const writingId = activeWritingInfo?.id;
   const deletePermanentWritings = useDeletePermanentWritings();
 
+  if (!writingId) return;
   if (!deletedWritings || deletedWritings?.length === 0)
     return <S.NoWritingsText>빈 휴지통</S.NoWritingsText>;
 
@@ -37,7 +38,7 @@ const DeletedWritingList = () => {
             <S.Text>{title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={() => writingId && deletePermanentWritings([writingId])} />
+            <DeleteButton onClick={() => deletePermanentWritings([writingId])} />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}

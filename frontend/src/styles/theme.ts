@@ -7,6 +7,7 @@ const color = {
 
   spaceBackground: '#fdfdfc',
   modalBackdrop: '#00000059',
+  dragArea: '#2383e26e',
 
   red1: '#fff1f0',
   red2: '#ffccc7',

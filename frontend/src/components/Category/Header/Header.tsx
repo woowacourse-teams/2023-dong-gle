@@ -8,7 +8,11 @@ import { useToast } from 'hooks/@common/useToast';
 import { getErrorMessage } from 'utils/error';
 import { validateCategoryName } from 'utils/validators';
 
-const Header = () => {
+type Props = {
+  onCategoryAdded: () => void;
+};
+
+const Header = ({ onCategoryAdded }: Props) => {
   const {
     inputRef,
     escapeInput: escapeAddCategory,
@@ -18,7 +22,7 @@ const Header = () => {
     isError,
     setIsError,
   } = useUncontrolledInput();
-  const { addCategory } = useCategoryMutation();
+  const { addCategory } = useCategoryMutation(onCategoryAdded);
   const toast = useToast();
 
   const requestAddCategory: KeyboardEventHandler<HTMLInputElement> = async (e) => {
@@ -66,11 +70,15 @@ export default Header;
 
 const S = {
   Header: styled.header`
+    position: sticky;
+    top: 0;
+    z-index: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 3.6rem;
     padding: 0.8rem;
+    background-color: ${({ theme }) => theme.color.spaceBackground};
     font-size: 1.2rem;
     font-weight: 400;
   `,

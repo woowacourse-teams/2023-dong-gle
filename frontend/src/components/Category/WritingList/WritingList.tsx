@@ -1,28 +1,56 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useParams } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { styled, css } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeleteWritings } from './useDeleteWritings';
+import { DragEvent } from 'react';
+import { INDEX_POSITION, LAST_DRAG_SECTION_ID } from 'constants/drag';
 
 type Props = {
   categoryId: number;
   isOpen: boolean;
+  dragOverIndexList: number[];
+  onDragStart: (...ids: number[]) => (e: DragEvent) => void;
+  onDragEnter: (...ids: number[]) => (e: DragEvent) => void;
+  onDragEnd: (e: DragEvent) => void;
+  isWritingDragging: boolean;
 };
 
-const WritingList = ({ categoryId, isOpen }: Props) => {
+const WritingList = ({
+  categoryId,
+  isOpen,
+  dragOverIndexList,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+  isWritingDragging,
+}: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
   const writingId = Number(useParams()['writingId']);
   const deleteWritings = useDeleteWritings();
+
+  const isWritingDragOverTarget = (categoryId: number, writingId: number) =>
+    isWritingDragging &&
+    categoryId === dragOverIndexList[INDEX_POSITION.CATEGORY_ID] &&
+    writingId === dragOverIndexList[INDEX_POSITION.WRITING_ID];
 
   if (!writings || writings?.length === 0) return <S.NoWritingsText>빈 카테고리</S.NoWritingsText>;
 
   return (
     <ul>
       {writings.map((writing) => (
-        <S.Item key={writing.id} $isClicked={writingId === writing.id}>
+        <S.Item
+          key={writing.id}
+          $isClicked={writingId === writing.id}
+          $isDragOverTarget={isWritingDragOverTarget(categoryId, writing.id)}
+          draggable={true}
+          onDragStart={onDragStart(categoryId, writing.id)}
+          onDragEnter={onDragEnter(categoryId, writing.id)}
+          onDragEnd={onDragEnd}
+        >
           <S.Button
             aria-label={`${writing.title}글 메인화면에 열기`}
             onClick={() => goWritingPage({ categoryId, writingId: writing.id })}
@@ -37,6 +65,10 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}
+      <S.DragLastSection
+        onDragEnter={onDragEnter(categoryId, LAST_DRAG_SECTION_ID)}
+        $isDragOverTarget={isWritingDragOverTarget(categoryId, LAST_DRAG_SECTION_ID)}
+      />
     </ul>
   );
 };
@@ -44,7 +76,7 @@ const WritingList = ({ categoryId, isOpen }: Props) => {
 export default WritingList;
 
 const S = {
-  Item: styled.li<{ $isClicked: boolean }>`
+  Item: styled.li<{ $isClicked: boolean; $isDragOverTarget: boolean }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,9 +84,16 @@ const S = {
     height: 3.6rem;
     border-radius: 4px;
     background-color: ${({ theme, $isClicked }) => $isClicked && theme.color.gray4};
+    border-top: 0.4rem solid transparent;
 
+    ${({ $isDragOverTarget }) =>
+      $isDragOverTarget &&
+      css`
+        border-radius: 0;
+        border-top: 0.4rem solid ${({ theme }) => theme.color.dragArea};
+      `};
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray4};
+      background-color: ${({ theme }) => theme.color.gray3};
 
       div {
         display: flex;
@@ -97,5 +136,15 @@ const S = {
   DeleteButtonWrapper: styled.div`
     display: none;
     margin-right: 0.8rem;
+  `,
+
+  DragLastSection: styled.div<{ $isDragOverTarget: boolean }>`
+    height: 0.4rem;
+    background-color: transparent;
+    ${({ $isDragOverTarget }) =>
+      $isDragOverTarget &&
+      css`
+        background-color: ${({ theme }) => theme.color.dragArea};
+      `};
   `,
 };

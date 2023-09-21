@@ -20,4 +20,16 @@ public class MemberCount {
         final int i = memberRepository.countMember();
         return ResponseEntity.ok(i);
     }
+
+    @GetMapping("add")
+    public ResponseEntity<Integer> asdasd() {
+        final int i1 = memberRepository.addWritings();
+        return ResponseEntity.ok(i1);
+    }
+
+    @GetMapping("published")
+    public ResponseEntity<Integer> asdasdad() {
+        final int pcount = memberRepository.pcount();
+        return ResponseEntity.ok(pcount);
+    }
 }

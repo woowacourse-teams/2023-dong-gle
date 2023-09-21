@@ -17,4 +17,19 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             """)
     int countMember();
 
+    @Query(value = """
+            SELECT COUNT(DISTINCT m.id)
+            FROM member m
+            JOIN writing w ON m.id = w.member_id
+            """, nativeQuery = true)
+    int addWritings();
+
+    @Query(value = """
+            SELECT COUNT(DISTINCT w.member_id) AS PublishedMemberCount
+            FROM blog_writing bw
+            JOIN writing w ON bw.writing_id = w.id
+            WHERE bw.published_at IS NOT NULL
+            """, nativeQuery = true)
+    int pcount();
+
 }

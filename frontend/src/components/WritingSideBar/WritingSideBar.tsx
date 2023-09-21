@@ -1,14 +1,13 @@
 import PublishingPropertySection from 'components/PublishingPropertySection/PublishingPropertySection';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import { css, styled } from 'styled-components';
-import { sidebarStyle } from 'styles/layoutStyle';
 import { useCurrentTab } from './useCurrentTab';
 import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useEffect, useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
-import Button from 'components/@common/Button/Button';
-import { useParams } from 'react-router-dom';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
+import { activeWritingInfoState } from 'globalState';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
@@ -27,9 +26,16 @@ type Props = {
 };
 
 const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
+
+  useEffect(() => {
+    selectCurrentTab(TabKeys.WritingProperty);
+  }, [writingId]);
+
+  if (!writingId) return;
 
   const selectPublishTo = (blog: Blog) => {
     setPublishTo(blog);
@@ -67,10 +73,6 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
         ]
       : []),
   ];
-
-  useEffect(() => {
-    selectCurrentTab(TabKeys.WritingProperty);
-  }, [writingId]);
 
   return (
     <S.SidebarContainer>

@@ -17,7 +17,7 @@ export const usePageNavigate = () => {
   const goWritingPage = ({
     categoryId,
     writingId,
-    isDeletedWriting = false,
+    isDeletedWriting,
   }: {
     categoryId: number;
     writingId: number;

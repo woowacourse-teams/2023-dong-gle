@@ -13,7 +13,7 @@ public record TistoryPublishRequest(
         String content,
         int visibility,
         String category,
-        String published,
+        Long published,
         List<String> slogan,
         String tag,
         String acceptComment,

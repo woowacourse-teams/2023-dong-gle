@@ -190,15 +190,22 @@ public class CategoryService {
         final Category source = findCategory(member.getId(), categoryId);
         final Category basicCategory = findBasicCategoryByMemberId(member.getId());
         validateBasicCategory(basicCategory, source);
-        deleteCategoryOrder(source);
+        if (deleteCategoryOrder(source)) {
+            return;
+        }
         addCategoryOrder(nextCategoryId, source, member.getId());
     }
 
-    private void deleteCategoryOrder(final Category category) {
+    private boolean deleteCategoryOrder(final Category category) {
         final Category nextCategory = category.getNextCategory();
         category.changeNextCategoryNull();
         final Category preCategory = findPreCategory(category.getId());
         preCategory.changeNextCategory(nextCategory);
+        if (nextCategory.getNextCategory() == null) {
+            nextCategory.changeNextCategory(category);
+            return true;
+        }
+        return false;
     }
 
     private void addCategoryOrder(final Long nextCategoryId, final Category category, final Long memberId) {

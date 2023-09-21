@@ -36,5 +36,17 @@ export const Primary: Story = {
     medias: {
       description: '캐러셀 내부에 보여질 미디어 컨텐츠 배열입니다.',
     },
+    width: {
+      options: ['400px', '600px', '800px', '1000px'],
+      control: {
+        type: 'radio',
+      },
+    },
+    height: {
+      options: ['400px', '600px', '800px', '1000px'],
+      control: {
+        type: 'radio',
+      },
+    },
   },
 };

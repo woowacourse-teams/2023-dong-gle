@@ -42,19 +42,14 @@ public class Member extends BaseEntity {
     private final boolean isDeleted = false;
     private LocalDateTime deletedAt;
 
-    private Member(final MemberName memberName, final Long socialId) {
+    private Member(final MemberName memberName, final Long socialId, final SocialType socialType) {
         this.memberName = memberName;
         this.socialId = socialId;
+        this.socialType = socialType;
     }
 
-    public Member(final Long id, final MemberName memberName, final Long socialId) {
-        this.id = id;
-        this.memberName = memberName;
-        this.socialId = socialId;
-    }
-
-    public static Member of(final MemberName memberName, final Long socialId) {
-        return new Member(memberName, socialId);
+    public static Member of(final MemberName memberName, final Long socialId, final SocialType socialType) {
+        return new Member(memberName, socialId, socialType);
     }
 
     @Override

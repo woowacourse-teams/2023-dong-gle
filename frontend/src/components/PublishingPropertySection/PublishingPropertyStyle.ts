@@ -30,7 +30,7 @@ const PublishingPropertyStyle = {
   Properties: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 0 0 1rem 0.9rem;
   `,
   PropertyRow: styled.div`
@@ -45,6 +45,7 @@ const PublishingPropertyStyle = {
   PropertyName: styled.div`
     display: flex;
     align-items: center;
+    gap: 0.6rem;
     flex-shrink: 0;
     width: 9.5rem;
     height: 2.3rem;

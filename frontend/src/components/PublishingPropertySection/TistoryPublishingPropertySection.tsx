@@ -2,12 +2,13 @@ import { css, styled } from 'styled-components';
 import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { LeftArrowHeadIcon, TagIcon } from 'assets/icons';
+import { LeftArrowHeadIcon, PasswordIcon, PublishIcon, TagIcon, TimeIcon } from 'assets/icons';
 import { slideToLeft } from 'styles/animation';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import { useTistoryPublishingPropertySection } from './useTistoryPublishingPropertySection';
 import { default as S } from './PublishingPropertyStyle';
 import type { Blog } from 'types/domain';
+import Input from 'components/@common/Input/Input';
 
 type Props = {
   writingId: number;
@@ -59,7 +60,10 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
 
       <S.Properties>
         <S.PropertyRow>
-          <S.PropertyName>발행 방식</S.PropertyName>
+          <S.PropertyName>
+            <PublishIcon width={12} height={12} />
+            발행 방식
+          </S.PropertyName>
           <div>
             <select
               onChange={(e) =>
@@ -74,16 +78,22 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
             </select>
           </div>
         </S.PropertyRow>
+          <S.PropertyRow>
+            <S.PropertyName>
+              <PasswordIcon width={12} height={12} />
+              비밀번호
+            </S.PropertyName>
+            <div>
+              <Input variant='underlined' type='password' ref={passwordRef} />
+            </div>
+          </S.PropertyRow>
         <S.PropertyRow>
-          <S.PropertyName>비밀번호</S.PropertyName>
+          <S.PropertyName>
+            <TimeIcon width={12} height={12} />
+            발행 시간
+          </S.PropertyName>
           <div>
-            <input type='password' ref={passwordRef} />
-          </div>
-        </S.PropertyRow>
-        <S.PropertyRow>
-          <S.PropertyName>발행 시간</S.PropertyName>
-          <div>
-            <input />
+            <Input variant='underlined' />
           </div>
         </S.PropertyRow>
         <S.PropertyRow>

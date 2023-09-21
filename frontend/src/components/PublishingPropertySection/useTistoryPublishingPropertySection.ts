@@ -24,15 +24,20 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
   });
   const toast = useToast();
   const { mutate: publishWritingToTistory, isLoading } = useMutation(
-    (writingId: number) =>
-      publishWritingToTistoryRequest({
+    (writingId: number) => {
+      const publishTime =
+        dateRef.current && timeRef.current
+          ? `${dateRef.current.value} ${timeRef.current.value}:59.999`
+          : '';
+      return publishWritingToTistoryRequest({
         writingId,
         body: {
           ...propertyFormInfo,
           password: passwordRef.current?.value ?? '',
-          publishTime: `${dateRef.current?.value} ${timeRef.current?.value}:59.999`,
+          publishTime,
         },
-      }),
+      });
+    },
     {
       onSuccess: () => {
         selectCurrentTab(TabKeys.WritingProperty);

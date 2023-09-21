@@ -1,4 +1,5 @@
 import { Blog, PublishingPropertyData } from 'types/domain';
+import { CategoryResponse } from './category';
 
 export type AddWritingRequest = FormData;
 
@@ -58,4 +59,12 @@ export type UpdateWritingOrderArgs = {
     targetCategoryId: number;
     nextWritingId: number;
   };
+};
+
+type HomeWritingsResponse = {
+  category: CategoryResponse;
+} & Writing;
+
+export type GetHomeWritingsResponse = {
+  content: HomeWritingsResponse[];
 };

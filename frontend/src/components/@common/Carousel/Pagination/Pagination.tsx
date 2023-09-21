@@ -12,7 +12,7 @@ type Props = {
   setActiveIndex: Dispatch<React.SetStateAction<number>>;
 };
 
-const PageNation = ({ direction, medias, activeIndex, setActiveIndex }: Props) => {
+const Pagination = ({ direction, medias, activeIndex, setActiveIndex }: Props) => {
   const updateMediaIndex = () => {
     const indexUpdater = {
       left: activeIndex === 0 ? medias.length - 1 : activeIndex - 1,
@@ -24,12 +24,12 @@ const PageNation = ({ direction, medias, activeIndex, setActiveIndex }: Props) =
 
   return (
     <S.ActiveButton $direction={direction} onClick={updateMediaIndex}>
-      <ArrowIcon width={12} height={36} />
+      <ArrowIcon width={20} height={36} />
     </S.ActiveButton>
   );
 };
 
-export default PageNation;
+export default Pagination;
 
 const S = {
   ActiveButton: styled.button<{ $direction: Direction }>`
@@ -43,16 +43,16 @@ const S = {
     ${({ $direction }) =>
       $direction === 'left'
         ? css`
-            left: 1rem;
+            left: 0rem;
           `
         : css`
-            right: 1rem;
+            right: 0rem;
             svg {
               transform: rotate(180deg);
             }
           `}
 
-    width: 2rem;
+    width: 4rem;
     height: 100%;
     z-index: 999;
   `,

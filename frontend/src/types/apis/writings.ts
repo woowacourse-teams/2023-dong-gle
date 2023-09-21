@@ -19,13 +19,27 @@ export type GetWritingPropertiesResponse = {
   publishedDetails: PublishedDetail[];
 };
 
-export type PublishWritingRequest = {
-  publishTo: Blog;
-} & PublishingPropertyData;
+export type PublishWritingToTistoryRequest = {
+  tags: string[];
+  publishStatus: 'PUBLIC' | 'PRIVATE' | 'PROTECT';
+  password: string;
+  categoryId: string;
+  publishTime: string; // TODO: "yyyy-MM-dd HH:mm:ss.SSS" 형식으로
+};
 
-export type PublishWritingArgs = {
+export type PublishWritingToTistoryArgs = {
   writingId: number;
-  body: PublishWritingRequest;
+  body: PublishWritingToTistoryRequest;
+};
+
+export type PublishWritingToMediumRequest = {
+  tags: string[];
+  publishStatus: 'PUBLIC' | 'PRIVATE' | 'PROTECT';
+};
+
+export type PublishWritingToMediumArgs = {
+  writingId: number;
+  body: PublishWritingToMediumRequest;
 };
 
 export type PublishedDetail = {

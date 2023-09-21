@@ -62,17 +62,38 @@ export type UpdateWritingOrderArgs = {
 };
 
 type HomeContent = {
+  id: number;
+  title: string;
   category: CategoryResponse;
-} & Writing;
+  createdAt: Date;
+  publishedDetails: Omit<PublishedDetail, 'tags' | 'publishedUrl'>[];
+};
 
-type PageInfo = {
-  size: number;
-  totalPages: number;
-  page: number;
-  totalElements: number;
+type Sort = {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+};
+
+type Pageable = {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
 };
 
 export type GetHomeWritingsResponse = {
-  pageInfo: PageInfo;
   content: HomeContent[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
 };

@@ -21,5 +21,20 @@ export const useHomeTable = (initialPageIndex: number) => {
     rowRef.current?.focus();
   }, []);
 
-  return { content: data?.content, pageInfo: data?.pageInfo, rowRef, activePage, changeActivePage };
+  return {
+    content: data?.content,
+    pageable: data?.pageable,
+    totalPages: data?.totalPages,
+    totalElements: data?.totalElements,
+    last: data?.last,
+    size: data?.size,
+    number: data?.number,
+    sort: data?.sort,
+    numberOfElements: data?.numberOfElements,
+    first: data?.first,
+    empty: data?.empty,
+    rowRef,
+    activePage,
+    changeActivePage,
+  };
 };

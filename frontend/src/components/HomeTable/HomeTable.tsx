@@ -11,11 +11,11 @@ type Props = {
 };
 
 const HomeTable = ({ initialPageIndex = 1 }: Props) => {
-  const { content, pageInfo, rowRef, activePage, changeActivePage } =
+  const { content, totalPages, rowRef, activePage, changeActivePage } =
     useHomeTable(initialPageIndex);
   const { goWritingPage } = usePageNavigate();
 
-  if (!content || !pageInfo) return null;
+  if (!content || !totalPages) return null;
 
   return (
     <S.Container>
@@ -65,7 +65,7 @@ const HomeTable = ({ initialPageIndex = 1 }: Props) => {
         </tbody>
       </S.HomeTable>
       <Pagination
-        pageLength={pageInfo.totalPages}
+        pageLength={totalPages}
         activePage={activePage}
         changeActivePage={changeActivePage}
       />

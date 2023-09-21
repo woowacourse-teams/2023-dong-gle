@@ -9,6 +9,7 @@ import { useTistoryPublishingPropertySection } from './useTistoryPublishingPrope
 import { default as S } from './PublishingPropertyStyle';
 import type { Blog } from 'types/domain';
 import Input from 'components/@common/Input/Input';
+import { dateFormatter } from 'utils/date';
 
 type Props = {
   writingId: number;
@@ -97,9 +98,14 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
             <TimeIcon width={12} height={12} />
             발행 시간
           </S.PropertyName>
-          <div>
-            <Input variant='underlined' />
-          </div>
+          <S.PublishTimeInputContainer>
+            <Input
+              type='date'
+              min={dateFormatter(new Date(), 'YYYY-MM-DD')}
+              defaultValue={dateFormatter(new Date(), 'YYYY-MM-DD')}
+            />
+            <Input type='time' defaultValue={dateFormatter(new Date(), 'HH:MM')} />
+          </S.PublishTimeInputContainer>
         </S.PropertyRow>
         <S.PropertyRow>
           <S.PropertyName>

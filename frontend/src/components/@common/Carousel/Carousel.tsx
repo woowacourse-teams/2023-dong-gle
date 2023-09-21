@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import Media, { Media as MediaType } from './Media/Media';
-import PageNation from './PageNation/PageNation';
+import Pagination from './Pagination/Pagination';
 import Indicator from './Indicator/Indicator';
 
 type Props = {
@@ -15,7 +15,7 @@ const Carousel = ({ medias, width = '640px', height = '360px' }: Props) => {
 
   return (
     <S.Carousel $width={width} $height={height}>
-      <PageNation
+      <Pagination
         direction='left'
         medias={medias}
         activeIndex={activeIndex}
@@ -26,7 +26,7 @@ const Carousel = ({ medias, width = '640px', height = '360px' }: Props) => {
           <Media key={index} media={media} />
         ))}
       </S.MediaAnimationContainer>
-      <PageNation
+      <Pagination
         direction='right'
         medias={medias}
         activeIndex={activeIndex}

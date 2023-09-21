@@ -2,6 +2,8 @@ package org.donggle.backend.domain.member;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.BaseEntity;
+import org.donggle.backend.domain.oauth.SocialType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -23,7 +26,9 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true, deleted_at = now() WHERE id = ?")
 @Where(clause = "is_deleted = false")
-@Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_UNIQUE", columnNames = "socialId"))
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "SOCIAL_ID_TYPE_UNIQUE", columnNames = {"socialId", "socialType"})
+})
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +37,9 @@ public class Member extends BaseEntity {
     @Embedded
     private MemberName memberName;
     private Long socialId;
-    private boolean isDeleted = false;
+    @Enumerated(value = EnumType.STRING)
+    private SocialType socialType;
+    private final boolean isDeleted = false;
     private LocalDateTime deletedAt;
 
     private Member(final MemberName memberName, final Long socialId) {

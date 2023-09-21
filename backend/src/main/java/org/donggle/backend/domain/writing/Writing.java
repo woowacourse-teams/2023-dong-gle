@@ -22,7 +22,6 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.block.Block;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +30,6 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Where(clause = "status = 'ACTIVE'")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE writing SET status = 'DELETED' WHERE id = ?")
 public class Writing extends BaseEntity {

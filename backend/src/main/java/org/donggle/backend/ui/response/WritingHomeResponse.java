@@ -10,9 +10,9 @@ public record WritingHomeResponse(
         String title,
         CategoryInfo category,
         LocalDateTime createdAt,
-        List<PublishedDetailResponse> publishedDetails
+        List<PublishedDetailSimpleResponse> publishedDetails
 ) {
-    public static WritingHomeResponse of(final Writing writing, final List<PublishedDetailResponse> responses) {
+    public static WritingHomeResponse of(final Writing writing, final List<PublishedDetailSimpleResponse> responses) {
         return new WritingHomeResponse(
                 writing.getId(),
                 writing.getTitleValue(),

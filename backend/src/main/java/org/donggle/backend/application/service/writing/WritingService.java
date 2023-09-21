@@ -44,6 +44,8 @@ import java.util.stream.Collectors;
 import static org.donggle.backend.domain.writing.BlockType.CODE_BLOCK;
 import static org.donggle.backend.domain.writing.BlockType.HORIZONTAL_RULES;
 import static org.donggle.backend.domain.writing.BlockType.IMAGE;
+import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
+import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
 
 @Service
 @Transactional
@@ -76,8 +78,7 @@ public class WritingService {
         final Member findMember = findMember(memberId);
         final Category category = findCategory(memberId, categoryId);
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
-        final String notionToken = memberCredentials.getNotionToken()
-                .orElseThrow(NotionNotConnectedException::new);
+        final String notionToken = memberCredentials.getNotionToken().orElseThrow(NotionNotConnectedException::new);
         return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }
 
@@ -92,18 +93,21 @@ public class WritingService {
     }
 
     private boolean isNotEmptyCategory(final Category category) {
-        return writingRepository.countByCategoryId(category.getId()) != 0;
+        return writingRepository.countByCategoryIdAndStatus(category.getId(), ACTIVE) != 0;
     }
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final Title title) {
         final Writing findWriting = findWritingById(writingId);
+        if (findWriting.getStatus() != ACTIVE) {
+            throw new IllegalArgumentException();
+        }
         validateAuthorization(memberId, findWriting);
         findWriting.updateTitle(title);
     }
 
     @Transactional(readOnly = true)
     public Writing findWritingWithBlocks(final Long memberId, final Long writingId) {
-        final Writing writing = writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeletedWithBlocks(memberId, writingId)
+        final Writing writing = writingRepository.findByWithBlocks(writingId, memberId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
         findStyleByNomalBlocks(writing);
         return writing;
@@ -112,8 +116,7 @@ public class WritingService {
     private void findStyleByNomalBlocks(final Writing writing) {
         final List<Block> blocks = writing.getBlocks();
         final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
-        final List<NormalBlock> normalBlocks = blocks.stream()
-                .filter(block -> !notNormalType.contains(block.getBlockType()))
+        final List<NormalBlock> normalBlocks = blocks.stream().filter(block -> !notNormalType.contains(block.getBlockType()))
                 .map(NormalBlock.class::cast)
                 .toList();
         writingRepository.findStylesForBlocks(normalBlocks);
@@ -121,43 +124,37 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
-        final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
-        final List<PublishedDetailSimpleResponse> publishedTos = convertToPublishedDetailSimpleResponses(writingId);
-        return WritingPropertiesResponse.of(writing, publishedTos);
+        final Writing findWriting = writingRepository.findByIdAndMemberId(writingId, memberId).orElseThrow(() -> new WritingNotFoundException(writingId));
+        if (findWriting.getStatus() == DELETED) {
+            throw new IllegalArgumentException();
+        }
+
+        final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
+        return WritingPropertiesResponse.of(findWriting, publishedTos);
     }
 
     @Transactional(readOnly = true)
     public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         final Category findCategory = findCategory(memberId, categoryId);
-        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
         if (findWritings.isEmpty()) {
             return WritingListWithCategoryResponse.of(findCategory, Collections.emptyList());
         }
         final Writing firstWriting = findFirstWriting(findWritings);
         final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
-        final Map<Writing, List<BlogWriting>> blogWritings = blogWritingRepository.findWithFetch(sortedWriting)
-                .stream()
-                .collect(Collectors.groupingBy(BlogWriting::getWriting));
+        final Map<Writing, List<BlogWriting>> blogWritings = blogWritingRepository.findWithFetch(sortedWriting).stream().collect(Collectors.groupingBy(BlogWriting::getWriting));
 
-        final List<WritingDetailResponse> responses = sortedWriting.stream()
-                .map(writing -> {
-                    final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing))
-                            .orElse(Collections.emptyList())
-                            .stream()
-                            .map(PublishedDetailResponse::of)
-                            .toList();
-                    return WritingDetailResponse.of(writing, publishedDetailResponses);
-                })
-                .toList();
+        final List<WritingDetailResponse> responses = sortedWriting.stream().map(writing -> {
+            final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing)).orElse(Collections.emptyList()).stream().map(PublishedDetailResponse::of).toList();
+            return WritingDetailResponse.of(writing, publishedDetailResponses);
+        }).toList();
 
         return WritingListWithCategoryResponse.of(findCategory, responses);
     }
 
     private Writing findFirstWriting(final List<Writing> findWritings) {
         final List<Writing> copy = new ArrayList<>(findWritings);
-        final List<Writing> nextWritings = findWritings.stream()
-                .map(Writing::getNextWriting)
-                .toList();
+        final List<Writing> nextWritings = findWritings.stream().map(Writing::getNextWriting).toList();
         copy.removeAll(nextWritings);
         return copy.get(0);
     }
@@ -218,7 +215,7 @@ public class WritingService {
     public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
         final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
         pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
-        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
+        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailSimpleResponses(writing.getId())));
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {
@@ -228,7 +225,7 @@ public class WritingService {
     }
 
     private boolean isNotFirstWriting(final Long writingId) {
-        return writingRepository.countByNextWritingId(writingId) != 0;
+        return writingRepository.countByNextWritingIdAndStatus(writingId, ACTIVE) != 0;
     }
 
     private void changeCategory(final Long memberId, final Long categoryId, final Writing writing) {
@@ -241,9 +238,7 @@ public class WritingService {
 
     private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
-        return blogWritings.stream()
-                .map(PublishedDetailResponse::of)
-                .toList();
+        return blogWritings.stream().map(PublishedDetailResponse::of).toList();
     }
 
     private List<PublishedDetailSimpleResponse> convertToPublishedDetailSimpleResponses(final Long findWriting) {
@@ -254,8 +249,7 @@ public class WritingService {
     }
 
     private Category findCategory(final Long memberId, final Long categoryId) {
-        return categoryRepository.findByIdAndMemberId(categoryId, memberId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        return categoryRepository.findByIdAndMemberId(categoryId, memberId).orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 
     private Writing findLastWritingInCategory(final Long categoryId) {
@@ -265,11 +259,6 @@ public class WritingService {
 
     private Writing findWritingById(final Long writingId) {
         return writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
-    }
-
-    private Writing findWritingAndTrashedWriting(final Long memberId, final Long writingId) {
-        return writingRepository.findByMemberIdAndWritingIdAndStatusIsNotDeleted(memberId, writingId)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 

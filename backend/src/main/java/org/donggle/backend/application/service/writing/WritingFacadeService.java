@@ -16,9 +16,12 @@ import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -84,5 +87,9 @@ public class WritingFacadeService {
 
     public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         return writingService.findWritingListByCategoryId(memberId, categoryId);
+    }
+
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        return writingService.findAll(memberId, pageable);
     }
 }

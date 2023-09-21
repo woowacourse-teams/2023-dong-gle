@@ -21,9 +21,13 @@ import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
+import org.donggle.backend.ui.response.PublishedDetailSimpleResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,7 +122,7 @@ public class WritingService {
     @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
         final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
-        final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
+        final List<PublishedDetailSimpleResponse> publishedTos = convertToPublishedDetailSimpleResponses(writingId);
         return WritingPropertiesResponse.of(writing, publishedTos);
     }
 
@@ -210,6 +214,13 @@ public class WritingService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
+        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
+    }
+
     private void validateAuthorization(final Long memberId, final Writing writing) {
         if (!writing.isOwnedBy(memberId)) {
             throw new WritingNotFoundException(writing.getId());
@@ -232,6 +243,13 @@ public class WritingService {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
         return blogWritings.stream()
                 .map(PublishedDetailResponse::of)
+                .toList();
+    }
+
+    private List<PublishedDetailSimpleResponse> convertToPublishedDetailSimpleResponses(final Long findWriting) {
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
+        return blogWritings.stream()
+                .map(PublishedDetailSimpleResponse::of)
                 .toList();
     }
 

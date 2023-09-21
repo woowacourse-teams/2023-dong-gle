@@ -12,7 +12,16 @@ type Props = {
 const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
   const openPublishingPropertySection = (blog: Blog) => {
     onBlogButtonClick(blog);
-    onTabClick(TabKeys.PublishingProperty);
+
+    switch (blog) {
+      case 'MEDIUM':
+        onTabClick(TabKeys.MediumPublishingProperty);
+        break;
+
+      case 'TISTORY':
+        onTabClick(TabKeys.TistoryPublishingProperty);
+        break;
+    }
   };
 
   return (

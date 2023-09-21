@@ -1,4 +1,4 @@
-import PublishingPropertySection from 'components/PublishingPropertySection/PublishingPropertySection';
+import MediumPublishingPropertySection from 'components/PublishingPropertySection/MediumPublishingPropertySection';
 import PublishingSection from 'components/PublishingSection/PublishingSection';
 import { css, styled } from 'styled-components';
 import { useCurrentTab } from './useCurrentTab';
@@ -8,17 +8,21 @@ import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
+import Button from 'components/@common/Button/Button';
+import TistoryPublishingPropertySection from 'components/PublishingPropertySection/TistoryPublishingPropertySection';
 
 export enum TabKeys {
   WritingProperty = 'WritingProperty',
   Publishing = 'Publishing',
-  PublishingProperty = 'PublishingProperty',
+  MediumPublishingProperty = 'MediumPublishingProperty',
+  TistoryPublishingProperty = 'TistoryPublishingProperty',
 }
 
 const ariaLabelFromTabKeys = {
   [TabKeys.WritingProperty]: '글 정보',
   [TabKeys.Publishing]: '발행 하기',
-  [TabKeys.PublishingProperty]: '발행 정보',
+  [TabKeys.MediumPublishingProperty]: '미디엄 발행 정보',
+  [TabKeys.TistoryPublishingProperty]: '티스토리 발행 정보',
 };
 
 type Props = {
@@ -60,10 +64,21 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
             ),
           },
           {
-            key: TabKeys.PublishingProperty,
-            label: 'PublishingProperty',
+            key: TabKeys.MediumPublishingProperty,
+            label: 'MediumPublishingProperty',
             content: publishTo && (
-              <PublishingPropertySection
+              <MediumPublishingPropertySection
+                writingId={writingId}
+                publishTo={publishTo}
+                selectCurrentTab={selectCurrentTab}
+              />
+            ),
+          },
+          {
+            key: TabKeys.TistoryPublishingProperty,
+            label: 'TistoryPublishingProperty',
+            content: publishTo && (
+              <TistoryPublishingPropertySection
                 writingId={writingId}
                 publishTo={publishTo}
                 selectCurrentTab={selectCurrentTab}
@@ -78,7 +93,13 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
     <S.SidebarContainer>
       <S.MenuTabList role='tablist'>
         {menus
-          .filter((menu) => menu.key !== TabKeys.PublishingProperty)
+          .filter(
+            (menu) =>
+              ![TabKeys.TistoryPublishingProperty, TabKeys.MediumPublishingProperty].includes(
+                // 이상함
+                menu.key,
+              ),
+          )
           .map((menu) => (
             <S.Tab key={menu.key} role='tab'>
               <S.Button

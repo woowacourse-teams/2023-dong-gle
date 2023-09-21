@@ -1,10 +1,10 @@
 package org.donggle.backend.domain.blog;
 
 import org.donggle.backend.application.client.BlogClient;
+import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.ui.response.PublishResponse;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,13 +20,13 @@ public class BlogClients {
 
     public PublishResponse publish(
             final BlogType blogType,
-            final List<String> tags,
+            final PublishRequest publishRequest,
             final String content,
             final String accessToken,
             final String titleValue
     ) {
         final BlogClient client = getClient(blogType);
-        return client.publish(accessToken, content, tags, titleValue);
+        return client.publish(accessToken, content, publishRequest, titleValue);
     }
 
     private BlogClient getClient(final BlogType blogType) {

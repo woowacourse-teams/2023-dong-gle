@@ -1,7 +1,7 @@
 package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.writing.Writing;
-import org.springframework.data.jpa.repository.EntityGraph;
+import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,12 +21,12 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.nextWriting is null")
     Optional<Writing> findLastWritingByCategoryId(@Param("categoryId") final Long categoryId);
 
+    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
+
     @Query("select w from Writing w " +
             "where w.nextWriting.id = :writingId")
     Optional<Writing> findPreWritingByWritingId(@Param("writingId") final Long writingId);
-
-    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
-    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
 
     @Query(value = "select * from writing w " +
             "where w.member_id = :memberId and " +
@@ -50,4 +50,13 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             "w.id = :writingId and " +
             "w.status != 'DELETED'", nativeQuery = true)
     Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeleted(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+
+    @Query(value = "select * from writing as w " +
+            "where w.member_id = :memberId and " +
+            "w.id = :writingId and " +
+            "w.status != 'DELETED'", nativeQuery = true)
+    Optional<Writing> findByMemberIdAndWritingIdAndStatusIsNotDeletedWithBlocks(@Param("memberId") final Long memberId, @Param("writingId") final Long writingId);
+
+    @Query("SELECT b FROM NormalBlock b LEFT JOIN FETCH b.styles WHERE b IN :blocks")
+    List<NormalBlock> findStylesForBlocks(@Param("blocks") List<NormalBlock> blocks);
 }

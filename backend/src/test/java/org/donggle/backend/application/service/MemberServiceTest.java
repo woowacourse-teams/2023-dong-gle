@@ -2,6 +2,7 @@ package org.donggle.backend.application.service;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.service.member.MemberService;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -64,5 +67,21 @@ class MemberServiceTest {
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
                 () -> assertThat(memberPage.medium().isConnected()).isTrue()
         );
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴한다.")
+    void deleteMember() {
+        //given
+        final Member member = memberRepository.save(Member.of(new MemberName("동굴"), 123L));
+        assertThat(member.isDeleted()).isFalse();
+
+        //when
+        memberService.deleteMember(member.getId());
+        memberRepository.flush();
+
+        //then
+        final Optional<Member> memberOptional = memberRepository.findById(member.getId());
+        assertThat(memberOptional).isEmpty();
     }
 }

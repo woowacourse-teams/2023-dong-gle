@@ -50,20 +50,26 @@ public class InitLocalAndTestData implements CommandLineRunner {
 
         @Transactional
         public void init() {
-            final Member savedMember = memberRepository.save(Member.of(new MemberName("동그리"), 1L));
-            final MemberCredentials credentials = credentialsRepository.save(MemberCredentials.basic(savedMember));
-            credentials.updateTistory("핑크헙크", "헙크");
-            credentials.updateMediumToken("핑크토리");
+            final Member savedMember1 = memberRepository.save(Member.of(new MemberName("동그리"), 1L));
+            final MemberCredentials credentials1 = credentialsRepository.save(MemberCredentials.basic(savedMember1));
+            credentials1.updateTistory("핑크헙크", "헙크");
+            credentials1.updateMediumToken("핑크토리");
 
-            final Category savedCategory = categoryRepository.save(Category.basic(savedMember));
+            final Member savedMember2 = memberRepository.save(Member.of(new MemberName("에코"), 2L));
+            final MemberCredentials credentials2 = credentialsRepository.save(MemberCredentials.basic(savedMember2));
+            credentials2.updateTistory("핑크에코", "에코");
+            credentials2.updateMediumToken("핑에크코");
+
+            final Category savedCategory1 = categoryRepository.save(Category.basic(savedMember1));
+            final Category savedCategory2 = categoryRepository.save(Category.basic(savedMember2));
 
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
             writingRepository.save(Writing.of(
-                    savedMember,
+                    savedMember1,
                     new Title("테스트 글"),
-                    savedCategory,
+                    savedCategory1,
                     List.of(
                             new NormalBlock(
                                     Depth.from(1),

@@ -1,9 +1,10 @@
-package org.donggle.backend.application.service;
+package org.donggle.backend.application.service.category;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
@@ -41,10 +42,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
 
+    @NoConcurrentExecution
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());
-        validateCategoryName(categoryName);
+        validateCategoryName(memberId, categoryName);
         final Category category = Category.of(categoryName, findMember);
         final Category lastCategory = findLastCategoryByMemberId(memberId);
         final Category savedCategory = categoryRepository.save(category);
@@ -52,8 +54,8 @@ public class CategoryService {
         return savedCategory.getId();
     }
 
-    private void validateCategoryName(final CategoryName categoryName) {
-        if (categoryRepository.existsByCategoryName(categoryName)) {
+    private void validateCategoryName(final Long memberId, final CategoryName categoryName) {
+        if (categoryRepository.existsByMemberIdAndCategoryName(memberId, categoryName)) {
             throw new DuplicateCategoryNameException(categoryName.getName());
         }
         if (categoryName.isBlank()) {
@@ -68,7 +70,7 @@ public class CategoryService {
     public CategoryListResponse findAll(final Long memberId) {
         final Member findMember = findMember(memberId);
         final List<Category> categories = categoryRepository.findAllByMemberId(findMember.getId());
-        final List<Category> sortedCategories = sortCategory(categories, findBasicCategoryByMemberId(findMember.getId()));
+        final List<Category> sortedCategories = sortCategory(categories, findBasicCategory(categories));
         final List<CategoryResponse> categoryResponses = sortedCategories.stream()
                 .map(CategoryResponse::of)
                 .toList();
@@ -135,7 +137,7 @@ public class CategoryService {
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
         validateBasicCategory(basicCategory, findCategory);
         final CategoryName categoryName = new CategoryName(request.categoryName());
-        validateCategoryName(categoryName);
+        validateCategoryName(memberId, categoryName);
 
         findCategory.changeName(categoryName);
     }
@@ -217,6 +219,13 @@ public class CategoryService {
 
     private Category findLastCategoryByMemberId(final Long memberId) {
         return categoryRepository.findLastCategoryByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    private Category findBasicCategory(final List<Category> categories) {
+        return categories.stream()
+                .filter(category -> category.getCategoryName().getName().equals("기본"))
+                .findFirst()
                 .orElseThrow(IllegalStateException::new);
     }
 

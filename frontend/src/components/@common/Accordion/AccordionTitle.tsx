@@ -47,7 +47,7 @@ const S = {
     border-radius: 4px;
 
     &:hover {
-      background-color: ${({ theme }) => theme.color.gray4};
+      background-color: ${({ theme }) => theme.color.gray3};
     }
   `,
 

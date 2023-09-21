@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service;
+package org.donggle.backend.application.service.member;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
@@ -21,10 +21,19 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberPageResponse findMemberPage(final Long memberId) {
-        final Member foundMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-        final MemberCredentials foundMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(foundMember)
+        final Member member = findMember(memberId);
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
-        return MemberPageResponse.of(foundMember, foundMemberCredentials);
+        return MemberPageResponse.of(member, memberCredentials);
+    }
+
+    public void deleteMember(final Long memberId) {
+        final Member member = findMember(memberId);
+        memberRepository.delete(member);
+    }
+
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

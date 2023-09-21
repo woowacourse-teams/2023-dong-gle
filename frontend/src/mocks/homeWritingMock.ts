@@ -33,6 +33,156 @@ export const getHomeWritingMock = (): GetHomeWritingsResponse => {
           },
         ],
       },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: '제목1',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: '제목1',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: '제목2',
+        category: {
+          id: 3,
+          categoryName: '기본',
+        },
+        createdAt: new Date('2023-07-11T06:55:46.922Z'),
+        publishedDetails: [
+          {
+            blogName: 'MEDIUM',
+            publishedAt: new Date('2023-07-11T06:55:46.922Z'),
+          },
+        ],
+      },
     ],
     pageable: {
       sort: {
@@ -46,7 +196,7 @@ export const getHomeWritingMock = (): GetHomeWritingsResponse => {
       paged: true,
       unpaged: false,
     },
-    totalPages: 1,
+    totalPages: 20,
     totalElements: 20,
     last: true,
     size: 20,

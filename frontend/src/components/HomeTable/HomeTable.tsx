@@ -10,7 +10,7 @@ type Props = {
   initialPageIndex?: number;
 };
 
-const HomeTable = ({ initialPageIndex = 1 }: Props) => {
+const HomeTable = ({ initialPageIndex = 0 }: Props) => {
   const { content, totalPages, rowRef, activePage, changeActivePage } =
     useHomeTable(initialPageIndex);
   const { goWritingPage } = usePageNavigate();

@@ -19,7 +19,7 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
     tags: [],
     publishStatus: 'PUBLIC',
     password: '',
-    categoryId: '0',
+    categoryId: '0', // TODO: 카테고리 선택 기능 추가
     publishTime: '',
   });
   const toast = useToast();

@@ -141,7 +141,6 @@ const S = {
   PropertyName: styled.div`
     display: flex;
     align-items: center;
-    align-self: flex-start;
     flex-shrink: 0;
     gap: 0.4rem;
     width: 9.5rem;

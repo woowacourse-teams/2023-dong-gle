@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { PlusCircleIcon } from 'assets/icons';
@@ -12,6 +12,7 @@ import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
 import TrashCan from 'components/TrashCan/TrashCan';
 import HomeButton from 'components/HomeButton/HomeButton';
+import HelpMenu from 'components/HelpMenu/HelpMenu';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
 
@@ -59,6 +60,7 @@ const Layout = () => {
         </S.LeftSidebarSection>
         <S.Main>
           <Outlet />
+          <HelpMenu />
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>

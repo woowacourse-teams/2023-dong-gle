@@ -19,7 +19,7 @@ const HelpMenu = () => {
   return (
     <S.HelpMenu onClick={() => setIsOpen(!isOpen)}>
       ?
-      <Menu isOpen={isOpen} closeMenu={closeMenu} direction='up'>
+      <Menu isOpen={isOpen} closeMenu={closeMenu} verticalDirection='up'>
         {helpMenus.map(({ title, handleMenuItemClick }) => {
           return <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />;
         })}
@@ -32,7 +32,9 @@ export default HelpMenu;
 
 const S = {
   HelpMenu: styled.button`
-    position: relative;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
     width: 40px;
     height: 40px;
     border: 1px solid ${({ theme }) => theme.color.gray5};

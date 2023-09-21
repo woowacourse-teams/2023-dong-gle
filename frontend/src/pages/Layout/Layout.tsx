@@ -11,6 +11,7 @@ import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
 import TrashCan from 'components/TrashCan/TrashCan';
+import HelpMenu from 'components/HelpMenu/HelpMenu';
 
 export type PageContext = {
   isLeftSidebarOpen?: boolean;
@@ -73,6 +74,7 @@ const Layout = () => {
               } satisfies PageContext
             }
           />
+          <HelpMenu />
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>

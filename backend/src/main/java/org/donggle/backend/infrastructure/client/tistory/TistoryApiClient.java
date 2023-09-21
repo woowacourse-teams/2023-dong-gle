@@ -26,8 +26,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 import static org.donggle.backend.domain.blog.BlogType.TISTORY;
@@ -141,16 +143,21 @@ public class TistoryApiClient implements BlogClient {
         return memberCredentials;
     }
 
-    private String makePublishTime(final String publishTime) {
+    private Long makePublishTime(final String publishTime) {
         if (publishTime.isBlank()) {
-            return String.valueOf(LocalDateTime.now());
+            return Instant.now().getEpochSecond();
         }
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-        final LocalDateTime publishLocalDateTime = LocalDateTime.parse(publishTime, formatter);
-        if (publishLocalDateTime.isBefore(LocalDateTime.now())) {
-            throw new InvalidPublishRequestException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        try {
+            final Date date = formatter.parse(publishTime);
+            final Instant instant = date.toInstant();
+            if (instant.isBefore(Instant.now())) {
+                throw new InvalidPublishRequestException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
+            }
+            return instant.getEpochSecond();
+        } catch (ParseException e) {
+            throw new InvalidPublishRequestException("예약 시간 입력 형식이 잘못되었습니다.");
         }
-        return publishTime;
     }
 
     public String findDefaultBlogName(final String access_token) {

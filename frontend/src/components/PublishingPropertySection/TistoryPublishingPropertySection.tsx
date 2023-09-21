@@ -29,6 +29,7 @@ const TistoryPublishStatusList = Object.keys(
 const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: Props) => {
   const {
     isLoading,
+    propertyFormInfo,
     setTags,
     setPublishStatus,
     passwordRef,
@@ -37,6 +38,8 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
   } = useTistoryPublishingPropertySection({
     selectCurrentTab,
   });
+
+  const { publishStatus } = propertyFormInfo;
 
   if (isLoading)
     return (
@@ -78,6 +81,7 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
             </select>
           </div>
         </S.PropertyRow>
+        {publishStatus === 'PROTECT' && (
           <S.PropertyRow>
             <S.PropertyName>
               <PasswordIcon width={12} height={12} />
@@ -87,6 +91,7 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
               <Input variant='underlined' type='password' ref={passwordRef} />
             </div>
           </S.PropertyRow>
+        )}
         <S.PropertyRow>
           <S.PropertyName>
             <TimeIcon width={12} height={12} />

@@ -54,6 +54,7 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
 
   return {
     isLoading,
+    propertyFormInfo,
     setTags,
     setPublishStatus,
     passwordRef,

@@ -11,19 +11,19 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BookmarkParserTest {
+class NotionBookmarkParserTest {
     @Test
     @DisplayName("BookmakrParser로부터 rawText와 Styles를 파싱한다.")
     void parse() {
         //given
-        final BookmarkParser bookmarkParser = new BookmarkParser(List.of(
+        final NotionBookmark notionBookmarkParser = new NotionBookmark(List.of(
                 new RichText("test", "null", Annotations.empty()),
                 new RichText("caption", "null", Annotations.empty()))
                 , "a.com");
 
         //when
-        final String rawText = bookmarkParser.parseRawText();
-        final List<Style> styles = bookmarkParser.parseStyles();
+        final String rawText = notionBookmarkParser.parseRawText();
+        final List<Style> styles = notionBookmarkParser.parseStyles();
 
         //then
         final String expectedRawText = "a.comtestcaption";

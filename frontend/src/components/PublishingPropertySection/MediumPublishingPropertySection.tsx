@@ -54,9 +54,11 @@ const MediumPublishingPropertySection = ({ writingId, publishTo, selectCurrentTa
         <S.PropertyRow>
           <S.PropertyName>발행 방식</S.PropertyName>
           <div>
-            <select>
+            <select
+              onChange={(e) => setPublishStatus(e.target.value as keyof typeof MediumPublishStatus)}
+            >
               {MediumPublishStatusList.map((value, index) => (
-                <option key={index} value={value} onChange={() => setPublishStatus(value)}>
+                <option key={index} value={value}>
                   {MediumPublishStatus[value]}
                 </option>
               ))}

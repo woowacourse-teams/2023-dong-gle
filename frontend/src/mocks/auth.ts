@@ -1,6 +1,6 @@
 import { DefaultBodyType, PathParams, RestRequest } from 'msw';
 
-export const ACCESS_TOKEN = 'mockAccessToken';
+export const MOCK_ACCESS_TOKEN = 'mockAccessToken';
 
 export const ERROR_RESPONSE = {
   error: {
@@ -13,6 +13,6 @@ export const ERROR_RESPONSE = {
 export const isValidAccessToken = (req: RestRequest<DefaultBodyType, PathParams<string>>) => {
   const authorizationHeader = req.headers.get('Authorization');
 
-  if (authorizationHeader === `Bearer ${ACCESS_TOKEN}`) return true;
+  if (authorizationHeader === `Bearer ${MOCK_ACCESS_TOKEN}`) return true;
   return false;
 };

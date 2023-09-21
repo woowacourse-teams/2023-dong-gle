@@ -1,7 +1,7 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
+import org.donggle.backend.application.service.parse.NotionParseService;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
@@ -16,22 +16,21 @@ import org.donggle.backend.domain.writing.block.ImageUrl;
 import org.donggle.backend.domain.writing.block.Language;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.domain.writing.block.RawText;
-import org.junit.jupiter.api.BeforeEach;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
 class NotionParserTest {
-    private NotionParser notionParser;
-
-    @BeforeEach
-    void setUp() {
-        notionParser = new NotionParser();
-    }
+    @Autowired
+    private NotionParseService notionParser;
 
     @Test
     @DisplayName("Paragraph타입 BlockNode로부터 NormalBlock을 생성한다.")
@@ -45,7 +44,7 @@ class NotionParserTest {
         final Block blocks = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final NotionNormalBlockParser blockParser = DefaultBlockParser.from(notionBlockNodeResponse);
+        final NotionNormalBlock blockParser = NotionDefaultBlock.from(notionBlockNodeResponse);
         final String rawText = blockParser.parseRawText();
         final List<Style> styles = blockParser.parseStyles();
         final NormalBlock expected = new NormalBlock(Depth.from(0), BlockType.PARAGRAPH, RawText.from(rawText), styles);
@@ -67,7 +66,7 @@ class NotionParserTest {
         final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final CodeBlockParser blockParser = CodeBlockParser.from(notionBlockNodeResponse);
+        final NotionCodeBlock blockParser = NotionCodeBlock.from(notionBlockNodeResponse);
         final String rawText = blockParser.parseRawText();
 
         assertThat(block)
@@ -88,9 +87,9 @@ class NotionParserTest {
         final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final ImageParser imageParser = ImageParser.from(notionBlockNodeResponse);
-        final String url = imageParser.url();
-        final String caption = imageParser.parseCaption();
+        final NotionImage notionImage = NotionImage.from(notionBlockNodeResponse);
+        final String url = notionImage.url();
+        final String caption = notionImage.parseCaption();
 
         assertThat(block)
                 .usingRecursiveComparison()
@@ -110,8 +109,8 @@ class NotionParserTest {
         final Block block = notionParser.parseBody(notionBlockNodeResponses).get(0);
 
         //then
-        final BookmarkParser bookmarkParser = BookmarkParser.from(notionBlockNodeResponse);
-        final String rawText = bookmarkParser.parseRawText();
+        final NotionBookmark notionBookmarkParser = NotionBookmark.from(notionBlockNodeResponse);
+        final String rawText = notionBookmarkParser.parseRawText();
         final NormalBlock expected = new NormalBlock(
                 Depth.from(0),
                 BlockType.PARAGRAPH,

@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
+
 @Component
 @Profile({"local", "test"})
 @RequiredArgsConstructor
@@ -50,12 +52,12 @@ public class InitLocalAndTestData implements CommandLineRunner {
 
         @Transactional
         public void init() {
-            final Member savedMember1 = memberRepository.save(Member.of(new MemberName("동그리"), 1L));
+            final Member savedMember1 = memberRepository.save(Member.of(new MemberName("동그리"), 1L, KAKAO));
             final MemberCredentials credentials1 = credentialsRepository.save(MemberCredentials.basic(savedMember1));
             credentials1.updateTistory("핑크헙크", "헙크");
             credentials1.updateMediumToken("핑크토리");
 
-            final Member savedMember2 = memberRepository.save(Member.of(new MemberName("에코"), 2L));
+            final Member savedMember2 = memberRepository.save(Member.of(new MemberName("에코"), 2L, KAKAO));
             final MemberCredentials credentials2 = credentialsRepository.save(MemberCredentials.basic(savedMember2));
             credentials2.updateTistory("핑크에코", "에코");
             credentials2.updateMediumToken("핑에크코");
@@ -66,20 +68,7 @@ public class InitLocalAndTestData implements CommandLineRunner {
             blogRepository.save(new Blog(BlogType.MEDIUM));
             blogRepository.save(new Blog(BlogType.TISTORY));
 
-            writingRepository.save(Writing.of(
-                    savedMember1,
-                    new Title("테스트 글"),
-                    savedCategory1,
-                    List.of(
-                            new NormalBlock(
-                                    Depth.from(1),
-                                    BlockType.PARAGRAPH,
-                                    RawText.from("테스트 글입니다."),
-                                    List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
-                                    )
-                            )
-                    )
-            ));
+            writingRepository.save(Writing.of(savedMember1, new Title("테스트 글"), savedCategory1, List.of(new NormalBlock(Depth.from(1), BlockType.PARAGRAPH, RawText.from("테스트 글입니다."), List.of(new Style(new StyleRange(0, 2), StyleType.BOLD))))));
         }
     }
 }

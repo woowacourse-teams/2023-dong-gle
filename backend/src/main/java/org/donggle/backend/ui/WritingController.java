@@ -2,15 +2,17 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,6 @@ import java.net.URI;
 @RequestMapping("/writings")
 public class WritingController {
     private final WritingFacadeService writingFacadeService;
-    private final PublishFacadeService blogService;
 
     @PostMapping(value = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> writingAdd(
@@ -48,6 +49,14 @@ public class WritingController {
     ) {
         final Long writingId = writingFacadeService.uploadNotionPage(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
+    }
+
+    @GetMapping("/home")
+    public ResponseEntity<Page<WritingHomeResponse>> showHomePage(
+            @AuthenticationPrincipal final Long memberId,
+            final Pageable pageable) {
+        final Page<WritingHomeResponse> response = writingFacadeService.findAll(memberId, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{writingId}")

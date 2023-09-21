@@ -42,7 +42,7 @@ const WritingTable = ({ writings, categoryId }: Props) => {
         {writings.map(({ id, title, publishedDetails, createdAt }) => (
           <tr
             key={id}
-            onClick={() => goWritingPage({ categoryId, writingId: id })}
+            onClick={() => goWritingPage({ categoryId, writingId: id, isDeletedWriting: false })}
             role='button'
             tabIndex={0}
           >

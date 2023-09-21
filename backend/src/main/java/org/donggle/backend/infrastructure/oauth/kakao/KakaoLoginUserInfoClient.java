@@ -2,7 +2,7 @@ package org.donggle.backend.infrastructure.oauth.kakao;
 
 import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.KakaoProfileResponse;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.SocialUserInfo;
+import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +22,7 @@ public class KakaoLoginUserInfoClient {
         this.webClient = WebClient.create();
     }
 
-    public SocialUserInfo request(final String accessToken) {
+    public UserInfo request(final String accessToken) {
         return Objects.requireNonNull(webClient.get()
                 .uri(PROFILE_URL)
                 .header("Authorization", "Bearer " + accessToken)

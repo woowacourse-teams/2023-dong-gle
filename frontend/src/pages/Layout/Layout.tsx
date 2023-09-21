@@ -12,22 +12,13 @@ import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
 import TrashCan from 'components/TrashCan/TrashCan';
 import HomeButton from 'components/HomeButton/HomeButton';
-
-export type PageContext = {
-  isLeftSidebarOpen?: boolean;
-  isRightSidebarOpen?: boolean;
-  setActiveWritingInfo?: Dispatch<SetStateAction<ActiveWritingInfo | null>>;
-};
-
-type ActiveWritingInfo = {
-  id: number;
-  isDeleted: boolean;
-};
+import { useGlobalStateValue } from '@yogjin/react-global-state';
+import { activeWritingInfoState } from 'globalState';
 
 const Layout = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
-  const [activeWritingInfo, setActiveWritingInfo] = useState<ActiveWritingInfo | null>(null);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
   const { isOpen, openModal, closeModal } = useModal();
   const isWritingViewerActive = activeWritingInfo !== null;
 
@@ -67,15 +58,7 @@ const Layout = () => {
           <TrashCan />
         </S.LeftSidebarSection>
         <S.Main>
-          <Outlet
-            context={
-              {
-                isLeftSidebarOpen,
-                isRightSidebarOpen,
-                setActiveWritingInfo,
-              } satisfies PageContext
-            }
-          />
+          <Outlet />
         </S.Main>
         {isWritingViewerActive && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>
@@ -88,10 +71,6 @@ const Layout = () => {
 };
 
 export default Layout;
-
-export const usePageContext = () => {
-  return useOutletContext<PageContext>();
-};
 
 const S = {
   Container: styled.div`

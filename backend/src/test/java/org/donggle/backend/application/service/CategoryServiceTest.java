@@ -25,6 +25,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
+import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
@@ -132,7 +134,7 @@ class CategoryServiceTest {
         categoryRepository.flush();
         writingRepository.flush();
 
-        final Writing writing = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(1L, 1L).get(0);
+        final Writing writing = writingRepository.findAllByMemberIdAndCategoryIdInStatuses(1L, 1L, List.of(TRASHED, DELETED)).get(0);
 
         //then
         assertAll(

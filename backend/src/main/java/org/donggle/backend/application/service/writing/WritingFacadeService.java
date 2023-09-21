@@ -2,13 +2,13 @@ package org.donggle.backend.application.service.writing;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
+import org.donggle.backend.application.service.parse.NotionParseService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.parser.markdown.MarkDownParser;
-import org.donggle.backend.domain.parser.notion.NotionParser;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
@@ -16,9 +16,12 @@ import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,8 +35,8 @@ public class WritingFacadeService {
     private static final String MD_FORMAT = ".md";
 
     private final WritingService writingService;
+    private final NotionParseService notionParser;
     private final MarkDownParser markDownParser;
-    private final NotionParser notionParser;
     private final HtmlRenderer htmlRenderer;
 
     @NoConcurrentExecution
@@ -84,5 +87,9 @@ public class WritingFacadeService {
 
     public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         return writingService.findWritingListByCategoryId(memberId, categoryId);
+    }
+
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        return writingService.findAll(memberId, pageable);
     }
 }

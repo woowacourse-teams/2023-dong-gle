@@ -42,7 +42,7 @@ const TrashCanTable = ({ writings }: Props) => {
               <Input
                 variant='unstyled'
                 type='checkbox'
-                checked={isAllCheckboxClicked}
+                defaultChecked={isAllCheckboxClicked}
                 onClick={toggleAllCheckbox}
               />
             </th>
@@ -56,7 +56,7 @@ const TrashCanTable = ({ writings }: Props) => {
                 <Input
                   variant='unstyled'
                   type='checkbox'
-                  checked={getIsChecked(id)}
+                  defaultChecked={getIsChecked(id)}
                   onChange={() => toggleCheckbox(id)}
                 />
               </td>

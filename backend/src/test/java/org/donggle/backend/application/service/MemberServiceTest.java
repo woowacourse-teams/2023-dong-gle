@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
@@ -32,7 +33,7 @@ class MemberServiceTest {
     @DisplayName("회원 페이지 조회 - 아무것도 연결되어있지 않은 회원")
     void findMemberPage() {
         //given
-        final Member member = memberRepository.save(Member.of(new MemberName("토리"), 1234L));
+        final Member member = memberRepository.save(Member.of(new MemberName("토리"), 1234L, KAKAO));
         final MemberCredentials savedMemberCredentials = memberCredentialsRepository.save(MemberCredentials.basic(member));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(member.getId());
@@ -73,7 +74,7 @@ class MemberServiceTest {
     @DisplayName("회원을 탈퇴한다.")
     void deleteMember() {
         //given
-        final Member member = memberRepository.save(Member.of(new MemberName("동굴"), 123L));
+        final Member member = memberRepository.save(Member.of(new MemberName("동굴"), 123L, KAKAO));
         assertThat(member.isDeleted()).isFalse();
 
         //when

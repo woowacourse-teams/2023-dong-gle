@@ -1,19 +1,19 @@
 package org.donggle.backend.domain.parser.notion;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.StyleRange;
 import org.donggle.backend.domain.writing.StyleType;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 
 import java.util.List;
 
-public record BookmarkParser(List<RichText> caption, String url) implements NotionNormalBlockParser {
-    public static BookmarkParser from(final NotionBlockNodeResponse blockNode) {
+public record NotionBookmark(List<RichText> caption, String url) implements NotionNormalBlock {
+    public static NotionBookmark from(final NotionBlockNodeResponse blockNode) {
         final JsonNode blockProperties = blockNode.getBlockProperties();
         final List<RichText> caption = RichText.parseRichTexts(blockProperties, "caption");
         final String url = blockProperties.get("url").asText();
-        return new BookmarkParser(caption, url);
+        return new NotionBookmark(caption, url);
     }
 
     @Override

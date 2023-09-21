@@ -12,6 +12,9 @@ type Args = {
 
 export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) => {
   const passwordRef = useRef<HTMLInputElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
+  const timeRef = useRef<HTMLInputElement>(null);
+
   const [propertyFormInfo, setPropertyFormInfo] = useState<PublishWritingToTistoryRequest>({
     tags: [],
     publishStatus: 'PUBLIC',
@@ -27,6 +30,7 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
         body: {
           ...propertyFormInfo,
           password: passwordRef.current?.value ?? '',
+          publishTime: `${dateRef.current?.value} ${timeRef.current?.value}:59.999`,
         },
       }),
     {
@@ -48,17 +52,14 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
     setPropertyFormInfo((prev) => ({ ...prev, publishStatus }));
   };
 
-  const setPublishTime = (publishTime: PublishWritingToTistoryRequest['publishTime']) => {
-    setPropertyFormInfo((prev) => ({ ...prev, publishTime }));
-  };
-
   return {
     isLoading,
     propertyFormInfo,
     setTags,
     setPublishStatus,
     passwordRef,
-    setPublishTime,
+    dateRef,
+    timeRef,
     publishWritingToTistory,
   };
 };

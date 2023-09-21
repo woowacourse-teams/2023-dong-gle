@@ -34,7 +34,8 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
     setTags,
     setPublishStatus,
     passwordRef,
-    setPublishTime,
+    dateRef,
+    timeRef,
     publishWritingToTistory,
   } = useTistoryPublishingPropertySection({
     selectCurrentTab,
@@ -100,11 +101,12 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
           </S.PropertyName>
           <S.PublishTimeInputContainer>
             <Input
+              ref={dateRef}
               type='date'
               min={dateFormatter(new Date(), 'YYYY-MM-DD')}
               defaultValue={dateFormatter(new Date(), 'YYYY-MM-DD')}
             />
-            <Input type='time' defaultValue={dateFormatter(new Date(), 'HH:MM')} />
+            <Input ref={timeRef} type='time' defaultValue={dateFormatter(new Date(), 'HH:MM')} />
           </S.PublishTimeInputContainer>
         </S.PropertyRow>
         <S.PropertyRow>

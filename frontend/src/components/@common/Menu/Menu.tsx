@@ -1,22 +1,32 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import Item from './Item';
 
-type Direction = 'up' | 'down';
+type VerticalDirection = 'up' | 'down';
+type HorizonDirection = 'left' | 'right';
 
 type Props = {
   isOpen: boolean;
   closeMenu: () => void;
-  direction?: Direction;
+  verticalDirection?: VerticalDirection;
+  horizonDirection?: HorizonDirection;
 } & PropsWithChildren;
 
-const Menu = ({ isOpen, closeMenu, direction = 'down', children }: Props) => {
+const Menu = ({
+  isOpen,
+  closeMenu,
+  verticalDirection = 'down',
+  horizonDirection = 'left',
+  children,
+}: Props) => {
   if (!isOpen) return null;
 
   return (
     <S.Menu>
       <S.Backdrop onClick={closeMenu} />
-      <S.MenuList $direction={direction}>{children}</S.MenuList>
+      <S.MenuList $verticalDirection={verticalDirection} $horizonDirection={horizonDirection}>
+        {children}
+      </S.MenuList>
     </S.Menu>
   );
 };
@@ -40,16 +50,25 @@ const S = {
     opacity: 0.1;
   `,
 
-  MenuList: styled.ul<{ $direction: Direction }>`
+  MenuList: styled.ul<{
+    $verticalDirection: VerticalDirection;
+    $horizonDirection: HorizonDirection;
+  }>`
     display: flex;
     flex-direction: column;
     position: absolute;
-    ${({ $direction }) =>
-      $direction === 'up' &&
+    ${({ $verticalDirection }) =>
+      $verticalDirection === 'up' &&
       `
-    bottom: 80%;
+    	bottom: 80%;
   	`}
-    left: 50%;
+    ${({ $horizonDirection }) =>
+      $horizonDirection === 'right' &&
+      `
+    	left: 50%;
+  	`}
+
+    right: 50%;
 
     border: 2px solid ${({ theme }) => theme.color.gray4};
     background-color: ${({ theme }) => theme.color.gray1};

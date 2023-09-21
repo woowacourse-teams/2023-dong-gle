@@ -5,6 +5,26 @@ import { StoryContainer, StoryItemContainer } from 'styles/storybook';
 
 const meta = {
   title: 'common/Menu',
+  args: {
+    isOpen: true,
+    closeMenu: () => {},
+    verticalDirection: 'down',
+    horizonDirection: 'left',
+  },
+  argTypes: {
+    isOpen: {
+      description: '메뉴의 상태입니다.',
+    },
+    closeMenu: {
+      description: '메뉴를 닫는 핸들러 함수입니다.',
+    },
+    verticalDirection: {
+      description: '메뉴가 수직을 기준으로 렌더링 되는 위치입니다.',
+    },
+    horizonDirection: {
+      description: '메뉴가 수평을 기준으로 렌더링 되는 위치입니다.',
+    },
+  },
   component: Menu,
 } satisfies Meta<typeof Menu>;
 
@@ -23,7 +43,12 @@ export const Playground: Story = {
     return (
       <StoryContainer>
         <StoryItemContainer>
-          <Menu>
+          <Menu
+            isOpen={args.isOpen}
+            closeMenu={args.closeMenu}
+            verticalDirection={args.verticalDirection}
+            horizonDirection={args.horizonDirection}
+          >
             {MenuValues.map(({ title, handleMenuItemClick }) => {
               return (
                 <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />

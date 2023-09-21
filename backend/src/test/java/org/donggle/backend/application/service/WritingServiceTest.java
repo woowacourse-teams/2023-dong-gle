@@ -1,18 +1,35 @@
 package org.donggle.backend.application.service;
 
+import org.donggle.backend.application.repository.CategoryRepository;
+import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.application.service.writing.WritingFacadeService;
+import org.donggle.backend.domain.category.Category;
+import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.writing.BlockType;
+import org.donggle.backend.domain.writing.Style;
+import org.donggle.backend.domain.writing.StyleRange;
+import org.donggle.backend.domain.writing.StyleType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Depth;
+import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.donggle.backend.domain.writing.block.RawText;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -23,7 +40,49 @@ class WritingServiceTest {
     @Autowired
     private WritingFacadeService writingService;
     @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     private WritingRepository writingRepository;
+
+    @BeforeEach
+    void setUp() {
+        final Member member = memberRepository.findById(1L).get();
+        final Category category = categoryRepository.findById(1L).get();
+        final Writing writing1 = writingRepository.findById(1L).get();
+
+        final Writing writing2 = writingRepository.save(Writing.of(
+                member,
+                new Title("테스트 글2"),
+                category,
+                List.of(
+                        new NormalBlock(
+                                Depth.from(1),
+                                BlockType.PARAGRAPH,
+                                RawText.from("테스트 글입니다."),
+                                List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
+                                )
+                        )
+                )
+        ));
+        final Writing writing3 = writingRepository.save(Writing.of(
+                member,
+                new Title("테스트 글3"),
+                category,
+                List.of(
+                        new NormalBlock(
+                                Depth.from(1),
+                                BlockType.PARAGRAPH,
+                                RawText.from("테스트 글입니다."),
+                                List.of(new Style(new StyleRange(0, 2), StyleType.BOLD)
+                                )
+                        )
+                )
+        ));
+        writing1.changeNextWriting(writing2);
+        writing2.changeNextWriting(writing3);
+    }
 
     @Test
     @DisplayName("글 제목 수정 테스트")
@@ -50,7 +109,7 @@ class WritingServiceTest {
 
         //then
         assertAll(
-                () -> assertThat(response.writings()).hasSize(1),
+                () -> assertThat(response.writings()).hasSize(3),
                 () -> assertThat(response.categoryName()).isEqualTo("기본")
         );
     }
@@ -67,8 +126,74 @@ class WritingServiceTest {
 
         //then
         assertAll(
-                () -> assertThat(response.title()).isEqualTo("테스트 글"),
+                () -> assertThat(response.id()).isEqualTo(1L),
                 () -> assertThat(response.categoryId()).isEqualTo(writing.getCategory().getId())
+        );
+    }
+
+    @Test
+    @DisplayName("홈 화면에서 페이징된 글을 가져올 수 있다.")
+    void findAll1() {
+        //given
+        final PageRequest pageRequest = PageRequest.of(0, 3);
+
+        //when
+        final Page<WritingHomeResponse> responses = writingService.findAll(1L, pageRequest);
+
+        //then
+        assertAll(
+                () -> assertThat(responses.getSize()).isEqualTo(3),
+                () -> assertThat(responses.getTotalPages()).isEqualTo(1),
+                () -> assertThat(responses.getTotalElements()).isEqualTo(3),
+                () -> assertThat(responses.getNumberOfElements()).isEqualTo(3),
+                () -> assertThat(responses.map(WritingHomeResponse::title).toList()).containsExactly("테스트 글3", "테스트 글2", "테스트 글"),
+                () -> assertThat(responses.getNumber()).isZero(),
+                () -> assertThat(responses.hasNext()).isFalse(),
+                () -> assertThat(responses.hasPrevious()).isFalse()
+        );
+    }
+
+    @Test
+    @DisplayName("홈 화면에서 페이징된 글을 가져올 수 있다.")
+    void findAll2() {
+        //given
+        final PageRequest pageRequest = PageRequest.of(0, 2);
+
+        //when
+        final Page<WritingHomeResponse> responses = writingService.findAll(1L, pageRequest);
+
+        //then
+        assertAll(
+                () -> assertThat(responses.getSize()).isEqualTo(2),
+                () -> assertThat(responses.getTotalPages()).isEqualTo(2),
+                () -> assertThat(responses.getTotalElements()).isEqualTo(3),
+                () -> assertThat(responses.getNumberOfElements()).isEqualTo(2),
+                () -> assertThat(responses.map(WritingHomeResponse::title).toList()).containsExactly("테스트 글3", "테스트 글2"),
+                () -> assertThat(responses.getNumber()).isZero(),
+                () -> assertThat(responses.hasNext()).isTrue(),
+                () -> assertThat(responses.hasPrevious()).isFalse()
+        );
+    }
+
+    @Test
+    @DisplayName("홈 화면에서 페이징된 글을 가져올 수 있다.")
+    void findAll3() {
+        //given
+        final PageRequest pageRequest = PageRequest.of(1, 2);
+
+        //when
+        final Page<WritingHomeResponse> responses = writingService.findAll(1L, pageRequest);
+
+        //then
+        assertAll(
+                () -> assertThat(responses.getSize()).isEqualTo(2),
+                () -> assertThat(responses.getTotalPages()).isEqualTo(2),
+                () -> assertThat(responses.getTotalElements()).isEqualTo(3),
+                () -> assertThat(responses.getNumberOfElements()).isEqualTo(1),
+                () -> assertThat(responses.map(WritingHomeResponse::title).toList()).containsExactly("테스트 글"),
+                () -> assertThat(responses.getNumber()).isEqualTo(1),
+                () -> assertThat(responses.hasNext()).isFalse(),
+                () -> assertThat(responses.hasPrevious()).isTrue()
         );
     }
 }

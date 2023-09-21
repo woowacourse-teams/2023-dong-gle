@@ -1,4 +1,5 @@
 import { TrashCanEmptyIcon } from 'assets/icons';
+import Spinner from 'components/@common/Spinner/Spinner';
 import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
 import { styled } from 'styled-components';
@@ -6,7 +7,14 @@ import { styled } from 'styled-components';
 const TrashCanPage = () => {
   const { deletedWritings, isLoading } = useDeletedWritings();
 
-  if (isLoading) return <>로딩 중...</>;
+  if (isLoading) {
+    return (
+      <S.LoadingContainer>
+        <Spinner size={60} thickness={4} />
+        <h1>휴지통을 불러오는 중입니다 ...</h1>
+      </S.LoadingContainer>
+    );
+  }
 
   return (
     <S.Article>
@@ -49,5 +57,15 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
+  `,
+
+  LoadingContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    max-width: 100%;
+    height: 100%;
   `,
 };

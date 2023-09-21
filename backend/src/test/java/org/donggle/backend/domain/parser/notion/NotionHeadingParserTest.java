@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.parser.notion.NotionBlockJsonBuilder.buildJsonBody;
 
-class HeadingParserTest {
+class NotionHeadingParserTest {
     @Test
     @DisplayName("notionBlockNode로부터 NotionNormalBlockParser를 생성한다.")
     void from() {
@@ -16,7 +16,7 @@ class HeadingParserTest {
         final JsonNode jsonNode = buildJsonBody("heading_1", false);
 
         //when
-        final NotionNormalBlockParser blockParser = HeadingParser.from(new NotionBlockNodeResponse(jsonNode, 0));
+        final NotionNormalBlock blockParser = NotionHeading.from(new NotionBlockNodeResponse(jsonNode, 0));
 
         //then
         assertThat(blockParser.parseRawText()).isEqualTo("heading");

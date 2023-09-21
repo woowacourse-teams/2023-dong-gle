@@ -7,16 +7,12 @@ const meta = {
   title: 'common/Menu',
   args: {
     isOpen: true,
-    closeMenu: () => {},
     verticalDirection: 'down',
     horizonDirection: 'left',
   },
   argTypes: {
     isOpen: {
       description: '메뉴의 상태입니다.',
-    },
-    closeMenu: {
-      description: '메뉴를 닫는 핸들러 함수입니다.',
     },
     verticalDirection: {
       description: '메뉴가 수직을 기준으로 렌더링 되는 위치입니다.',
@@ -45,7 +41,6 @@ export const Playground: Story = {
         <StoryItemContainer>
           <Menu
             isOpen={args.isOpen}
-            closeMenu={args.closeMenu}
             verticalDirection={args.verticalDirection}
             horizonDirection={args.horizonDirection}
           >

@@ -1,9 +1,15 @@
 import Menu from 'components/@common/Menu/Menu';
-import { useState } from 'react';
+import useOutsideClickEffect from 'hooks/@common/useOutsideClickEffect';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const HelpMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const closeMenu = () => setIsOpen(false);
+  useOutsideClickEffect(menuRef, closeMenu);
+
   const helpMenus = [
     {
       title: '동글 위키보러 가기',
@@ -18,17 +24,19 @@ const HelpMenu = () => {
     },
   ];
 
-  const closeMenu = () => setIsOpen(false);
-
   return (
-    <S.HelpMenu onClick={() => setIsOpen(!isOpen)}>
-      ?
-      <Menu isOpen={isOpen} closeMenu={closeMenu} verticalDirection='up'>
-        {helpMenus.map(({ title, handleMenuItemClick }) => {
-          return <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />;
-        })}
-      </Menu>
-    </S.HelpMenu>
+    <div ref={menuRef}>
+      <S.HelpMenu onClick={() => setIsOpen(!isOpen)}>
+        ?
+        <Menu isOpen={isOpen} verticalDirection='up'>
+          {helpMenus.map(({ title, handleMenuItemClick }) => {
+            return (
+              <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />
+            );
+          })}
+        </Menu>
+      </S.HelpMenu>
+    </div>
   );
 };
 

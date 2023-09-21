@@ -6,10 +6,11 @@ import type {
   GetDetailWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
-  PublishWritingArgs,
   UpdateWritingTitleArgs,
   UpdateWritingOrderArgs,
   GetHomeWritingsResponse,
+  PublishWritingToTistoryArgs,
+  PublishWritingToMediumArgs,
 } from 'types/apis/writings';
 
 // 글 생성(글 업로드): POST
@@ -38,9 +39,11 @@ export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
 export const getWritingProperties = (writingId: number): Promise<GetWritingPropertiesResponse> =>
   http.get(`${writingURL}/${writingId}/properties`);
 
-// 글 발행하기: POST
-export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
-  http.post(`${writingURL}/${writingId}/publish`, { json: body });
+export const publishWritingToTistory = ({ writingId, body }: PublishWritingToTistoryArgs) =>
+  http.post(`${writingURL}/${writingId}/publish/tistory`, { json: body });
+
+export const publishWritingToMedium = ({ writingId, body }: PublishWritingToMediumArgs) =>
+  http.post(`${writingURL}/${writingId}/publish/medium`, { json: body });
 
 // 카테고리 글 상세 목록 조회 : GET
 export const getDetailWritings = (categoryId: number): Promise<GetDetailWritingsResponse> =>

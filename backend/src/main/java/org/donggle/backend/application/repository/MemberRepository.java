@@ -25,7 +25,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int addWritings();
 
     @Query(value = """
-            SELECT COUNT(DISTINCT w.member_id) AS PublishedMemberCount
+            SELECT COUNT(DISTINCT w.member_id)
             FROM blog_writing bw
             JOIN writing w ON bw.writing_id = w.id
             WHERE bw.published_at IS NOT NULL

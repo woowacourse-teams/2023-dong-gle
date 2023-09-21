@@ -5,6 +5,7 @@ export const PATH = {
   myPage: 'my-page',
   connections: 'connections/*',
   space: 'space',
+  home: '',
   writingPage: 'writings/:categoryId/:writingId',
   writingTablePage: 'writings/:categoryId',
   trashCanPage: 'trash-can',

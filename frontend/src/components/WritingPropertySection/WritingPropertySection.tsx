@@ -129,7 +129,7 @@ const S = {
   InfoContent: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1.8rem;
     padding: 1.6rem 0.9rem;
     font-size: 1.3rem;
     line-height: 1.3rem;
@@ -145,7 +145,6 @@ const S = {
     flex-shrink: 0;
     gap: 0.4rem;
     width: 9.5rem;
-    height: 2.3rem;
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;

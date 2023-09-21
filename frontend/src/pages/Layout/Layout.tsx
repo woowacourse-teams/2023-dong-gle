@@ -11,6 +11,7 @@ import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
 import TrashCan from 'components/TrashCan/TrashCan';
+import HomeButton from 'components/HomeButton/HomeButton';
 import HelpMenu from 'components/HelpMenu/HelpMenu';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
@@ -50,6 +51,8 @@ const Layout = () => {
             글 가져오기
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
+          <Divider />
+          <HomeButton />
           <Divider />
           <CategorySection />
           <Divider />

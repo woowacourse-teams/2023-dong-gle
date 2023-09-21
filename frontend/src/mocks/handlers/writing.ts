@@ -3,6 +3,7 @@ import { writingURL } from 'constants/apis/url';
 import { writingContentMock } from 'mocks/writingContentMock';
 import {
   GetDetailWritingsResponse,
+  GetHomeWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
   UpdateWritingOrderArgs,
@@ -10,12 +11,17 @@ import {
 } from 'types/apis/writings';
 import { getWritingTableMock } from 'mocks/writingTableMock';
 import { hasDefinedField } from 'utils/typeGuard';
+import { getHomeWritingMock } from 'mocks/homeWritingMock';
 
 export const writingHandlers = [
   // 글 조회: GET
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-    const writingId = Number(req.params.writingId);
+    const writingIdOrHome = req.params.writingId;
 
+    if (writingIdOrHome === 'home')
+      return res(ctx.delay(300), ctx.status(200), ctx.json(getHomeWritingMock()));
+
+    const writingId = Number(req.params.writingId);
     if (writingId === 200) {
       return res(
         ctx.delay(300),
@@ -139,4 +145,9 @@ export const writingHandlers = [
 
     return res(ctx.delay(3000), ctx.status(200));
   }),
+
+  // // 전체 글 조회
+  // rest.get(`${writingURL}/home`, (_, res, ctx) => {
+  //   return res(ctx.json<GetHomeWritingsResponse>(getHomeWritingMock()), ctx.status(200));
+  // }),
 ];

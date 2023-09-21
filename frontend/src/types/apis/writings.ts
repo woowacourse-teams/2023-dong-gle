@@ -1,4 +1,5 @@
 import { Blog, PublishingPropertyData } from 'types/domain';
+import { CategoryResponse } from './category';
 
 export type AddWritingRequest = FormData;
 
@@ -58,4 +59,41 @@ export type UpdateWritingOrderArgs = {
     targetCategoryId: number;
     nextWritingId: number;
   };
+};
+
+type HomeContent = {
+  id: number;
+  title: string;
+  category: CategoryResponse;
+  createdAt: Date;
+  publishedDetails: Omit<PublishedDetail, 'tags' | 'publishedUrl'>[];
+};
+
+type Sort = {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+};
+
+type Pageable = {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+};
+
+export type GetHomeWritingsResponse = {
+  content: HomeContent[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
 };

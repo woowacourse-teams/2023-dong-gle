@@ -40,8 +40,10 @@ public class S3UploadClient implements FileUploadClient {
                     .build();
             final RequestBody requestBody = RequestBody.fromBytes(data);
             final PutObjectResponse putObjectResponse = s3Client.putObject(request, requestBody);
+            log.info("S3 upload response: {}", putObjectResponse);
             return Optional.of(getUploadedUrl(fileName));
         } catch (final Exception e) {
+            log.error("S3 upload error", e);
             return Optional.empty();
         }
     }

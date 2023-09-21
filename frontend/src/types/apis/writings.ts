@@ -1,4 +1,4 @@
-import { Blog, PublishingPropertyData } from 'types/domain';
+import { Blog } from 'types/domain';
 import { CategoryResponse } from './category';
 
 export type AddWritingRequest = FormData;
@@ -24,7 +24,7 @@ export type PublishWritingToTistoryRequest = {
   publishStatus: 'PUBLIC' | 'PRIVATE' | 'PROTECT';
   password: string;
   categoryId: string;
-  publishTime: string; // TODO: "yyyy-MM-dd HH:mm:ss.SSS" 형식으로
+  publishTime: string; // "yyyy-MM-dd HH:mm:ss.SSS" 형식
 };
 
 export type PublishWritingToTistoryArgs = {

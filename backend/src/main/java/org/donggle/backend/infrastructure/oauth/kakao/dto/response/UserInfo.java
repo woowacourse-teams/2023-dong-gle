@@ -4,7 +4,7 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.oauth.SocialType;
 
-public record SocialUserInfo(
+public record UserInfo(
         Long socialId,
         SocialType socialType,
         String nickname

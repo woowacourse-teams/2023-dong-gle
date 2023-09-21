@@ -2,7 +2,7 @@ package org.donggle.backend.application.service.auth;
 
 import org.donggle.backend.application.client.LoginClient;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.SocialUserInfo;
+import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class LoginClients {
         return client.createRedirectUri(redirectUri);
     }
 
-    public SocialUserInfo findUserInfo(final SocialType socialType, final String code, final String redirectUri) {
+    public UserInfo findUserInfo(final SocialType socialType, final String code, final String redirectUri) {
         final LoginClient client = getClient(socialType);
         final String accessToken = client.requestToken(code, redirectUri);
         return client.findUserInfo(accessToken);

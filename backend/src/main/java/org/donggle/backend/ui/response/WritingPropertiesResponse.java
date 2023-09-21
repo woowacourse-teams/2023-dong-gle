@@ -7,10 +7,10 @@ import java.util.List;
 
 public record WritingPropertiesResponse(
         LocalDateTime createdAt,
-        List<PublishedDetailSimpleResponse> publishedDetails
+        List<PublishedDetailResponse> publishedDetails
 ) {
     public static WritingPropertiesResponse of(final Writing writing,
-                                               final List<PublishedDetailSimpleResponse> publishedTos) {
+                                               final List<PublishedDetailResponse> publishedTos) {
         return new WritingPropertiesResponse(writing.getCreatedAt(), publishedTos);
     }
 }

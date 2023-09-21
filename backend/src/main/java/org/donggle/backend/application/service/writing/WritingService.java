@@ -21,7 +21,9 @@ import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
+import org.donggle.backend.ui.response.PublishedDetailSimpleResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.springframework.data.domain.Page;
@@ -213,7 +215,7 @@ public class WritingService {
     public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
         final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
         pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
-        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
+        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailSimpleResponses(writing.getId())));
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {

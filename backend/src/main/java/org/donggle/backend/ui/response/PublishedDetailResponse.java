@@ -9,7 +9,7 @@ public record PublishedDetailResponse(
         String blogName,
         LocalDateTime publishedAt,
         List<String> tags,
-        String url
+        String publishedUrl
 ) {
     public static PublishedDetailResponse of(final BlogWriting blogWriting) {
         return new PublishedDetailResponse(blogWriting.getBlogTypeValue(), blogWriting.getPublishedAt(), blogWriting.getTags(), blogWriting.getUrl());

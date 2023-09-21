@@ -10,6 +10,8 @@ import { default as S } from './PublishingPropertyStyle';
 import type { Blog } from 'types/domain';
 import Input from 'components/@common/Input/Input';
 import { dateFormatter } from 'utils/date';
+import { useState } from 'react';
+import Divider from 'components/@common/Divider/Divider';
 
 type Props = {
   writingId: number;
@@ -40,8 +42,17 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
   } = useTistoryPublishingPropertySection({
     selectCurrentTab,
   });
+  const [isPublishTimeInputOpen, setIsPublishTimeInputOpen] = useState(false);
 
   const { publishStatus } = propertyFormInfo;
+
+  const openPublishTimeInput = () => {
+    setIsPublishTimeInputOpen(true);
+  };
+
+  const closePublishTimeInput = () => {
+    setIsPublishTimeInputOpen(false);
+  };
 
   if (isLoading)
     return (
@@ -95,19 +106,36 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
           </S.PropertyRow>
         )}
         <S.PropertyRow>
-          <S.PropertyName>
+          <S.PropertyName style={{ alignSelf: 'flex-start' }}>
             <TimeIcon width={12} height={12} />
             발행 시간
           </S.PropertyName>
-          <S.PublishTimeInputContainer>
-            <Input
-              ref={dateRef}
-              type='date'
-              min={dateFormatter(new Date(), 'YYYY-MM-DD')}
-              defaultValue={dateFormatter(new Date(), 'YYYY-MM-DD')}
-            />
-            <Input ref={timeRef} type='time' defaultValue={dateFormatter(new Date(), 'HH:MM')} />
-          </S.PublishTimeInputContainer>
+          <S.PublishButtonAndTimeInputContainer>
+            <S.PublishButtonContainer>
+              <S.PublishButton onClick={closePublishTimeInput} selected={!isPublishTimeInputOpen}>
+                현재
+              </S.PublishButton>
+              <Divider direction='vertical' length='1.2rem' />
+              <S.PublishButton onClick={openPublishTimeInput} selected={isPublishTimeInputOpen}>
+                예약
+              </S.PublishButton>
+            </S.PublishButtonContainer>
+            {isPublishTimeInputOpen && (
+              <S.PublishTimeInputContainer>
+                <Input
+                  ref={dateRef}
+                  type='date'
+                  min={dateFormatter(new Date(), 'YYYY-MM-DD')}
+                  defaultValue={dateFormatter(new Date(), 'YYYY-MM-DD')}
+                />
+                <Input
+                  ref={timeRef}
+                  type='time'
+                  defaultValue={dateFormatter(new Date(), 'HH:MM')}
+                />
+              </S.PublishTimeInputContainer>
+            )}
+          </S.PublishButtonAndTimeInputContainer>
         </S.PropertyRow>
         <S.PropertyRow>
           <S.PropertyName>

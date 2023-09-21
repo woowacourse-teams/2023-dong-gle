@@ -48,7 +48,6 @@ const PublishingPropertyStyle = {
     gap: 0.6rem;
     flex-shrink: 0;
     width: 9.5rem;
-    height: 2.3rem;
     color: ${({ theme }) => theme.color.gray8};
     font-size: 1.3rem;
     font-weight: 600;
@@ -65,6 +64,19 @@ const PublishingPropertyStyle = {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+  `,
+  PublishButtonContainer: styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  `,
+  PublishButton: styled.button<{ selected: boolean }>`
+    color: ${({ theme, selected }) => !selected && theme.color.gray5};
+  `,
+  PublishButtonAndTimeInputContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   `,
 };
 

@@ -45,7 +45,9 @@ const HomeTable = ({ initialPageIndex = 1 }: Props) => {
             }) => (
               <tr
                 key={id}
-                onClick={() => goWritingPage({ categoryId, writingId: id })}
+                onClick={() =>
+                  goWritingPage({ categoryId, writingId: id, isDeletedWriting: false })
+                }
                 role='button'
                 tabIndex={0}
               >

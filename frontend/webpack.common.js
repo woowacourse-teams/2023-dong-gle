@@ -22,7 +22,7 @@ module.exports = {
         test: /\.(png|webp|avif)$/i,
         type: 'asset',
         generator: {
-          filename: 'static/[name][ext]',
+          filename: 'static/[name].[contenthash][ext]',
         },
       },
       {
@@ -46,10 +46,11 @@ module.exports = {
       utils: path.resolve(__dirname, 'src/utils'),
       routes: path.resolve(__dirname, 'src/routes'),
       contexts: path.resolve(__dirname, 'src/contexts'),
+      globalState: path.resolve(__dirname, 'src/globalState'),
     },
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     publicPath: '/',

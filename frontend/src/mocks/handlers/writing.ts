@@ -5,8 +5,11 @@ import {
   GetDetailWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
+  UpdateWritingOrderArgs,
+  UpdateWritingTitleArgs,
 } from 'types/apis/writings';
 import { getWritingTableMock } from 'mocks/writingTableMock';
+import { hasDefinedField } from 'utils/typeGuard';
 
 export const writingHandlers = [
   // 글 조회: GET
@@ -104,8 +107,36 @@ export const writingHandlers = [
     );
   }),
 
-  // 글 제목 변경: PATCH
+  // 글 수정(이름, 순서): PATCH
   rest.patch(`${writingURL}/:writingId`, async (req, res, ctx) => {
+    const writingId = Number(req.params.writingId);
+    const body = await req.json();
+
+    // 글 순서 수정
+    if (hasDefinedField<UpdateWritingOrderArgs['body']>(body, 'nextWritingId')) {
+      if (!body.nextWritingId) {
+        return res(
+          ctx.delay(300),
+          ctx.status(404),
+          ctx.json({
+            message: '글 순서 수정 에러',
+          }),
+        );
+      }
+    }
+
+    // 글 이름 수정
+    if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
+      if (!body.title)
+        return res(
+          ctx.delay(300),
+          ctx.status(404),
+          ctx.json({
+            message: '글 이름 수정 에러',
+          }),
+        );
+    }
+
     return res(ctx.delay(3000), ctx.status(200));
   }),
 ];

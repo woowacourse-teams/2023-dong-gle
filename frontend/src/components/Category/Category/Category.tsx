@@ -26,7 +26,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
     isError,
     setIsError,
   } = useUncontrolledInput();
-  const { patchCategory, deleteCategory } = useCategoryMutation();
+  const { updateCategoryTitle, deleteCategory } = useCategoryMutation();
   const { goWritingTablePage } = usePageNavigate();
   const toast = useToast();
 
@@ -38,7 +38,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 
       validateCategoryName(categoryName);
 
-      patchCategory({
+      updateCategoryTitle({
         categoryId,
         body: {
           categoryName,

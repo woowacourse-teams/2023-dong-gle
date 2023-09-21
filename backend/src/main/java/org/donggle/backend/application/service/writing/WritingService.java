@@ -24,6 +24,8 @@ import org.donggle.backend.ui.response.PublishedDetailResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -207,6 +209,13 @@ public class WritingService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
+        final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
+        return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
+    }
+
     private void validateAuthorization(final Long memberId, final Writing writing) {
         if (!writing.isOwnedBy(memberId)) {
             throw new WritingNotFoundException(writing.getId());
@@ -228,6 +237,13 @@ public class WritingService {
     private List<PublishedDetailResponse> convertToPublishedDetailResponses(final Long findWriting) {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
         return blogWritings.stream().map(PublishedDetailResponse::of).toList();
+    }
+
+    private List<PublishedDetailSimpleResponse> convertToPublishedDetailSimpleResponses(final Long findWriting) {
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
+        return blogWritings.stream()
+                .map(PublishedDetailSimpleResponse::of)
+                .toList();
     }
 
     private Category findCategory(final Long memberId, final Long categoryId) {

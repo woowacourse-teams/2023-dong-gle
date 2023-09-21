@@ -8,18 +8,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class CodeBlockParserTest {
+class NotionCodeBlockTest {
     @Test
     @DisplayName("CodeBlockParser로부터 rawText를 파싱한다.")
     void parseRawText() {
         //given
-        final CodeBlockParser codeBlockParser = new CodeBlockParser(List.of(
+        final NotionCodeBlock notionCodeBlock = new NotionCodeBlock(List.of(
                 new RichText("void parseRawText()", "null", Annotations.empty())),
                 "java"
         );
         //when
-        final String rawText = codeBlockParser.parseRawText();
-        final String language = codeBlockParser.language();
+        final String rawText = notionCodeBlock.parseRawText();
+        final String language = notionCodeBlock.language();
 
         //then
         final String expected = "void parseRawText()";

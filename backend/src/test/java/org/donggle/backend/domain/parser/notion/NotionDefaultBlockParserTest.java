@@ -11,20 +11,20 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DefaultBlockParserTest {
+class NotionDefaultBlockParserTest {
     @Test
     @DisplayName("DefaultBlockParser로부터 RawText와 Styles를 파싱한다.")
     void parse() {
         //given
-        final DefaultBlockParser defaultBlockParser = new DefaultBlockParser(List.of(
+        final NotionDefaultBlock notionDefaultBlockParser = new NotionDefaultBlock(List.of(
                 new RichText("hello", "null", new Annotations(true, false, false, false, false, "default")),
                 new RichText(" ", "null", Annotations.empty()),
                 new RichText("world", "null", new Annotations(false, true, false, false, true, "default"))
         ));
 
         //when
-        final String rawText = defaultBlockParser.parseRawText();
-        final List<Style> styles = defaultBlockParser.parseStyles();
+        final String rawText = notionDefaultBlockParser.parseRawText();
+        final List<Style> styles = notionDefaultBlockParser.parseStyles();
 
         //then
         final String expectedRawText = "hello world";
@@ -45,15 +45,15 @@ class DefaultBlockParserTest {
     @DisplayName("DefaultBlockParser로부터 RawText와 Styles를 파싱한다. - 링크가 중간에 있는 경우")
     void parseLink() {
         //given
-        final DefaultBlockParser defaultBlockParser = new DefaultBlockParser(List.of(
+        final NotionDefaultBlock notionDefaultBlockParser = new NotionDefaultBlock(List.of(
                 new RichText("hello", "null", new Annotations(true, false, false, false, false, "default")),
                 new RichText(" ", "null", Annotations.empty()),
                 new RichText("world", "href", new Annotations(false, true, false, false, true, "default"))
         ));
 
         //when
-        final String rawText = defaultBlockParser.parseRawText();
-        final List<Style> styles = defaultBlockParser.parseStyles();
+        final String rawText = notionDefaultBlockParser.parseRawText();
+        final List<Style> styles = notionDefaultBlockParser.parseStyles();
 
         //then
         final String expectedRawText = "hello hrefworld";

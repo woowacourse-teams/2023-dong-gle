@@ -7,9 +7,12 @@ import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
 import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
+import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,14 @@ public class WritingController {
     ) {
         final Long writingId = writingFacadeService.uploadNotionPage(memberId, request);
         return ResponseEntity.created(URI.create("/writings/" + writingId)).build();
+    }
+
+    @GetMapping("/home")
+    public ResponseEntity<Page<WritingHomeResponse>> showHomePage(
+            @AuthenticationPrincipal final Long memberId,
+            final Pageable pageable) {
+        final Page<WritingHomeResponse> response = writingFacadeService.findAll(memberId, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{writingId}")

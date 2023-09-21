@@ -1,30 +1,33 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
 import { useDeletePermanentWritings } from 'components/TrashCanTable/useDeletePermanentWritings';
+import { activeWritingInfoState } from 'globalState';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 
 const DeletedWritingList = () => {
   const { deletedWritings } = useDeletedWritings();
   const { goWritingPage } = usePageNavigate();
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const deletePermanentWritings = useDeletePermanentWritings();
 
+  if (!writingId) return;
   if (!deletedWritings || deletedWritings?.length === 0)
     return <S.NoWritingsText>빈 휴지통</S.NoWritingsText>;
 
   return (
     <ul>
-      {deletedWritings.map((deletedWriting) => (
-        <S.Item key={deletedWriting.id} $isClicked={writingId === deletedWriting.id}>
+      {deletedWritings.map(({ id, categoryId, title }) => (
+        <S.Item key={id} $isClicked={writingId === id}>
           <S.Button
-            aria-label={`${deletedWriting.title}글 메인화면에 열기`}
+            aria-label={`${title}글 메인화면에 열기`}
             onClick={() =>
               goWritingPage({
-                categoryId: deletedWriting.categoryId,
-                writingId: deletedWriting.id,
+                categoryId: categoryId,
+                writingId: id,
                 isDeletedWriting: true,
               })
             }
@@ -32,7 +35,7 @@ const DeletedWritingList = () => {
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />
             </S.IconWrapper>
-            <S.Text>{deletedWriting.title}</S.Text>
+            <S.Text>{title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
             <DeleteButton onClick={() => deletePermanentWritings([writingId])} />

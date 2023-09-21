@@ -12,6 +12,10 @@ const HelpMenu = () => {
           'https://github.com/woowacourse-teams/2023-dong-gle/wiki/%EB%8F%99%EA%B8%80-%EB%8F%84%EC%9B%80%EB%A7%90',
         ),
     },
+    {
+      title: '피드백 주러 가기',
+      handleMenuItemClick: () => window.open('https://forms.gle/wSjCQKb4jhmFwSWQ9'),
+    },
   ];
 
   const closeMenu = () => setIsOpen(false);

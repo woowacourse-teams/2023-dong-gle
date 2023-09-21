@@ -96,7 +96,6 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
           .filter(
             (menu) =>
               ![TabKeys.TistoryPublishingProperty, TabKeys.MediumPublishingProperty].includes(
-                // 이상함
                 menu.key,
               ),
           )

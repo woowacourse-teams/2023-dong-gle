@@ -61,10 +61,18 @@ export type UpdateWritingOrderArgs = {
   };
 };
 
-type HomeWritingsResponse = {
+type HomeContent = {
   category: CategoryResponse;
 } & Writing;
 
+type PageInfo = {
+  size: number;
+  totalPages: number;
+  page: number;
+  totalElements: number;
+};
+
 export type GetHomeWritingsResponse = {
-  content: HomeWritingsResponse[];
+  pageInfo: PageInfo;
+  content: HomeContent[];
 };

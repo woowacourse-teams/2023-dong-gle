@@ -55,5 +55,5 @@ export const updateWritingOrder = ({ writingId, body }: UpdateWritingOrderArgs) 
   http.patch(`${writingURL}/${writingId}`, { json: body });
 
 // 전체 글: GET
-export const getHomeWritings = (): Promise<GetHomeWritingsResponse> =>
-  http.get(`${writingURL}/home`);
+export const getHomeWritings = (option: string): Promise<GetHomeWritingsResponse> =>
+  http.get(`${writingURL}/home${option}`);

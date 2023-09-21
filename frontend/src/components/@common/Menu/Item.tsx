@@ -19,11 +19,11 @@ const S = {
   Item: styled.li`
     display: flex;
     align-items: center;
-    width: 20rem;
+    width: 100%;
     height: 4rem;
 
     &:not(:last-child) {
-      border-bottom: 2px solid ${({ theme }) => theme.color.gray4};
+      border: 1px solid ${({ theme }) => theme.color.gray4};
     }
 
     &:hover {

@@ -67,10 +67,11 @@ const S = {
       `
     	left: 50%;
   	`}
-
     right: 50%;
+    width: 20rem;
 
-    border: 2px solid ${({ theme }) => theme.color.gray4};
+    border: 1px solid ${({ theme }) => theme.color.gray4};
     background-color: ${({ theme }) => theme.color.gray1};
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   `,
 };

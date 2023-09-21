@@ -26,3 +26,4 @@ export { ReactComponent as NotionIcon } from './notion.svg';
 export { ReactComponent as DonggleIcon } from './donggle-logo.svg';
 export { ReactComponent as BlurBackgroundIcon } from './blur-background.svg';
 export { ReactComponent as HyperlinkIcon } from './hyperlink.svg';
+export { ReactComponent as HomeBorderIcon } from './home-border.svg';

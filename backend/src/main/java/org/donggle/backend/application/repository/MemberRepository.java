@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("""
             SELECT COUNT(*) AS memberCount
             FROM Member
-            WHERE Member .createdAt >= '2023-08-19 00:00:00'
+            WHERE Member.createdAt >= '2023-08-19 00:00:00'
             """)
     int countMember();
 

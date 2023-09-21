@@ -12,7 +12,8 @@ public record UserInfo(
     public Member toMember() {
         return Member.of(
                 new MemberName(nickname),
-                socialId
+                socialId,
+                socialType
         );
     }
 }

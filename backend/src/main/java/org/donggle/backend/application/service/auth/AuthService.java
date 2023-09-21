@@ -40,8 +40,8 @@ public class AuthService {
         tokenRepository.deleteByMemberId(memberId);
     }
 
-    private Member initializeMember(final UserInfo socialUserInfo) {
-        Member member = socialUserInfo.toMember();
+    private Member initializeMember(final UserInfo userInfo) {
+        Member member = userInfo.toMember();
         final Category basicCategory = Category.basic(member);
         final MemberCredentials basic = MemberCredentials.basic(member);
         try {
@@ -49,7 +49,7 @@ public class AuthService {
             categoryRepository.save(basicCategory);
             memberCredentialsRepository.save(basic);
         } catch (final DuplicateKeyException e) {
-            throw new DuplicatedMemberException(socialUserInfo.socialType().name());
+            throw new DuplicatedMemberException(userInfo.socialType().name());
         }
         return member;
     }

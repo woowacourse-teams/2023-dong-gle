@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class S3UploadClient implements FileUploadClient {
                     .contentType(mediaType.toString())
                     .build();
             final RequestBody requestBody = RequestBody.fromBytes(data);
-            s3Client.putObject(request, requestBody);
+            final PutObjectResponse putObjectResponse = s3Client.putObject(request, requestBody);
             return Optional.of(getUploadedUrl(fileName));
         } catch (final Exception e) {
             return Optional.empty();

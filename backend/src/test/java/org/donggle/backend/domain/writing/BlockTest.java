@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
 
 @SpringBootTest
 @Transactional
@@ -34,7 +35,7 @@ class BlockTest {
     @DisplayName("block과 content save 테스트")
     void blockSave() {
         //given
-        final Member member = Member.of(new MemberName("동그리"), 3L);
+        final Member member = Member.of(new MemberName("동그리"), 3L, KAKAO);
         final Member savedMember = memberRepository.save(member);
         final Category basicCategory = categoryRepository.findById(1L).get();
         final Block codeBlock = new CodeBlock(BlockType.CODE_BLOCK, RawText.from("r"), Language.from("l"));

@@ -18,6 +18,9 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     int countByNextWritingId(Long nextWritingId);
 
+    @Query("select w from Writing w join fetch w.blocks where w.id = :writingId")
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
+
     @Query("select w from Writing w " +
             "where w.category.id = :categoryId and " +
             "w.nextWriting is null")

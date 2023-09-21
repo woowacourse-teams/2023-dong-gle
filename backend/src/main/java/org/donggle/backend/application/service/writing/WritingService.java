@@ -21,6 +21,7 @@ import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.ui.response.PublishedDetailResponse;
+import org.donggle.backend.ui.response.PublishedDetailSimpleResponse;
 import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
@@ -121,7 +122,7 @@ public class WritingService {
     @Transactional(readOnly = true)
     public WritingPropertiesResponse findWritingProperties(final Long memberId, final Long writingId) {
         final Writing writing = findWritingAndTrashedWriting(memberId, writingId);
-        final List<PublishedDetailResponse> publishedTos = convertToPublishedDetailResponses(writingId);
+        final List<PublishedDetailSimpleResponse> publishedTos = convertToPublishedDetailSimpleResponses(writingId);
         return WritingPropertiesResponse.of(writing, publishedTos);
     }
 
@@ -248,6 +249,13 @@ public class WritingService {
         final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
         return blogWritings.stream()
                 .map(PublishedDetailResponse::of)
+                .toList();
+    }
+
+    private List<PublishedDetailSimpleResponse> convertToPublishedDetailSimpleResponses(final Long findWriting) {
+        final List<BlogWriting> blogWritings = blogWritingRepository.findByWritingId(findWriting);
+        return blogWritings.stream()
+                .map(PublishedDetailSimpleResponse::of)
                 .toList();
     }
 

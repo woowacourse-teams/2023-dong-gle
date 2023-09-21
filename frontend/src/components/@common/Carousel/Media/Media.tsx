@@ -50,16 +50,8 @@ const S = {
     flex: 0 0 auto;
     ${CommonMediaStyles}
 
-    picture {
+    picture, img, video {
       ${CommonMediaStyles}
-    }
-
-    img {
-      ${CommonMediaStyles}
-    }
-
-    video {
-      ${CommonMediaStyles}
-    }
+    }    
   `,
 };

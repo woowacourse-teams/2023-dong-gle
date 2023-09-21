@@ -39,7 +39,7 @@ const PublishingPropertyStyle = {
 
     select,
     input {
-      padding: 1px;
+      padding: 0.6rem;
     }
   `,
   PropertyName: styled.div`
@@ -60,6 +60,11 @@ const PublishingPropertyStyle = {
     align-items: center;
     gap: 4rem;
     font-size: 1.3rem;
+  `,
+  PublishTimeInputContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
   `,
 };
 

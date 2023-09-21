@@ -10,12 +10,12 @@ type Props = {
   initialPageIndex?: number;
 };
 
-const HomeTable = ({ initialPageIndex = 1 }: Props) => {
+const HomeTable = ({ initialPageIndex = 0 }: Props) => {
   const { content, totalPages, rowRef, activePage, changeActivePage } =
     useHomeTable(initialPageIndex);
   const { goWritingPage } = usePageNavigate();
 
-  if (!content || !totalPages) return null;
+  if (!content || !totalPages) return <S.AddWritingText>글을 추가해 주세요😊</S.AddWritingText>;
 
   return (
     <S.Container>
@@ -84,6 +84,10 @@ const S = {
     justify-content: center;
     align-items: center;
     gap: 50px;
+  `,
+
+  AddWritingText: styled.p`
+    font-size: 1.5rem;
   `,
 
   HomeTable: styled.table`

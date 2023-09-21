@@ -7,17 +7,17 @@ type Props = {
 };
 
 const Pagination = ({ pageLength, activePage, changeActivePage }: Props) => {
-  const isShowPrevious = activePage > 1;
-  const isShowNext = activePage < pageLength;
+  const isShowPrevious = activePage > 0;
+  const isShowNext = activePage < pageLength - 1;
 
   // 시작 페이지와 끝 페이지의 범위를 설정해주는 함수
   const setPageRange = () => {
-    const isBetween1and4 = activePage < 5;
-    const isNearLast4Pages = activePage >= pageLength - 4;
+    const isBetween1and4 = activePage < 4;
+    const isNearLast4Pages = activePage >= pageLength - 5;
 
-    if (isBetween1and4) return [1, Math.min(9, pageLength)];
+    if (isBetween1and4) return [0, Math.min(8, pageLength - 1)];
 
-    if (isNearLast4Pages) return [Math.max(pageLength - 8, 1), pageLength];
+    if (isNearLast4Pages) return [Math.max(pageLength - 9, 0), pageLength - 1];
 
     return [activePage - 4, activePage + 4];
   };
@@ -38,7 +38,7 @@ const Pagination = ({ pageLength, activePage, changeActivePage }: Props) => {
               $isActive={pageIndex === activePage}
               onClick={() => changeActivePage(pageIndex)}
             >
-              {pageIndex}
+              {pageIndex + 1}
             </S.PageButton>
           </li>
         );

@@ -66,7 +66,7 @@ const MediumPublishingPropertySection = ({ writingId, publishTo, selectCurrentTa
         <S.PropertyRow>
           <S.PropertyName>
             <TagIcon width={12} height={12} />
-            Tags
+            태그
           </S.PropertyName>
           <div>
             <TagInput onChangeTags={setTags} />

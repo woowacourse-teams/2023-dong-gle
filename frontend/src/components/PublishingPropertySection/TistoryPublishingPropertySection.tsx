@@ -89,7 +89,7 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
         <S.PropertyRow>
           <S.PropertyName>
             <TagIcon width={12} height={12} />
-            Tags
+            태그
           </S.PropertyName>
           <div>
             <TagInput onChangeTags={setTags} />

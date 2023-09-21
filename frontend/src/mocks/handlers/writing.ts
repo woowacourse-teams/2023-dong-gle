@@ -10,11 +10,14 @@ import {
 } from 'types/apis/writings';
 import { getWritingTableMock } from 'mocks/writingTableMock';
 import { hasDefinedField } from 'utils/typeGuard';
+import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 
 export const writingHandlers = [
   // 글 조회: GET
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (writingId === 200) {
       return res(
@@ -33,6 +36,8 @@ export const writingHandlers = [
   // 글 정보: GET
   rest.get(`${writingURL}/:writingId/properties`, (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (writingId === 200) {
       return res(
@@ -65,13 +70,18 @@ export const writingHandlers = [
   }),
 
   // 글 생성(글 업로드): POST
-  rest.post(`${writingURL}/file`, async (_, res, ctx) => {
+  rest.post(`${writingURL}/file`, async (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
   }),
 
   // 글 생성(글 업로드): POST
-  rest.post(`${writingURL}/notion`, async (_, res, ctx) => {
+  rest.post(`${writingURL}/notion`, async (req, res, ctx) => {
     // return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/200`));
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(
       ctx.delay(1000),
       ctx.status(404),
@@ -84,6 +94,8 @@ export const writingHandlers = [
     const blog = ['MEDIUM', 'TISTORY'];
     const id = Number(req.params.writingId);
     const { publishTo } = await req.json();
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (!blog.includes(publishTo) || typeof id !== 'number')
       return res(
@@ -100,6 +112,8 @@ export const writingHandlers = [
   rest.get(`${writingURL}`, (req, res, ctx) => {
     const categoryId = Number(req.url.searchParams.get('categoryId'));
 
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(
       ctx.json<GetDetailWritingsResponse>(getWritingTableMock(categoryId)),
       // ctx.delay(1000),
@@ -111,6 +125,8 @@ export const writingHandlers = [
   rest.patch(`${writingURL}/:writingId`, async (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
     const body = await req.json();
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     // 글 순서 수정
     if (hasDefinedField<UpdateWritingOrderArgs['body']>(body, 'nextWritingId')) {
@@ -127,6 +143,8 @@ export const writingHandlers = [
 
     // 글 이름 수정
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
+      if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
       if (!body.title)
         return res(
           ctx.delay(300),

@@ -7,16 +7,21 @@ import {
   UpdateCategoryTitleArgs,
 } from 'types/apis/category';
 import { hasDefinedField } from 'utils/typeGuard';
+import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 
 export const categoryHandlers = [
   // 카테고리 목록 조회
-  rest.get(categoryURL, (_, res, ctx) => {
+  rest.get(categoryURL, (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(ctx.json(categories), ctx.delay(300), ctx.status(200));
   }),
 
   // 카테고리 추가
   rest.post(categoryURL, (req, res, ctx) => {
     const body = req.body as AddCategoriesRequest;
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (!body || !body.categoryName)
       return res(
@@ -30,6 +35,8 @@ export const categoryHandlers = [
 
   // 카테고리 글 목록 조회
   rest.get(`${categoryURL}/:categoryId`, (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     const categoryId = Number(req.params.categoryId);
 
     if (categoryId !== 1 && categoryId !== 3)
@@ -50,6 +57,8 @@ export const categoryHandlers = [
   rest.patch(`${categoryURL}/:categoryId`, async (req, res, ctx) => {
     const categoryId = Number(req.params.categoryId);
     const body = await req.json();
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     // 카테고리 순서 변경
     if (hasDefinedField<UpdateCategoryOrderArgs['body']>(body, 'nextCategoryId')) {
@@ -83,6 +92,8 @@ export const categoryHandlers = [
 
     // 카테고리 이름 수정
     if (hasDefinedField<UpdateCategoryTitleArgs['body']>(body, 'categoryName')) {
+      if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
       if (!body.categoryName)
         return res(
           ctx.delay(300),
@@ -96,7 +107,9 @@ export const categoryHandlers = [
   }),
 
   // 카테고리 삭제
-  rest.delete(`${categoryURL}/:categoryId`, (_, res, ctx) => {
+  rest.delete(`${categoryURL}/:categoryId`, (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(ctx.delay(300), ctx.status(204));
   }),
 ];

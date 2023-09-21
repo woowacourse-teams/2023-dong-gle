@@ -217,14 +217,8 @@ public class WritingService {
     @Transactional(readOnly = true)
     public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
         final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
-        pagedWritings.forEach(writing -> validateWritingHomeResponse(writing, memberId));
+        pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
         return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailResponses(writing.getId())));
-    }
-
-    private void validateWritingHomeResponse(final Writing writing, final Long memberId) {
-        if (!writing.getMember().getId().equals(memberId)) {
-            throw new MemberNotFoundException(memberId);
-        }
     }
 
     private void validateAuthorization(final Long memberId, final Writing writing) {

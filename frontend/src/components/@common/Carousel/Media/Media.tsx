@@ -24,14 +24,14 @@ const Media = ({ media }: Props) => {
   return (
     <S.Media>
       {type.startsWith('video/') ? (
-        <video controls autoPlay playsInline loop width='100%' height='100%'>
+        <video controls autoPlay playsInline loop>
           <source src={src} type={type} />
           비디오를 지원하지 않는 브라우저입니다.
         </video>
       ) : (
         <picture>
           <source srcSet={src} type={type} />
-          <img src={src} alt={alt ?? '캐러셀의 컨텐츠'} width='100%' height='100%' />
+          <img src={src} alt={alt ?? '캐러셀의 컨텐츠'} />
         </picture>
       )}
     </S.Media>
@@ -52,6 +52,6 @@ const S = {
 
     picture, img, video {
       ${CommonMediaStyles}
-    }    
+    }
   `,
 };

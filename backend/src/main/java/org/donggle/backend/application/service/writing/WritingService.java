@@ -213,7 +213,7 @@ public class WritingService {
 
     @Transactional(readOnly = true)
     public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
-        final Page<Writing> pagedWritings = writingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        final Page<Writing> pagedWritings = writingRepository.findByMemberIdAndWritingStatusOrderByCreatedAtDesc(memberId, pageable);
         pagedWritings.forEach(writing -> validateAuthorization(memberId, writing));
         return pagedWritings.map(writing -> WritingHomeResponse.of(writing, convertToPublishedDetailSimpleResponses(writing.getId())));
     }

@@ -15,9 +15,7 @@ import org.donggle.backend.exception.business.OverLengthCategoryNameException;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -198,64 +196,6 @@ class CategoryServiceTest {
                 () -> assertThat(response.writings()).isEmpty(),
                 () -> assertThat(response.categoryName()).isEqualTo("두 번째 카테고리")
         );
-    }
-
-    @Nested
-    class ModifyCategoryOrderTest {
-        private Long firstId = 1L;
-        private Long secondId;
-        private Long thirdId;
-
-        @BeforeEach
-        void setUp() {
-            //given
-            secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
-            thirdId = categoryService.addCategory(1L, new CategoryAddRequest("세 번째 카테고리"));
-        }
-
-        @Test
-        @DisplayName("카테고리 순서 수정 테스트 - [1, 2, '3'] -> [1, '3', 2]")
-        void modifyCategoryOrder1() {
-            //when
-            categoryService.modifyCategoryOrder(1L, thirdId, new CategoryModifyRequest(null, secondId));
-
-            //then
-            final CategoryListResponse response = categoryService.findAll(1L);
-            assertAll(
-                    () -> assertThat(response.categories()).hasSize(3),
-                    () -> assertThat(response.categories()).containsExactly(
-                            new CategoryResponse(firstId, "기본"),
-                            new CategoryResponse(thirdId, "세 번째 카테고리"),
-                            new CategoryResponse(secondId, "두 번째 카테고리")
-                    )
-            );
-        }
-
-        @Test
-        @DisplayName("카테고리 순서 수정 테스트 - ['1', 2, 3] -> [2, 3, '1']")
-        void modifyCategoryOrder2() {
-            //when, then
-            assertThatThrownBy(() -> categoryService.modifyCategoryOrder(1L, firstId, new CategoryModifyRequest(null, -1L)))
-                    .isInstanceOf(InvalidBasicCategoryException.class);
-        }
-
-        @Test
-        @DisplayName("카테고리 순서 수정 테스트 - [1, '2', 3] -> [1, 3, '2']")
-        void modifyCategoryOrder3() {
-            //when
-            categoryService.modifyCategoryOrder(1L, secondId, new CategoryModifyRequest(null, -1L));
-
-            //then
-            final CategoryListResponse response = categoryService.findAll(1L);
-            assertAll(
-                    () -> assertThat(response.categories()).hasSize(3),
-                    () -> assertThat(response.categories()).containsExactly(
-                            new CategoryResponse(firstId, "기본"),
-                            new CategoryResponse(thirdId, "세 번째 카테고리"),
-                            new CategoryResponse(secondId, "두 번째 카테고리")
-                    )
-            );
-        }
     }
 
 

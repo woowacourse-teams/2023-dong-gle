@@ -137,19 +137,30 @@ public class WritingService {
     public WritingListWithCategoryResponse findWritingListByCategoryId(final Long memberId, final Long categoryId) {
         final Category findCategory = findCategory(memberId, categoryId);
         final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
-        if (findWritings.isEmpty()) {
-            return WritingListWithCategoryResponse.of(findCategory, Collections.emptyList());
+        if (!findWritings.isEmpty()) {
+            final Writing firstWriting = findFirstWriting(findWritings);
+            final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
+            final Map<Writing, List<BlogWriting>> blogWritings =
+                    blogWritingRepository.findWithBlogWritings(sortedWriting).stream()
+                            .collect(Collectors.groupingBy(BlogWriting::getWriting));
+            final List<WritingDetailResponse> responses = makeWritingDetailResponses(sortedWriting, blogWritings);
+            return WritingListWithCategoryResponse.of(findCategory, responses);
         }
-        final Writing firstWriting = findFirstWriting(findWritings);
-        final List<Writing> sortedWriting = sortWriting(findWritings, firstWriting);
-        final Map<Writing, List<BlogWriting>> blogWritings = blogWritingRepository.findWithFetch(sortedWriting).stream().collect(Collectors.groupingBy(BlogWriting::getWriting));
+        return WritingListWithCategoryResponse.of(findCategory, Collections.emptyList());
+    }
 
-        final List<WritingDetailResponse> responses = sortedWriting.stream().map(writing -> {
-            final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing)).orElse(Collections.emptyList()).stream().map(PublishedDetailResponse::of).toList();
-            return WritingDetailResponse.of(writing, publishedDetailResponses);
-        }).toList();
-
-        return WritingListWithCategoryResponse.of(findCategory, responses);
+    private List<WritingDetailResponse> makeWritingDetailResponses(
+            final List<Writing> sortedWriting,
+            final Map<Writing, List<BlogWriting>> blogWritings
+    ) {
+        return sortedWriting.stream()
+                .map(writing -> {
+                    final List<PublishedDetailResponse> publishedDetailResponses = Optional.ofNullable(blogWritings.get(writing))
+                            .orElse(Collections.emptyList()).stream()
+                            .map(PublishedDetailResponse::of)
+                            .toList();
+                    return WritingDetailResponse.of(writing, publishedDetailResponses);
+                }).toList();
     }
 
     private Writing findFirstWriting(final List<Writing> findWritings) {

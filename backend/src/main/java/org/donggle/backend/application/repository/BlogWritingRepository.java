@@ -11,6 +11,12 @@ import java.util.List;
 public interface BlogWritingRepository extends JpaRepository<BlogWriting, Long> {
     List<BlogWriting> findByWritingId(final Long writingId);
 
-    @Query("SELECT bw FROM BlogWriting bw LEFT JOIN FETCH bw.blog WHERE bw.writing IN :writings")
-    List<BlogWriting> findWithFetch(@Param("writings") List<Writing> writings);
+    @Query("""
+            SELECT bw
+            FROM BlogWriting bw
+            LEFT JOIN FETCH bw.blog
+            LEFT JOIN FETCH bw.tags
+            WHERE bw.writing IN :writings
+            """)
+    List<BlogWriting> findWithBlogWritings(@Param("writings") final List<Writing> writings);
 }

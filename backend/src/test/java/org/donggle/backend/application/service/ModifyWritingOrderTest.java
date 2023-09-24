@@ -230,8 +230,37 @@ class ModifyWritingOrderTest {
         }
 
         @Test
-        @DisplayName("[기본][1, 2, 3, '4'] -> [기본][1, '4', 2, 3]")
+        @DisplayName("[기본][1, '2', 3, 4] -> [기본]['2', 1, 3, 4]")
         void movingInOneCategory5() {
+            //when
+            writingService.modifyWritingOrder(
+                    member.getId(),
+                    basicWritings.get(1).getId(),
+                    new WritingModifyRequest(null, basicCategory.getId(), basicWritings.get(0).getId())
+            );
+
+            final List<Writing> writings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+            assertThat(writings).hasSize(4);
+            final List<Writing> nextWritings = writings.stream()
+                    .map(Writing::getNextWriting)
+                    .toList();
+
+            writings.removeAll(nextWritings);
+
+            //then
+            final Writing firstWriting = writings.get(0);
+            assertAll(
+                    () -> assertThat(firstWriting).isEqualTo(basicWritings.get(1)),
+                    () -> assertThat(firstWriting.getNextWriting()).isEqualTo(basicWritings.get(0)),
+                    () -> assertThat(firstWriting.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
+                    () -> assertThat(firstWriting.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                    () -> assertThat(firstWriting.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+            );
+        }
+
+        @Test
+        @DisplayName("[기본][1, 2, 3, '4'] -> [기본][1, '4', 2, 3]")
+        void movingInOneCategory6() {
             //when
             writingService.modifyWritingOrder(
                     member.getId(),
@@ -260,7 +289,7 @@ class ModifyWritingOrderTest {
 
         @Test
         @DisplayName("[기본][1, 2, 3, '4'] -> [기본]['4', 1, 2, 3]")
-        void movingInOneCategory6() {
+        void movingInOneCategory7() {
             //when
             writingService.modifyWritingOrder(
                     member.getId(),

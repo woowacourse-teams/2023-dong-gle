@@ -97,10 +97,7 @@ public class WritingService {
     }
 
     public void modifyWritingTitle(final Long memberId, final Long writingId, final Title title) {
-        final Writing findWriting = findWritingById(writingId);
-        if (findWriting.getStatus() != ACTIVE) {
-            throw new IllegalArgumentException();
-        }
+        final Writing findWriting = findActiveWriting(writingId);
         validateAuthorization(memberId, findWriting);
         findWriting.updateTitle(title);
     }
@@ -237,11 +234,6 @@ public class WritingService {
                 Objects.equals(source.getId(), request.nextWritingId());
     }
 
-    private Writing findActiveWriting(Long writingId) {
-        return writingRepository.findByIdAndStatus(writingId, ACTIVE)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
-    }
-
     @Transactional(readOnly = true)
     public Page<WritingHomeResponse> findAll(final Long memberId, final Pageable pageable) {
         final Page<Writing> pagedWritings = writingRepository.findByMemberIdAndWritingStatusOrderByCreatedAtDesc(memberId, pageable);
@@ -281,6 +273,11 @@ public class WritingService {
                 .toList();
     }
 
+    private Writing findActiveWriting(Long writingId) {
+        return writingRepository.findByIdAndStatus(writingId, ACTIVE)
+                .orElseThrow(() -> new WritingNotFoundException(writingId));
+    }
+
     private Category findCategory(final Long memberId, final Long categoryId) {
         return categoryRepository.findByIdAndMemberId(categoryId, memberId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
@@ -289,11 +286,6 @@ public class WritingService {
     private Writing findLastWritingInCategory(final Long categoryId) {
         return writingRepository.findLastWritingByCategoryId(categoryId)
                 .orElseThrow(IllegalStateException::new);
-    }
-
-    private Writing findWritingById(final Long writingId) {
-        return writingRepository.findById(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
     }
 
     private Writing findPreWriting(final Long writingId) {

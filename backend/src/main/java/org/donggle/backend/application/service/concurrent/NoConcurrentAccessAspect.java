@@ -20,7 +20,7 @@ public class NoConcurrentAccessAspect {
 
     private final ConcurrentHashMap<Long, Lock> memberLock = new ConcurrentHashMap<>();
 
-    @Around("@annotation(org.donggle.backend.application.service.concurrent.NoConcurrentExecution)")
+    @Around("@annotation(NoConcurrentExecution)")
     public Object noConcurrentAccess(final ProceedingJoinPoint joinPoint) throws Throwable {
         final NoConcurrentExecution anno = getAnnotation(joinPoint);
         final Long memberId = (Long) joinPoint.getArgs()[MEMBER_ID_INDEX];

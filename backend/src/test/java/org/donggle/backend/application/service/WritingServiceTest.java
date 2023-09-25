@@ -155,6 +155,7 @@ class WritingServiceTest {
             ));
             basicCategory = categoryRepository.save(Category.basic(member));
 
+            Writing tmp = null;
             for (int i = 0; i < 30; i++) {
                 final Writing writing = writingRepository.save(Writing.of(
                         member,
@@ -170,6 +171,10 @@ class WritingServiceTest {
                                 )
                         )
                 ));
+                if (i != 0) {
+                    writing.changeNextWriting(tmp);
+                }
+                tmp = writing;
                 writings.add(writing);
             }
         }

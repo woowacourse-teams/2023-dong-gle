@@ -84,6 +84,12 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     int countByCategoryIdAndStatus(final Long id, final WritingStatus status);
 
-    @Query(countQuery = "select count(w) from Writing w where w.member.id = :memberId")
-    Page<Writing> findByMemberIdOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
+    @Query("""
+            select w
+            from Writing w
+            where w.member.id = :memberId and
+            w.status = 'ACTIVE'
+            order by w.createdAt desc
+            """)
+    Page<Writing> findByMemberIdAndWritingStatusOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
 }

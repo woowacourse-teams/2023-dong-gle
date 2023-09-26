@@ -30,3 +30,4 @@ export { ReactComponent as HomeBorderIcon } from './home-border.svg';
 export { ReactComponent as TimeIcon } from './time.svg';
 export { ReactComponent as PasswordIcon } from './password.svg';
 export { ReactComponent as PublishIcon } from './publish.svg';
+export { ReactComponent as CategoryIcon } from './category.svg';

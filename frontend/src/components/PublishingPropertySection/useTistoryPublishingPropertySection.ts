@@ -57,11 +57,16 @@ export const useTistoryPublishingPropertySection = ({ selectCurrentTab }: Args) 
     setPropertyFormInfo((prev) => ({ ...prev, publishStatus }));
   };
 
+  const setCategoryId = (categoryId: string) => {
+    setPropertyFormInfo((prev) => ({ ...prev, categoryId }));
+  };
+
   return {
     isLoading,
     propertyFormInfo,
     setTags,
     setPublishStatus,
+    setCategoryId,
     passwordRef,
     dateRef,
     timeRef,

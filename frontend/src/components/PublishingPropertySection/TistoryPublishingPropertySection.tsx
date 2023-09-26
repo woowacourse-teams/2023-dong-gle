@@ -2,7 +2,14 @@ import { css, styled } from 'styled-components';
 import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { LeftArrowHeadIcon, PasswordIcon, PublishIcon, TagIcon, TimeIcon } from 'assets/icons';
+import {
+  CategoryIcon,
+  LeftArrowHeadIcon,
+  PasswordIcon,
+  PublishIcon,
+  TagIcon,
+  TimeIcon,
+} from 'assets/icons';
 import { slideToLeft } from 'styles/animation';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import { useTistoryPublishingPropertySection } from './useTistoryPublishingPropertySection';
@@ -12,6 +19,7 @@ import Input from 'components/@common/Input/Input';
 import { dateFormatter } from 'utils/date';
 import { useState } from 'react';
 import Divider from 'components/@common/Divider/Divider';
+import { useTistoryCategories } from 'hooks/queries/blogs/useTistoryCategories';
 
 type Props = {
   writingId: number;
@@ -30,11 +38,13 @@ const TistoryPublishStatusList = Object.keys(
 ) as (keyof typeof TistoryPublishStatus)[];
 
 const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: Props) => {
+  const { categories, isLoading: isCategoryLoading } = useTistoryCategories();
   const {
     isLoading,
     propertyFormInfo,
     setTags,
     setPublishStatus,
+    setCategoryId,
     passwordRef,
     dateRef,
     timeRef,
@@ -91,6 +101,22 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
                   {TistoryPublishStatus[value]}
                 </option>
               ))}
+            </select>
+          </div>
+        </S.PropertyRow>
+        <S.PropertyRow>
+          <S.PropertyName>
+            <CategoryIcon width={12} height={12} />
+            카테고리
+          </S.PropertyName>
+          <div>
+            <select onChange={(e) => setCategoryId(e.target.value)}>
+              {categories &&
+                categories.map(({ id, name }) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ))}
             </select>
           </div>
         </S.PropertyRow>

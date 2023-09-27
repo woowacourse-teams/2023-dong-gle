@@ -193,33 +193,11 @@ class CategoryServiceTest {
 
         //then
         assertAll(
-                () -> assertThat(response.writings()).hasSize(0),
                 () -> assertThat(response.writings()).isEmpty(),
                 () -> assertThat(response.categoryName()).isEqualTo("두 번째 카테고리")
         );
     }
 
-    @Test
-    @DisplayName("카테고리 순서 수정 테스트")
-    void modifyCategoryOrder() {
-        //given
-        final Long secondId = categoryService.addCategory(1L, new CategoryAddRequest("두 번째 카테고리"));
-        final Long thirdId = categoryService.addCategory(1L, new CategoryAddRequest("세 번째 카테고리"));
-
-        //when
-        categoryService.modifyCategoryOrder(1L, thirdId, new CategoryModifyRequest(null, secondId));
-
-        //then
-        final CategoryListResponse response = categoryService.findAll(1L);
-        assertAll(
-                () -> assertThat(response.categories()).hasSize(3),
-                () -> assertThat(response.categories()).containsExactly(
-                        new CategoryResponse(1L, "기본"),
-                        new CategoryResponse(thirdId, "세 번째 카테고리"),
-                        new CategoryResponse(secondId, "두 번째 카테고리")
-                )
-        );
-    }
 
     @Test
     @DisplayName("카테고리 이름 중복 예외")

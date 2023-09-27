@@ -84,10 +84,6 @@ public class Writing extends BaseEntity {
         changeNextWritingNull();
     }
 
-    public String getTitleValue() {
-        return this.title.getTitle();
-    }
-
     public void changeCategory(final Category category) {
         this.category = category;
     }
@@ -107,6 +103,10 @@ public class Writing extends BaseEntity {
 
     public boolean isOwnedBy(final Long memberId) {
         return getMember().getId().equals(memberId);
+    }
+
+    public String getTitleValue() {
+        return this.title.getTitle();
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException
 import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
 import org.donggle.backend.exception.authentication.NoRefreshTokenInCookieException;
 import org.donggle.backend.exception.notfound.RefreshTokenNotFoundException;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
@@ -23,6 +24,9 @@ public class RefreshTokenAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
+        if (CorsUtils.isPreFlightRequest(request)) {
+            return true;
+        }
         final String comparisonRefreshToken = extract(request);
         final Long memberId = jwtTokenProvider.getPayload(comparisonRefreshToken);
         final RefreshToken originalRefreshToken = tokenRepository.findByMemberId(memberId)

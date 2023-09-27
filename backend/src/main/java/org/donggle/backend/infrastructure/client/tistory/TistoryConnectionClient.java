@@ -8,6 +8,7 @@ import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryAccessTokenResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import java.util.NoSuchElementException;
 @Transactional
 public class TistoryConnectionClient {
     private static final String AUTHORIZE_URL = "https://www.tistory.com/oauth/authorize";
-    private static final String TOKEN_URL = "https://www.tistory.com/oauth/access_token";
+    private static final String TOKEN_URL = "https://www.tistory.com/oauth";
     private static final String PLATFORM_NAME = "Tistory";
 
     private final String clientId;
@@ -32,6 +33,7 @@ public class TistoryConnectionClient {
     private final MemberRepository memberRepository;
     private final TistoryApiClient tistoryApiService;
 
+    @Autowired
     public TistoryConnectionClient(@Value("${tistory_client_id}") final String clientId,
                                    @Value("${tistory_client_secret}") final String clientSecret,
                                    final MemberCredentialsRepository memberCredentialsRepository,
@@ -42,7 +44,21 @@ public class TistoryConnectionClient {
         this.memberCredentialsRepository = memberCredentialsRepository;
         this.memberRepository = memberRepository;
         this.tistoryApiService = tistoryApiService;
-        this.webClient = WebClient.create();
+        this.webClient = WebClient.create(TOKEN_URL);
+    }
+
+    public TistoryConnectionClient(final String clientId,
+                                   final String clientSecret,
+                                   final MemberCredentialsRepository memberCredentialsRepository,
+                                   final MemberRepository memberRepository,
+                                   final TistoryApiClient tistoryApiService,
+                                   final WebClient webClient) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.memberCredentialsRepository = memberCredentialsRepository;
+        this.memberRepository = memberRepository;
+        this.tistoryApiService = tistoryApiService;
+        this.webClient = webClient;
     }
 
     public String createAuthorizeRedirectUri(final String redirectUri) {
@@ -64,7 +80,7 @@ public class TistoryConnectionClient {
         memberCredentials.updateTistory(accessToken, tistoryBlogName);
     }
 
-    public String getAccessToken(final String code, final String redirectUri) {
+    private String getAccessToken(final String code, final String redirectUri) {
         final String tokenUri = createTokenUri(redirectUri, code);
 
         return webClient.get()
@@ -78,7 +94,7 @@ public class TistoryConnectionClient {
     }
 
     public String createTokenUri(final String redirectUri, final String code) {
-        return UriComponentsBuilder.fromUriString(TOKEN_URL)
+        return UriComponentsBuilder.fromUriString("/access_token")
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
                 .queryParam("redirect_uri", redirectUri)

@@ -7,6 +7,7 @@ import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,11 @@ class TistoryConnectionClientTest {
                 memberRepository,
                 tistoryApiClient,
                 webClient);
+    }
+
+    @AfterEach
+    void shutDown() throws IOException {
+        mockWebServer.shutdown();
     }
 
     @Test

@@ -2,13 +2,14 @@ package org.donggle.backend.infrastructure.client.notion;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
-import org.donggle.backend.infrastructure.client.notion.dto.request.NotionTokenRequest;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.infrastructure.client.exception.ClientException;
+import org.donggle.backend.infrastructure.client.notion.dto.request.NotionTokenRequest;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionTokenResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -37,13 +38,26 @@ public class NotionConnectionClient {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 
+    @Autowired
     public NotionConnectionClient(@Value("${notion_client_id}") final String clientId,
                                   @Value("${notion_client_secret}") final String clientSecret, final MemberRepository memberRepository, final MemberCredentialsRepository memberCredentialsRepository) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.memberRepository = memberRepository;
         this.memberCredentialsRepository = memberCredentialsRepository;
-        this.webClient = WebClient.create();
+        this.webClient = WebClient.create(TOKEN_URL);
+    }
+
+    public NotionConnectionClient(final String clientId,
+                                  final String clientSecret,
+                                  final MemberRepository memberRepository,
+                                  final MemberCredentialsRepository memberCredentialsRepository,
+                                  final WebClient webClient) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.memberRepository = memberRepository;
+        this.memberCredentialsRepository = memberCredentialsRepository;
+        this.webClient = webClient;
     }
 
     public String createRedirectUri(final String redirectUri) {
@@ -65,7 +79,6 @@ public class NotionConnectionClient {
 
     private String getAccessToken(final String code, final String redirectUri) {
         return Objects.requireNonNull(webClient.post()
-                        .uri(TOKEN_URL)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + base64Encode(clientId + ":" + clientSecret))
                         .bodyValue(new NotionTokenRequest(GRANT_TYPE, code, redirectUri))

@@ -54,13 +54,98 @@ class TistoryApiClientTest {
     }
 
     @Test
-    @DisplayName("tistory에 발행 테스트")
-    void publish() {
+    @DisplayName("tistory에 공개발행 테스트")
+    void publish_PUBLIC() {
         // given
         final String accessToken = "testToken";
         final String content = "<p>Test Content</p>";
         final LocalDateTime dateTime = Instant.ofEpochMilli(1442286338435L).atZone(ZoneId.systemDefault()).toLocalDateTime();
         final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PUBLIC", "", "", "");
+        final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
+
+        final String titleValue = "Test Title";
+        final String defaultBlogName = """
+                {
+                   "tistory": {
+                     "status": "200",
+                     "item": {
+                       "id": "blog_oauth_test@daum.net",
+                       "userId": "12345",
+                       "blogs": [
+                         {
+                           "name": "oauth-test",
+                           "default": "Y",
+                           "blogIconUrl": "https://blog_icon_url",
+                           "faviconUrl": "https://favicon_url",
+                           "profileThumbnailImageUrl": "https://profile_image",
+                           "profileImageUrl": "https://profile_image",
+                           "role": "소유자",
+                           "blogId": "123",
+                           "statistics": {
+                             "post": "182",
+                             "comment": "146",
+                             "trackback": "0",
+                             "guestbook": "39",
+                             "invitation": "0"
+                           }
+                         }
+                       ]
+                     }
+                   }
+                 }
+                """;
+        final String publishResponseBody = """
+                {
+                    "tistory": {
+                        "status": "200",
+                        "postId": "74",
+                        "url": "http://sampleUrl.tistory.com/74"
+                    }
+                }
+                """;
+
+        final String publishPropertyResponseBody = """
+                {
+                    "tistory":{
+                        "status":"200",
+                        "item":{
+                            "url":"http://oauth.tistory.com",
+                            "postUrl":"http://sampleUrl.tistory.com/74",
+                            "tags":{
+                                "tag":["open", "api"]
+                            },
+                            "date":"1442286338435"
+                        }
+                    }
+                }
+                """;
+
+
+        final Member member = mock(Member.class);
+        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
+
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishPropertyResponseBody).addHeader("Content-Type", "application/json"));
+
+        // when
+        final PublishResponse response = tistoryApiClient.publish(accessToken, content, publishRequest, titleValue);
+
+        // then
+        assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("tistory에 보호 발행 테스트")
+    void publish_PROTECT() {
+        // given
+        final String accessToken = "testToken";
+        final String content = "<p>Test Content</p>";
+        final LocalDateTime dateTime = Instant.ofEpochMilli(1442286338435L).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PROTECT", "", "", "");
         final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
 
         final String titleValue = "Test Title";

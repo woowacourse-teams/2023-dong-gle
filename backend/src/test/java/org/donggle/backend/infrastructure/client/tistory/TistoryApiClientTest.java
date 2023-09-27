@@ -344,6 +344,7 @@ class TistoryApiClientTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getTistoryToken()).willReturn(Optional.of(accessToken));
+        given(memberCredentials.isTistoryConnected()).willReturn(true);
         given(memberCredentials.getTistoryBlogName()).willReturn(Optional.of("jeoninpyo726"));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(categoryListResponse).addHeader("Content-Type", "application/json"));

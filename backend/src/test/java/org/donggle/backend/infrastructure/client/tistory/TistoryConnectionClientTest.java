@@ -22,6 +22,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 class TistoryConnectionClientTest {
 
@@ -78,5 +79,23 @@ class TistoryConnectionClientTest {
 
         tistoryConnectionClient.saveAccessToken(1L, new OAuthAccessTokenRequest("redirect_uri", "code"));
         then(memberCredentials).should(times(1)).updateTistory("accessToken", "jeoninpyo726");
+    }
+
+    @Test
+    @DisplayName("tistory의 accessToken을 제거하는 테스트")
+    void deleteAccessTokenTest() {
+        // Given
+        final Long memberId = 1L;
+        final Member member = mock(Member.class);
+        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(memberCredentialsRepository.findMemberCredentialsByMember(member)).thenReturn(Optional.of(memberCredentials));
+
+        // When
+        tistoryConnectionClient.deleteAccessToken(memberId);
+
+        // Then
+        then(memberCredentials).should(times(1)).deleteTistoryConnection();
     }
 }

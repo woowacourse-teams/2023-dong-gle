@@ -20,6 +20,7 @@ import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryGet
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryPublishWritingResponseWrapper;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.ui.response.TistoryCategoryListResposne;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -44,11 +45,20 @@ public class TistoryApiClient implements BlogClient {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
 
+    @Autowired
     public TistoryApiClient(final MemberRepository memberRepository,
                             final MemberCredentialsRepository memberCredentialsRepository) {
         this.memberRepository = memberRepository;
         this.webClient = WebClient.create(TISTORY_URL);
         this.memberCredentialsRepository = memberCredentialsRepository;
+    }
+
+    public TistoryApiClient(final MemberRepository memberRepository,
+                            final MemberCredentialsRepository memberCredentialsRepository,
+                            final WebClient webClient) {
+        this.memberRepository = memberRepository;
+        this.memberCredentialsRepository = memberCredentialsRepository;
+        this.webClient = webClient;
     }
 
     @Override
@@ -155,14 +165,13 @@ public class TistoryApiClient implements BlogClient {
                 throw new InvalidPublishRequestException("현재 시간보다 과거의 시간은 입력될 수 없습니다.");
             }
             return instant.getEpochSecond();
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             throw new InvalidPublishRequestException("예약 시간 입력 형식이 잘못되었습니다.");
         }
     }
 
     public String findDefaultBlogName(final String access_token) {
-        final String blogInfoUri = UriComponentsBuilder.fromUriString(TISTORY_URL)
-                .path("/blog/info")
+        final String blogInfoUri = UriComponentsBuilder.fromUriString("/blog/info")
                 .queryParam("access_token", access_token)
                 .queryParam("output", "json")
                 .build()

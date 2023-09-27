@@ -92,4 +92,6 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             order by w.createdAt desc
             """)
     Page<Writing> findByMemberIdAndWritingStatusOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
+
+    Optional<Writing> findByIdAndStatus(final Long id, final WritingStatus status);
 }

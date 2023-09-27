@@ -33,6 +33,10 @@ public class MediumApiClient implements BlogClient {
         this.webClient = WebClient.create(MEDIUM_URL);
     }
 
+    public MediumApiClient(final WebClient webClient) {
+        this.webClient = webClient;
+    }
+
     @Override
     public PublishResponse publish(final String accessToken, final String content, final PublishRequest publishRequest, final String titleValue) {
         final MediumRequestBody body = makePublishRequest(titleValue, content, publishRequest);

@@ -137,7 +137,7 @@ public class TistoryApiClient implements BlogClient {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member)
                 .orElseThrow(NoSuchElementException::new);
-        if (memberCredentials.isTistoryConnected()) {
+        if (!memberCredentials.isTistoryConnected()) {
             throw new TistoryNotConnectedException();
         }
         return memberCredentials;

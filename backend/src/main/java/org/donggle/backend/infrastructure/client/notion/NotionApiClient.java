@@ -30,6 +30,10 @@ public class NotionApiClient {
         this.webClient = WebClient.create(NOTION_URL);
     }
 
+    public NotionApiClient(final WebClient webClient) {
+        this.webClient = webClient;
+    }
+
     public NotionBlockNodeResponse retrieveParentBlockNode(final String parentBlockId, final String notionToken) {
         return new NotionBlockNodeResponse(retrieveBlock(parentBlockId, notionToken), -1);
     }

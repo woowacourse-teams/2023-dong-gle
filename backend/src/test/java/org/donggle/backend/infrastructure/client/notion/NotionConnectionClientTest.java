@@ -42,7 +42,12 @@ class NotionConnectionClientTest {
 
         memberRepository = mock(MemberRepository.class);
         memberCredentialsRepository = mock(MemberCredentialsRepository.class);
-        notionConnectionClient = new NotionConnectionClient("clientId", "clientSecret", memberRepository, memberCredentialsRepository, webClient);
+        notionConnectionClient = new NotionConnectionClient(
+                "clientId",
+                "clientSecret",
+                memberRepository,
+                memberCredentialsRepository,
+                webClient);
     }
 
     @AfterEach

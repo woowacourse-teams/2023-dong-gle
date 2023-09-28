@@ -1,17 +1,11 @@
 package org.donggle.backend.exception.authentication;
 
-import org.donggle.backend.exception.authentication.UnAuthenticationException;
-
 public class ExpiredAccessTokenException extends UnAuthenticationException {
     private static final String MESSAGE = "유효하지 않은 토큰입니다.";
     private static final int REFRESH_REQUEST_CODE = 4011;
 
     public ExpiredAccessTokenException() {
         super(MESSAGE);
-    }
-
-    public ExpiredAccessTokenException(final Throwable cause) {
-        super(MESSAGE, cause);
     }
 
     @Override

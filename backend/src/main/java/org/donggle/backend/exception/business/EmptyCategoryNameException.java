@@ -9,10 +9,6 @@ public class EmptyCategoryNameException extends BusinessException {
         super(MESSAGE);
     }
 
-    public EmptyCategoryNameException(final Throwable cause) {
-        super(MESSAGE, cause);
-    }
-
     @Override
     public String getHint() {
         return "카테고리 이름은 빈 값이 될 수 없습니다.";

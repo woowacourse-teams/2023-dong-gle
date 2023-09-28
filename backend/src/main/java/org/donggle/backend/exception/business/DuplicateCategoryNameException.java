@@ -11,11 +11,6 @@ public class DuplicateCategoryNameException extends BusinessException {
         this.categoryName = categoryName;
     }
 
-    public DuplicateCategoryNameException(final String categoryName, final Throwable cause) {
-        super(MESSAGE, cause);
-        this.categoryName = categoryName;
-    }
-
     @Override
     public String getHint() {
         return "이미 존재하는 카테고리 이름입니다. 입력한 이름: " + categoryName;

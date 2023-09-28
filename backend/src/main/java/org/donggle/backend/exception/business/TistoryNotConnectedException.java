@@ -9,10 +9,6 @@ public class TistoryNotConnectedException extends BusinessException {
         super(MESSAGE);
     }
 
-    public TistoryNotConnectedException(final Throwable cause) {
-        super(MESSAGE, cause);
-    }
-
     @Override
     public String getHint() {
         return "티스토리 연동을 해주세요.";

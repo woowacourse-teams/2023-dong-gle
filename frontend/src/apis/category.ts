@@ -12,11 +12,11 @@ import {
 export const addCategory = (body: AddCategoriesRequest) => http.post(categoryURL, { json: body });
 
 // GET: 카테고리 목록 조회
-export const getCategories = (): Promise<GetCategoriesResponse> => http.get(categoryURL);
+export const getCategories = (): Promise<GetCategoriesResponse> => http.get(categoryURL).json();
 
 // GET: 카테고리 글 목록 조회
 export const getWritingsInCategory = (categoryId: number): Promise<GetCategoryDetailResponse> =>
-  http.get(`${categoryURL}/${categoryId}`);
+  http.get(`${categoryURL}/${categoryId}`).json();
 
 // PATCH: 카테고리 이름 수정
 export const updateCategoryTitle = ({ categoryId, body }: UpdateCategoryTitleArgs) =>

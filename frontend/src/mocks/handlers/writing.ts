@@ -106,6 +106,17 @@ export const writingHandlers = [
   rest.get(`${writingURL}`, (req, res, ctx) => {
     const categoryId = Number(req.url.searchParams.get('categoryId'));
 
+    if (req.headers.get('Authorization') !== 'Bearer accessToken')
+      return res(
+        ctx.status(401),
+        ctx.json({
+          error: {
+            message: '만료된 accessToken입니다. refreshToken을 이용해 갱신해주세요',
+            code: 4011,
+          },
+        }),
+      );
+
     return res(
       ctx.json<GetDetailWritingsResponse>(getWritingTableMock(categoryId)),
       // ctx.delay(1000),

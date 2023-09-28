@@ -67,6 +67,16 @@ public class Writing extends BaseEntity {
         this.nextWriting = nextWriting;
     }
 
+    public Writing(final Long id, final Member member, final Title title, final Category category, final List<Block> blocks, final Writing nextWriting, final WritingStatus status) {
+        this.id = id;
+        this.member = member;
+        this.title = title;
+        this.category = category;
+        this.blocks = blocks;
+        this.nextWriting = nextWriting;
+        this.status = status;
+    }
+
     public static Writing lastOf(final Member member, final Title title, final Category category) {
         return new Writing(member, title, category, Collections.emptyList(), null);
     }

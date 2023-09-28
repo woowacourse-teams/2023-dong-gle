@@ -42,6 +42,13 @@ public class Category {
         this.member = member;
     }
 
+    public Category(final Long id, final CategoryName categoryName, final Category nextCategory, final Member member) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.nextCategory = nextCategory;
+        this.member = member;
+    }
+
     public static Category basic(final Member member) {
         return new Category(BASIC_CATEGORY_NAME, null, member);
     }

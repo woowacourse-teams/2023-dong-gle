@@ -1,7 +1,7 @@
 package org.donggle.backend.auth;
 
 import org.donggle.backend.domain.auth.RefreshToken;
-import org.donggle.backend.domain.member.MemberFixture;
+import org.donggle.backend.fix.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -48,6 +48,14 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
     }
 
+    public Member(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+        this.id = id;
+        this.memberName = memberName;
+        this.socialId = socialId;
+        this.socialType = socialType;
+        this.deletedAt = deletedAt;
+    }
+
     public static Member of(final MemberName memberName, final Long socialId, final SocialType socialType) {
         return new Member(memberName, socialId, socialType);
     }

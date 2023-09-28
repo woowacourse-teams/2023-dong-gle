@@ -2,6 +2,7 @@ package org.donggle.backend.domain.member;
 
 import jakarta.persistence.EntityManager;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
+import org.donggle.backend.fix.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

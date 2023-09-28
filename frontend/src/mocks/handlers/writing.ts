@@ -12,6 +12,7 @@ import {
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { getHomeWritingMock } from 'mocks/homeWritingMock';
+import { getWritingTableMock } from 'mocks/writingTableMock';
 
 export const writingHandlers = [
   // 글 조회: GET
@@ -24,7 +25,7 @@ export const writingHandlers = [
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     const writingId = Number(req.params.writingId);
-    
+
     if (writingId === 200) {
       return res(
         ctx.delay(300),

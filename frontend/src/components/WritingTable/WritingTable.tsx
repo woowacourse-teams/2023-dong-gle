@@ -11,7 +11,7 @@ type Props = {
   categoryId: number;
 };
 
-const blogIcon: Record<Blog, ReactElement> = {
+export const blogIcon: Record<Blog, ReactElement> = {
   MEDIUM: <MediumLogoIcon width='2.4rem' height='2.4rem' />,
   TISTORY: <TistoryLogoIcon width='2.4rem' height='2.4rem' />,
 };
@@ -34,15 +34,15 @@ const WritingTable = ({ writings, categoryId }: Props) => {
       <thead>
         <tr ref={rowRef} tabIndex={0}>
           <th>글 제목</th>
+          <th>생성 날짜</th>
           <th>발행한 블로그 플랫폼</th>
-          <th>발행 시간</th>
         </tr>
       </thead>
       <tbody>
         {writings.map(({ id, title, publishedDetails, createdAt }) => (
           <tr
             key={id}
-            onClick={() => goWritingPage({ categoryId, writingId: id })}
+            onClick={() => goWritingPage({ categoryId, writingId: id, isDeletedWriting: false })}
             role='button'
             tabIndex={0}
           >

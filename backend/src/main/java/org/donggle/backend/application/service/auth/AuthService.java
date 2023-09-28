@@ -5,22 +5,19 @@ import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
-import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.oauth.SocialType;
 import org.donggle.backend.exception.business.DuplicatedMemberException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.SocialUserInfo;
+import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,22 +30,18 @@ public class AuthService {
     private final CategoryRepository categoryRepository;
 
 
-    public TokenResponse login(final SocialUserInfo socialUserInfo) {
-        final Optional<MemberInfo> optionalMemberInfo = memberRepository.findBySocialId(socialUserInfo.socialId());
-        if (optionalMemberInfo.isPresent()) {
-            final MemberInfo memberInfo = optionalMemberInfo.get();
-            final Member member = new Member(memberInfo.id(), new MemberName(socialUserInfo.nickname()), memberInfo.socialId());
-            return createTokens(member);
-        }
-        return createTokens(initializeMember(socialUserInfo));
+    public TokenResponse login(final UserInfo userInfo, final SocialType type) {
+        final Member loginMember = memberRepository.findBySocialIdAndSocialType(userInfo.socialId(), type)
+                .orElseGet(() -> initializeMember(userInfo));
+        return createTokens(loginMember);
     }
 
     public void logout(final Long memberId) {
         tokenRepository.deleteByMemberId(memberId);
     }
 
-    private Member initializeMember(final SocialUserInfo socialUserInfo) {
-        Member member = socialUserInfo.toMember();
+    private Member initializeMember(final UserInfo userInfo) {
+        Member member = userInfo.toMember();
         final Category basicCategory = Category.basic(member);
         final MemberCredentials basic = MemberCredentials.basic(member);
         try {
@@ -56,7 +49,7 @@ public class AuthService {
             categoryRepository.save(basicCategory);
             memberCredentialsRepository.save(basic);
         } catch (final DuplicateKeyException e) {
-            throw new DuplicatedMemberException(socialUserInfo.socialType().name());
+            throw new DuplicatedMemberException(userInfo.socialType().name());
         }
         return member;
     }

@@ -6,9 +6,11 @@ import type {
   GetDetailWritingsResponse,
   GetWritingPropertiesResponse,
   GetWritingResponse,
-  PublishWritingArgs,
   UpdateWritingTitleArgs,
   UpdateWritingOrderArgs,
+  GetHomeWritingsResponse,
+  PublishWritingToTistoryArgs,
+  PublishWritingToMediumArgs,
 } from 'types/apis/writings';
 
 // 글 생성(글 업로드): POST
@@ -31,19 +33,21 @@ export const addNotionWriting = (body: AddNotionWritingRequest) =>
 
 // 글 조회: GET
 export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
-  http.get(`${writingURL}/${writingId}`);
+  http.get(`${writingURL}/${writingId}`).json();
 
 // 글 정보: GET
 export const getWritingProperties = (writingId: number): Promise<GetWritingPropertiesResponse> =>
-  http.get(`${writingURL}/${writingId}/properties`);
+  http.get(`${writingURL}/${writingId}/properties`).json();
 
-// 글 발행하기: POST
-export const publishWriting = ({ writingId, body }: PublishWritingArgs) =>
-  http.post(`${writingURL}/${writingId}/publish`, { json: body });
+export const publishWritingToTistory = ({ writingId, body }: PublishWritingToTistoryArgs) =>
+  http.post(`${writingURL}/${writingId}/publish/tistory`, { json: body });
+
+export const publishWritingToMedium = ({ writingId, body }: PublishWritingToMediumArgs) =>
+  http.post(`${writingURL}/${writingId}/publish/medium`, { json: body });
 
 // 카테고리 글 상세 목록 조회 : GET
 export const getDetailWritings = (categoryId: number): Promise<GetDetailWritingsResponse> =>
-  http.get(`${writingURL}?categoryId=${categoryId}`);
+  http.get(`${writingURL}?categoryId=${categoryId}`).json();
 
 // 글 제목 변경: PATCH
 export const updateWritingTitle = ({ writingId, body }: UpdateWritingTitleArgs) =>
@@ -52,3 +56,7 @@ export const updateWritingTitle = ({ writingId, body }: UpdateWritingTitleArgs) 
 // 글 제목 순서 변경: PATCH
 export const updateWritingOrder = ({ writingId, body }: UpdateWritingOrderArgs) =>
   http.patch(`${writingURL}/${writingId}`, { json: body });
+
+// 전체 글: GET
+export const getHomeWritings = (option: string): Promise<GetHomeWritingsResponse> =>
+  http.get(`${writingURL}/home${option}`).json();

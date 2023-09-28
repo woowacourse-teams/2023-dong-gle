@@ -32,9 +32,7 @@ public class NoConcurrentAccessAspect {
             return joinPoint.proceed();
         } finally {
             lock.unlock();
-            if (memberLock.contains(memberId)) {
-                memberLock.remove(memberId);
-            }
+            memberLock.remove(memberId);
         }
     }
 

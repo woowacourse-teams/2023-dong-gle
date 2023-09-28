@@ -1,4 +1,5 @@
-import { Blog, PublishingPropertyData } from 'types/domain';
+import { Blog } from 'types/domain';
+import { CategoryResponse } from './category';
 
 export type AddWritingRequest = FormData;
 
@@ -18,13 +19,27 @@ export type GetWritingPropertiesResponse = {
   publishedDetails: PublishedDetail[];
 };
 
-export type PublishWritingRequest = {
-  publishTo: Blog;
-} & PublishingPropertyData;
+export type PublishWritingToTistoryRequest = {
+  tags: string[];
+  publishStatus: 'PUBLIC' | 'PRIVATE' | 'PROTECT';
+  password: string;
+  categoryId: string;
+  publishTime: string; // "yyyy-MM-dd HH:mm:ss.SSS" 형식
+};
 
-export type PublishWritingArgs = {
+export type PublishWritingToTistoryArgs = {
   writingId: number;
-  body: PublishWritingRequest;
+  body: PublishWritingToTistoryRequest;
+};
+
+export type PublishWritingToMediumRequest = {
+  tags: string[];
+  publishStatus: 'PUBLIC' | 'PRIVATE' | 'PROTECT';
+};
+
+export type PublishWritingToMediumArgs = {
+  writingId: number;
+  body: PublishWritingToMediumRequest;
 };
 
 export type PublishedDetail = {
@@ -58,4 +73,41 @@ export type UpdateWritingOrderArgs = {
     targetCategoryId: number;
     nextWritingId: number;
   };
+};
+
+type HomeContent = {
+  id: number;
+  title: string;
+  category: CategoryResponse;
+  createdAt: Date;
+  publishedDetails: Omit<PublishedDetail, 'tags' | 'publishedUrl'>[];
+};
+
+type Sort = {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+};
+
+type Pageable = {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+};
+
+export type GetHomeWritingsResponse = {
+  content: HomeContent[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
 };

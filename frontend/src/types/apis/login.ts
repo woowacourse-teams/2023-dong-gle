@@ -11,3 +11,7 @@ export type LoginOauthRequest = {
 export type LoginOauthResponse = {
   accessToken: string;
 };
+
+export type RegenerateAccessTokenResponse = {
+  accessToken: string;
+};

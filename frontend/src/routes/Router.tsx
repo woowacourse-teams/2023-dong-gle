@@ -18,6 +18,7 @@ import TrashCanPage from 'pages/TrashCanPage/TrashCanPage';
 import PrivateRouter from './PrivateRouter';
 
 import { Suspense, lazy } from 'react';
+import HomePage from 'pages/HomePage/HomePage';
 
 const IntroducePage = lazy(() => import('pages/IntroducePage/IntroducePage'));
 
@@ -34,6 +35,7 @@ export const Router = () => {
           <Route path={PATH.connections} element={<ConnectionPage />} />
 
           <Route path={PATH.space} element={<Layout />}>
+            <Route path={PATH.home} element={<HomePage />} />
             <Route path={PATH.writingPage} element={<WritingPage />} />
             <Route path={PATH.writingTablePage} element={<WritingTablePage />} />
             <Route path={PATH.trashCanPage} element={<TrashCanPage />} />

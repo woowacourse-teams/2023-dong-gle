@@ -1,23 +1,22 @@
-import { useLocation, useParams } from 'react-router-dom';
-import { styled } from 'styled-components';
 import WritingViewer from 'components/WritingViewer/WritingViewer';
-import { usePageContext } from 'pages/Layout/Layout';
 import { useEffect } from 'react';
+import { useSetGlobalState } from '@yogjin/react-global-state';
+import { activeCategoryIdState, activeWritingInfoState } from 'globalState';
+import { useLocation } from 'react-router-dom';
+import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
+import use활성화된글설정 from 'hooks/use활성화된글설정';
 
 const WritingPage = () => {
-  const writingId = Number(useParams()['writingId']);
-  const categoryId = Number(useParams()['categoryId']);
-  const { setActiveWritingInfo } = usePageContext();
-  const location = useLocation();
-  const isDeletedWriting = location.state.isDeletedWriting;
+  const {
+    state: { categoryId, writingId, isDeletedWriting },
+  } = useLocation();
+  const activeWritingInfo = { id: writingId, isDeleted: isDeletedWriting };
 
-  useEffect(() => {
-    const clearActiveWritingId = () => {
-      setActiveWritingInfo?.(null);
-    };
-    setActiveWritingInfo?.({ id: writingId, isDeleted: isDeletedWriting });
-    return () => clearActiveWritingId();
-  }, [isDeletedWriting]);
+  use활성화된카테고리설정(categoryId);
+  use활성화된글설정(activeWritingInfo);
+
+  if (!writingId) return <div>존재하지 않는 글입니다.</div>;
+  if (!categoryId) return <div>존재하지 않는 카테고리입니다.</div>;
 
   return (
     <WritingViewer

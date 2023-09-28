@@ -31,11 +31,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
+import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
+import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CategoryService {
-    private static final int LAST_WRITING_FLAG = -1;
+    private static final int LAST_CATEGORY_FLAG = -1;
     private static final int FIRST_WRITING_INDEX = 0;
 
     private final MemberRepository memberRepository;
@@ -95,7 +99,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryWritingsResponse findAllWritings(final Long memberId, final Long categoryId) {
         final Category findCategory = findCategory(memberId, categoryId);
-        final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+        final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
         if (findWritings.isEmpty()) {
             return CategoryWritingsResponse.of(findCategory, Collections.emptyList());
         }
@@ -147,8 +151,8 @@ public class CategoryService {
         final Category findCategory = findCategory(findMember.getId(), categoryId);
         final Category basicCategory = findBasicCategoryByMemberId(memberId);
         validateBasicCategory(basicCategory, findCategory);
-        final List<Writing> trashedWritingInCategory = writingRepository.findAllByMemberIdAndCategoryIdAndStatusIsTrashedAndDeleted(memberId, categoryId);
-        for (final Writing writing : trashedWritingInCategory) {
+        final List<Writing> trashedAndDeletedWritingsInCategory = writingRepository.findAllByMemberIdAndCategoryIdInStatuses(memberId, categoryId, List.of(TRASHED, DELETED));
+        for (final Writing writing : trashedAndDeletedWritingsInCategory) {
             writing.changeCategory(basicCategory);
         }
         transferToBasicCategory(basicCategory, findCategory);
@@ -157,7 +161,7 @@ public class CategoryService {
 
     private void transferToBasicCategory(final Category basicCategory, final Category findCategory) {
         if (haveWritingsCategory(findCategory)) {
-            final List<Writing> findWritings = writingRepository.findAllByCategoryId(findCategory.getId());
+            final List<Writing> findWritings = writingRepository.findAllByCategoryIdAndStatus(findCategory.getId(), ACTIVE);
             final Writing firstWritingInCategory = findFirstWriting(findWritings);
             if (haveWritingsCategory(basicCategory)) {
                 final Writing lastWritingInBasicCategory = findLastWritingInCategory(basicCategory);
@@ -168,7 +172,7 @@ public class CategoryService {
     }
 
     private boolean haveWritingsCategory(final Category category) {
-        return !writingRepository.findAllByCategoryId(category.getId()).isEmpty();
+        return !writingRepository.findAllByCategoryIdAndStatus(category.getId(), ACTIVE).isEmpty();
     }
 
     private void deleteCategory(final Category findCategory) {
@@ -181,34 +185,65 @@ public class CategoryService {
     }
 
     public void modifyCategoryOrder(final Long memberId, final Long categoryId, final CategoryModifyRequest request) {
-        final Member member = findMember(memberId);
-        final Long nextCategoryId = request.nextCategoryId();
-        final Category source = findCategory(member.getId(), categoryId);
-        final Category basicCategory = findBasicCategoryByMemberId(member.getId());
-        validateBasicCategory(basicCategory, source);
-        deleteCategoryOrder(source);
-        addCategoryOrder(nextCategoryId, source, member.getId());
-    }
-
-    private void deleteCategoryOrder(final Category category) {
-        final Category nextCategory = category.getNextCategory();
-        category.changeNextCategoryNull();
-        final Category preCategory = findPreCategory(category.getId());
+        final Long targetCategoryId = request.nextCategoryId();
+        final Category source = findCategory(memberId, categoryId);
+        validateAuthorization(source, memberId);
+        final Category basicCategory = findBasicCategoryByMemberId(memberId);
+        validateModifyCategoryOrder(basicCategory, categoryId, request.nextCategoryId());
+        if (isInValidRequest(source, request)) {
+            return;
+        }
+        final Category nextCategory = source.getNextCategory();
+        final Category lastCategory = findLastCategoryByMemberId(memberId);
+        source.changeNextCategoryNull();
+        final Category preCategory = findPreCategory(source.getId());
         preCategory.changeNextCategory(nextCategory);
+
+        if (targetCategoryId == LAST_CATEGORY_FLAG) {
+            lastCategory.changeNextCategory(source);
+        } else {
+            final Category targetCategory = findCategory(memberId, targetCategoryId);
+            final Category targetPreCategory = findPreCategory(targetCategoryId);
+            targetPreCategory.changeNextCategory(source);
+            categoryRepository.flush();
+            source.changeNextCategory(targetCategory);
+        }
     }
 
-    private void addCategoryOrder(final Long nextCategoryId, final Category category, final Long memberId) {
-        final Category preCategory;
-        if (nextCategoryId == LAST_WRITING_FLAG) {
-            preCategory = findLastCategoryByMemberId(memberId);
-        } else {
-            preCategory = findPreCategory(nextCategoryId);
+    private void validateAuthorization(final Category category, final Long memberId) {
+        if (!category.getMember().getId().equals(memberId)) {
+            throw new CategoryNotFoundException(category.getId());
         }
-        preCategory.changeNextCategory(category);
-        if (nextCategoryId != LAST_WRITING_FLAG) {
-            final Category nextCategory = findCategory(memberId, nextCategoryId);
-            category.changeNextCategory(nextCategory);
+    }
+
+    private void validateModifyCategoryOrder(final Category basicCategory, final Long categoryId, final Long targetCategoryId) {
+        if (isMovingBasicCategory(basicCategory, categoryId, targetCategoryId)) {
+            throw new InvalidBasicCategoryException(categoryId, targetCategoryId);
         }
+    }
+
+    private boolean isMovingBasicCategory(final Category basicCategory, final Long categoryId, final Long targetCategoryId) {
+        return Objects.equals(basicCategory.getId(), categoryId) ||
+                Objects.equals(basicCategory.getId(), targetCategoryId);
+    }
+
+    private boolean isInValidRequest(final Category source, final CategoryModifyRequest request) {
+        return isAlreadyLast(source, request) ||
+                isSamePosition(source, request) ||
+                isSelfPointing(source, request);
+    }
+
+    private boolean isAlreadyLast(final Category source, final CategoryModifyRequest request) {
+        return source.getNextCategory() == null && request.nextCategoryId() == LAST_CATEGORY_FLAG;
+    }
+
+    private boolean isSamePosition(final Category source, final CategoryModifyRequest request) {
+        return source.getNextCategory() != null &&
+                Objects.equals(source.getNextCategory().getId(), request.nextCategoryId());
+    }
+
+    private boolean isSelfPointing(final Category source, final CategoryModifyRequest request) {
+        return Objects.equals(source.getId(), request.nextCategoryId());
     }
 
     private void validateBasicCategory(final Category basicCategory, final Category category) {

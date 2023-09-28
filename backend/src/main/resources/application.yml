@@ -27,3 +27,15 @@ notion_client_id: notion_client_id
 notion_client_secret: notion_client_secret
 encrypt_secret_key: encryptsecretkey
 encrypt_iv: encryptivparamet
+
+aws:
+  s3:
+    bucket: bucket
+    key: key
+uploader:
+  image-url: https://image.donggle.blog/
+data:
+  web:
+    pageable:
+      default-page-size: 12
+      max-page-size: 100

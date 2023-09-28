@@ -1,10 +1,11 @@
 import { WritingIcon } from 'assets/icons';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { useParams } from 'react-router-dom';
 import { styled, css } from 'styled-components';
 import { useWritings } from './useWritings';
 import DeleteButton from 'components/DeleteButton/DeleteButton';
 import { useDeleteWritings } from './useDeleteWritings';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
+import { activeWritingInfoState } from 'globalState';
 import { DragEvent } from 'react';
 import { INDEX_POSITION, LAST_DRAG_SECTION_ID } from 'constants/drag';
 
@@ -29,7 +30,8 @@ const WritingList = ({
 }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const { writings } = useWritings(categoryId, isOpen);
-  const writingId = Number(useParams()['writingId']);
+  const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
+  const writingId = activeWritingInfo?.id;
   const deleteWritings = useDeleteWritings();
 
   const isWritingDragOverTarget = (categoryId: number, writingId: number) =>
@@ -53,7 +55,9 @@ const WritingList = ({
         >
           <S.Button
             aria-label={`${writing.title}글 메인화면에 열기`}
-            onClick={() => goWritingPage({ categoryId, writingId: writing.id })}
+            onClick={() =>
+              goWritingPage({ categoryId, writingId: writing.id, isDeletedWriting: false })
+            }
           >
             <S.IconWrapper>
               <WritingIcon width={14} height={14} />

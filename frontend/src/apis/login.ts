@@ -7,9 +7,9 @@ import {
 } from 'types/apis/login';
 
 export const loginOauth = ({ platform, body }: LoginOauthRequest): Promise<LoginOauthResponse> =>
-  http.post(`${loginURL}/${platform}`, { json: body });
+  http.post(`${loginURL}/${platform}`, { json: body }).json();
 
 export const logout = () => http.post(`${authURL}/logout`);
 
 export const regenerateAccessToken = (): Promise<RegenerateAccessTokenResponse> =>
-  http.post(`${authURL}/token/refresh`);
+  http.post(`${authURL}/token/refresh`).json();

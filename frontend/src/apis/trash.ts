@@ -21,7 +21,8 @@ export const deletePermanentWritings = (writingIds: number[]) =>
   });
 
 // 휴지통에 있는 글 목록 조회: GET
-export const getDeletedWritings = (): Promise<GetDeletedWritingsResponse> => http.get(trashURL);
+export const getDeletedWritings = (): Promise<GetDeletedWritingsResponse> =>
+  http.get(trashURL).json();
 
 // 휴지통에서 글 복구: POST
 export const restoreDeletedWritings = (writingIds: number[]) =>

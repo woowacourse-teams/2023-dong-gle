@@ -33,11 +33,11 @@ export const addNotionWriting = (body: AddNotionWritingRequest) =>
 
 // 글 조회: GET
 export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
-  http.get(`${writingURL}/${writingId}`);
+  http.get(`${writingURL}/${writingId}`).json();
 
 // 글 정보: GET
 export const getWritingProperties = (writingId: number): Promise<GetWritingPropertiesResponse> =>
-  http.get(`${writingURL}/${writingId}/properties`);
+  http.get(`${writingURL}/${writingId}/properties`).json();
 
 export const publishWritingToTistory = ({ writingId, body }: PublishWritingToTistoryArgs) =>
   http.post(`${writingURL}/${writingId}/publish/tistory`, { json: body });
@@ -47,7 +47,7 @@ export const publishWritingToMedium = ({ writingId, body }: PublishWritingToMedi
 
 // 카테고리 글 상세 목록 조회 : GET
 export const getDetailWritings = (categoryId: number): Promise<GetDetailWritingsResponse> =>
-  http.get(`${writingURL}?categoryId=${categoryId}`);
+  http.get(`${writingURL}?categoryId=${categoryId}`).json();
 
 // 글 제목 변경: PATCH
 export const updateWritingTitle = ({ writingId, body }: UpdateWritingTitleArgs) =>

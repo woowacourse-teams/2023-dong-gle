@@ -59,4 +59,4 @@ export const updateWritingOrder = ({ writingId, body }: UpdateWritingOrderArgs) 
 
 // 전체 글: GET
 export const getHomeWritings = (option: string): Promise<GetHomeWritingsResponse> =>
-  http.get(`${writingURL}/home${option}`);
+  http.get(`${writingURL}/home${option}`).json();

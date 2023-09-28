@@ -52,6 +52,26 @@ class JwtTokenProviderTest {
     }
 
     @Test
+    @DisplayName("짧은 유효 기간이 지난 토큰 사용 시 예외 발생")
+    void shortLivedTokenShouldExpire() throws InterruptedException {
+        //given
+        final JwtTokenProvider shortJwt = new JwtTokenProvider(
+                "secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey",
+                1,
+                1);
+        final String shortLivedToken = shortJwt.createAccessToken(1L);
+
+        Thread.sleep(2);
+
+        //when
+        //then
+        assertThatThrownBy(
+                () -> shortJwt.inValidTokenUsage(shortLivedToken)
+        ).isInstanceOf(ExpiredAccessTokenException.class);
+    }
+
+
+    @Test
     @DisplayName("만료된 토큰 사용 시 예외 발생")
     void expiredTokenUsageTest() {
         //given

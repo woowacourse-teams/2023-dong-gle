@@ -12,11 +12,6 @@ public class ClientRequestException extends ClientException {
         this.platformName = platformName;
     }
 
-    public ClientRequestException(final Throwable cause, final String platformName) {
-        super(MESSAGE, cause);
-        this.platformName = platformName;
-    }
-
     @Override
     public String getHint() {
         return "잘못된 요청입니다. 요청한 플랫폼: " + platformName;

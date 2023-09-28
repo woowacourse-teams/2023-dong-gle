@@ -2,11 +2,13 @@ package org.donggle.backend.infrastructure.client.medium;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.request.TokenAddRequest;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.infrastructure.client.exception.ClientInvalidTokenException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +75,30 @@ class MediumConnectionClientTest {
         mediumConnectionClient.saveAccessToken(memberId, token);
 
         then(memberCredentials).should(times(1)).updateMediumToken(token.token());
+    }
+
+    @Test
+    @DisplayName("medium의 accessToken을 save하는도중 에외 테스트")
+    void saveAccessToken_status_400() {
+        //given
+        final long memberId = 1L;
+        final TokenAddRequest token = new TokenAddRequest("token");
+        final String userInfo = """
+                {
+                  "data": {
+                    "id": "5303d74c64f66366f00cb9b2a94f3251bf5",
+                    "username": "majelbstoat",
+                    "name": "Jamie Talbot",
+                    "url": "https://medium.com/@majelbstoat",
+                    "imageUrl": "https://images.medium.com/0*fkfQiTzT7TlUGGyI.png"
+                  }
+                }
+                """;
+        mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(userInfo).addHeader("Content-Type", "application/json"));
+
+        Assertions.assertThatThrownBy(
+                () -> mediumConnectionClient.saveAccessToken(memberId, token)
+        ).isInstanceOf(ClientInvalidTokenException.class);
     }
 
     @Test

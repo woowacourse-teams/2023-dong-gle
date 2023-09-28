@@ -12,11 +12,6 @@ public class ClientForbiddenException extends ClientException {
         this.platformName = platformName;
     }
 
-    public ClientForbiddenException(final String platformName, final Throwable cause) {
-        super(MESSAGE, cause);
-        this.platformName = platformName;
-    }
-
     @Override
     public String getHint() {
         return platformName + "에 접근 권한이 없습니다.";

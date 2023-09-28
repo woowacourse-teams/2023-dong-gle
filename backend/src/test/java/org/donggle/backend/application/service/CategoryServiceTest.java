@@ -161,7 +161,7 @@ class CategoryServiceTest {
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
         given(categoryRepository.findPreCategoryByCategoryId(categoryId)).willReturn(Optional.of(basicCategory));
         given(writingRepository.findAllByMemberIdAndCategoryIdInStatuses(memberId, categoryId, List.of(TRASHED, DELETED)))
-                .willReturn(WritingFixture.createWritings());
+                .willReturn(WritingFixture.createWritings_ACTIVE());
         //when
         //then
         assertDoesNotThrow(() -> categoryService.removeCategory(memberId, categoryId));
@@ -177,7 +177,7 @@ class CategoryServiceTest {
         final Category category = new Category(2L, new CategoryName(newName), null, beaver);
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
         given(writingRepository.findAllByCategoryIdAndStatus(2L, ACTIVE))
-                .willReturn(WritingFixture.createWritings());
+                .willReturn(WritingFixture.createWritings_ACTIVE());
         //when
         final CategoryWritingsResponse result = categoryService.findAllWritings(memberId, categoryId);
 

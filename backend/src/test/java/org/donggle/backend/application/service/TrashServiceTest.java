@@ -1,149 +1,150 @@
 package org.donggle.backend.application.service;
 
-import jakarta.transaction.Transactional;
-import org.donggle.backend.application.repository.CategoryRepository;
-import org.donggle.backend.application.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.trash.TrashService;
 import org.donggle.backend.domain.category.Category;
-import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.fix.WritingFixture;
 import org.donggle.backend.ui.response.TrashResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
-@SpringBootTest
-@Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
 class TrashServiceTest {
-    @Autowired
-    private WritingRepository writingRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
+    @InjectMocks
     private TrashService trashService;
+    @Mock
+    private WritingRepository writingRepository;
 
-    @BeforeEach
-    void setUp() {
-        final Writing writing1 = writingRepository.findById(1L).get();
-        final Member member = memberRepository.findById(1L).get();
-        final Category category = categoryRepository.findFirstByMemberId(1L).get();
-        final Writing writing2 = Writing.lastOf(member, new Title("test2"), category);
-        final Writing writing3 = Writing.lastOf(member, new Title("test3"), category);
-        final Writing writing4 = Writing.lastOf(member, new Title("test4"), category);
-        writingRepository.save(writing2);
-        writingRepository.save(writing3);
-        writingRepository.save(writing4);
-        writing1.changeNextWriting(writing2);
-        writing2.changeNextWriting(writing3);
-        writing3.changeNextWriting(writing4);
-    }
 
     @Test
     @DisplayName("쓰레기통에 있는 글을 조회한다.")
     void findTrashedWritingList() {
         //given
-        final Writing writing = writingRepository.findById(1L).get();
-        writing.moveToTrash();
-
+        final long memberId = 10L;
+        given(writingRepository.findAllByMemberIdAndStatusIsTrashed(memberId)).willReturn(WritingFixture.createWritings_ACTIVE());
         //when
-        final TrashResponse trashResponse = trashService.findTrashedWritingList(1L);
+        final TrashResponse trashResponse = trashService.findTrashedWritingList(memberId);
 
         //then
-        assertAll(() -> assertThat(trashResponse.writings()).hasSize(1), () -> assertThat(trashResponse.writings()).usingRecursiveComparison().comparingOnlyFields("id").isEqualTo(writing.getId()));
+        assertThat(trashResponse.writings()).hasSize(2);
     }
 
-//    @Test
-//    @DisplayName("쓰레기통으로 글을 옮긴 뒤 원래 글의 순서를 변경한다. - 가운데")
-//    void changeOrderOfTrashedWritingsMiddle() {
-//        //given
-//        //when
-//        trashService.trashWritings(1L, List.of(3L));
-//
-//        //then
-//        final List<Writing> writings = writingRepository.findAllByCategoryIdAndStatus(1L, ACTIVE);
-//        assertAll(
-//                () -> assertThat(writings).hasSize(3),
-//                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
-//        );
-//    }
-
-//    @Test
-//    @DisplayName("쓰레기통으로 글을 옮긴 뒤 원래 글의 순서를 변경한다. - 마지막")
-//    void changeOrderOfTrashedWritingsLast() {
-//        //given
-//        final Writing writing = writingRepository.findById(4L).get();
-//
-//        //when
-//        trashService.trashWritings(1L, List.of(writing.getId()));
-//
-//        //then
-//        final List<Writing> writings = writingRepository.findAllByCategoryIdAndStatus(1L, ACTIVE);
-//        assertAll(
-//                () -> assertThat(writings).hasSize(3),
-//                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
-//        );
-//    }
-
     @Test
-    @DisplayName("쓰레기통으로 글을 옮긴 뒤 원래 글의 순서를 변경한다. - 첫번째")
-    void changeOrderOfTrashedWritingsFirst() {
+    @DisplayName("쓰레기통으로 글을 옮긴 뒤 원래 글의 순서를 변경한다.")
+    void changeOrderOfTrashedWriting() {
         //given
-        final Writing writing = writingRepository.findById(1L).get();
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+        final Writing writing = mock(Writing.class);
+        final Writing nextWriting = mock(Writing.class);
+        final Writing preWriting = mock(Writing.class);
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(writing));
+        given(writing.getNextWriting()).willReturn(nextWriting);
+        given(writingRepository.findPreWritingByWritingId(0L)).willReturn(Optional.of(preWriting));
+        given(writing.getStatus()).willReturn(ACTIVE);
+        given(writing.isOwnedBy(memberId)).willReturn(true);
+
         //when
-        trashService.trashWritings(1L, List.of(writing.getId()));
+        trashService.trashWritings(memberId, writingIds);
 
         //then
-        final List<Writing> writings = writingRepository.findAllByCategoryIdAndStatus(1L, ACTIVE);
-        assertAll(
-                () -> assertThat(writings).hasSize(3),
-                () -> assertThat(writings.get(0).getNextWriting()).isEqualTo(writings.get(1))
-        );
+        then(writing).should().moveToTrash();
+        then(preWriting).should().changeNextWriting(nextWriting);
     }
 
     @Test
-    @DisplayName("글을 삭제한다.")
+    @DisplayName("쓰레기통으로 글을 옮길 때 ACTIVE인 글이 아닐때 에러")
+    void changeOrderOfTrashedIsACTIVEWriting() {
+        //given
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+        final Writing writing = mock(Writing.class);
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(writing));
+        given(writing.getStatus()).willReturn(TRASHED);
+
+        //when
+        //then
+        Assertions.assertThatThrownBy(
+                () -> trashService.trashWritings(memberId, writingIds)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+
+    @Test
+    @DisplayName("글을 1개 삭제한다.")
+    void deleteWriting() {
+        //given
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+        final Writing writing = mock(Writing.class);
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(writing));
+        given(writing.getStatus()).willReturn(TRASHED);
+
+        //when
+        trashService.deleteWritings(memberId, writingIds);
+
+        //then
+        then(writingRepository).should().delete(writing);
+    }
+
+    @Test
+    @DisplayName("글을 2개이상 삭제한다.")
     void deleteWritings() {
         //given
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L, 2L);
+        final List<Writing> writings = WritingFixture.createWritings_TRASHED();
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(writings.get(0)));
+        given(writingRepository.findByIdAndMemberId(2L, memberId)).willReturn(Optional.of(writings.get(1)));
 
         //when
-        trashService.trashWritings(1L, List.of(1L));
-        trashService.deleteWritings(1L, List.of(1L));
+        trashService.deleteWritings(memberId, writingIds);
 
         //then
-        assertThat(writingRepository.findByIdAndMemberId(1L, 1L)).isEmpty();
+        then(writingRepository).should().delete(writings.get(0));
+        then(writingRepository).should().delete(writings.get(1));
     }
 
     @Test
     @DisplayName("쓰레기통에 있는 글을 복원한다.")
     void restoreWritings() {
         //given
-        final Writing writing = writingRepository.findById(1L).get();
-        writing.moveToTrash();
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+        final Writing writing1 = mock(Writing.class);
+        final Category category = mock(Category.class);
+
+        given(writing1.getCategory()).willReturn(category);
+        given(category.getId()).willReturn(1L);
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(writing1));
+        given(writingRepository.findLastWritingByCategoryId(1L)).willReturn(Optional.of(writing1));
+        given(writing1.getStatus()).willReturn(TRASHED);
 
         //when
-        trashService.restoreWritings(1L, List.of(1L));
+        trashService.restoreWritings(memberId, writingIds);
 
         //then
-        final List<Writing> writings = writingRepository.findAllByCategoryIdAndStatus(1L, ACTIVE);
-        final Optional<Writing> restoredWriting = writingRepository.findById(1L);
-        assertAll(
-                () -> assertThat(restoredWriting).isNotEmpty(),
-                () -> assertThat(writings).hasSize(4), () -> assertThat(restoredWriting.get().getNextWriting()).isNull()
-        );
+        then(writing1).should(times(1)).restore();
     }
 }

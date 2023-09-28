@@ -11,6 +11,9 @@ import static org.donggle.backend.fix.CategoryFixture.basicCategory;
 import static org.donggle.backend.fix.MemberFixture.beaver;
 
 public class WritingFixture {
+
+    public static final Writing writing = new Writing(1L, beaver, new Title("Title 1"), basicCategory, new ArrayList<>(), null, ACTIVE);
+
     public static List<Writing> createWritings() {
         final Title title1 = new Title("Title 1");
         final Title title2 = new Title("Title 2");

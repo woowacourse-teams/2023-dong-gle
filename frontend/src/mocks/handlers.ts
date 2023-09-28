@@ -1,5 +1,4 @@
 import { categoryHandlers } from './handlers/category';
-import { errorHandlers } from './handlers/error';
 import { trashHandlers } from './handlers/trash';
 import { writingHandlers } from './handlers/writing';
 import { loginHandlers } from './handlers/login';
@@ -10,7 +9,6 @@ import { authHandlers } from './handlers/auth';
 export const handlers = [
   ...writingHandlers,
   ...categoryHandlers,
-  ...errorHandlers,
   ...loginHandlers,
   ...trashHandlers,
   ...memberHandlers,

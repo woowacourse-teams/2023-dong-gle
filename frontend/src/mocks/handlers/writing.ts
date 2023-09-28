@@ -9,8 +9,8 @@ import {
   UpdateWritingOrderArgs,
   UpdateWritingTitleArgs,
 } from 'types/apis/writings';
-import { getWritingTableMock } from 'mocks/writingTableMock';
 import { hasDefinedField } from 'utils/typeGuard';
+import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { getHomeWritingMock } from 'mocks/homeWritingMock';
 
 export const writingHandlers = [
@@ -21,7 +21,10 @@ export const writingHandlers = [
     if (writingIdOrHome === 'home')
       return res(ctx.delay(300), ctx.status(200), ctx.json(getHomeWritingMock()));
 
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     const writingId = Number(req.params.writingId);
+    
     if (writingId === 200) {
       return res(
         ctx.delay(300),
@@ -39,6 +42,8 @@ export const writingHandlers = [
   // 글 정보: GET
   rest.get(`${writingURL}/:writingId/properties`, (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (writingId === 200) {
       return res(
@@ -71,13 +76,18 @@ export const writingHandlers = [
   }),
 
   // 글 생성(글 업로드): POST
-  rest.post(`${writingURL}/file`, async (_, res, ctx) => {
+  rest.post(`${writingURL}/file`, async (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
   }),
 
   // 글 생성(글 업로드): POST
-  rest.post(`${writingURL}/notion`, async (_, res, ctx) => {
+  rest.post(`${writingURL}/notion`, async (req, res, ctx) => {
     // return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/200`));
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
     return res(
       ctx.delay(1000),
       ctx.status(404),
@@ -90,6 +100,8 @@ export const writingHandlers = [
     const blog = ['MEDIUM', 'TISTORY'];
     const id = Number(req.params.writingId);
     const { publishTo } = await req.json();
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     if (!blog.includes(publishTo) || typeof id !== 'number')
       return res(
@@ -106,16 +118,7 @@ export const writingHandlers = [
   rest.get(`${writingURL}`, (req, res, ctx) => {
     const categoryId = Number(req.url.searchParams.get('categoryId'));
 
-    if (req.headers.get('Authorization') !== 'Bearer accessToken')
-      return res(
-        ctx.status(401),
-        ctx.json({
-          error: {
-            message: '만료된 accessToken입니다. refreshToken을 이용해 갱신해주세요',
-            code: 4011,
-          },
-        }),
-      );
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     return res(
       ctx.json<GetDetailWritingsResponse>(getWritingTableMock(categoryId)),
@@ -128,6 +131,8 @@ export const writingHandlers = [
   rest.patch(`${writingURL}/:writingId`, async (req, res, ctx) => {
     const writingId = Number(req.params.writingId);
     const body = await req.json();
+
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     // 글 순서 수정
     if (hasDefinedField<UpdateWritingOrderArgs['body']>(body, 'nextWritingId')) {
@@ -144,6 +149,8 @@ export const writingHandlers = [
 
     // 글 이름 수정
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
+      if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
       if (!body.title)
         return res(
           ctx.delay(300),

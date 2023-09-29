@@ -13,15 +13,17 @@ import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { getHomeWritingMock } from 'mocks/homeWritingMock';
 import { getWritingTableMock } from 'mocks/writingTableMock';
+import { jsonCtx } from './utils';
 
 export const writingHandlers = [
+  // 전체 글 조회: GET
+  rest.get(`${writingURL}/home`, (_, res, ctx) => {
+    // return res(ctx.json<GetHomeWritingsResponse>(getHomeWritingMock()), ctx.status(200));
+    return res(...jsonCtx(getHomeWritingMock()));
+  }),
+
   // 글 조회: GET
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-    const writingIdOrHome = req.params.writingId;
-
-    if (writingIdOrHome === 'home')
-      return res(ctx.delay(300), ctx.status(200), ctx.json(getHomeWritingMock()));
-
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
     const writingId = Number(req.params.writingId);
@@ -164,9 +166,4 @@ export const writingHandlers = [
 
     return res(ctx.delay(3000), ctx.status(200));
   }),
-
-  // // 전체 글 조회
-  // rest.get(`${writingURL}/home`, (_, res, ctx) => {
-  //   return res(ctx.json<GetHomeWritingsResponse>(getHomeWritingMock()), ctx.status(200));
-  // }),
 ];

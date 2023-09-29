@@ -1,7 +1,11 @@
 package org.donggle.backend.fix;
 
+import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Depth;
+import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.donggle.backend.domain.writing.block.RawText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +18,7 @@ import static org.donggle.backend.fix.MemberFixture.beaver;
 
 public class WritingFixture {
 
-    public static final Writing writing_ACTIVE = new Writing(1L, beaver, new Title("Title 1"), basicCategory, new ArrayList<>(), null, ACTIVE);
+    public static final Writing writing_ACTIVE = new Writing(1L, beaver, new Title("Title 1"), basicCategory, List.of(new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from("안녕"), List.of())), null, ACTIVE);
     public static final Writing writing_DELETED = new Writing(2L, beaver, new Title("Title 1"), basicCategory, new ArrayList<>(), null, DELETED);
 
     public static List<Writing> createWritings_ACTIVE() {

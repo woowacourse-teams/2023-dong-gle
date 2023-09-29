@@ -2,7 +2,9 @@ package org.donggle.backend.application.repository;
 
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
+import org.donggle.backend.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +28,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findPreCategoryByCategoryId(@Param("categoryId") final Long categoryId);
 
     Optional<Category> findByIdAndMemberId(final Long categoryId, final Long memberId);
+
+    @Modifying
+    void deleteAllByMember(final Member member);
 }

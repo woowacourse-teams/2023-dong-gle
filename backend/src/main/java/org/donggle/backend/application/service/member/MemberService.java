@@ -1,17 +1,20 @@
 package org.donggle.backend.application.service.member;
 
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.repository.BlockRepository;
 import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.repository.StyleRepository;
 import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.domain.blog.BlogWriting;
-import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final WritingRepository writingRepository;
+    private final BlockRepository blockRepository;
+    private final StyleRepository styleRepository;
     private final BlogWritingRepository blogWritingRepository;
     private final CategoryRepository categoryRepository;
     private final TokenRepository tokenRepository;
@@ -45,31 +50,45 @@ public class MemberService {
         deleteCategories(member);
         deleteToken(member);
         deleteMemberCredentials(member);
-
         memberRepository.delete(member);
     }
 
     private void deleteWritings(final Member member) {
-        final List<Writing> writings = writingRepository.findByMember(member);
-        final List<BlogWriting> blogWritings = blogWritingRepository.findAllByWritingIds(writings);
+        final List<Writing> writings = writingRepository.findAllByMember(member);
+        final List<Long> memberIds = writings.stream()
+                .map(writing -> writing.getMember().getId())
+                .toList();
 
-        writingRepository.deleteAll(writings);
-        blogWritingRepository.deleteAll(blogWritings);
-    }
+        for (final Writing writing : writings) {
+            final List<Block> blocks = writing.getBlocks();
+            final List<Long> totalBlockIds = blocks.stream()
+                    .map(Block::getId)
+                    .toList();
 
-    private void deleteMemberCredentials(final Member member) {
-        memberCredentialsRepository.findByMember(member)
-                .ifPresent(memberCredentialsRepository::delete);
+            final List<NormalBlock> normalBlocks = blockRepository.findNormalBlocksByIds(totalBlockIds);
+            for (final NormalBlock normalBlock : normalBlocks) {
+                final List<Long> styleIds = normalBlock.getStyles().stream()
+                        .map(Style::getId)
+                        .toList();
+                styleRepository.deleteAllByIds(styleIds);
+            }
+            blockRepository.deleteAllByIds(totalBlockIds);
+        }
+
+        writingRepository.deleteAllByMember(memberIds);
+        blogWritingRepository.deleteAllByWritings(writings);
     }
 
     private void deleteCategories(final Member member) {
-        final List<Category> categories = categoryRepository.findAllByMemberId(member.getId());
-        categoryRepository.deleteAll(categories);
+        categoryRepository.deleteAllByMember(member);
+    }
+
+    private void deleteMemberCredentials(final Member member) {
+        memberCredentialsRepository.deleteByMember(member);
     }
 
     private void deleteToken(final Member member) {
-        tokenRepository.findByMemberId(member.getId())
-                .ifPresent(tokenRepository::delete);
+        tokenRepository.deleteByMemberId(member.getId());
     }
 
     private Member findMember(final Long memberId) {

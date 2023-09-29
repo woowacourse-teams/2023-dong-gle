@@ -6,7 +6,9 @@ import org.donggle.backend.domain.writing.WritingStatus;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -96,5 +98,14 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     Optional<Writing> findByIdAndStatus(final Long id, final WritingStatus status);
 
-    List<Writing> findByMember(final Member member);
+    @EntityGraph(attributePaths = {"blocks"})
+    List<Writing> findAllByMember(final Member member);
+
+    @Modifying
+    @Query(value = """
+            delete from writing
+            where member_id in :memberIds
+            """,
+            nativeQuery = true)
+    void deleteAllByMember(@Param("memberIds") final List<Long> memberIds);
 }

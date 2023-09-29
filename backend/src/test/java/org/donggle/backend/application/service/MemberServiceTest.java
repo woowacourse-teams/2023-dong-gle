@@ -1,21 +1,34 @@
 package org.donggle.backend.application.service;
 
+import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.repository.TokenRepository;
+import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.member.MemberService;
+import org.donggle.backend.domain.auth.RefreshToken;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.ui.response.MemberPageResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.donggle.backend.TestFixtures.BASIC_CATEGORY;
+import static org.donggle.backend.TestFixtures.GENERAL_WRITING;
+import static org.donggle.backend.TestFixtures.MEMBER;
+import static org.donggle.backend.TestFixtures.MEMBER_CREDENTIALS;
+import static org.donggle.backend.TestFixtures.REFRESH_TOKEN;
 import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -26,6 +39,12 @@ class MemberServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private WritingRepository writingRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
     @Autowired
     private MemberCredentialsRepository memberCredentialsRepository;
 
@@ -70,19 +89,35 @@ class MemberServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("회원을 탈퇴한다.")
-    void deleteMember() {
-        //given
-        final Member member = memberRepository.save(Member.of(new MemberName("동굴"), 123L, KAKAO));
-        assertThat(member.isDeleted()).isFalse();
+    @Nested
+    class UnregisterMember {
+        private Member member;
+        private MemberCredentials memberCredentials;
+        private Category basicCategory;
+        private Writing writing;
+        private RefreshToken refreshToken;
 
-        //when
-        memberService.deleteMember(member.getId());
-        memberRepository.flush();
+        @BeforeEach
+        void setUp() {
+            //given
+            member = memberRepository.save(MEMBER);
+            memberCredentials = memberCredentialsRepository.save(MEMBER_CREDENTIALS);
+            basicCategory = categoryRepository.save(BASIC_CATEGORY);
+            writing = writingRepository.save(GENERAL_WRITING);
+            refreshToken = tokenRepository.save(REFRESH_TOKEN);
+        }
 
-        //then
-        final Optional<Member> memberOptional = memberRepository.findById(member.getId());
-        assertThat(memberOptional).isEmpty();
+        @Test
+        @DisplayName("회원을 탈퇴한다.")
+        void deleteWritings() {
+            // given
+            memberService.deleteMember(member.getId());
+
+            // when
+            final List<Writing> writings = writingRepository.findAllByMember(member);
+
+            // then
+            assertThat(writings).isEmpty();
+        }
     }
 }

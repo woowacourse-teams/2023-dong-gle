@@ -25,20 +25,7 @@ export const writingHandlers = [
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    const writingId = Number(req.params.writingId);
-
-    if (writingId === 200) {
-      return res(
-        ctx.delay(300),
-        ctx.status(200),
-        ctx.json<GetWritingResponse>({
-          id: writingId,
-          title: '동글을 소개합니다 🎉',
-          content: writingContentMock,
-        }),
-      );
-    }
-    return res(ctx.delay(300), ctx.status(404), ctx.json({ message: '글을 찾을 수 없습니다.' }));
+    return res(...jsonCtx<GetWritingResponse>(writing));
   }),
 
   // 글 정보: GET

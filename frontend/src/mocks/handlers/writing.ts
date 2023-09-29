@@ -12,8 +12,8 @@ import {
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { homepageWritingTable } from 'mocks/data/homePage';
-import { getWritingTableMock } from 'mocks/writingTableMock';
-import { jsonCtx } from './utils';
+import { jsonCtx, withoutJson } from './utils';
+import { writing, writingProperties } from 'mocks/data/writingPage';
 
 export const writingHandlers = [
   // 전체 글 조회: GET
@@ -30,38 +30,9 @@ export const writingHandlers = [
 
   // 글 정보: GET
   rest.get(`${writingURL}/:writingId/properties`, (req, res, ctx) => {
-    const writingId = Number(req.params.writingId);
-
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    if (writingId === 200) {
-      return res(
-        ctx.delay(300),
-        ctx.status(200),
-        ctx.json<GetWritingPropertiesResponse>({
-          createdAt: new Date('2023-07-11T06:55:46.922Z'),
-          publishedDetails: [
-            {
-              blogName: 'MEDIUM',
-              publishedAt: new Date('2023-07-11T06:55:46.922Z'),
-              tags: ['개발', '네트워크', '서버'],
-              publishedUrl: 'https://medium.com/',
-            },
-            {
-              blogName: 'TISTORY',
-              publishedAt: new Date('2023-06-11T06:55:46.922Z'),
-              tags: ['프로그래밍', 'CS'],
-              publishedUrl: 'https://www.tistory.com/',
-            },
-          ],
-        }),
-      );
-    }
-    return res(
-      ctx.delay(300),
-      ctx.status(404),
-      ctx.json({ message: '글 정보를 찾을 수 없습니다.' }),
-    );
+    return res(...jsonCtx<GetWritingPropertiesResponse>(writingProperties));
   }),
 
   // 글 생성(글 업로드): POST

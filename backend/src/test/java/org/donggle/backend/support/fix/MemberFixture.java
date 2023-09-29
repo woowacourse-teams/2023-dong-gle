@@ -1,4 +1,4 @@
-package org.donggle.backend.fix;
+package org.donggle.backend.support.fix;
 
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberName;

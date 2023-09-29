@@ -7,7 +7,7 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
 import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
-import org.donggle.backend.fix.WritingFixture;
+import org.donggle.backend.support.fix.WritingFixture;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

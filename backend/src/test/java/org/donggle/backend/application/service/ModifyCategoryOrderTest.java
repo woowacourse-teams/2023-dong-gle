@@ -8,7 +8,7 @@ import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
-import org.donggle.backend.fix.CategoryFixture;
+import org.donggle.backend.support.fix.CategoryFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

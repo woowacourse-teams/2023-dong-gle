@@ -19,7 +19,7 @@ import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCat
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryPublishWritingResponseWrapper;
 import org.donggle.backend.ui.response.PublishResponse;
-import org.donggle.backend.ui.response.TistoryCategoryListResposne;
+import org.donggle.backend.ui.response.TistoryCategoryListResposnse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -120,7 +120,7 @@ public class TistoryApiClient implements BlogClient {
                 .build();
     }
 
-    public TistoryCategoryListResposne findCategory(final Long memberId) {
+    public TistoryCategoryListResposnse findCategory(final Long memberId) {
         final MemberCredentials memberCredentials = getMemberCredentials(memberId);
         final String categoryListUri = UriComponentsBuilder.fromUriString("/category/list")
                 .queryParam("access_token", memberCredentials.getTistoryToken())
@@ -136,9 +136,9 @@ public class TistoryApiClient implements BlogClient {
                         .map(e -> new ClientInternalServerError(PLATFORM_NAME)))
                 .bodyToMono(TistoryCategoryListResponseWrapper.class)
                 .block();
-        return new TistoryCategoryListResposne(
+        return new TistoryCategoryListResposnse(
                 categoryList.tistory().item().categories().stream()
-                        .map(category -> new TistoryCategoryListResposne.TistoryCategoryResponse(category.id(), category.name()))
+                        .map(category -> new TistoryCategoryListResposnse.TistoryCategoryResponse(category.id(), category.name()))
                         .toList());
     }
 

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.donggle.backend.domain.blog.BlogType.MEDIUM;
-import static org.donggle.backend.fix.WritingFixture.writing_ACTIVE;
+import static org.donggle.backend.support.fix.WritingFixture.writing_ACTIVE;
 import static org.mockito.BDDMockito.given;
 
 @Transactional

@@ -9,7 +9,7 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.InvalidPublishRequestException;
 import org.donggle.backend.ui.response.PublishResponse;
-import org.donggle.backend.ui.response.TistoryCategoryListResposne;
+import org.donggle.backend.ui.response.TistoryCategoryListResposnse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -435,7 +435,7 @@ class TistoryApiClientTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(categoryListResponse).addHeader("Content-Type", "application/json"));
 
         // When
-        final TistoryCategoryListResposne response = tistoryApiClient.findCategory(memberId);
+        final TistoryCategoryListResposnse response = tistoryApiClient.findCategory(memberId);
 
         // Then
         assertThat(response.categories()).anyMatch(category -> categories.contains(category.name()));

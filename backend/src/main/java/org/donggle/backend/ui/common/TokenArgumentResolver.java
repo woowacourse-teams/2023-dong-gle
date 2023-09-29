@@ -26,6 +26,7 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
                                 final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         final String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        return jwtTokenProvider.getPayload(token);
+        final Long payload = jwtTokenProvider.getPayload(token);
+        return payload;
     }
 }

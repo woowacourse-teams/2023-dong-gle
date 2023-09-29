@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
-import static org.donggle.backend.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 

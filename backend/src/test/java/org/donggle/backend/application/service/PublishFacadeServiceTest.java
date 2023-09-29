@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.donggle.backend.domain.blog.BlogType.MEDIUM;
-import static org.donggle.backend.fix.WritingFixture.writing;
+import static org.donggle.backend.fix.WritingFixture.writing_ACTIVE;
 import static org.mockito.BDDMockito.given;
 
 @Transactional
@@ -42,7 +42,7 @@ class PublishFacadeServiceTest {
         final long memberId = 10L;
         final long writingId = 1L;
         final PublishRequest publishRequest = new PublishRequest(List.of(), "PUBLIC", "", "", "");
-        final PublishWritingRequest publishWritingRequest = new PublishWritingRequest(new Blog(MEDIUM), writing, "token");
+        final PublishWritingRequest publishWritingRequest = new PublishWritingRequest(new Blog(MEDIUM), writing_ACTIVE, "token");
         given(publishService.findPublishWriting(memberId, writingId, MEDIUM)).willReturn(publishWritingRequest);
         given(blogClients.publish(publishWritingRequest.blog().getBlogType(), publishRequest, "", "token", "잉표"))
                 .willReturn(new PublishResponse(LocalDateTime.now(), List.of(), "https://donggle.blog/"));

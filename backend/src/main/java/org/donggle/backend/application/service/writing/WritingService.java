@@ -78,7 +78,8 @@ public class WritingService {
         final Member findMember = findMember(memberId);
         final Category category = findCategory(memberId, categoryId);
         final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
-        final String notionToken = memberCredentials.getNotionToken().orElseThrow(NotionNotConnectedException::new);
+        final String notionToken = memberCredentials.getNotionToken()
+                .orElseThrow(NotionNotConnectedException::new);
         return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }
 
@@ -273,7 +274,7 @@ public class WritingService {
                 .toList();
     }
 
-    private Writing findActiveWriting(Long writingId) {
+    private Writing findActiveWriting(final Long writingId) {
         return writingRepository.findByIdAndStatus(writingId, ACTIVE)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }

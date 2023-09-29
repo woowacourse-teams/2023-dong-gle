@@ -13,4 +13,7 @@ public interface BlogWritingRepository extends JpaRepository<BlogWriting, Long> 
 
     @Query("SELECT bw FROM BlogWriting bw LEFT JOIN FETCH bw.blog WHERE bw.writing IN :writings")
     List<BlogWriting> findWithFetch(@Param("writings") List<Writing> writings);
+
+    @Query("select bw from BlogWriting bw where bw.writing in :writings")
+    List<BlogWriting> findAllByWritingIds(@Param("writings") List<Writing> writings);
 }

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface MemberCredentialsRepository extends JpaRepository<MemberCredentials, Long> {
 
-    Optional<MemberCredentials> findMemberCredentialsByMember(Member member);
+    Optional<MemberCredentials> findByMember(Member member);
 }

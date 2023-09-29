@@ -102,6 +102,7 @@ const S = {
     p {
       padding: 1rem 0;
       font-size: 1.6rem;
+      line-height: 2.3rem;
     }
 
     blockquote {

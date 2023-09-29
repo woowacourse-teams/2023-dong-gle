@@ -55,23 +55,18 @@ export const writingHandlers = [
     );
   }),
 
-  // 글 블로그로 발행: POST
-  rest.post(`${writingURL}/:writingId/publish`, async (req, res, ctx) => {
-    const blog = ['MEDIUM', 'TISTORY'];
-    const id = Number(req.params.writingId);
-    const { publishTo } = await req.json();
-
+  // 글 티스토리 블로그로 발행: POST
+  rest.post(`${writingURL}/:writingId/publish/tistory`, async (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    if (!blog.includes(publishTo) || typeof id !== 'number')
-      return res(
-        ctx.status(404),
-        ctx.json({
-          message: '글 발행을 실패했습니다.',
-        }),
-      );
+    return res(...withoutJson());
+  }),
 
-    return res(ctx.delay(3000), ctx.status(200));
+  // 글 미디엄 블로그로 발행: POST
+  rest.post(`${writingURL}/:writingId/publish/medium`, async (req, res, ctx) => {
+    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
+    return res(...withoutJson());
   }),
 
   // 카테고리 글 상세 목록 조회: GET

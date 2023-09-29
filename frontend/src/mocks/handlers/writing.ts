@@ -11,15 +11,14 @@ import {
 } from 'types/apis/writings';
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
-import { getHomeWritingMock } from 'mocks/homeWritingMock';
+import { homeWritingsMock } from 'mocks/homeWritingMock';
 import { getWritingTableMock } from 'mocks/writingTableMock';
 import { jsonCtx } from './utils';
 
 export const writingHandlers = [
   // 전체 글 조회: GET
   rest.get(`${writingURL}/home`, (_, res, ctx) => {
-    // return res(ctx.json<GetHomeWritingsResponse>(getHomeWritingMock()), ctx.status(200));
-    return res(...jsonCtx(getHomeWritingMock()));
+    return res(...jsonCtx(homeWritingsMock));
   }),
 
   // 글 조회: GET

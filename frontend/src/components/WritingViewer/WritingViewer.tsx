@@ -70,37 +70,37 @@ const S = {
     font-size: 1.6rem;
 
     h1 {
-      margin: 3.4rem 0 1.7rem;
+      padding: 3.4rem 0 1.7rem;
       font-size: 3.4rem;
     }
 
     h2 {
-      margin: 2.8rem 0 1.4rem;
+      padding: 2.8rem 0 1.4rem;
       font-size: 2.8rem;
     }
 
     h3 {
-      margin: 2.2rem 0 1.1rem;
+      padding: 2.2rem 0 1.1rem;
       font-size: 2.2rem;
     }
 
     h4 {
-      margin: 1.6rem 0 0.8rem;
+      padding: 1.6rem 0 0.8rem;
       font-size: 1.6rem;
     }
 
     h5 {
-      margin: 1.3rem 0 0.65rem;
+      padding: 1.3rem 0 0.65rem;
       font-size: 1.3rem;
     }
 
     h6 {
-      margin: 1rem 0 0.5rem;
+      padding: 1rem 0 0.5rem;
       font-size: 1rem;
     }
 
     p {
-      margin: 1.6rem 0;
+      padding: 1rem 0;
       font-size: 1.6rem;
     }
 
@@ -116,7 +116,6 @@ const S = {
     ol,
     ul {
       padding-left: 2rem;
-      margin: 1rem 0;
     }
 
     ul > li {
@@ -128,7 +127,7 @@ const S = {
     }
 
     li {
-      margin-bottom: 10px;
+      padding: 0.5rem 0;
     }
 
     a {

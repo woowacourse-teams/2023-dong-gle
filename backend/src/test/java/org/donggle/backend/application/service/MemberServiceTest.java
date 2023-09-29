@@ -4,6 +4,7 @@ import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.member.MemberService;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.donggle.backend.fix.MemberFixture.beaver;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +31,22 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private MemberCredentialsRepository memberCredentialsRepository;
+
+
+    @Test
+    @DisplayName("회원 페이지 조회 시 사용자를 찾을 수 없을때 에러")
+    void findMemberPage_member_not_found() {
+        //given
+        final long memberId = 10L;
+
+        given(memberRepository.findById(memberId)).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(
+                () -> memberService.findMemberPage(memberId)
+        ).isInstanceOf(MemberNotFoundException.class);
+    }
 
     @Test
     @DisplayName("회원 페이지 조회 - 아무것도 연결되어있지 않은 회원")
@@ -48,7 +66,6 @@ class MemberServiceTest {
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
                 () -> assertThat(memberPage.medium().isConnected()).isFalse()
         );
-
     }
 
     @Test

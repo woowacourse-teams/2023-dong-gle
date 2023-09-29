@@ -9,9 +9,12 @@ import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
 import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
 import org.donggle.backend.exception.authentication.NoRefreshTokenInCookieException;
+import org.donggle.backend.exception.notfound.RefreshTokenNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -63,7 +66,7 @@ class RefreshTokenAuthInterceptorTest {
 
         given(request.getCookies()).willReturn(new Cookie[]{new Cookie("refreshToken", "someToken")});
         given(jwtTokenProvider.getPayload("someToken")).willReturn(1L);
-        given(tokenRepository.findByMemberId(1L)).willReturn(java.util.Optional.of(refreshToken));
+        given(tokenRepository.findByMemberId(1L)).willReturn(Optional.of(refreshToken));
         given(refreshToken.isDifferentFrom("someToken")).willReturn(true);
 
         //when
@@ -71,6 +74,24 @@ class RefreshTokenAuthInterceptorTest {
         assertThatThrownBy(
                 () -> refreshTokenAuthInterceptor.preHandle(request, response, new Object())
         ).isInstanceOf(InvalidRefreshTokenException.class);
+    }
+
+    @Test
+    @DisplayName("Refresh 토큰을 찾을 수 없을 때 에러")
+    void RefreshTokenNotFoundException() {
+        //given
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+
+        given(request.getCookies()).willReturn(new Cookie[]{new Cookie("refreshToken", "someToken")});
+        given(jwtTokenProvider.getPayload("someToken")).willReturn(1L);
+        given(tokenRepository.findByMemberId(1L)).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(
+                () -> refreshTokenAuthInterceptor.preHandle(request, response, new Object())
+        ).isInstanceOf(RefreshTokenNotFoundException.class);
     }
 
     @Test
@@ -83,7 +104,7 @@ class RefreshTokenAuthInterceptorTest {
 
         given(request.getCookies()).willReturn(new Cookie[]{new Cookie("refreshToken", "someToken")});
         given(jwtTokenProvider.getPayload("someToken")).willReturn(1L);
-        given(tokenRepository.findByMemberId(1L)).willReturn(java.util.Optional.of(refreshToken));
+        given(tokenRepository.findByMemberId(1L)).willReturn(Optional.of(refreshToken));
         given(refreshToken.isDifferentFrom("someToken")).willReturn(false);
         given(jwtTokenProvider.inValidTokenUsage("someToken")).willReturn(true);
         //when

@@ -10,6 +10,7 @@ import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.writing.Title;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.exception.business.NotionNotConnectedException;
 import org.donggle.backend.exception.notfound.WritingNotFoundException;
 import org.donggle.backend.fix.WritingFixture;
 import org.donggle.backend.ui.response.WritingHomeResponse;
@@ -100,6 +101,25 @@ class WritingServiceTest {
         assertThat(result.notionToken()).isEqualTo("token");
         assertThat(result.category()).isEqualTo(basicCategory);
         assertThat(result.member()).isEqualTo(beaver);
+    }
+
+    @Test
+    @DisplayName("member,category,notionToken의 정보를 불러올 시 토큰이 없을 때 에러")
+    void getMemberCategoryNotionInfo_NotFound_token() {
+        // given
+        final Long memberId = 1L;
+        final Long categoryId = 2L;
+
+        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+
+        // when
+        // then
+        Assertions.assertThatThrownBy(
+                () -> writingService.getMemberCategoryNotionInfo(memberId, categoryId)
+        ).isInstanceOf(NotionNotConnectedException.class);
     }
 
     @Test

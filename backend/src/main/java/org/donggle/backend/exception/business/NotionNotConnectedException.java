@@ -9,10 +9,6 @@ public class NotionNotConnectedException extends BusinessException {
         super(MESSAGE);
     }
 
-    public NotionNotConnectedException(final Throwable cause) {
-        super(MESSAGE, cause);
-    }
-
     @Override
     public String getHint() {
         return "노션을 연동해주세요.";

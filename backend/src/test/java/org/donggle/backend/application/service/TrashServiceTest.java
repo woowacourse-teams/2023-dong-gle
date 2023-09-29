@@ -5,6 +5,8 @@ import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.trash.TrashService;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.exception.notfound.DeleteWritingNotFoundException;
+import org.donggle.backend.exception.notfound.RestoreWritingNotFoundException;
 import org.donggle.backend.fix.WritingFixture;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -88,6 +90,22 @@ class TrashServiceTest {
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("제거할 때 글을 찾을 수 없으면 에러")
+    void trashWritings_not_found_delete_writing() {
+        //given
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.empty());
+
+        //when
+        //then
+        Assertions.assertThatThrownBy(
+                () -> trashService.trashWritings(memberId, writingIds)
+        ).isInstanceOf(DeleteWritingNotFoundException.class);
+    }
+
 
     @Test
     @DisplayName("글을 1개 삭제한다.")
@@ -146,5 +164,21 @@ class TrashServiceTest {
 
         //then
         then(writing1).should(times(1)).restore();
+    }
+
+    @Test
+    @DisplayName("쓰레기통에 있는 글 찾지 못했을 때 에러")
+    void restoreWritings_restore_writing_not_found() {
+        //given
+        final Long memberId = 10L;
+        final List<Long> writingIds = List.of(1L);
+
+        given(writingRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.empty());
+
+        //when
+        //then
+        Assertions.assertThatThrownBy(
+                () -> trashService.restoreWritings(memberId, writingIds)
+        ).isInstanceOf(RestoreWritingNotFoundException.class);
     }
 }

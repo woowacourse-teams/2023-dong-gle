@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service;
 
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
@@ -13,6 +14,7 @@ import org.donggle.backend.exception.business.DuplicateCategoryNameException;
 import org.donggle.backend.exception.business.EmptyCategoryNameException;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
 import org.donggle.backend.exception.business.OverLengthCategoryNameException;
+import org.donggle.backend.exception.notfound.CategoryNotFoundException;
 import org.donggle.backend.fix.WritingFixture;
 import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
@@ -124,6 +126,25 @@ class CategoryServiceTest {
         // when
         // then
         assertDoesNotThrow(() -> categoryService.modifyCategoryName(memberId, categoryId, request));
+    }
+
+    @Test
+    @DisplayName("카테고리를 찾지 못할 때 에러")
+    void modifyCategoryName_not_found_category() {
+        // given
+        final long memberId = 10L;
+        final long categoryId = 1L;
+        final String newName = "새 카테고리 이름";
+        final CategoryModifyRequest request = new CategoryModifyRequest(newName, -1L);
+
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.empty());
+
+        // when
+        // then
+        Assertions.assertThatThrownBy(
+                () -> categoryService.modifyCategoryName(memberId, categoryId, request)
+        ).isInstanceOf(CategoryNotFoundException.class);
     }
 
 

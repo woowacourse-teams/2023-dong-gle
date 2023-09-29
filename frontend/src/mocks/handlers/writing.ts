@@ -1,6 +1,5 @@
 import { rest } from 'msw';
 import { writingURL } from 'constants/apis/url';
-import { writingContentMock } from 'mocks/writingContentMock';
 import {
   GetDetailWritingsResponse,
   GetHomeWritingsResponse,
@@ -14,6 +13,7 @@ import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { homepageWritingTable } from 'mocks/data/homePage';
 import { jsonCtx, withoutJson } from './utils';
 import { writing, writingProperties } from 'mocks/data/writingPage';
+import { writingTable } from 'mocks/data/WritingTablePage';
 
 export const writingHandlers = [
   // 전체 글 조회: GET
@@ -76,15 +76,9 @@ export const writingHandlers = [
 
   // 카테고리 글 상세 목록 조회: GET
   rest.get(`${writingURL}`, (req, res, ctx) => {
-    const categoryId = Number(req.url.searchParams.get('categoryId'));
-
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(
-      ctx.json<GetDetailWritingsResponse>(getWritingTableMock(categoryId)),
-      // ctx.delay(1000),
-      ctx.status(200),
-    );
+    return res(...jsonCtx<GetDetailWritingsResponse>(writingTable));
   }),
 
   // 글 수정(이름, 순서): PATCH

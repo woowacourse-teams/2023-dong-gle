@@ -1,4 +1,5 @@
 import { authURL } from 'constants/apis/url';
+import { MOCK_ACCESS_TOKEN } from 'mocks/auth';
 import { rest } from 'msw';
 
 export const authHandlers = [
@@ -7,7 +8,7 @@ export const authHandlers = [
       ctx.delay(3000),
       ctx.status(200),
       ctx.json({
-        accessToken: 'accessToken',
+        accessToken: MOCK_ACCESS_TOKEN,
       }),
     );
   }),

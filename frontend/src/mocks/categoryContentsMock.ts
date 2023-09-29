@@ -2,19 +2,19 @@ export const categories = {
   categories: [
     {
       id: 1,
-      categoryName: '우아한테크코스',
+      categoryName: '기본',
     },
     {
       id: 2,
-      categoryName: '동글',
+      categoryName: '쿠마',
     },
     {
       id: 3,
-      categoryName: '테스트',
+      categoryName: '아커',
     },
     {
       id: 4,
-      categoryName: '레벨 3 프로젝트 화이팅',
+      categoryName: '파인',
     },
   ],
 };

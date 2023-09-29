@@ -11,15 +11,16 @@ import java.util.List;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
 
-    @Modifying
-    @Query("delete from Block b where b.id in :blockIds")
-    void deleteAllByIds(@Param("blockIds") List<Long> blockIds);
+    @Override
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Block b where b in :blocks")
+    void deleteAll(@Param("blocks") final Iterable<? extends Block> blocks);
 
     @Query("""
             select b
             from Block b
-            where b.id in :blockIds and
+            where b in :blocks and
             type(b) = NormalBlock
             """)
-    List<NormalBlock> findNormalBlocksByIds(@Param("blockIds") List<Long> blockIds);
+    List<NormalBlock> findNormalBlocks(@Param("blocks") List<Block> blocks);
 }

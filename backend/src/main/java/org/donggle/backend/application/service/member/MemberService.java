@@ -11,7 +11,6 @@ import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
-import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.NormalBlock;
@@ -47,48 +46,28 @@ public class MemberService {
     public void deleteMember(final Long memberId) {
         final Member member = findMember(memberId);
         deleteWritings(member);
-        deleteCategories(member);
-        deleteToken(member);
-        deleteMemberCredentials(member);
+        categoryRepository.deleteAllByMember(member);
+        tokenRepository.deleteByMember(member);
+        memberCredentialsRepository.deleteByMember(member);
         memberRepository.delete(member);
     }
 
     private void deleteWritings(final Member member) {
         final List<Writing> writings = writingRepository.findAllByMember(member);
-        final List<Long> memberIds = writings.stream()
-                .map(writing -> writing.getMember().getId())
-                .toList();
-
-        for (final Writing writing : writings) {
-            final List<Block> blocks = writing.getBlocks();
-            final List<Long> totalBlockIds = blocks.stream()
-                    .map(Block::getId)
-                    .toList();
-
-            final List<NormalBlock> normalBlocks = blockRepository.findNormalBlocksByIds(totalBlockIds);
-            for (final NormalBlock normalBlock : normalBlocks) {
-                final List<Long> styleIds = normalBlock.getStyles().stream()
-                        .map(Style::getId)
-                        .toList();
-                styleRepository.deleteAllByIds(styleIds);
-            }
-            blockRepository.deleteAllByIds(totalBlockIds);
-        }
-
-        writingRepository.deleteAllByMember(memberIds);
+        writings.forEach(this::deleteBlocks);
+        writingRepository.deleteAllByMember(member);
         blogWritingRepository.deleteAllByWritings(writings);
     }
 
-    private void deleteCategories(final Member member) {
-        categoryRepository.deleteAllByMember(member);
+    private void deleteBlocks(final Writing writing) {
+        final List<Block> blocks = writing.getBlocks();
+        deleteStyles(blocks);
+        blockRepository.deleteAll(blocks);
     }
 
-    private void deleteMemberCredentials(final Member member) {
-        memberCredentialsRepository.deleteByMember(member);
-    }
-
-    private void deleteToken(final Member member) {
-        tokenRepository.deleteByMemberId(member.getId());
+    private void deleteStyles(final List<Block> blocks) {
+        final List<NormalBlock> normalBlocks = blockRepository.findNormalBlocks(blocks);
+        normalBlocks.forEach(normalBlock -> styleRepository.deleteAll(normalBlock.getStyles()));
     }
 
     private Member findMember(final Long memberId) {

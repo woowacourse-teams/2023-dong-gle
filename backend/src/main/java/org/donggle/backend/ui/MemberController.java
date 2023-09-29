@@ -22,6 +22,7 @@ public class MemberController {
         return ResponseEntity.ok(memberPage);
     }
 
+    // TODO : 이제 바로 삭제를 하니까, Http method를 DELETE로 하도록 하는 것이 어떨까?
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal final Long memberId) {
         memberService.deleteMember(memberId);

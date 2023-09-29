@@ -45,7 +45,7 @@ public class Writing extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "writing_id", nullable = false, updatable = false)
     private List<Block> blocks = new ArrayList<>();
     @OneToOne(fetch = FetchType.LAZY)

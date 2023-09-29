@@ -20,7 +20,7 @@ import java.util.List;
 public class NormalBlock extends Block {
     @NotNull
     private RawText rawText;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "normal_block_id", updatable = false, nullable = false)
     private List<Style> styles = new ArrayList<>();
 

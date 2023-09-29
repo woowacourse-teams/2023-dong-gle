@@ -1,5 +1,6 @@
 package org.donggle.backend.application.repository;
 
+import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.WritingStatus;
 import org.donggle.backend.domain.writing.block.NormalBlock;
@@ -94,4 +95,6 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
     Page<Writing> findByMemberIdAndWritingStatusOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
 
     Optional<Writing> findByIdAndStatus(final Long id, final WritingStatus status);
+
+    List<Writing> findByMember(final Member member);
 }

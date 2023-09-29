@@ -47,6 +47,7 @@ const WritingTable = ({ writings, categoryId }: Props) => {
             tabIndex={0}
           >
             <td>{title}</td>
+            <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
             <td>
               <S.PublishedToIconContainer>
                 {publishedDetails.map(({ blogName }, index) => (
@@ -54,7 +55,6 @@ const WritingTable = ({ writings, categoryId }: Props) => {
                 ))}
               </S.PublishedToIconContainer>
             </td>
-            <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
           </tr>
         ))}
       </tbody>

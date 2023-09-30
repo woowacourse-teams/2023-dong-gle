@@ -58,8 +58,8 @@ const writingsIn사이드바쿠마카테고리 = {
 };
 
 const writingsIn사이드바아커카테고리 = {
-  id: 2,
-  categoryName: '쿠마',
+  id: 3,
+  categoryName: '아커',
   writings: [
     {
       id: 7,
@@ -77,8 +77,8 @@ const writingsIn사이드바아커카테고리 = {
 };
 
 const writingsIn사이드바파인카테고리 = {
-  id: 2,
-  categoryName: '쿠마',
+  id: 4,
+  categoryName: '파인',
   writings: [
     {
       id: 10,
@@ -95,8 +95,8 @@ const writingsIn사이드바파인카테고리 = {
   ],
 };
 
-export const getWritingsIn사이드바카테고리 = (id: number) => {
-  switch (id) {
+export const getWritingsIn사이드바카테고리 = (categoryId: number) => {
+  switch (categoryId) {
     case 1:
       return writingsIn사이드바기본카테고리;
     case 2:
@@ -106,4 +106,67 @@ export const getWritingsIn사이드바카테고리 = (id: number) => {
     case 4:
       return writingsIn사이드바파인카테고리;
   }
+};
+
+export const deleteWritingsIn사이드바카테고리 = (writingIds: number[]) => {
+  [
+    writingsIn사이드바기본카테고리,
+    writingsIn사이드바쿠마카테고리,
+    writingsIn사이드바아커카테고리,
+    writingsIn사이드바파인카테고리,
+  ].forEach((카테고리) => {
+    카테고리.writings = 카테고리.writings.filter(({ id }) => !writingIds.includes(id));
+  });
+};
+
+export const deleteCategory = (categoryId: number) => {
+  categories.categories = categories.categories.filter(({ id }) => categoryId !== id);
+
+  const category = getWritingsIn사이드바카테고리(categoryId);
+
+  // 카테고리 삭제 시 해당 카테고리 내부 모든 글이 기본 카테고리로 이동
+  writingsIn사이드바기본카테고리.writings.push(...category?.writings!);
+};
+
+export const addCategory = (categoryName: string) => {
+  categories.categories.push({
+    id: 5,
+    categoryName,
+  });
+};
+
+export const renameCategory = (categoryId: number, categoryName: string) => {
+  console.log('categoryName', categoryName);
+  categories.categories.forEach((category) => {
+    if (category.id === categoryId) {
+      category.categoryName = categoryName;
+    }
+  });
+};
+
+export const changeOrder = (categoryId: number, nextCategoryId: number) => {
+  const newCategories = [...categories.categories];
+
+  const draggingIndex = newCategories.findIndex((category) => category.id === categoryId);
+
+  const draggingItem = newCategories[draggingIndex];
+  newCategories.splice(draggingIndex, 1);
+
+  const dragOverIndex = newCategories.findIndex((category) => category.id === nextCategoryId);
+
+  if (dragOverIndex === -1) {
+    newCategories.push(draggingItem);
+  } else {
+    newCategories.splice(dragOverIndex, -1, draggingItem);
+  }
+  categories.categories = newCategories;
+};
+
+export const addRestoredWritings = (writingIds: number[]) => {
+  writingIds.forEach((writingId) =>
+    writingsIn사이드바기본카테고리.writings.push({
+      id: writingId,
+      title: `복구된 글 ${writingId}`,
+    }),
+  );
 };

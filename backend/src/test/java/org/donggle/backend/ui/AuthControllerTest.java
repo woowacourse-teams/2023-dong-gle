@@ -55,7 +55,8 @@ class AuthControllerTest {
         //then
         mockMvc.perform(
                         get("/auth/login/{socialType}/redirect", "kakao")
-                                .param("redirect_uri", "someUri"))
+                                .param("redirect_uri", "someUri")
+                )
                 .andExpect(status().isFound())
                 .andExpect(header().string(HttpHeaders.LOCATION, redirectUri));
     }

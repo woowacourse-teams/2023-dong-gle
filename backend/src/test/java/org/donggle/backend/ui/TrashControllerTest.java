@@ -81,7 +81,7 @@ class TrashControllerTest {
         //when
         //then
         mockMvc.perform(
-                        get("/trash")
+                        post("/trash")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                                 .content(new ObjectMapper().writeValueAsString(writingsDeleteRequest))
@@ -102,7 +102,7 @@ class TrashControllerTest {
         //when
         //then
         mockMvc.perform(
-                        get("/trash")
+                        post("/trash")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                                 .content(new ObjectMapper().writeValueAsString(writingsDeleteRequest))

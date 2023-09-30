@@ -26,3 +26,7 @@ export const writingProperties: GetWritingPropertiesResponse = {
     },
   ],
 };
+
+export const renameWritingTitle = (newTitle: string) => {
+  writing.title = newTitle;
+};

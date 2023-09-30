@@ -12,7 +12,7 @@ import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { homepageWritingTable } from 'mocks/data/homePage';
 import { jsonCtx, withoutJson } from './utils';
-import { writing, writingProperties } from 'mocks/data/writingPage';
+import { renameWritingTitle, writing, writingProperties } from 'mocks/data/writingPage';
 import { writingTable } from 'mocks/data/writingTablePage';
 
 export const writingHandlers = [
@@ -99,6 +99,8 @@ export const writingHandlers = [
     // 글 이름 수정
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
       if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+
+      renameWritingTitle(body.title);
 
       if (!body.title)
         return res(

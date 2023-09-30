@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+//todo: 슬라이스 테스트로 바꾸기
 @SpringBootTest
 @Transactional
 class MemberCredentialsTest {

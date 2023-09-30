@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+//todo: 슬라이스 테스트로 바꾸기
 @Transactional
 @SpringBootTest
 class ModifyWritingOrderTest {
@@ -49,8 +50,8 @@ class ModifyWritingOrderTest {
     private Member member;
     private Category basicCategory;
     private Category anotherCategory;
-    private List<Writing> basicWritings = new ArrayList<>();
-    private List<Writing> anotherWritings = new ArrayList<>();
+    private final List<Writing> basicWritings = new ArrayList<>();
+    private final List<Writing> anotherWritings = new ArrayList<>();
 
     @BeforeEach
     void setUp() {

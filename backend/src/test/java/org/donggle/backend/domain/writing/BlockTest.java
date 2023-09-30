@@ -21,6 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
 
+//todo: 슬라이스 테스트로 바꾸기
 @SpringBootTest
 @Transactional
 class BlockTest {

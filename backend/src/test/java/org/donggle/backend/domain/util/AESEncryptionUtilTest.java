@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+//todo: 슬라이스 테스트로 바꾸기
 @SpringBootTest
 class AESEncryptionUtilTest {
     @Autowired

@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { categoryURL } from 'constants/apis/url';
-import { categories, writingsInCategory, writingsInCategory2 } from 'mocks/categoryContentsMock';
+import { categories, getWritingsIn사이드바카테고리 } from 'mocks/data/category';
 import {
   AddCategoriesRequest,
   UpdateCategoryOrderArgs,
@@ -8,6 +8,7 @@ import {
 } from 'types/apis/category';
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
+import { jsonCtx } from './utils';
 
 export const categoryHandlers = [
   // 카테고리 목록 조회
@@ -39,18 +40,7 @@ export const categoryHandlers = [
 
     const categoryId = Number(req.params.categoryId);
 
-    if (categoryId !== 1 && categoryId !== 3)
-      return res(
-        ctx.delay(300),
-        ctx.status(500),
-        ctx.json({
-          message: '서버에서 예기치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        }),
-      );
-
-    if (categoryId === 1) return res(ctx.json(writingsInCategory), ctx.delay(300), ctx.status(200));
-
-    return res(ctx.json(writingsInCategory2), ctx.delay(300), ctx.status(200));
+    return res(...jsonCtx(getWritingsIn사이드바카테고리(categoryId)));
   }),
 
   // 카테고리 수정(이름, 순서)

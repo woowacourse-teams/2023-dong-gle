@@ -54,9 +54,9 @@ public class MemberService {
 
     private void deleteWritings(final Member member) {
         final List<Writing> writings = writingRepository.findAllByMember(member);
+        blogWritingRepository.deleteAllByWritings(writings);
         writings.forEach(this::deleteBlocks);
         writingRepository.deleteAllByMember(member);
-        blogWritingRepository.deleteAllByWritings(writings);
     }
 
     private void deleteBlocks(final Writing writing) {

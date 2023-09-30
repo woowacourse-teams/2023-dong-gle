@@ -33,7 +33,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
 import static org.donggle.backend.support.fix.CategoryFixture.basicCategory;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.donggle.backend.support.fix.WritingFixture.writing_ACTIVE;
 import static org.donggle.backend.support.fix.WritingFixture.writing_DELETED;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,9 +68,9 @@ class WritingServiceTest {
         final String title = "Test Title.md";
         final List<Block> blocks = Collections.emptyList();
 
-        final Writing writing = Writing.of(beaver, new Title("Title 1"), basicCategory, blocks);
+        final Writing writing = Writing.of(beaver_have_id, new Title("Title 1"), basicCategory, blocks);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
         given(writingRepository.save(writing)).willReturn(WritingFixture.writing_ACTIVE);
 
@@ -88,11 +88,11 @@ class WritingServiceTest {
         final Long memberId = 1L;
         final Long categoryId = 2L;
 
-        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver);
+        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver_have_id);
         memberCredentials.updateNotionToken("token");
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
 
         // when
         final MemberCategoryNotionInfo result = writingService.getMemberCategoryNotionInfo(memberId, categoryId);
@@ -100,7 +100,7 @@ class WritingServiceTest {
         // then
         assertThat(result.notionToken()).isEqualTo("token");
         assertThat(result.category()).isEqualTo(basicCategory);
-        assertThat(result.member()).isEqualTo(beaver);
+        assertThat(result.member()).isEqualTo(beaver_have_id);
     }
 
     @Test
@@ -110,10 +110,10 @@ class WritingServiceTest {
         final Long memberId = 1L;
         final Long categoryId = 2L;
 
-        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver);
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver_have_id);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
 
         // when
         // then
@@ -127,7 +127,7 @@ class WritingServiceTest {
     void saveAndGetWriting() {
         // given
         final List<Block> blocks = Collections.emptyList();
-        final Writing createWriting = Writing.of(beaver, new Title("Title 1"), basicCategory, blocks);
+        final Writing createWriting = Writing.of(beaver_have_id, new Title("Title 1"), basicCategory, blocks);
         final List<Writing> writings = WritingFixture.createWritings_ACTIVE();
         given(writingRepository.countByCategoryIdAndStatus(anyLong(), any())).willReturn(1);
         given(writingRepository.findLastWritingByCategoryId(anyLong())).willReturn(Optional.of(writings.get(1)));

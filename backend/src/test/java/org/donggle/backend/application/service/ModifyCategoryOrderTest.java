@@ -145,7 +145,7 @@ class ModifyCategoryOrderTest {
         @DisplayName("['1', 2, 3] -> [2, 3, '1']")
         void exceptionalModify1() {
             final Long memberId = 10L;
-            final Long movingCategoryId = 1L;
+            final Long movingCategoryId = 10L;
             final Long targetCategoryId = 3L;
             final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
             final Category movingCategory = CategoryFixture.basicCategory;

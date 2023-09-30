@@ -14,7 +14,7 @@ class RefreshTokenProviderTest {
     @DisplayName("refreshToken이 일치하는지 테스트")
     void equalRefreshToken() {
         //given
-        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver);
+        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver_have_id);
         //when
 
         //then
@@ -26,7 +26,7 @@ class RefreshTokenProviderTest {
     @DisplayName("refreshToken이 갱신이 되는지 테스트")
     void updateRefreshToken() {
         //given
-        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver);
+        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver_have_id);
 
         //when
         refreshToken.update("ingpyo");

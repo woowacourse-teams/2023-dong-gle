@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.donggle.backend.support.fix.WritingFixture.writing_ACTIVE;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -122,9 +122,9 @@ class WritingFacadeServiceTest {
                     final List<PublishedDetailResponse> publishedDetailResponses = List.of();
                     return WritingDetailResponse.of(writing, publishedDetailResponses);
                 }).toList();
-        given(writingService.findWritingListByCategoryId(beaver.getId(), basicCategory.getId())).willReturn(WritingListWithCategoryResponse.of(basicCategory, responses));
+        given(writingService.findWritingListByCategoryId(beaver_have_id.getId(), basicCategory.getId())).willReturn(WritingListWithCategoryResponse.of(basicCategory, responses));
         //when
-        final WritingListWithCategoryResponse response = writingFacadeService.findWritingListByCategoryId(10L, 1L);
+        final WritingListWithCategoryResponse response = writingFacadeService.findWritingListByCategoryId(10L, 10L);
 
         //then
         assertThat(response.writings()).hasSize(2);
@@ -145,7 +145,7 @@ class WritingFacadeServiceTest {
 
         //then
         assertThat(response.id()).isEqualTo(1L);
-        assertThat(response.categoryId()).isEqualTo(1L);
+        assertThat(response.categoryId()).isEqualTo(10L);
         assertThat(response.title()).isEqualTo("Title 1");
     }
 }

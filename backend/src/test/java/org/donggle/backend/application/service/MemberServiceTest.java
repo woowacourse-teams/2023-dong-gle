@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -53,15 +53,15 @@ class MemberServiceTest {
     void findMemberPage_empty() {
         //given
         final long memberId = 10L;
-        final MemberCredentials basic = MemberCredentials.basic(beaver);
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(basic));
+        final MemberCredentials basic = MemberCredentials.basic(beaver_have_id);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(basic));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(memberId);
         //then
         assertAll(
                 () -> assertThat(memberPage.id()).isEqualTo(memberId),
-                () -> assertThat(memberPage.name()).isEqualTo(beaver.getMemberName().getName()),
+                () -> assertThat(memberPage.name()).isEqualTo(beaver_have_id.getMemberName().getName()),
                 () -> assertThat(memberPage.tistory().isConnected()).isFalse(),
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
                 () -> assertThat(memberPage.medium().isConnected()).isFalse()
@@ -73,17 +73,17 @@ class MemberServiceTest {
     void findMemberPage_notion() {
         //given
         final long memberId = 10L;
-        final MemberCredentials basic = MemberCredentials.basic(beaver);
+        final MemberCredentials basic = MemberCredentials.basic(beaver_have_id);
         basic.updateNotionToken("token");
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(basic));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(basic));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(memberId);
 
         //then
         assertAll(
                 () -> assertThat(memberPage.id()).isEqualTo(memberId),
-                () -> assertThat(memberPage.name()).isEqualTo(beaver.getMemberName().getName()),
+                () -> assertThat(memberPage.name()).isEqualTo(beaver_have_id.getMemberName().getName()),
                 () -> assertThat(memberPage.tistory().isConnected()).isFalse(),
                 () -> assertThat(memberPage.notion().isConnected()).isTrue(),
                 () -> assertThat(memberPage.medium().isConnected()).isFalse()
@@ -95,17 +95,17 @@ class MemberServiceTest {
     void findMemberPage_tistory() {
         //given
         final long memberId = 10L;
-        final MemberCredentials basic = MemberCredentials.basic(beaver);
+        final MemberCredentials basic = MemberCredentials.basic(beaver_have_id);
         basic.updateTistory("token", "jeoninpyo");
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(basic));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(basic));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(memberId);
 
         //then
         assertAll(
                 () -> assertThat(memberPage.id()).isEqualTo(memberId),
-                () -> assertThat(memberPage.name()).isEqualTo(beaver.getMemberName().getName()),
+                () -> assertThat(memberPage.name()).isEqualTo(beaver_have_id.getMemberName().getName()),
                 () -> assertThat(memberPage.tistory().blogName()).isEqualTo("jeoninpyo"),
                 () -> assertThat(memberPage.tistory().isConnected()).isTrue(),
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
@@ -118,17 +118,17 @@ class MemberServiceTest {
     void findMemberPage_medium() {
         //given
         final long memberId = 10L;
-        final MemberCredentials basic = MemberCredentials.basic(beaver);
+        final MemberCredentials basic = MemberCredentials.basic(beaver_have_id);
         basic.updateMediumToken("token");
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(basic));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(basic));
         //when
         final MemberPageResponse memberPage = memberService.findMemberPage(memberId);
 
         //then
         assertAll(
                 () -> assertThat(memberPage.id()).isEqualTo(memberId),
-                () -> assertThat(memberPage.name()).isEqualTo(beaver.getMemberName().getName()),
+                () -> assertThat(memberPage.name()).isEqualTo(beaver_have_id.getMemberName().getName()),
                 () -> assertThat(memberPage.tistory().isConnected()).isFalse(),
                 () -> assertThat(memberPage.notion().isConnected()).isFalse(),
                 () -> assertThat(memberPage.medium().isConnected()).isTrue()
@@ -140,12 +140,12 @@ class MemberServiceTest {
     void deleteMember() {
         //given
         final long memberId = 10L;
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
 
         //when
         memberService.deleteMember(memberId);
 
         //then
-        then(memberRepository).should(times(1)).delete(beaver);
+        then(memberRepository).should(times(1)).delete(beaver_have_id);
     }
 }

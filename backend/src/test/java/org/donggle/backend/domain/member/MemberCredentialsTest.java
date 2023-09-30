@@ -59,7 +59,7 @@ class MemberCredentialsTest {
     @DisplayName("token을 삭제하기_tistory")
     void deleteTistoryConnectionTest() {
         //given
-        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver);
+        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver_have_id);
         basic.updateTistory("123", "jeoninpyo726");
 
         //when
@@ -73,7 +73,7 @@ class MemberCredentialsTest {
     @DisplayName("token을 삭제하기_medium")
     void deleteMediumConnectionTest() {
         //given
-        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver);
+        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver_have_id);
         basic.updateMediumToken("jeoninpyo726");
 
         //when
@@ -86,7 +86,7 @@ class MemberCredentialsTest {
     @DisplayName("token을 삭제하기_notion")
     void deleteNotionConnectionTest() {
         //given
-        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver);
+        final MemberCredentials basic = MemberCredentials.basic(MemberFixture.beaver_have_id);
         basic.updateNotionToken("jeoninpyo726");
 
         //when

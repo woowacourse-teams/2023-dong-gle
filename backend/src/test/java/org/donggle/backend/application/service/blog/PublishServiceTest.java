@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.donggle.backend.support.fix.WritingFixture.writing_ACTIVE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -63,9 +63,9 @@ class PublishServiceTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getBlogToken(blogType)).willReturn(Optional.of("token"));
 
         // when
@@ -88,9 +88,9 @@ class PublishServiceTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getBlogToken(blogType)).willReturn(Optional.empty());
 
         // when
@@ -128,12 +128,12 @@ class PublishServiceTest {
 
         final Blog blog = new Blog(blogType);
         final BlogWriting blogWriting = new BlogWriting(blog, writing_ACTIVE, LocalDateTime.now(), List.of("tag1"), "url");
-        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver);
+        final MemberCredentials memberCredentials = MemberCredentials.basic(beaver_have_id);
         memberCredentials.updateMediumToken("token");
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(blogWritingRepository.findByWritingId(writingId)).willReturn(List.of(blogWriting));
 
         //when

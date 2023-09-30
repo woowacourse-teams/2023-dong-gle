@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -109,7 +109,7 @@ class AuthControllerTest {
         final Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 
         given(jwtTokenProvider.getPayload(accessToken)).willReturn(1L);
-        given(tokenRepository.findByMemberId(memberId)).willReturn(Optional.of(new RefreshToken(refreshToken, beaver)));
+        given(tokenRepository.findByMemberId(memberId)).willReturn(Optional.of(new RefreshToken(refreshToken, beaver_have_id)));
         given(authFacadeService.reissueAccessTokenAndRefreshToken(memberId)).willReturn(tokenResponse);
 
         //when

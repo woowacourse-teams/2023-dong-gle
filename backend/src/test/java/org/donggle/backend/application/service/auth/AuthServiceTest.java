@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -50,7 +50,7 @@ class AuthServiceTest {
         final UserInfo userInfo = new UserInfo(1L, KAKAO, "비버");
 
         given(memberRepository.findBySocialIdAndSocialType(1L, KAKAO))
-                .willReturn(Optional.of(beaver));
+                .willReturn(Optional.of(beaver_have_id));
         given(jwtTokenProvider.createAccessToken(memberId))
                 .willReturn("accessToken");
         given(jwtTokenProvider.createRefreshToken(memberId))
@@ -75,7 +75,7 @@ class AuthServiceTest {
 
         given(memberRepository.findBySocialIdAndSocialType(socialId, KAKAO))
                 .willReturn(Optional.empty());
-        given(memberRepository.save(any(Member.class))).willReturn(beaver);
+        given(memberRepository.save(any(Member.class))).willReturn(beaver_have_id);
         given(jwtTokenProvider.createAccessToken(memberId))
                 .willReturn("accessToken");
         given(jwtTokenProvider.createRefreshToken(memberId))
@@ -114,7 +114,7 @@ class AuthServiceTest {
         // given
         final Long memberId = 10L;
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(jwtTokenProvider.createAccessToken(memberId)).willReturn("newAccessToken");
         given(jwtTokenProvider.createRefreshToken(memberId)).willReturn("newRefreshToken");
 

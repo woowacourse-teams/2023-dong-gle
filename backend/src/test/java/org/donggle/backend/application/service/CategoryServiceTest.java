@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
 import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
 import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
-import static org.donggle.backend.support.fix.MemberFixture.beaver;
+import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -60,7 +60,7 @@ class CategoryServiceTest {
     void findBasicCategory() {
         //given
         final long memberId = 1L;
-        final Category category = Category.of(new CategoryName("안녕"), beaver);
+        final Category category = Category.of(new CategoryName("안녕"), beaver_have_id);
         given(categoryRepository.findLastCategoryByMemberId(memberId)).willReturn(Optional.of(category));
         //when
         final Category lastCategory = categoryRepository.findLastCategoryByMemberId(1L).get();
@@ -76,10 +76,10 @@ class CategoryServiceTest {
         final long memberId = 10L;
         final String categoryName = "새 카테고리";
         final CategoryAddRequest request = new CategoryAddRequest(categoryName);
-        final Category lastCategory = new Category(10L, new CategoryName("기존 카테고리"), null, beaver);
-        final Category newCategory = new Category(11L, new CategoryName(categoryName), null, beaver);
+        final Category lastCategory = new Category(10L, new CategoryName("기존 카테고리"), null, beaver_have_id);
+        final Category newCategory = new Category(11L, new CategoryName(categoryName), null, beaver_have_id);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(false);
         given(categoryRepository.findLastCategoryByMemberId(memberId)).willReturn(Optional.of(lastCategory));
         given(categoryRepository.save(any(Category.class))).willReturn(newCategory);
@@ -98,8 +98,8 @@ class CategoryServiceTest {
         //given
         final long memberId = 10L;
         final CategoryModifyRequest categoryModifyRequest = new CategoryModifyRequest("안녕", -1L);
-        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver);
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver_have_id);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
         given(categoryRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(basicCategory));
         //when
@@ -116,9 +116,9 @@ class CategoryServiceTest {
         final String newName = "새 카테고리 이름";
         final CategoryModifyRequest request = new CategoryModifyRequest(newName, -1L);
 
-        final Member member = beaver;
+        final Member member = beaver_have_id;
         final Category category = new Category(11L, new CategoryName(newName), null, member);
-        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver);
+        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver_have_id);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
@@ -137,7 +137,7 @@ class CategoryServiceTest {
         final String newName = "새 카테고리 이름";
         final CategoryModifyRequest request = new CategoryModifyRequest(newName, -1L);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.empty());
 
         // when
@@ -153,7 +153,7 @@ class CategoryServiceTest {
     void findAll() {
         //given
         final long memberId = 10L;
-        final Member member = beaver;
+        final Member member = beaver_have_id;
         final Category category3 = new Category(3L, new CategoryName("세 번째 카테고리"), null, member);
         final Category category2 = new Category(2L, new CategoryName("두 번째 카테고리"), category3, member);
         final Category category1 = new Category(1L, new CategoryName("기본"), category2, member);
@@ -175,9 +175,9 @@ class CategoryServiceTest {
         final long memberId = 10L;
         final long categoryId = 2L;
         final String newName = "카테고리";
-        final Category category = new Category(2L, new CategoryName(newName), null, beaver);
-        final Category basicCategory = new Category(1L, new CategoryName("기본"), category, beaver);
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        final Category category = new Category(2L, new CategoryName(newName), null, beaver_have_id);
+        final Category basicCategory = new Category(1L, new CategoryName("기본"), category, beaver_have_id);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
         given(categoryRepository.findPreCategoryByCategoryId(categoryId)).willReturn(Optional.of(basicCategory));
@@ -195,7 +195,7 @@ class CategoryServiceTest {
         final long memberId = 10L;
         final long categoryId = 2L;
         final String newName = "카테고리";
-        final Category category = new Category(2L, new CategoryName(newName), null, beaver);
+        final Category category = new Category(2L, new CategoryName(newName), null, beaver_have_id);
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
         given(writingRepository.findAllByCategoryIdAndStatus(2L, ACTIVE))
                 .willReturn(WritingFixture.createWritings_ACTIVE());
@@ -213,7 +213,7 @@ class CategoryServiceTest {
         final long memberId = 10L;
         final long categoryId = 2L;
         final String newName = "카테고리";
-        final Category category = new Category(2L, new CategoryName(newName), null, beaver);
+        final Category category = new Category(2L, new CategoryName(newName), null, beaver_have_id);
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
         given(writingRepository.findAllByCategoryIdAndStatus(2L, ACTIVE))
                 .willReturn(List.of());
@@ -233,7 +233,7 @@ class CategoryServiceTest {
         final String categoryName = "기본 카테고리";
         final CategoryAddRequest request = new CategoryAddRequest(categoryName);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(true);
 
         //then
@@ -250,7 +250,7 @@ class CategoryServiceTest {
         final String categoryName = "";
         final CategoryAddRequest request = new CategoryAddRequest(categoryName);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(false);
 
         //then
@@ -265,7 +265,7 @@ class CategoryServiceTest {
         final String categoryName = " ";
         final CategoryAddRequest request = new CategoryAddRequest(categoryName);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(false);
 
         //when
@@ -281,11 +281,11 @@ class CategoryServiceTest {
         final long categoryId = 2L;
         final String categoryName = "";
         final CategoryModifyRequest request = new CategoryModifyRequest(categoryName, -1L);
-        final Category category = new Category(2L, new CategoryName(categoryName), null, beaver);
-        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver);
+        final Category category = new Category(2L, new CategoryName(categoryName), null, beaver_have_id);
+        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver_have_id);
 
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(false);
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(category));
 
@@ -301,7 +301,7 @@ class CategoryServiceTest {
         final String categoryName = "새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리새 카테고리";
         final CategoryAddRequest request = new CategoryAddRequest(categoryName);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.existsByMemberIdAndCategoryName(memberId, new CategoryName(categoryName))).willReturn(false);
 
         //when
@@ -314,9 +314,9 @@ class CategoryServiceTest {
     void removeDefaultCategory() {
         //given
         final long memberId = 10L;
-        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver);
+        final Category basicCategory = new Category(1L, new CategoryName("기본"), null, beaver_have_id);
         given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(basicCategory));
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver));
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(1L, memberId)).willReturn(Optional.of(basicCategory));
 
         //when

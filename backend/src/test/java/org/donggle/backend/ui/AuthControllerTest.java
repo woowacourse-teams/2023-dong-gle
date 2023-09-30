@@ -87,7 +87,7 @@ class AuthControllerTest {
         //given
         final Long memberId = 1L;
         final String accessToken = JwtSupporter.generateToken(memberId);
-        given(jwtTokenProvider.getPayload(accessToken)).willReturn(1L);
+        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
         //when
         //then
         mockMvc.perform(

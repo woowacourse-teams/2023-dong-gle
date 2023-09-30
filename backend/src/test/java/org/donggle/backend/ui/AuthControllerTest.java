@@ -2,21 +2,14 @@ package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
-import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.service.auth.AuthFacadeService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
@@ -31,18 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = AuthController.class, properties = "security.jwt.token.refresh-token-expire-length=10000")
-class AuthControllerTest {
-
-    @Autowired
-    public MockMvc mockMvc;
-    @MockBean
-    private AuthFacadeService authFacadeService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class AuthControllerTest extends ControllerTest {
     @Test
     @DisplayName("OAuth로그인 시 Redirect uri를 정상적으로 만들면 302 반환")
     void createRedirect() throws Exception {

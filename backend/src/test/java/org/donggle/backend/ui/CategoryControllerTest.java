@@ -1,11 +1,8 @@
 package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.CategoryListResponse;
 import org.donggle.backend.ui.response.CategoryResponse;
@@ -13,11 +10,7 @@ import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.donggle.backend.ui.response.WritingSimpleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -32,17 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CategoryController.class)
-class CategoryControllerTest {
-    @Autowired
-    public MockMvc mockMvc;
-    @MockBean
-    private CategoryService categoryService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class CategoryControllerTest extends ControllerTest {
     @Test
     @DisplayName("정상적으로 카테고리가 추가되면 201을 반환한다.")
     void categoryAdd() throws Exception {

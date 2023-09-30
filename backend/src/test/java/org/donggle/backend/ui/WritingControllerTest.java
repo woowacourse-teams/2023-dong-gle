@@ -1,12 +1,9 @@
 package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
-import org.donggle.backend.application.service.writing.WritingFacadeService;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.WritingDetailResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
@@ -14,14 +11,10 @@ import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.donggle.backend.ui.response.WritingResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -42,17 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(WritingController.class)
-class WritingControllerTest {
-    @Autowired
-    public MockMvc mockMvc;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-    @MockBean
-    private WritingFacadeService writingFacadeService;
-
+class WritingControllerTest extends ControllerTest {
     @Test
     @DisplayName(".md 파일을 정상적으로 저장했을때 201을 반환한다.")
     void writingAdd_file() throws Exception {

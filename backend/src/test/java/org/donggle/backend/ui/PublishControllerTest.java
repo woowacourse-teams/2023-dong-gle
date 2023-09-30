@@ -1,18 +1,11 @@
 package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.service.blog.PublishFacadeService;
 import org.donggle.backend.application.service.request.PublishRequest;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.support.JwtSupporter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -24,17 +17,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PublishController.class)
-class PublishControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-    @MockBean
-    private PublishFacadeService blogService;
-
+class PublishControllerTest extends ControllerTest {
     @Test
     @DisplayName("tistory로 정상적으로 발행했을때 200을 반환한다.")
     void publishToTistory() throws Exception {
@@ -45,7 +28,7 @@ class PublishControllerTest {
         final String categoryId = "1";
         final PublishRequest publishRequest = new PublishRequest(List.of("동글로 업로드한 글임"), "PUBLIC", "", categoryId, "");
         given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
-        willDoNothing().given(blogService).publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(publishRequest));
+        willDoNothing().given(publishFacadeService).publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(publishRequest));
 
         //when
         //then
@@ -67,7 +50,7 @@ class PublishControllerTest {
         final String accessToken = JwtSupporter.generateToken(memberId);
         final PublishRequest publishRequest = new PublishRequest(List.of("동글로 업로드한 글임"), "PUBLIC", null, null, null);
         given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
-        willDoNothing().given(blogService).publishWriting(memberId, writingId, MEDIUM, PublishRequest.medium(publishRequest));
+        willDoNothing().given(publishFacadeService).publishWriting(memberId, writingId, MEDIUM, PublishRequest.medium(publishRequest));
 
         //when
         //then

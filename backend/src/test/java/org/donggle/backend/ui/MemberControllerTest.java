@@ -1,8 +1,5 @@
 package org.donggle.backend.ui;
 
-import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.application.service.member.MemberService;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.MediumConnectionResponse;
 import org.donggle.backend.ui.response.MemberPageResponse;
@@ -10,10 +7,6 @@ import org.donggle.backend.ui.response.NotionConnectionResponse;
 import org.donggle.backend.ui.response.TistoryConnectionResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -24,17 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MemberController.class)
-class MemberControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private MemberService memberService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class MemberControllerTest extends ControllerTest {
     @Test
     @DisplayName("사용자의 정보를 정상적으로 가져올때 200을 반환한다.")
     void memberPage() throws Exception {

@@ -1,20 +1,13 @@
 package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.service.request.WritingsDeleteRequest;
 import org.donggle.backend.application.service.request.WritingsRestoreRequest;
-import org.donggle.backend.application.service.trash.TrashService;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.TrashResponse;
 import org.donggle.backend.ui.response.TrashedWritingResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -27,17 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TrashController.class)
-class TrashControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private TrashService trashService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class TrashControllerTest extends ControllerTest {
     @Test
     @DisplayName("휴지통에 글목록을 정상적으로 불러왔을때 200을 반환한다.")
     void trashGetWritings() throws Exception {

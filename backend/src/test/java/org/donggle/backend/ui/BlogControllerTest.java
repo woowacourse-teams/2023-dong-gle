@@ -1,17 +1,10 @@
 package org.donggle.backend.ui;
 
-import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
-import org.donggle.backend.infrastructure.client.tistory.TistoryApiClient;
 import org.donggle.backend.support.JwtSupporter;
 import org.donggle.backend.ui.response.TistoryCategoryListResposnse;
 import org.donggle.backend.ui.response.TistoryCategoryListResposnse.TistoryCategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -21,17 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BlogController.class)
-class BlogControllerTest {
-    @Autowired
-    public MockMvc mockMvc;
-    @MockBean
-    private TistoryApiClient tistoryApiService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class BlogControllerTest extends ControllerTest {
     @Test
     @DisplayName("tistory의 카테고리를 정상적으로 가져오면 200을 반환한다.")
     void tistoryCategoryList() throws Exception {

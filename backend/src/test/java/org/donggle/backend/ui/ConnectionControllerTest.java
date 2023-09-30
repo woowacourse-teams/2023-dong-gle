@@ -1,21 +1,12 @@
 package org.donggle.backend.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.application.service.request.TokenAddRequest;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
-import org.donggle.backend.infrastructure.client.medium.MediumConnectionClient;
-import org.donggle.backend.infrastructure.client.notion.NotionConnectionClient;
-import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
 import org.donggle.backend.support.JwtSupporter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -26,21 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ConnectionController.class)
-class ConnectionControllerTest {
-    @Autowired
-    public MockMvc mockMvc;
-    @MockBean
-    private TistoryConnectionClient tistoryConnectService;
-    @MockBean
-    private NotionConnectionClient notionConnectionService;
-    @MockBean
-    private MediumConnectionClient mediumConnectionClient;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private TokenRepository tokenRepository;
-
+class ConnectionControllerTest extends ControllerTest {
     @Test
     @DisplayName("tistory의 RedirectUri를 정상적으로 반한했을때 302를 반환한다.")
     void connectionsRedirectTistory() throws Exception {

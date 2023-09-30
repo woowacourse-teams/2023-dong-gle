@@ -45,7 +45,7 @@ class BlogWritingRepositoryTest {
         final List<String> tags = List.of("안녕");
         final String url = "https://donggle.blog";
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category = new Category(new CategoryName("카테고리"), null, member);
         final Writing writing = Writing.of(member, new Title("Title 1"), category, new ArrayList<>());
         blogRepository.save(blog);
         categoryRepository.save(category);
@@ -67,7 +67,7 @@ class BlogWritingRepositoryTest {
         //given
         final Blog blog = new Blog(MEDIUM);
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category = new Category(new CategoryName("카테고리"), null, member);
         final Writing writing1 = Writing.of(member, new Title("Title 1"), category, new ArrayList<>());
         final Writing writing2 = Writing.of(member, new Title("Title 2"), category, new ArrayList<>());
 

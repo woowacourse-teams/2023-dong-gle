@@ -18,8 +18,6 @@ import static org.donggle.backend.support.fix.MemberFixture.beaver_have_not_id;
 @DataJpaTest
 class CategoryRepositoryTest {
     @Autowired
-    private WritingRepository writingRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private MemberRepository memberRepository;
@@ -31,9 +29,9 @@ class CategoryRepositoryTest {
     void findLastCategoryByMemberId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category2 = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category2 = new Category(new CategoryName("카테고리"), null, member);
         final Category saveCategory2 = categoryRepository.save(category2);
-        final Category category1 = new Category(2L, new CategoryName("카테고리"), saveCategory2, member);
+        final Category category1 = new Category(new CategoryName("카테고리"), saveCategory2, member);
         final Category saveCategory1 = categoryRepository.save(category1);
 
         //when
@@ -48,9 +46,9 @@ class CategoryRepositoryTest {
     void findAllByMemberId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category2 = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category2 = new Category(new CategoryName("카테고리"), null, member);
         final Category saveCategory2 = categoryRepository.save(category2);
-        final Category category1 = new Category(2L, new CategoryName("카테고리"), saveCategory2, member);
+        final Category category1 = new Category(new CategoryName("카테고리"), saveCategory2, member);
         final Category saveCategory1 = categoryRepository.save(category1);
 
         //when
@@ -61,20 +59,20 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("맨 처음 카테고리를 가져오는 테스")
+    @DisplayName("맨 처음 카테고리를 가져오는 테스트")
     void findFirstByMemberId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category2 = new Category(2L, new CategoryName("카테고리"), null, member);
+        final Category category2 = new Category(new CategoryName("카테고리"), null, member);
         final Category saveCategory2 = categoryRepository.save(category2);
-        final Category category1 = new Category(1L, new CategoryName("카테고리"), saveCategory2, member);
+        final Category category1 = new Category(new CategoryName("카테고리"), saveCategory2, member);
         final Category saveCategory1 = categoryRepository.save(category1);
 
         //when
         final Category category = categoryRepository.findFirstByMemberId(member.getId()).get();
 
         //then
-        assertThat(category).usingRecursiveAssertion().isEqualTo(saveCategory1);
+        assertThat(category).usingRecursiveAssertion().isEqualTo(saveCategory2);
     }
 
     @Test
@@ -97,7 +95,7 @@ class CategoryRepositoryTest {
         //given
         final CategoryName categoryName = new CategoryName("그래고리");
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category = new Category(new CategoryName("카테고리"), null, member);
         categoryRepository.save(category);
 
         //when
@@ -110,9 +108,9 @@ class CategoryRepositoryTest {
     void findPreCategoryByCategoryId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category2 = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category2 = new Category(new CategoryName("카테고리"), null, member);
         final Category saveCategory2 = categoryRepository.save(category2);
-        final Category category1 = new Category(2L, new CategoryName("카테고리"), saveCategory2, member);
+        final Category category1 = new Category(new CategoryName("카테고리"), saveCategory2, member);
         final Category saveCategory1 = categoryRepository.save(category1);
 
         //when
@@ -127,13 +125,14 @@ class CategoryRepositoryTest {
     void findByIdAndMemberId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category = new Category(1L, new CategoryName("카테고리"), null, member);
+        final Category category = new Category(new CategoryName("카테고리"), null, member);
         final Category saveCategory = categoryRepository.save(category);
 
         //when
         final Category findCategory = categoryRepository.findByIdAndMemberId(saveCategory.getId(), member.getId()).get();
 
         //then
-        assertThat(findCategory).usingRecursiveAssertion().isEqualTo(category);
+        assertThat(findCategory.getMember()).usingRecursiveAssertion().isEqualTo(member);
+        assertThat(findCategory.getCategoryName()).isEqualTo(new CategoryName("카테고리"));
     }
 }

@@ -36,7 +36,7 @@ public class Category {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
+    public Category(final CategoryName categoryName, final Category nextCategory, final Member member) {
         this.categoryName = categoryName;
         this.nextCategory = nextCategory;
         this.member = member;

@@ -24,7 +24,6 @@ import org.donggle.backend.domain.writing.block.Block;
 import org.hibernate.annotations.SQLDelete;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,10 +74,6 @@ public class Writing extends BaseEntity {
         this.blocks = blocks;
         this.nextWriting = nextWriting;
         this.status = status;
-    }
-
-    public static Writing lastOf(final Member member, final Title title, final Category category) {
-        return new Writing(member, title, category, Collections.emptyList(), null);
     }
 
     public static Writing of(final Member member, final Title title, final Category category, final List<Block> blocks) {

@@ -1,6 +1,6 @@
 import { memberURL } from 'constants/apis/url';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
-import { member } from 'mocks/memberContentsMock';
+import { member } from 'mocks/data/member';
 import { rest } from 'msw';
 
 export const memberHandlers = [

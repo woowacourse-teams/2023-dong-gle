@@ -11,9 +11,10 @@ import {
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { homepageWritingTable } from 'mocks/data/homePage';
-import { jsonCtx, withoutJson } from './utils';
+import { errorCtx, jsonCtx, withoutJson } from './utils';
 import { renameWritingTitle, writing, writingProperties } from 'mocks/data/writingPage';
 import { writingTable } from 'mocks/data/writingTablePage';
+import { isConnected } from 'mocks/data/member';
 
 export const writingHandlers = [
   // 전체 글 조회: GET
@@ -39,34 +40,28 @@ export const writingHandlers = [
   rest.post(`${writingURL}/file`, async (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(ctx.delay(3000), ctx.status(201), ctx.set('Location', `/writings/200`));
+    return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/1`));
   }),
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/notion`, async (req, res, ctx) => {
-    // return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/200`));
-
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(
-      ctx.delay(1000),
-      ctx.status(404),
-      ctx.json({ message: '유효한 노션 id를 입력해주세요.' }),
-    );
+    return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/1`));
   }),
 
   // 글 티스토리 블로그로 발행: POST
   rest.post(`${writingURL}/:writingId/publish/tistory`, async (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(...withoutJson());
+    return isConnected('tistory') ? res(...withoutJson()) : res(...errorCtx());
   }),
 
   // 글 미디엄 블로그로 발행: POST
   rest.post(`${writingURL}/:writingId/publish/medium`, async (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(...withoutJson());
+    return isConnected('medium') ? res(...withoutJson()) : res(...errorCtx());
   }),
 
   // 카테고리 글 상세 목록 조회: GET

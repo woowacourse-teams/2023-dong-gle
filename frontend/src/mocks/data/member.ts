@@ -12,3 +12,15 @@ export const member = {
     isConnected: false,
   },
 };
+
+export const isConnected = (platform: 'tistory' | 'notion' | 'medium') => {
+  return member[platform].isConnected;
+};
+
+export const connect = (platform: 'tistory' | 'notion' | 'medium') => {
+  member[platform].isConnected = true;
+};
+
+export const disconnect = (platform: 'tistory' | 'notion' | 'medium') => {
+  member[platform].isConnected = false;
+};

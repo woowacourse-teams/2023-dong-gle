@@ -41,14 +41,14 @@ class BlogControllerTest {
         final TistoryCategoryListResposnse tistoryCategoryListResposnse = new TistoryCategoryListResposnse(
                 List.of(new TistoryCategoryResponse("1", "카테고리1"), new TistoryCategoryResponse("2", "카테고리2")));
 
-        given(jwtTokenProvider.getPayload(accessToken)).willReturn(1L);
+        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
         given(tistoryApiService.findCategory(memberId)).willReturn(tistoryCategoryListResposnse);
 
         //when
         //then
         mockMvc.perform(
                         get("/blogs/tistory/category")
-                                .header(AUTHORIZATION, "Bearer " + JwtSupporter.generateToken(memberId)))
+                                .header(AUTHORIZATION, "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categories.size()").value(2))
                 .andExpect(jsonPath("$.categories[0].id").value("1"))

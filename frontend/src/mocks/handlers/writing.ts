@@ -78,33 +78,11 @@ export const writingHandlers = [
 
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    // 글 순서 수정
-    if (hasDefinedField<UpdateWritingOrderArgs['body']>(body, 'nextWritingId')) {
-      if (!body.nextWritingId) {
-        return res(
-          ctx.delay(300),
-          ctx.status(404),
-          ctx.json({
-            message: '글 순서 수정 에러',
-          }),
-        );
-      }
-    }
-
     // 글 이름 수정
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
       if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
       renameWritingTitle(body.title);
-
-      if (!body.title)
-        return res(
-          ctx.delay(300),
-          ctx.status(404),
-          ctx.json({
-            message: '글 이름 수정 에러',
-          }),
-        );
     }
 
     return res(...withoutJson());

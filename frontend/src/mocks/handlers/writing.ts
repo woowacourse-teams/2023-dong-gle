@@ -13,7 +13,7 @@ import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { homepageWritingTable } from 'mocks/data/homePage';
 import { jsonCtx, withoutJson } from './utils';
 import { writing, writingProperties } from 'mocks/data/writingPage';
-import { writingTable } from 'mocks/data/WritingTablePage';
+import { writingTable } from 'mocks/data/writingTablePage';
 
 export const writingHandlers = [
   // 전체 글 조회: GET

@@ -107,6 +107,6 @@ export const writingHandlers = [
         );
     }
 
-    return res(ctx.delay(3000), ctx.status(200));
+    return res(...withoutJson());
   }),
 ];

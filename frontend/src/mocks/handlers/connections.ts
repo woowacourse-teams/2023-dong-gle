@@ -2,6 +2,7 @@ import { connectionsURL } from 'constants/apis/url';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { connect, disconnect } from 'mocks/data/member';
 import { rest } from 'msw';
+import { withoutJson } from './utils';
 
 export const connectionsHandlers = [
   // 티스토리 정보 저장
@@ -10,7 +11,7 @@ export const connectionsHandlers = [
 
     connect('tistory');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 
   // 미디움 정보 저장
@@ -19,7 +20,7 @@ export const connectionsHandlers = [
 
     connect('medium');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 
   // 노션 정보 저장
@@ -28,7 +29,7 @@ export const connectionsHandlers = [
 
     connect('notion');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 
   // 티스토리 연결 해제
@@ -37,7 +38,7 @@ export const connectionsHandlers = [
 
     disconnect('tistory');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 
   // 미디움 연결 해제
@@ -46,7 +47,7 @@ export const connectionsHandlers = [
 
     disconnect('medium');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 
   // 노션 연결 해제
@@ -55,6 +56,6 @@ export const connectionsHandlers = [
 
     disconnect('notion');
 
-    return res(ctx.status(200));
+    return res(...withoutJson());
   }),
 ];

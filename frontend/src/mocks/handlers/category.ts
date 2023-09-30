@@ -22,7 +22,7 @@ export const categoryHandlers = [
   rest.get(categoryURL, (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
 
-    return res(ctx.json(categories), ctx.delay(300), ctx.status(200));
+    return res(...jsonCtx(categories));
   }),
 
   // 카테고리 추가
@@ -63,7 +63,7 @@ export const categoryHandlers = [
 
       renameCategory(categoryId, body.categoryName);
     }
-    return res(ctx.status(204));
+    return res(...withoutJson(204));
   }),
 
   // 카테고리 삭제

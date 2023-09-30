@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface StyleRepository extends JpaRepository<Style, Long> {
     @Override
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from Style s where s.id in :styleIds")
     void deleteAllById(@Param("styleIds") final Iterable<? extends Long> styleIds);
 }

@@ -19,7 +19,7 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
     List<NormalBlock> findNormalBlocks(@Param("blocks") List<Block> blocks);
 
     @Override
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from Block b where b in :blocks")
     void deleteAll(@Param("blocks") final Iterable<? extends Block> blocks);
 }

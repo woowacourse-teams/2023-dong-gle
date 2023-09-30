@@ -15,7 +15,7 @@ public interface BlogWritingRepository extends JpaRepository<BlogWriting, Long> 
     @Query("SELECT bw FROM BlogWriting bw LEFT JOIN FETCH bw.blog WHERE bw.writing IN :writings")
     List<BlogWriting> findWithFetch(@Param("writings") List<Writing> writings);
 
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from BlogWriting bw where bw.writing in :writings")
     void deleteAllByWritings(@Param("writings") final List<Writing> writings);
 }

@@ -13,7 +13,7 @@ public interface MemberCredentialsRepository extends JpaRepository<MemberCredent
 
     Optional<MemberCredentials> findByMember(Member member);
 
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from MemberCredentials mc where mc.member = :member")
     void deleteByMember(@Param("member") final Member member);
 }

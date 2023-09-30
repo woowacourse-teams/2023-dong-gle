@@ -29,7 +29,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByIdAndMemberId(final Long categoryId, final Long memberId);
 
     @Override
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from Category c where c = :category")
     void delete(@Param("category") final Category category);
 }

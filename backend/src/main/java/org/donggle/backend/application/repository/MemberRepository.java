@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findBySocialIdAndSocialType(final Long socialId, final SocialType socialType);
 
     @Override
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from Member m where m = :member")
     void delete(@Param("member") final Member member);
 }

@@ -37,6 +37,7 @@ public class TestFixtures {
     public static final RefreshToken REFRESH_TOKEN = new RefreshToken("testRefreshToken", MEMBER);
 
     public static final Category BASIC_CATEGORY = Category.of(new CategoryName("기본"), MEMBER);
+    public static final Category ANOTHER_CATEGORY = Category.of(new CategoryName("추가"), MEMBER);
 
     public static final Writing WRITING_WITH_NORMAL_BLOCK = Writing.of(MEMBER, new Title("WRITING_WITH_NORMAL_BLOCK"),
             BASIC_CATEGORY,
@@ -53,7 +54,39 @@ public class TestFixtures {
             )
     );
 
-    public static final Writing GENERAL_WRITING = Writing.of(MEMBER, new Title("GENERAL_WRITING"),
+    public static final Writing GENERAL_WRITING1 = Writing.of(MEMBER, new Title("GENERAL_WRITING1"),
+            BASIC_CATEGORY,
+            List.of(
+                    new NormalBlock(
+                            Depth.from(1),
+                            BlockType.PARAGRAPH,
+                            RawText.from("테스트 글입니다"),
+                            List.of(
+                                    new Style(new StyleRange(0, 2), StyleType.BOLD),
+                                    new Style(new StyleRange(3, 4), StyleType.ITALIC)
+                            )
+                    ),
+                    new CodeBlock(
+                            Depth.from(1),
+                            BlockType.CODE_BLOCK,
+                            RawText.from("public static void main(String... args) {}"),
+                            Language.from("java")
+                    ),
+                    new ImageBlock(
+                            Depth.from(1),
+                            BlockType.IMAGE,
+                            new ImageUrl("localhost:8080/hello-world.png"),
+                            new ImageCaption("테스트 이미지")
+                    ),
+                    new HorizontalRulesBlock(
+                            Depth.from(1),
+                            BlockType.HORIZONTAL_RULES,
+                            RawText.from("")
+                    )
+            )
+    );
+
+    public static final Writing GENERAL_WRITING2 = Writing.of(MEMBER, new Title("GENERAL_WRITING2"),
             BASIC_CATEGORY,
             List.of(
                     new NormalBlock(

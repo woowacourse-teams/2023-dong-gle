@@ -10,12 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
-
-    @Override
-    @Modifying(flushAutomatically = true)
-    @Query("delete from Block b where b in :blocks")
-    void deleteAll(@Param("blocks") final Iterable<? extends Block> blocks);
-
     @Query("""
             select b
             from Block b
@@ -23,4 +17,9 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
             type(b) = NormalBlock
             """)
     List<NormalBlock> findNormalBlocks(@Param("blocks") List<Block> blocks);
+
+    @Override
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Block b where b in :blocks")
+    void deleteAll(@Param("blocks") final Iterable<? extends Block> blocks);
 }

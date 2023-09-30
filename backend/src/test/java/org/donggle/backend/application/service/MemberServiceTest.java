@@ -29,8 +29,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.donggle.backend.TestFixtures.ANOTHER_CATEGORY;
 import static org.donggle.backend.TestFixtures.BASIC_CATEGORY;
-import static org.donggle.backend.TestFixtures.GENERAL_WRITING;
+import static org.donggle.backend.TestFixtures.GENERAL_WRITING1;
+import static org.donggle.backend.TestFixtures.GENERAL_WRITING2;
 import static org.donggle.backend.TestFixtures.MEMBER;
 import static org.donggle.backend.TestFixtures.MEMBER_CREDENTIALS;
 import static org.donggle.backend.TestFixtures.REFRESH_TOKEN;
@@ -107,17 +109,23 @@ class MemberServiceTest {
         final Member member = memberRepository.save(MEMBER);
         final MemberCredentials memberCredentials = memberCredentialsRepository.save(MEMBER_CREDENTIALS);
         final Category basicCategory = categoryRepository.save(BASIC_CATEGORY);
-        final Writing writing = writingRepository.save(GENERAL_WRITING);
+        final Category anotherCategory = categoryRepository.save(ANOTHER_CATEGORY);
+        basicCategory.changeNextCategory(anotherCategory);
+        final Writing writing1 = writingRepository.save(GENERAL_WRITING1);
+        final Writing writing2 = writingRepository.save(GENERAL_WRITING2);
+        writing1.changeNextWriting(writing2);
         final Blog blog = blogRepository.findByBlogType(BlogType.TISTORY).orElseThrow();
         final BlogWriting blogWriting = new BlogWriting(
                 blog,
-                GENERAL_WRITING,
+                GENERAL_WRITING1,
                 LocalDateTime.now(),
                 List.of("태그1", "태그2"),
                 "www.dongle.blog"
         );
         final BlogWriting savedBlogWriting = blogWritingRepository.save(blogWriting);
         final RefreshToken refreshToken = tokenRepository.save(REFRESH_TOKEN);
+        em.flush();
+        em.clear();
 
         // when
         memberService.deleteMember(member.getId());

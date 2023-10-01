@@ -1,4 +1,3 @@
-// import { HomeIcon } from 'assets/icons';
 import {
   CSSProperties,
   ComponentPropsWithRef,
@@ -66,10 +65,6 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
           background-color: ${theme.color.primary};
           color: ${theme.color.gray2};
         }
-
-        &:focus {
-          box-shadow: 0 0 0 3px ${theme.color.primary};
-        }
       `}
     `,
     text: css`
@@ -80,10 +75,6 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
 
         &:hover {
           background-color: ${theme.color.gray4};
-        }
-
-        &:focus {
-          box-shadow: 0 0 0 3px ${theme.color.gray4};
         }
       `}
     `,
@@ -96,10 +87,6 @@ const genVariantStyle = (variant: Required<Props>['variant']): RuleSet<object> =
 
         &:hover {
           background-color: ${theme.color.primaryHover};
-        }
-
-        &:focus {
-          box-shadow: 0 0 0 3px ${theme.color.primary};
         }
       `}
     `,

@@ -83,7 +83,7 @@ public class MemberService {
             Writing target = writing;
             while (target != null) {
                 blockRepository.deleteAll(target.getBlocks());
-                writingRepository.delete(target);
+                writingRepository.deleteImmediately(target);
                 target = target.getNextWriting();
             }
         });

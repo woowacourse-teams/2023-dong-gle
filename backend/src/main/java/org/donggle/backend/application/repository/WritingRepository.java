@@ -99,8 +99,7 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
 
     List<Writing> findAllByMember(final Member member);
 
-    @Override
     @Modifying
     @Query("delete from Writing w where w = :writing")
-    void delete(@Param("writing") final Writing writing);
+    void deleteImmediately(@Param("writing") final Writing writing);
 }

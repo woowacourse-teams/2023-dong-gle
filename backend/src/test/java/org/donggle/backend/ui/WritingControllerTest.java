@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
 import org.donggle.backend.application.service.request.WritingModifyRequest;
@@ -84,7 +83,7 @@ class WritingControllerTest extends ControllerTest {
                         post("/writings/notion")
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                                 .contentType(APPLICATION_JSON)
-                                .content(new ObjectMapper().writeValueAsString(notionUploadRequest))
+                                .content(objectMapper.writeValueAsString(notionUploadRequest))
                 )
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/writings/" + writingId));
@@ -158,7 +157,7 @@ class WritingControllerTest extends ControllerTest {
                         patch("/writings/" + writingId)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                                 .contentType(APPLICATION_JSON)
-                                .content(new ObjectMapper().writeValueAsString(request))
+                                .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isNoContent());
     }
@@ -181,7 +180,7 @@ class WritingControllerTest extends ControllerTest {
                         get("/writings/" + writingId + "/properties")
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                                 .contentType(APPLICATION_JSON)
-                                .content(new ObjectMapper().writeValueAsString(request))
+                                .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk());
     }

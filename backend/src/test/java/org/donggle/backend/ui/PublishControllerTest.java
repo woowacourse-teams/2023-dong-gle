@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.support.JwtSupporter;
@@ -36,7 +35,7 @@ class PublishControllerTest extends ControllerTest {
                         post("/writings/{writingId}/publish/tistory", writingId)
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(publishRequest))
+                                .content(objectMapper.writeValueAsString(publishRequest))
                 )
                 .andExpect(status().isOk());
     }
@@ -58,7 +57,7 @@ class PublishControllerTest extends ControllerTest {
                         post("/writings/{writingId}/publish/medium", writingId)
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(publishRequest))
+                                .content(objectMapper.writeValueAsString(publishRequest))
                 )
                 .andExpect(status().isOk());
     }

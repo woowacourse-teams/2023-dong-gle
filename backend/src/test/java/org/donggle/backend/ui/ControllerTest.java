@@ -1,6 +1,7 @@
 package org.donggle.backend.ui;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.application.service.auth.AuthFacadeService;
 import org.donggle.backend.application.service.blog.PublishFacadeService;
@@ -31,6 +32,8 @@ import org.springframework.test.web.servlet.MockMvc;
 public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
+    @Autowired
+    protected ObjectMapper objectMapper;
     @MockBean
     protected MemberService memberService;
     @MockBean

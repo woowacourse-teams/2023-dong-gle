@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.support.JwtSupporter;
@@ -45,7 +44,7 @@ class CategoryControllerTest extends ControllerTest {
                         post("/categories")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(categoryAddRequest))
+                                .content(objectMapper.writeValueAsString(categoryAddRequest))
                 )
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/categories/" + categoryId));
@@ -70,7 +69,7 @@ class CategoryControllerTest extends ControllerTest {
                         patch("/categories/" + categoryId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(categoryModifyRequest))
+                                .content(objectMapper.writeValueAsString(categoryModifyRequest))
                 )
                 .andExpect(status().isNoContent());
     }
@@ -94,7 +93,7 @@ class CategoryControllerTest extends ControllerTest {
                         patch("/categories/" + categoryId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(categoryModifyRequest))
+                                .content(objectMapper.writeValueAsString(categoryModifyRequest))
                 )
                 .andExpect(status().isNoContent());
     }
@@ -117,7 +116,7 @@ class CategoryControllerTest extends ControllerTest {
                         patch("/categories/" + categoryId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(categoryModifyRequest))
+                                .content(objectMapper.writeValueAsString(categoryModifyRequest))
                 )
                 .andExpect(status().isBadRequest());
     }

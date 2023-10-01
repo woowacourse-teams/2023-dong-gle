@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.application.service.request.TokenAddRequest;
 import org.donggle.backend.support.JwtSupporter;
@@ -56,7 +55,7 @@ class ConnectionControllerTest extends ControllerTest {
                         post("/connections/tistory")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(oAuthAccessTokenRequest))
+                                .content(objectMapper.writeValueAsString(oAuthAccessTokenRequest))
                 )
                 .andExpect(status().isOk());
     }
@@ -119,7 +118,7 @@ class ConnectionControllerTest extends ControllerTest {
                         post("/connections/notion")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(oAuthAccessTokenRequest))
+                                .content(objectMapper.writeValueAsString(oAuthAccessTokenRequest))
                 )
                 .andExpect(status().isOk());
     }
@@ -161,7 +160,7 @@ class ConnectionControllerTest extends ControllerTest {
                         post("/connections/medium")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(tokenAddRequest))
+                                .content(objectMapper.writeValueAsString(tokenAddRequest))
                 )
                 .andExpect(status().isOk());
     }

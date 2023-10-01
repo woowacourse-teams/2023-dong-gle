@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.domain.auth.RefreshToken;
@@ -57,7 +56,7 @@ class AuthControllerTest extends ControllerTest {
         mockMvc.perform(
                         post("/auth/login/{socialType}", socialType)
                                 .contentType(APPLICATION_JSON)
-                                .content(new ObjectMapper().writeValueAsString(oAuthAccessTokenRequest)))
+                                .content(objectMapper.writeValueAsString(oAuthAccessTokenRequest)))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("Set-Cookie"))
                 .andExpect(jsonPath("$.accessToken").value(tokenResponse.accessToken()));

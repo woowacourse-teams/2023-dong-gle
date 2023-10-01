@@ -1,6 +1,5 @@
 package org.donggle.backend.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.donggle.backend.application.service.request.WritingsDeleteRequest;
 import org.donggle.backend.application.service.request.WritingsRestoreRequest;
 import org.donggle.backend.support.JwtSupporter;
@@ -67,7 +66,7 @@ class TrashControllerTest extends ControllerTest {
                         post("/trash")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(writingsDeleteRequest))
+                                .content(objectMapper.writeValueAsString(writingsDeleteRequest))
                 )
                 .andExpect(status().isOk());
     }
@@ -88,7 +87,7 @@ class TrashControllerTest extends ControllerTest {
                         post("/trash")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(writingsDeleteRequest))
+                                .content(objectMapper.writeValueAsString(writingsDeleteRequest))
                 )
                 .andExpect(status().isOk());
     }
@@ -109,7 +108,7 @@ class TrashControllerTest extends ControllerTest {
                         post("/trash/restore")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(new ObjectMapper().writeValueAsString(writingsRestoreRequest))
+                                .content(objectMapper.writeValueAsString(writingsRestoreRequest))
                 )
                 .andExpect(status().isOk());
     }

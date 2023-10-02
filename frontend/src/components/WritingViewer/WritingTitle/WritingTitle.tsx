@@ -93,6 +93,7 @@ const S = {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 2rem;
+    gap: 0.3rem;
   `,
   Title: styled.h1`
     font-size: 4rem;
@@ -102,6 +103,7 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
     border-radius: 12px;
     padding: 1rem;
     background-color: ${({ theme }) => theme.color.gray4};

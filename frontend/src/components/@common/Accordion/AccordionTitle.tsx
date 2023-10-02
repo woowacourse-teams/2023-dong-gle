@@ -59,6 +59,7 @@ const S = {
     height: 2.2rem;
     padding: 0.4rem;
     border-radius: 4px;
+    flex-shrink: 0;
 
     &:hover {
       background-color: ${({ theme }) => theme.color.gray5};

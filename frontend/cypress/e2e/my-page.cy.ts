@@ -23,4 +23,31 @@ describe('마이 페이지', () => {
       cy.location('pathname').should('eq', '/');
     });
   });
+
+  describe('연결 테스트', () => {
+    it('티스토리와 연결한다.', () => {
+      cy.findByLabelText('티스토리 연결하기').click();
+
+      cy.wait(1000);
+      cy.visit(`/connections/tistory?code=mock`);
+
+      cy.findByLabelText('티스토리 연결 해제하기').should('exist');
+    });
+
+    it('미디엄과 연결한다.', () => {
+      cy.findByLabelText('미디엄 연결하기').click();
+
+      cy.findByLabelText('미디엄 토큰 입력 창').focus().type('mediumToken{enter}');
+
+      cy.findByLabelText('미디엄 연결 해제하기').should('exist');
+    });
+
+    it('노션과 연결한다.', () => {
+      cy.findAllByLabelText('노션 연결하기').click();
+
+      cy.visit(`/connections/notion?code=mock`);
+
+      cy.findByLabelText('노션 연결 해제하기').should('exist');
+    });
+  });
 });

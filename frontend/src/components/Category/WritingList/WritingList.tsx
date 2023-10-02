@@ -65,7 +65,10 @@ const WritingList = ({
             <S.Text>{writing.title}</S.Text>
           </S.Button>
           <S.DeleteButtonWrapper>
-            <DeleteButton onClick={() => deleteWritings([writing.id])} />
+            <DeleteButton
+              onClick={() => deleteWritings([writing.id])}
+              aria-label={`${writing.title}글 삭제`}
+            />
           </S.DeleteButtonWrapper>
         </S.Item>
       ))}

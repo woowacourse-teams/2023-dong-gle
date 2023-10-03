@@ -14,7 +14,7 @@ describe('글 페이지', () => {
       cy.findByText('글 정보').should('be.visible');
 
       cy.findByLabelText('오른쪽 사이드바 토글').click();
-      cy.findByText('글 정보').should('not.visible');
+      cy.findByText('글 정보').should('not.be.visible');
 
       cy.findByLabelText('오른쪽 사이드바 토글').click();
       cy.findByText('글 정보').should('be.visible');

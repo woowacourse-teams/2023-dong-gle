@@ -6,8 +6,10 @@ import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -35,12 +37,12 @@ public class NotionApiClient {
     }
 
     private JsonNode retrieveBlock(final String parentBlockId, final String notionToken) {
-        return retrieveData(parentBlockId, BLOCK_URI, notionToken);
+        return retrieveData(parentBlockId, BLOCK_URI, notionToken, "");
     }
 
-    private JsonNode retrieveData(final String blockId, final String childBlockUri, final String notionToken) {
+    private JsonNode retrieveData(final String blockId, final String blockUrl, final String notionToken, final String startCursor) {
         return webClient.get()
-                .uri(childBlockUri, blockId)
+                .uri(getRequestUri(blockId, blockUrl, startCursor))
                 .header(AUTHORIZATION, BEARER + notionToken)
                 .header(NOTION_VERSION, API_VERSION)
                 .retrieve()
@@ -48,6 +50,19 @@ public class NotionApiClient {
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
                 .bodyToMono(JsonNode.class)
                 .block();
+    }
+
+    private URI getRequestUri(final String blockId, final String blockUrl, final String startCursor) {
+        final URI requestUri;
+        if (!startCursor.isEmpty()) {
+            requestUri = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl)
+                    .queryParam("start_cursor", startCursor)
+                    .build(blockId);
+        } else {
+            requestUri = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl)
+                    .build(blockId);
+        }
+        return requestUri;
     }
 
     public List<NotionBlockNodeResponse> retrieveBodyBlockNodes(final NotionBlockNodeResponse parentNotionBlock, final String notionToken) {
@@ -61,10 +76,6 @@ public class NotionApiClient {
         }
 
         return bodyBlockNodes;
-    }
-
-    public String findTitle(final NotionBlockNodeResponse parentBlockNode) {
-        return parentBlockNode.getBlockProperties().get("title").asText();
     }
 
     private void processNotionBlockNode(
@@ -83,7 +94,18 @@ public class NotionApiClient {
 
     private List<JsonNode> retrieveChildrenBlocks(final String blockId, final String notionToken) {
         final List<JsonNode> childrenBlocks = new ArrayList<>();
-        retrieveData(blockId, CHILD_BLOCK_URI, notionToken).withArray("results").elements().forEachRemaining(childrenBlocks::add);
+        boolean hasMore;
+        String nextCursor = "";
+        do {
+            final JsonNode response = retrieveData(blockId, CHILD_BLOCK_URI, notionToken, nextCursor);
+            response.withArray("results").elements().forEachRemaining(childrenBlocks::add);
+            hasMore = response.get("has_more").asBoolean();
+            if (hasMore) {
+                nextCursor = response.get("next_cursor").asText();
+            } else {
+                nextCursor = "";
+            }
+        } while (hasMore);
         return childrenBlocks;
     }
 
@@ -101,5 +123,9 @@ public class NotionApiClient {
             }
             notionBlockNodeResponseDeque.addFirst(new NotionBlockNodeResponse(childBlock, notionBlockNodeResponse.depth() + 1));
         }
+    }
+
+    public String findTitle(final NotionBlockNodeResponse parentBlockNode) {
+        return parentBlockNode.getBlockProperties().get("title").asText();
     }
 }

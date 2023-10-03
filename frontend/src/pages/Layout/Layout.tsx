@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Outlet, useOutletContext } from 'react-router-dom';
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { PlusCircleIcon } from 'assets/icons';
+import { HomeBorderIcon, PlusCircleIcon, TrashCanIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
@@ -10,11 +10,11 @@ import CategorySection from 'components/Category/Section/Section';
 import { useModal } from 'hooks/@common/useModal';
 import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
 import Divider from 'components/@common/Divider/Divider';
-import TrashCan from 'components/TrashCan/TrashCan';
-import HomeButton from 'components/HomeButton/HomeButton';
 import HelpMenu from 'components/HelpMenu/HelpMenu';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeWritingInfoState } from 'globalState';
+import { NAVIGATE_PATH } from 'constants/path';
+import GoToPageLink from 'components/GoToPageLink/GoToPageLink';
 
 const Layout = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
@@ -52,11 +52,17 @@ const Layout = () => {
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
           <Divider />
-          <HomeButton />
+          <GoToPageLink path={NAVIGATE_PATH.spacePage}>
+            <HomeBorderIcon aria-label='홈 아이콘' />
+            <S.GoToPageLinkText>전체 글</S.GoToPageLinkText>
+          </GoToPageLink>
           <Divider />
           <CategorySection />
           <Divider />
-          <TrashCan />
+          <GoToPageLink path={NAVIGATE_PATH.trashCanPage}>
+            <TrashCanIcon width={20} height={20} aria-label='휴지통 아이콘' />
+            <S.GoToPageLinkText>휴지통</S.GoToPageLinkText>
+          </GoToPageLink>
         </S.LeftSidebarSection>
         <S.Main>
           <Outlet />
@@ -107,5 +113,10 @@ const S = {
   RightSidebarSection: styled.section<{ $isRightSidebarOpen: boolean }>`
     ${sidebarStyle}
     display: ${({ $isRightSidebarOpen }) => !$isRightSidebarOpen && 'none'};
+  `,
+
+  GoToPageLinkText: styled.p`
+    font-size: 1.4rem;
+    font-weight: 500;
   `,
 };

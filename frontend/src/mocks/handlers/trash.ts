@@ -1,7 +1,7 @@
 import { trashURL } from 'constants/apis/url';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { rest } from 'msw';
-import { jsonCtx, withoutJson } from './utils';
+import { errorCtx, jsonCtx, withoutJson } from './utils';
 import {
   deleteWritingFromTrashTable,
   moveWritingToTrashTable,
@@ -14,7 +14,7 @@ import { DeleteWritingRequest } from 'types/apis/trash';
 export const trashHandlers = [
   // 글 휴지통으로 이동 / 글 영구 삭제
   rest.post(trashURL, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     const { writingIds, isPermanentDelete } = await req.json<DeleteWritingRequest>();
 
@@ -30,14 +30,14 @@ export const trashHandlers = [
 
   // 휴지통에서 글 목록 조회
   rest.get(trashURL, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...jsonCtx(trashcanWritingTable));
   }),
 
   // 휴지통에서 글 복구
   rest.post(`${trashURL}/restore`, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     const { writingIds } = await req.json();
 

@@ -7,7 +7,7 @@ import { withoutJson } from './utils';
 export const connectionsHandlers = [
   // 티스토리 정보 저장
   rest.post(`${connectionsURL}/tistory`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     connect('tistory');
 
@@ -16,7 +16,7 @@ export const connectionsHandlers = [
 
   // 미디움 정보 저장
   rest.post(`${connectionsURL}/medium`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     connect('medium');
 
@@ -25,7 +25,7 @@ export const connectionsHandlers = [
 
   // 노션 정보 저장
   rest.post(`${connectionsURL}/notion`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     connect('notion');
 
@@ -34,7 +34,7 @@ export const connectionsHandlers = [
 
   // 티스토리 연결 해제
   rest.post(`${connectionsURL}/tistory/disconnect`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     disconnect('tistory');
 
@@ -43,7 +43,7 @@ export const connectionsHandlers = [
 
   // 미디움 연결 해제
   rest.post(`${connectionsURL}/medium/disconnect`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     disconnect('medium');
 
@@ -52,7 +52,7 @@ export const connectionsHandlers = [
 
   // 노션 연결 해제
   rest.post(`${connectionsURL}/notion/disconnect`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     disconnect('notion');
 

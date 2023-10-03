@@ -24,49 +24,49 @@ export const writingHandlers = [
 
   // 글 조회: GET
   rest.get(`${writingURL}/:writingId`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...jsonCtx<GetWritingResponse>(writing));
   }),
 
   // 글 정보: GET
   rest.get(`${writingURL}/:writingId/properties`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...jsonCtx<GetWritingPropertiesResponse>(writingProperties));
   }),
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/file`, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/1`));
   }),
 
   // 글 생성(글 업로드): POST
   rest.post(`${writingURL}/notion`, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(ctx.delay(1000), ctx.status(201), ctx.set('Location', `/writings/1`));
   }),
 
   // 글 티스토리 블로그로 발행: POST
   rest.post(`${writingURL}/:writingId/publish/tistory`, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return isConnected('tistory') ? res(...withoutJson()) : res(...errorCtx());
   }),
 
   // 글 미디엄 블로그로 발행: POST
   rest.post(`${writingURL}/:writingId/publish/medium`, async (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return isConnected('medium') ? res(...withoutJson()) : res(...errorCtx());
   }),
 
   // 카테고리 글 상세 목록 조회: GET
   rest.get(`${writingURL}`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...jsonCtx<GetDetailWritingsResponse>(writingTable));
   }),
@@ -76,11 +76,11 @@ export const writingHandlers = [
     const writingId = Number(req.params.writingId);
     const body = await req.json();
 
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     // 글 이름 수정
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
-      if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+      if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
       renameWritingTitle(body.title);
     }

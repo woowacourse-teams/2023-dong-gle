@@ -7,14 +7,14 @@ import { jsonCtx, withoutJson } from './utils';
 export const memberHandlers = [
   // 멤버 정보 가져오기: GET
   rest.get(memberURL, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...jsonCtx(member));
   }),
 
   // 회원 탈퇴: POST
   rest.post(`${memberURL}/delete`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...withoutJson());
   }),

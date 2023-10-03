@@ -13,8 +13,8 @@ export const trashcanWritingTable = {
 // 글 휴지통으로 이동
 export const moveWritingToTrashTable = () => {
   trashcanWritingTable.writings.push({
-    id: writingId++,
-    title: `나도 버려졌어 ${writingId}`,
+    id: writingId,
+    title: `나도 버려졌어 ${writingId++}`,
     categoryId: 1,
   });
 };

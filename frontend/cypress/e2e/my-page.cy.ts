@@ -26,7 +26,7 @@ describe('마이 페이지', () => {
 
   describe('연결 테스트', () => {
     it('티스토리와 연결한다.', () => {
-      cy.findByLabelText('티스토리 연결하기').click();
+      cy.findByLabelText('티스토리 연결하기').click().wait(1000);
 
       cy.visit(`/connections/tistory?code=mock`);
 
@@ -42,7 +42,7 @@ describe('마이 페이지', () => {
     });
 
     it('노션과 연결한다.', () => {
-      cy.findAllByLabelText('노션 연결하기').click();
+      cy.findAllByLabelText('노션 연결하기').click().wait(1000);
 
       cy.visit(`/connections/notion?code=mock`);
 

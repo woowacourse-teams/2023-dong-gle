@@ -1,4 +1,4 @@
-describe('동글 메인 페이지', () => {
+describe('메인 페이지', () => {
   beforeEach(() => {
     cy.viewport(1440, 810);
     cy.visit(`/`);

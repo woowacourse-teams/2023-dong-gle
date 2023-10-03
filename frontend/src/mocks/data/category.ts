@@ -125,12 +125,12 @@ export const deleteCategory = (categoryId: number) => {
   const category = getWritingsIn사이드바카테고리(categoryId);
 
   // 카테고리 삭제 시 해당 카테고리 내부 모든 글이 기본 카테고리로 이동
-  writingsIn사이드바기본카테고리.writings.push(...category?.writings!);
+  writingsIn사이드바기본카테고리.writings.push(...(category?.writings ?? []));
 };
 
 export const addCategory = (categoryName: string) => {
   categories.categories.push({
-    id: 5,
+    id: categories.categories.length + 1,
     categoryName,
   });
 };

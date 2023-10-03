@@ -130,7 +130,7 @@ export const deleteCategory = (categoryId: number) => {
 
 export const addCategory = (categoryName: string) => {
   categories.categories.push({
-    id: categories.categories.length + 1,
+    id: Math.max(...categories.categories.map((category) => category.id)) + 1,
     categoryName,
   });
 };

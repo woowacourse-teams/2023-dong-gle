@@ -28,7 +28,6 @@ describe('마이 페이지', () => {
     it('티스토리와 연결한다.', () => {
       cy.findByLabelText('티스토리 연결하기').click();
 
-      cy.wait(1000);
       cy.visit(`/connections/tistory?code=mock`);
 
       cy.findByLabelText('티스토리 연결 해제하기').should('exist');

@@ -11,6 +11,7 @@ export const useDeleteWritings = () => {
   const { mutate } = useMutation(moveToTrash, {
     onSuccess: () => {
       toast.show({ type: 'success', message: '글이 휴지통으로 이동됐습니다.' });
+      queryClient.invalidateQueries(['deletedWritings']);
       queryClient.invalidateQueries(['writingsInCategory']);
       goTrashCanPage();
     },

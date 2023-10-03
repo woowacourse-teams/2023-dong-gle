@@ -36,4 +36,19 @@ describe('글 페이지', () => {
       cy.findByText('발행하기').should('be.visible');
     });
   });
+
+  describe('휴지통 글 테스트', () => {
+    beforeEach(() => {
+      cy.findByLabelText('휴지통으로 이동하기').click().wait(1000);
+      cy.findByText('너 버려진거야').click().wait(1000);
+    });
+
+    it('글 제목을 변경할 수 없다.', () => {
+      cy.findByLabelText('글 제목 수정').should('not.exist');
+    });
+
+    it('발행 하기 탭이 없다.', () => {
+      cy.findByLabelText('발행 하기').should('not.exist');
+    });
+  });
 });

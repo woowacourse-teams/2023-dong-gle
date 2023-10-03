@@ -43,6 +43,7 @@ const TrashCanTable = ({ writings }: Props) => {
                 variant='unstyled'
                 type='checkbox'
                 checked={isAllCheckboxClicked}
+                defaultChecked={false}
                 onClick={toggleAllCheckbox}
               />
             </th>
@@ -57,6 +58,7 @@ const TrashCanTable = ({ writings }: Props) => {
                   variant='unstyled'
                   type='checkbox'
                   checked={getIsChecked(id)}
+                  defaultChecked={false}
                   onChange={() => toggleCheckbox(id)}
                 />
               </td>

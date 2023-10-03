@@ -17,7 +17,7 @@ import { default as S } from './PublishingPropertyStyle';
 import type { Blog } from 'types/domain';
 import Input from 'components/@common/Input/Input';
 import { dateFormatter } from 'utils/date';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Divider from 'components/@common/Divider/Divider';
 import { useTistoryCategories } from 'hooks/queries/blogs/useTistoryCategories';
 
@@ -110,14 +110,18 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
             카테고리
           </S.PropertyName>
           <div>
-            <select onChange={(e) => setCategoryId(e.target.value)}>
+            <S.TistoryCategorySelect
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => setCategoryId(e.target.value)}
+              disabled={isCategoryLoading}
+            >
+              {isCategoryLoading && <option hidden>불러오는 중입니다</option>}
               {categories &&
                 categories.map(({ id, name }) => (
                   <option key={id} value={id}>
                     {name}
                   </option>
                 ))}
-            </select>
+            </S.TistoryCategorySelect>
           </div>
         </S.PropertyRow>
         {publishStatus === 'PROTECT' && (

@@ -78,6 +78,10 @@ const PublishingPropertyStyle = {
     flex-direction: column;
     gap: 1rem;
   `,
+
+  TistoryCategorySelect: styled.select`
+    width: 100%;
+  `,
 };
 
 export default PublishingPropertyStyle;

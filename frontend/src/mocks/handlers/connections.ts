@@ -2,7 +2,7 @@ import { connectionsURL } from 'constants/apis/url';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
 import { connect, disconnect } from 'mocks/data/member';
 import { rest } from 'msw';
-import { withoutJson } from './utils';
+import { errorCtx, withoutJson } from './utils';
 
 export const connectionsHandlers = [
   // 티스토리 정보 저장

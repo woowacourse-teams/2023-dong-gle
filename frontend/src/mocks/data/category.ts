@@ -136,7 +136,6 @@ export const addCategory = (categoryName: string) => {
 };
 
 export const renameCategory = (categoryId: number, categoryName: string) => {
-  console.log('categoryName', categoryName);
   categories.categories.forEach((category) => {
     if (category.id === categoryId) {
       category.categoryName = categoryName;

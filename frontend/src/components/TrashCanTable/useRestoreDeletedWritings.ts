@@ -10,6 +10,7 @@ export const useRestoreDeleteWritings = () => {
     onSuccess: () => {
       toast.show({ type: 'success', message: '글이 복구되었습니다.' });
       queryClient.invalidateQueries(['deletedWritings']);
+      queryClient.invalidateQueries(['writingsInCategory']);
     },
     onError: (error) => {
       if (error instanceof HttpError) toast.show({ type: 'error', message: error.message });

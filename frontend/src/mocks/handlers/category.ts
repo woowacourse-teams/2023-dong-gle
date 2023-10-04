@@ -1,6 +1,13 @@
 import { rest } from 'msw';
 import { categoryURL } from 'constants/apis/url';
-import { categories, writingsInCategory, writingsInCategory2 } from 'mocks/categoryContentsMock';
+import {
+  addCategory,
+  categories,
+  changeOrder,
+  deleteCategory,
+  getWritingsIn사이드바카테고리,
+  renameCategory,
+} from 'mocks/data/category';
 import {
   AddCategoriesRequest,
   UpdateCategoryOrderArgs,
@@ -8,49 +15,34 @@ import {
 } from 'types/apis/category';
 import { hasDefinedField } from 'utils/typeGuard';
 import { ERROR_RESPONSE, isValidAccessToken } from 'mocks/auth';
+import { errorCtx, jsonCtx, withoutJson } from './utils';
 
 export const categoryHandlers = [
   // 카테고리 목록 조회
   rest.get(categoryURL, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
-    return res(ctx.json(categories), ctx.delay(300), ctx.status(200));
+    return res(...jsonCtx(categories));
   }),
 
   // 카테고리 추가
-  rest.post(categoryURL, (req, res, ctx) => {
-    const body = req.body as AddCategoriesRequest;
+  rest.post(categoryURL, async (req, res, ctx) => {
+    const body = await req.json<AddCategoriesRequest>();
 
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
-    if (!body || !body.categoryName)
-      return res(
-        ctx.delay(300),
-        ctx.status(404),
-        ctx.json({ message: '카테고리 이름은 공백이 될 수 없습니다.' }),
-      );
+    addCategory(body.categoryName);
 
     return res(ctx.delay(300), ctx.set('Location', `/categories/200`), ctx.status(201));
   }),
 
   // 카테고리 글 목록 조회
   rest.get(`${categoryURL}/:categoryId`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     const categoryId = Number(req.params.categoryId);
 
-    if (categoryId !== 1 && categoryId !== 3)
-      return res(
-        ctx.delay(300),
-        ctx.status(500),
-        ctx.json({
-          message: '서버에서 예기치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        }),
-      );
-
-    if (categoryId === 1) return res(ctx.json(writingsInCategory), ctx.delay(300), ctx.status(200));
-
-    return res(ctx.json(writingsInCategory2), ctx.delay(300), ctx.status(200));
+    return res(...jsonCtx(getWritingsIn사이드바카테고리(categoryId)));
   }),
 
   // 카테고리 수정(이름, 순서)
@@ -58,58 +50,28 @@ export const categoryHandlers = [
     const categoryId = Number(req.params.categoryId);
     const body = await req.json();
 
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     // 카테고리 순서 변경
     if (hasDefinedField<UpdateCategoryOrderArgs['body']>(body, 'nextCategoryId')) {
-      if (!body.nextCategoryId) {
-        return res(
-          ctx.delay(300),
-          ctx.status(404),
-          ctx.json({
-            message: '카테고리 순서 수정 에러',
-          }),
-        );
-      }
-      const newCategories = [...categories.categories];
-
-      const draggingIndex = newCategories.findIndex((category) => category.id === categoryId);
-
-      const draggingItem = newCategories[draggingIndex];
-      newCategories.splice(draggingIndex, 1);
-
-      const dragOverIndex = newCategories.findIndex(
-        (category) => category.id === body.nextCategoryId,
-      );
-
-      if (dragOverIndex === -1) {
-        newCategories.push(draggingItem);
-      } else {
-        newCategories.splice(dragOverIndex, -1, draggingItem);
-      }
-      categories.categories = newCategories;
+      changeOrder(categoryId, body.nextCategoryId);
     }
 
     // 카테고리 이름 수정
     if (hasDefinedField<UpdateCategoryTitleArgs['body']>(body, 'categoryName')) {
-      if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+      if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
-      if (!body.categoryName)
-        return res(
-          ctx.delay(300),
-          ctx.status(404),
-          ctx.json({
-            message: '카테고리 이름 수정 에러',
-          }),
-        );
+      renameCategory(categoryId, body.categoryName);
     }
-    return res(ctx.status(204));
+    return res(...withoutJson(204));
   }),
 
   // 카테고리 삭제
   rest.delete(`${categoryURL}/:categoryId`, (req, res, ctx) => {
-    if (!isValidAccessToken(req)) return res(ctx.status(401), ctx.json(ERROR_RESPONSE));
+    if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
-    return res(ctx.delay(300), ctx.status(204));
+    deleteCategory(Number(req.params.categoryId));
+
+    return res(...withoutJson(204));
   }),
 ];

@@ -39,9 +39,11 @@ export const getWriting = (writingId: number): Promise<GetWritingResponse> =>
 export const getWritingProperties = (writingId: number): Promise<GetWritingPropertiesResponse> =>
   http.get(`${writingURL}/${writingId}/properties`).json();
 
+// 티스토리 글 발행: POST
 export const publishWritingToTistory = ({ writingId, body }: PublishWritingToTistoryArgs) =>
   http.post(`${writingURL}/${writingId}/publish/tistory`, { json: body });
 
+// 미디엄 글 발행: POST
 export const publishWritingToMedium = ({ writingId, body }: PublishWritingToMediumArgs) =>
   http.post(`${writingURL}/${writingId}/publish/medium`, { json: body });
 

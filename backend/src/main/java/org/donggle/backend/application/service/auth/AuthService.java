@@ -34,7 +34,6 @@ public class AuthService {
     private final MemberCredentialsRepository memberCredentialsRepository;
     private final CategoryRepository categoryRepository;
 
-
     public TokenResponse login(final UserInfo userInfo, final SocialType type) {
         final Member member = memberRepository.findBySocialIdAndSocialType(userInfo.socialId(), type)
                 .orElseGet(() -> initializeMember(userInfo));

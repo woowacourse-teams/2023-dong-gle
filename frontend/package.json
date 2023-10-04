@@ -14,7 +14,7 @@
     "build-storybook": "storybook build",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test:e2e": "start-server-and-test start http://localhost:3000 cy:run",
+    "test:e2e": "start-server-and-test start:mocking http://localhost:3000 cy:run",
     "preanalyze": "yarn build:prod",
     "analyze": "webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes gzip"
   },

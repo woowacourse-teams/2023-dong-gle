@@ -52,14 +52,14 @@ const Layout = () => {
           </Button>
           <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
           <Divider />
-          <GoToPageLink path={NAVIGATE_PATH.spacePage}>
+          <GoToPageLink pathname={NAVIGATE_PATH.spacePage}>
             <HomeBorderIcon />
             <S.GoToPageLinkText>전체 글</S.GoToPageLinkText>
           </GoToPageLink>
           <Divider />
           <CategorySection />
           <Divider />
-          <GoToPageLink path={NAVIGATE_PATH.trashCanPage}>
+          <GoToPageLink pathname={NAVIGATE_PATH.trashCanPage}>
             <TrashCanIcon width={20} height={20} />
             <S.GoToPageLinkText>휴지통</S.GoToPageLinkText>
           </GoToPageLink>

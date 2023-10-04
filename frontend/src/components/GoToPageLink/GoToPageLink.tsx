@@ -3,14 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 type Props = {
-  path: string;
+  pathname: string;
 } & PropsWithChildren;
 
-const GoToPageLink = ({ path, children }: Props) => {
+const GoToPageLink = ({ pathname, children }: Props) => {
   const location = useLocation();
 
   return (
-    <S.Link to={path} $isClicked={location.pathname === path} aria-label='페이지 이동 버튼'>
+    <S.Link to={pathname} $isClicked={location.pathname === pathname} aria-label='페이지 이동 버튼'>
       {children}
     </S.Link>
   );

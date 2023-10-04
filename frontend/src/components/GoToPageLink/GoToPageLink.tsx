@@ -37,7 +37,6 @@ const S = {
 
     &:visited {
       color: ${({ theme }) => theme.color.gray13};
-      text-decoration: none;
     }
   `,
 };

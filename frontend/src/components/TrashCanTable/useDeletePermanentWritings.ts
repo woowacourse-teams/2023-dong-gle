@@ -3,12 +3,13 @@ import { deletePermanentWritings as deletePermanentWritingsAPI } from 'apis/tras
 import { useToast } from 'hooks/@common/useToast';
 import { HttpError } from 'utils/apis/HttpError';
 
-export const useDeletePermanentWritings = () => {
+export const useDeletePermanentWritings = (onSuccessCbFn: () => void) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { mutate } = useMutation(deletePermanentWritingsAPI, {
     onSuccess: () => {
       toast.show({ type: 'success', message: '글이 삭제되었습니다.' });
+      onSuccessCbFn();
       queryClient.invalidateQueries(['deletedWritings']);
     },
     onError: (error) => {

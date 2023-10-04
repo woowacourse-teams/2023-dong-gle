@@ -12,7 +12,7 @@ const DeletedWritingList = () => {
   const { goWritingPage } = usePageNavigate();
   const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
   const writingId = activeWritingInfo?.id;
-  const deletePermanentWritings = useDeletePermanentWritings();
+  const deletePermanentWritings = useDeletePermanentWritings(() => {});
 
   if (!writingId) return;
   if (!deletedWritings || deletedWritings?.length === 0)

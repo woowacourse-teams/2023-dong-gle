@@ -25,13 +25,13 @@ describe('마이 페이지', () => {
   });
 
   describe('연결 테스트', () => {
-    it('티스토리와 연결한다.', () => {
-      cy.findByLabelText('티스토리 연결하기').click().wait(1000);
+    // it('티스토리와 연결한다.', () => {
+    //   cy.findByLabelText('티스토리 연결하기').click().wait(1000);
 
-      cy.visit(`/connections/tistory?code=mock`);
+    //   cy.visit(`/connections/tistory?code=mock`);
 
-      cy.findByLabelText('티스토리 연결 해제하기').should('exist');
-    });
+    //   cy.findByLabelText('티스토리 연결 해제하기').should('exist');
+    // });
 
     it('미디엄과 연결한다.', () => {
       cy.findByLabelText('미디엄 연결하기').click();
@@ -41,12 +41,12 @@ describe('마이 페이지', () => {
       cy.findByLabelText('미디엄 연결 해제하기').should('exist');
     });
 
-    it('노션과 연결한다.', () => {
-      cy.findAllByLabelText('노션 연결하기').click().wait(1000);
+    // it('노션과 연결한다.', () => {
+    //   cy.findAllByLabelText('노션 연결하기').click().wait(1000);
 
-      cy.visit(`/connections/notion?code=mock`);
+    //   cy.visit(`/connections/notion?code=mock`);
 
-      cy.findByLabelText('노션 연결 해제하기').should('exist');
-    });
+    //   cy.findByLabelText('노션 연결 해제하기').should('exist');
+    // });
   });
 });

@@ -10,7 +10,7 @@ const GoToPageLink = ({ path, children }: Props) => {
   const location = useLocation();
 
   return (
-    <S.Link to={path} $isClicked={location.pathname === path}>
+    <S.Link to={path} $isClicked={location.pathname === path} aria-label='페이지 이동 버튼'>
       {children}
     </S.Link>
   );

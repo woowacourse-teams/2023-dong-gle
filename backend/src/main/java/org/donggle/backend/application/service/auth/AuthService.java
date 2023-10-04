@@ -11,13 +11,18 @@ import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.oauth.SocialType;
+import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
+import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
 import org.donggle.backend.exception.business.DuplicatedMemberException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.exception.notfound.RefreshTokenNotFoundException;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,9 +36,17 @@ public class AuthService {
 
 
     public TokenResponse login(final UserInfo userInfo, final SocialType type) {
-        final Member loginMember = memberRepository.findBySocialIdAndSocialType(userInfo.socialId(), type)
+        final Member member = memberRepository.findBySocialIdAndSocialType(userInfo.socialId(), type)
                 .orElseGet(() -> initializeMember(userInfo));
-        return createTokens(loginMember);
+        final Optional<RefreshToken> refreshTokenOptional = tokenRepository.findByMemberId(member.getId());
+        final String newAccessToken = jwtTokenProvider.createAccessToken(member.getId());
+        final String newRefreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+
+        refreshTokenOptional.ifPresentOrElse(
+                refreshToken -> refreshToken.update(newRefreshToken),
+                () -> tokenRepository.save(new RefreshToken(newRefreshToken, member))
+        );
+        return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
     public void logout(final Long memberId) {
@@ -54,28 +67,28 @@ public class AuthService {
         return member;
     }
 
-    public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
+    public TokenResponse reissueAccessTokenAndRefreshToken(final String refreshToken) {
+        final Long memberId = jwtTokenProvider.getPayload(refreshToken);
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+                .orElseThrow(() -> new MemberNotFoundException(null));
+        final RefreshToken findRefreshToken = tokenRepository.findByMemberId(member.getId())
+                .orElseThrow(RefreshTokenNotFoundException::new);
 
-        return createTokens(member);
+        validateRefreshToken(findRefreshToken, refreshToken);
+
+        final String newAccessToken = jwtTokenProvider.createAccessToken(member.getId());
+        final String newRefreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+        findRefreshToken.update(newRefreshToken);
+
+        return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    private TokenResponse createTokens(final Member loginMember) {
-        final String accessToken = jwtTokenProvider.createAccessToken(loginMember.getId());
-        final String refreshToken = jwtTokenProvider.createRefreshToken(loginMember.getId());
-
-        synchronizeRefreshToken(loginMember, refreshToken);
-
-        return new TokenResponse(accessToken, refreshToken);
+    private void validateRefreshToken(final RefreshToken refreshToken, final String refreshTokenValue) {
+        if (refreshToken.isDifferentFrom(refreshTokenValue)) {
+            throw new InvalidRefreshTokenException();
+        }
+        if (jwtTokenProvider.inValidTokenUsage(refreshTokenValue)) {
+            throw new ExpiredRefreshTokenException();
+        }
     }
-
-    private void synchronizeRefreshToken(final Member member, final String refreshToken) {
-        tokenRepository.findByMemberId(member.getId())
-                .ifPresentOrElse(
-                        token -> token.update(refreshToken),
-                        () -> tokenRepository.save(new RefreshToken(refreshToken, member))
-                );
-    }
-
 }

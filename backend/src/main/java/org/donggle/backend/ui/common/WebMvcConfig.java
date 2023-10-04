@@ -1,7 +1,6 @@
 package org.donggle.backend.ui.common;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.repository.TokenRepository;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,6 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MDCInterceptor mdcInterceptor;
     private final JwtTokenProvider jwtTokenProvider;
-    private final TokenRepository tokenRepository;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
@@ -29,10 +27,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**", "/auth/**")
                 .excludePathPatterns("/connections/**/redirect", "/auth/login/**", "/auth/token/refresh")
                 .order(2);
-
-        registry.addInterceptor(new RefreshTokenAuthInterceptor(jwtTokenProvider, tokenRepository))
-                .addPathPatterns("/auth/token/refresh")
-                .order(3);
     }
 
     @Override

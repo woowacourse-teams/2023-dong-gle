@@ -6,7 +6,7 @@ type Props = {
   path: string;
 } & PropsWithChildren;
 
-const GoToPageLink = ({ path, children = null }: Props) => {
+const GoToPageLink = ({ path, children }: Props) => {
   const location = useLocation();
 
   return (

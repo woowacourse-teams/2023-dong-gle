@@ -79,6 +79,10 @@ const PublishingPropertyStyle = {
     gap: 1rem;
   `,
 
+  TistoryCategorySelectWrapper: styled.div`
+    flex: 1;
+  `,
+
   TistoryCategorySelect: styled.select`
     width: 100%;
   `,

@@ -109,7 +109,7 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
             <CategoryIcon width={12} height={12} />
             카테고리
           </S.PropertyName>
-          <div>
+          <S.TistoryCategorySelectWrapper>
             <S.TistoryCategorySelect
               onChange={(e: ChangeEvent<HTMLSelectElement>) => setCategoryId(e.target.value)}
               disabled={isCategoryLoading}
@@ -129,7 +129,7 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
                 </>
               )}
             </S.TistoryCategorySelect>
-          </div>
+          </S.TistoryCategorySelectWrapper>
         </S.PropertyRow>
         {publishStatus === 'PROTECT' && (
           <S.PropertyRow>

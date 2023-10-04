@@ -115,12 +115,19 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
               disabled={isCategoryLoading}
             >
               {isCategoryLoading && <option hidden>불러오는 중입니다</option>}
-              {categories &&
-                categories.map(({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
+              {categories && (
+                <>
+                  {/* 티스토리 "카테고리 없음" 카테고리의 id가 "0"임 */}
+                  <option key='0' value='0'>
+                    카테고리 없음
                   </option>
-                ))}
+                  {categories.map(({ id, name }) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+                </>
+              )}
             </S.TistoryCategorySelect>
           </div>
         </S.PropertyRow>

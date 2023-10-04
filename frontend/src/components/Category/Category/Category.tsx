@@ -99,7 +99,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
     height: 3.6rem;
     border-radius: 4px;
     font-size: 1.4rem;

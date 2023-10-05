@@ -2,13 +2,13 @@ package org.donggle.backend.infrastructure.client.notion;
 
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
-import org.donggle.backend.infrastructure.client.notion.dto.request.NotionTokenRequest;
-import org.donggle.backend.infrastructure.client.notion.dto.response.NotionTokenResponse;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
+import org.donggle.backend.infrastructure.client.exception.ClientException;
+import org.donggle.backend.infrastructure.client.notion.dto.request.NotionTokenRequest;
+import org.donggle.backend.infrastructure.client.notion.dto.response.NotionTokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -93,7 +93,7 @@ public class NotionConnectionClient {
     }
 
     private MemberCredentials findMemberCredentials(final Member member) {
-        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+        return memberCredentialsRepository.findByMember(member)
                 .orElseThrow(NoSuchElementException::new);
     }
 }

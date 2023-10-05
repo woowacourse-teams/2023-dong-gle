@@ -72,8 +72,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryListResponse findAll(final Long memberId) {
-        final Member findMember = findMember(memberId);
-        final List<Category> categories = categoryRepository.findAllByMemberId(findMember.getId());
+        final List<Category> categories = categoryRepository.findAllByMemberId(memberId);
         final List<Category> sortedCategories = sortCategory(categories, findBasicCategory(categories));
         final List<CategoryResponse> categoryResponses = sortedCategories.stream()
                 .map(CategoryResponse::of)

@@ -77,7 +77,7 @@ public class WritingService {
     public MemberCategoryNotionInfo getMemberCategoryNotionInfo(final Long memberId, final Long categoryId) {
         final Member findMember = findMember(memberId);
         final Category category = findCategory(memberId, categoryId);
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findByMember(findMember).orElseThrow();
         final String notionToken = memberCredentials.getNotionToken().orElseThrow(NotionNotConnectedException::new);
         return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }

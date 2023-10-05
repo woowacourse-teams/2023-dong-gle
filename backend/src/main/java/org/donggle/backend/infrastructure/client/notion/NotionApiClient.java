@@ -53,16 +53,11 @@ public class NotionApiClient {
     }
 
     private URI getRequestUri(final String blockId, final String blockUrl, final String startCursor) {
-        final URI requestUri;
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl);
         if (!startCursor.isEmpty()) {
-            requestUri = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl)
-                    .queryParam("start_cursor", startCursor)
-                    .build(blockId);
-        } else {
-            requestUri = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl)
-                    .build(blockId);
+            uriComponentsBuilder = uriComponentsBuilder.queryParam("start_cursor", startCursor);
         }
-        return requestUri;
+        return uriComponentsBuilder.build(blockId);
     }
 
     public List<NotionBlockNodeResponse> retrieveBodyBlockNodes(final NotionBlockNodeResponse parentNotionBlock, final String notionToken) {
@@ -87,14 +82,20 @@ public class NotionApiClient {
         bodyBlockNodes.add(notionBlockNodeResponse);
 
         if (notionBlockNodeResponse.hasChildren()
-                && isSupportedChildBlock(notionBlockNodeResponse.getBlockType())) {
+                && isSupportedChildBlock(notionBlockNodeResponse.getBlockType())
+                || isRootBlockNode(notionBlockNodeResponse)) {
             final List<JsonNode> childrenBlocks = retrieveChildrenBlocks(notionBlockNodeResponse.getId(), notionToken);
             processChildrenBlocks(childrenBlocks, notionBlockNodeResponse, notionBlockNodeResponseDeque);
         }
     }
 
-    private static boolean isSupportedChildBlock(final NotionBlockType blockType) {
-        return blockType != NotionBlockType.CHILD_PAGE && blockType != NotionBlockType.CHILD_DATABASE;
+    private boolean isRootBlockNode(final NotionBlockNodeResponse notionBlockNodeResponse) {
+        return notionBlockNodeResponse.depth() == -1;
+    }
+
+    private boolean isSupportedChildBlock(final NotionBlockType blockType) {
+        return !(blockType == NotionBlockType.CHILD_PAGE
+                || blockType == NotionBlockType.CHILD_DATABASE);
     }
 
     private List<JsonNode> retrieveChildrenBlocks(final String blockId, final String notionToken) {
@@ -105,11 +106,7 @@ public class NotionApiClient {
             final JsonNode response = retrieveData(blockId, CHILD_BLOCK_URI, notionToken, nextCursor);
             response.withArray("results").elements().forEachRemaining(childrenBlocks::add);
             hasMore = response.get("has_more").asBoolean();
-            if (hasMore) {
-                nextCursor = response.get("next_cursor").asText();
-            } else {
-                nextCursor = "";
-            }
+            nextCursor = response.get("next_cursor").asText();
         } while (hasMore);
         return childrenBlocks;
     }

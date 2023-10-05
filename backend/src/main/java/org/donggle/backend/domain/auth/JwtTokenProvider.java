@@ -60,27 +60,18 @@ public class JwtTokenProvider {
                 .get(MEMBER_ID_KEY, Long.class);
     }
 
-    public boolean inValidTokenUsage(final String token) {
-        try {
-            final Jws<Claims> claims = getClaims(token);
-            return claims.getBody().getExpiration().before(new Date());
-        } catch (final Exception e) {
-            return true;
-        }
-    }
-
-    private Jws<Claims> getClaims(final String token) {
+    public Jws<Claims> getClaims(final String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
         } catch (final ExpiredJwtException e) {
-            throw new ExpiredAccessTokenException();
+            throw new ExpiredAccessTokenException(e);
         } catch (final SecurityException e) {
-            throw new RefreshTokenSecurityException();
+            throw new RefreshTokenSecurityException(e);
         } catch (final JwtException | IllegalArgumentException e) {
-            throw new InvalidRefreshTokenException();
+            throw new InvalidRefreshTokenException(e);
         }
     }
 }

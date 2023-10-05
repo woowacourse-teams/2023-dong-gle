@@ -12,7 +12,6 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
 import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
 import org.donggle.backend.exception.business.DuplicatedMemberException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -70,13 +69,9 @@ public class AuthService {
 
     public TokenResponse reissueAccessTokenAndRefreshToken(final String refreshToken) {
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        if (!memberRepository.existsById(memberId)) {
-            throw new MemberNotFoundException(null);
-        }
-        final RefreshToken findRefreshToken = tokenRepository.findByMemberId(memberId)
-                .orElseThrow(RefreshTokenNotFoundException::new);
-
-        validateRefreshToken(findRefreshToken, refreshToken);
+        validateExistenceOfMember(memberId);
+        final RefreshToken findRefreshToken = findRefreshToken(memberId);
+        validateRefreshTokenValue(refreshToken, findRefreshToken);
 
         final String newAccessToken = jwtTokenProvider.createAccessToken(memberId);
         final String newRefreshToken = jwtTokenProvider.createRefreshToken(memberId);
@@ -85,12 +80,20 @@ public class AuthService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    private void validateRefreshToken(final RefreshToken refreshToken, final String refreshTokenValue) {
-        if (refreshToken.isDifferentFrom(refreshTokenValue)) {
+    private void validateExistenceOfMember(final Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberNotFoundException(null);
+        }
+    }
+
+    private void validateRefreshTokenValue(final String refreshToken, final RefreshToken findRefreshToken) {
+        if (findRefreshToken.isDifferentFrom(refreshToken)) {
             throw new InvalidRefreshTokenException();
         }
-        if (jwtTokenProvider.inValidTokenUsage(refreshTokenValue)) {
-            throw new ExpiredRefreshTokenException();
-        }
+    }
+
+    private RefreshToken findRefreshToken(final Long memberId) {
+        return tokenRepository.findByMemberId(memberId)
+                .orElseThrow(RefreshTokenNotFoundException::new);
     }
 }

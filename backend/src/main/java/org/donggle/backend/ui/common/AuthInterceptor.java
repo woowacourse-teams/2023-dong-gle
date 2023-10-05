@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
-import org.donggle.backend.exception.authentication.ExpiredAccessTokenException;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,15 +16,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
-
-        validateToken(request);
-        return true;
-    }
-
-    private void validateToken(final HttpServletRequest request) {
         final String token = AuthorizationExtractor.extract(request);
-        if (jwtTokenProvider.inValidTokenUsage(token)) {
-            throw new ExpiredAccessTokenException();
-        }
+        jwtTokenProvider.getPayload(token);
+        return true;
     }
 }

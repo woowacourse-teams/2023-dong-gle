@@ -9,7 +9,7 @@ import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
+import org.donggle.backend.exception.authentication.ExpiredAccessTokenException;
 import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 import org.donggle.backend.ui.response.TokenResponse;
@@ -36,7 +36,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -121,31 +120,18 @@ class AuthServiceTest {
             given(tokenRepository.findByMemberId(anyLong())).willReturn(Optional.of(refreshToken));
         }
 
-        @ParameterizedTest
-        @DisplayName("refreshToken에 대한 유효성을 검사한다.")
-        @MethodSource("provideValidateRefreshToken")
-        void validateRefreshToken(
-                final boolean isDifferent,
-                final boolean isInvalid,
-                final Class<?> exceptionType
-        ) {
+        @Test
+        @DisplayName("요청 받은 리프레시 토큰과 db에 있는 리프레시 토큰의 값이 다른 경우")
+        void invalidateRefreshToken() {
             // when
-            lenient().when(jwtTokenProvider.getPayload(anyString())).thenReturn(1L);
-            lenient().when(refreshToken.isDifferentFrom(anyString())).thenReturn(isDifferent);
-            lenient().when(jwtTokenProvider.inValidTokenUsage(anyString())).thenReturn(isInvalid);
+            given(jwtTokenProvider.getPayload(anyString())).willReturn(1L);
+            given(refreshToken.isDifferentFrom(anyString())).willReturn(true);
 
             // then
             assertThatThrownBy(() -> authService.reissueAccessTokenAndRefreshToken("oldRefreshToken"))
-                    .isInstanceOf(exceptionType);
+                    .isInstanceOf(InvalidRefreshTokenException.class);
         }
 
-        private static Stream<Arguments> provideValidateRefreshToken() {
-            return Stream.of(
-                    Arguments.of(true, true, Object.class),
-                    Arguments.of(true, false, InvalidRefreshTokenException.class),
-                    Arguments.of(false, true, ExpiredRefreshTokenException.class)
-            );
-        }
 
         @Test
         @DisplayName("유효성 검사를 통과하면 accessToken과 refreshToken을 새로 발급한다. (db에 있는 refreshToken은 갱신한다)")
@@ -154,7 +140,6 @@ class AuthServiceTest {
             final String newAccessToken = "newAccessToken";
             final String newRefreshToken = "newRefreshToken";
             given(refreshToken.isDifferentFrom(anyString())).willReturn(false);
-            given(jwtTokenProvider.inValidTokenUsage(anyString())).willReturn(false);
             given(jwtTokenProvider.createAccessToken(anyLong())).willReturn(newAccessToken);
             given(jwtTokenProvider.createRefreshToken(anyLong())).willReturn(newRefreshToken);
 
@@ -167,5 +152,16 @@ class AuthServiceTest {
                     () -> assertThat(response.refreshToken()).isEqualTo(newRefreshToken)
             );
         }
+    }
+
+    @Test
+    @DisplayName("리프레시 토큰이 이미 만료된 경우")
+    void expiredRefreshToken() {
+        // when
+        given(jwtTokenProvider.getPayload(anyString())).willThrow(new ExpiredAccessTokenException());
+
+        // then
+        assertThatThrownBy(() -> authService.reissueAccessTokenAndRefreshToken("oldRefreshToken"))
+                .isInstanceOf(ExpiredAccessTokenException.class);
     }
 }

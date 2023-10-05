@@ -187,7 +187,7 @@ public class WritingService {
             source.changeNextWritingNull();
             final Writing preWriting = findPreWriting(source.getId());
             preWriting.changeNextWriting(nextWriting);
-            writingRepository.flush(); // !!!!
+            writingRepository.flush();
             if (request.nextWritingId() == LAST_WRITING_FLAG) {
                 lastWritingOptional.ifPresent(lastWriting -> lastWriting.changeNextWriting(source));
                 changeCategory(memberId, request.targetCategoryId(), source);

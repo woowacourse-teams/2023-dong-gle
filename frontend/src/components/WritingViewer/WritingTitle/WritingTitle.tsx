@@ -64,6 +64,7 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
         <S.Input
           type='text'
           placeholder='새 제목을 입력해주세요'
+          defaultValue={title}
           ref={inputRef}
           onBlur={resetInput}
           onKeyDown={escapeRename}

@@ -101,5 +101,10 @@ const S = {
   CloseButton: styled.button`
     position: absolute;
     inset: 2.5rem 2.5rem auto auto;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray4};
+    }
   `,
 };

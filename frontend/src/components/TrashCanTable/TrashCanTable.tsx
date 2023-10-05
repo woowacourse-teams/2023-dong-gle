@@ -112,7 +112,12 @@ const S = {
 
     th:first-child,
     td:first-child {
+      padding: 0 0.1rem;
       border-left: none;
+
+      input {
+        cursor: pointer;
+      }
     }
 
     th:last-child,
@@ -122,8 +127,7 @@ const S = {
 
     tbody tr:hover td:not(:first-child) {
       cursor: pointer;
-      transform: scale(1.01);
-      transition: all 300ms;
+      background-color: ${({ theme }) => theme.color.gray3};
     }
   `,
 };

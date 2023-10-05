@@ -60,6 +60,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
           variant='underlined'
           size='small'
           placeholder='변경할 카테고리 이름'
+          defaultValue={categoryName}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}

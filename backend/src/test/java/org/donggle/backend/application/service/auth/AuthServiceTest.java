@@ -1,7 +1,10 @@
 package org.donggle.backend.application.service.auth;
 
+import org.donggle.backend.application.repository.CategoryRepository;
+import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.TokenRepository;
+import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.domain.member.Member;
@@ -35,49 +38,73 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
-
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
     @Mock
     private MemberRepository memberRepository;
     @Mock
-    private TokenRepository tokenRepository;
+    private CategoryRepository categoryRepository;
     @Mock
-    private JwtTokenProvider jwtTokenProvider;
+    private MemberCredentialsRepository memberCredentialsRepository;
+    @Mock
+    private TokenRepository tokenRepository;
 
-    @DisplayName("기존에 refreshToken이 있든 없든, accessToken과 refreshToken은 새로 발급된다.")
-    @ParameterizedTest
-    @MethodSource("provideStringsForIsBlank")
-    void login(final Optional<RefreshToken> refreshToken) {
-        //given
-        final Member member = mock(Member.class);
-        final String newAccessToken = "newAccessToken";
-        final String newRefreshToken = "newRefreshToken";
+    @Nested
+    class LoginTest {
+        @Test
+        @DisplayName("기존에 회원 정보가 없는 경우, 회원 정보를 새롭게 저장한다.")
+        void findBySocialIdAndSocialTypeReturnEmpty() {
+            //given
+            given(memberRepository.findBySocialIdAndSocialType(anyLong(), any(SocialType.class))).willReturn(Optional.empty());
 
-        given(member.getId()).willReturn(111L);
-        given(memberRepository.findBySocialIdAndSocialType(anyLong(), any(SocialType.class))).willReturn(Optional.of(member));
-        given(jwtTokenProvider.createAccessToken(anyLong())).willReturn(newAccessToken);
-        given(jwtTokenProvider.createRefreshToken(anyLong())).willReturn(newRefreshToken);
-        given(tokenRepository.findByMemberId(any())).willReturn(refreshToken);
+            //when
+            final TokenResponse response = authService.login(new UserInfo(1234L, KAKAO, "nickname"), KAKAO);
 
-        //when
-        final TokenResponse response = authService.login(new UserInfo(1234L, KAKAO, "nickname"), KAKAO);
+            //then
+            assertAll(
+                    () -> verify(memberRepository, times(1)).save(any()),
+                    () -> verify(categoryRepository, times(1)).save(any()),
+                    () -> verify(memberCredentialsRepository, times(1)).save(any())
+            );
+        }
 
-        //then
-        assertAll(
-                () -> assertThat(response.accessToken()).isEqualTo(newAccessToken),
-                () -> assertThat(response.refreshToken()).isEqualTo(newRefreshToken)
-        );
-    }
+        @DisplayName("기존에 refreshToken이 있든 없든(회원이든 아니든), accessToken과 refreshToken은 새로 발급된다.")
+        @MethodSource("provideStringsForIsBlank")
+        @ParameterizedTest
+        void login(Optional<RefreshToken> refreshToken) {
+            //given
+            final MemberInfo memberInfo = mock(MemberInfo.class);
+            final String newAccessToken = "newAccessToken";
+            final String newRefreshToken = "newRefreshToken";
 
-    private static Stream<Arguments> provideStringsForIsBlank() {
-        return Stream.of(
-                Arguments.of(Optional.of(new RefreshToken("oldRefreshToken", null))),
-                Arguments.of(Optional.empty())
-        );
+            given(memberRepository.findBySocialIdAndSocialType(anyLong(), any(SocialType.class))).willReturn(Optional.of(memberInfo));
+            given(jwtTokenProvider.createAccessToken(anyLong())).willReturn(newAccessToken);
+            given(jwtTokenProvider.createRefreshToken(anyLong())).willReturn(newRefreshToken);
+            given(tokenRepository.findByMemberId(any())).willReturn(refreshToken);
+
+            //when
+            final TokenResponse response = authService.login(new UserInfo(1234L, KAKAO, "nickname"), KAKAO);
+
+            //then
+            assertAll(
+                    () -> assertThat(response.accessToken()).isEqualTo(newAccessToken),
+                    () -> assertThat(response.refreshToken()).isEqualTo(newRefreshToken)
+            );
+        }
+
+        private static Stream<Arguments> provideStringsForIsBlank() {
+            return Stream.of(
+                    Arguments.of(Optional.of(new RefreshToken("oldRefreshToken", null))),
+                    Arguments.of(Optional.empty())
+            );
+        }
     }
 
     @Nested
@@ -90,7 +117,7 @@ class AuthServiceTest {
             // given
             member = mock(Member.class);
             refreshToken = mock(RefreshToken.class);
-            given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
+            given(memberRepository.existsById(anyLong())).willReturn(true);
             given(tokenRepository.findByMemberId(anyLong())).willReturn(Optional.of(refreshToken));
         }
 

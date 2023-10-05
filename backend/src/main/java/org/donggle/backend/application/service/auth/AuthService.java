@@ -10,6 +10,7 @@ import org.donggle.backend.domain.auth.RefreshToken;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
+import org.donggle.backend.domain.member.MemberName;
 import org.donggle.backend.domain.oauth.SocialType;
 import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
 import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
@@ -36,6 +37,7 @@ public class AuthService {
 
     public TokenResponse login(final UserInfo userInfo, final SocialType type) {
         final Member member = memberRepository.findBySocialIdAndSocialType(userInfo.socialId(), type)
+                .map(info -> Member.of(info.id(), new MemberName(userInfo.nickname()), info.socialId(), userInfo.socialType()))
                 .orElseGet(() -> initializeMember(userInfo));
         final Optional<RefreshToken> refreshTokenOptional = tokenRepository.findByMemberId(member.getId());
         final String newAccessToken = jwtTokenProvider.createAccessToken(member.getId());
@@ -48,16 +50,12 @@ public class AuthService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    public void logout(final Long memberId) {
-        tokenRepository.deleteByMemberId(memberId);
-    }
-
     private Member initializeMember(final UserInfo userInfo) {
         Member member = userInfo.toMember();
         final Category basicCategory = Category.basic(member);
         final MemberCredentials basic = MemberCredentials.basic(member);
         try {
-            member = memberRepository.save(member);
+            memberRepository.save(member);
             categoryRepository.save(basicCategory);
             memberCredentialsRepository.save(basic);
         } catch (final DuplicateKeyException e) {
@@ -66,17 +64,22 @@ public class AuthService {
         return member;
     }
 
+    public void logout(final Long memberId) {
+        tokenRepository.deleteByMemberId(memberId);
+    }
+
     public TokenResponse reissueAccessTokenAndRefreshToken(final String refreshToken) {
         final Long memberId = jwtTokenProvider.getPayload(refreshToken);
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(null));
-        final RefreshToken findRefreshToken = tokenRepository.findByMemberId(member.getId())
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberNotFoundException(null);
+        }
+        final RefreshToken findRefreshToken = tokenRepository.findByMemberId(memberId)
                 .orElseThrow(RefreshTokenNotFoundException::new);
 
         validateRefreshToken(findRefreshToken, refreshToken);
 
-        final String newAccessToken = jwtTokenProvider.createAccessToken(member.getId());
-        final String newRefreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+        final String newAccessToken = jwtTokenProvider.createAccessToken(memberId);
+        final String newRefreshToken = jwtTokenProvider.createRefreshToken(memberId);
         findRefreshToken.update(newRefreshToken);
 
         return new TokenResponse(newAccessToken, newRefreshToken);

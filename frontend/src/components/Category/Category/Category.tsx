@@ -53,7 +53,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   };
 
   return (
-    <S.Container>
+    <S.Container $isDefaultCategory={isDefaultCategory}>
       {isInputOpen ? (
         <Input
           type='text'
@@ -95,7 +95,7 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 export default Category;
 
 const S = {
-  Container: styled.div`
+  Container: styled.div<{ $isDefaultCategory: boolean }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -105,9 +105,12 @@ const S = {
     font-size: 1.4rem;
 
     &:hover {
+      & > button {
+        padding-right: ${({ $isDefaultCategory }) => !$isDefaultCategory && '4rem'};
+      }
+
       div {
-        display: inline-flex;
-        gap: 0.4rem;
+        opacity: 0.99;
       }
     }
   `,
@@ -140,8 +143,11 @@ const S = {
   `,
 
   IconContainer: styled.div`
-    display: none;
-    margin-right: 0.4rem;
+    display: flex;
+    position: absolute;
+    right: 0;
+    margin-right: 0.8rem;
+    opacity: 0;
   `,
 
   Button: styled.button`

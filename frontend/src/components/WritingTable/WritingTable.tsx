@@ -103,8 +103,7 @@ const S = {
 
     tbody tr:hover {
       cursor: pointer;
-      transform: scale(1.01);
-      transition: all 300ms;
+      background-color: ${({ theme }) => theme.color.gray3};
     }
   `,
 

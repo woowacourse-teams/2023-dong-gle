@@ -13,11 +13,16 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  data:
+    web:
+      pageable:
+        default-page-size: 12
+        max-page-size: 50
 security:
   jwt:
     token:
       secret-key: 'wjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd'
-      access-token-expire-length: 600000
+      access-token-expire-length: 60000000
       refresh-token-expire-length: 1200000
 kakao_client_id: kakao_client_id
 kakao_client_secret: kakao_client_secret
@@ -34,8 +39,3 @@ aws:
     key: key
 uploader:
   image-url: https://image.donggle.blog/
-data:
-  web:
-    pageable:
-      default-page-size: 12
-      max-page-size: 100

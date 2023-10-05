@@ -57,6 +57,9 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
                     placeholder='https://www.notion.so/..'
                     value={inputValue}
                     onChange={setNotionPageLink}
+                    onKeyUp={(e) => {
+                      if (e.key === 'Enter') uploadNotionWriting();
+                    }}
                   />
                 </S.Item>
                 <Button block={true} variant='secondary' onClick={uploadNotionWriting}>

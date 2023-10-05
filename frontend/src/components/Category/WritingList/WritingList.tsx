@@ -100,7 +100,7 @@ const S = {
       background-color: ${({ theme }) => theme.color.gray3};
 
       & > button {
-        padding-right: 3rem;
+        padding-right: 2.8rem;
       }
 
       div {

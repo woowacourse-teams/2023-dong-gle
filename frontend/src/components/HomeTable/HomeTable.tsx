@@ -5,6 +5,7 @@ import { dateFormatter } from 'utils/date';
 import { blogIcon } from 'components/WritingTable/WritingTable';
 import Pagination from 'components/@common/Pagination/Pagination';
 import { useHomeTable } from './useHomeTable';
+import { EmptyWritingTableIcon } from 'assets/icons';
 
 type Props = {
   initialPageIndex?: number;
@@ -15,7 +16,16 @@ const HomeTable = ({ initialPageIndex = 0 }: Props) => {
     useHomeTable(initialPageIndex);
   const { goWritingPage } = usePageNavigate();
 
-  if (!content || !totalPages) return <S.AddWritingText>글을 추가해 주세요😊</S.AddWritingText>;
+  if (!content || !totalPages)
+    return (
+      <S.EmptyMessage>
+        <EmptyWritingTableIcon width={80} height={80} />
+        <S.AddWritingTextContainer>
+          <S.AddWritingText>동글에 오신 걸 환영합니다.</S.AddWritingText>
+          <S.AddWritingText>글 가져오기를 통해 글을 추가해 보세요!</S.AddWritingText>
+        </S.AddWritingTextContainer>
+      </S.EmptyMessage>
+    );
 
   return (
     <S.Container>
@@ -80,15 +90,33 @@ export default HomeTable;
 const S = {
   Container: styled.div`
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 50px;
   `,
 
-  AddWritingText: styled.p`
-    font-size: 1.5rem;
+  EmptyMessage: styled.p`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   `,
+
+  AddWritingTextContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  `,
+
+  AddWritingText: styled.p``,
 
   HomeTable: styled.table`
     width: 100%;

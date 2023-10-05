@@ -107,7 +107,7 @@ const S = {
 
     &:hover {
       & > button {
-        padding-right: ${({ $isDefaultCategory }) => !$isDefaultCategory && '4rem'};
+        padding-right: ${({ $isDefaultCategory }) => !$isDefaultCategory && '5.2rem'};
       }
 
       div {

@@ -2,7 +2,14 @@ import { css, styled } from 'styled-components';
 import TagInput from '../@common/TagInput/TagInput';
 import Button from '../@common/Button/Button';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { LeftArrowHeadIcon, PasswordIcon, PublishIcon, TagIcon, TimeIcon } from 'assets/icons';
+import {
+  CategoryIcon,
+  LeftArrowHeadIcon,
+  PasswordIcon,
+  PublishIcon,
+  TagIcon,
+  TimeIcon,
+} from 'assets/icons';
 import { slideToLeft } from 'styles/animation';
 import { TabKeys } from 'components/WritingSideBar/WritingSideBar';
 import { useTistoryPublishingPropertySection } from './useTistoryPublishingPropertySection';
@@ -10,8 +17,9 @@ import { default as S } from './PublishingPropertyStyle';
 import type { Blog } from 'types/domain';
 import Input from 'components/@common/Input/Input';
 import { dateFormatter } from 'utils/date';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Divider from 'components/@common/Divider/Divider';
+import { useTistoryCategories } from 'hooks/queries/blogs/useTistoryCategories';
 
 type Props = {
   writingId: number;
@@ -30,11 +38,13 @@ const TistoryPublishStatusList = Object.keys(
 ) as (keyof typeof TistoryPublishStatus)[];
 
 const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentTab }: Props) => {
+  const { categories, isLoading: isCategoryLoading } = useTistoryCategories();
   const {
     isLoading,
     propertyFormInfo,
     setTags,
     setPublishStatus,
+    setCategoryId,
     passwordRef,
     dateRef,
     timeRef,
@@ -93,6 +103,33 @@ const TistoryPublishingPropertySection = ({ writingId, publishTo, selectCurrentT
               ))}
             </select>
           </div>
+        </S.PropertyRow>
+        <S.PropertyRow>
+          <S.PropertyName>
+            <CategoryIcon width={12} height={12} />
+            카테고리
+          </S.PropertyName>
+          <S.TistoryCategorySelectWrapper>
+            <S.TistoryCategorySelect
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => setCategoryId(e.target.value)}
+              disabled={isCategoryLoading}
+            >
+              {isCategoryLoading && <option hidden>불러오는 중입니다</option>}
+              {categories && (
+                <>
+                  {/* 티스토리 "카테고리 없음" 카테고리의 id가 "0"임 */}
+                  <option key='0' value='0'>
+                    카테고리 없음
+                  </option>
+                  {categories.map(({ id, name }) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+                </>
+              )}
+            </S.TistoryCategorySelect>
+          </S.TistoryCategorySelectWrapper>
         </S.PropertyRow>
         {publishStatus === 'PROTECT' && (
           <S.PropertyRow>

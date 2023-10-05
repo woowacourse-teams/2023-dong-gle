@@ -86,10 +86,15 @@ public class NotionApiClient {
     ) {
         bodyBlockNodes.add(notionBlockNodeResponse);
 
-        if (notionBlockNodeResponse.hasChildren()) {
+        if (notionBlockNodeResponse.hasChildren()
+                && isSupportedChildBlock(notionBlockNodeResponse.getBlockType())) {
             final List<JsonNode> childrenBlocks = retrieveChildrenBlocks(notionBlockNodeResponse.getId(), notionToken);
             processChildrenBlocks(childrenBlocks, notionBlockNodeResponse, notionBlockNodeResponseDeque);
         }
+    }
+
+    private static boolean isSupportedChildBlock(final NotionBlockType blockType) {
+        return blockType != NotionBlockType.CHILD_PAGE && blockType != NotionBlockType.CHILD_DATABASE;
     }
 
     private List<JsonNode> retrieveChildrenBlocks(final String blockId, final String notionToken) {

@@ -29,24 +29,24 @@ const Header = ({ onClickLeftSidebar, onClickRightSidebar, isWritingViewerActive
 
   return (
     <S.Container>
-      <S.LeftIconsBox>
-        <button onClick={goMyPage} aria-label='마이 페이지 이동'>
+      <S.IconsBox>
+        <S.TransparentButton onClick={goMyPage} aria-label='마이 페이지 이동'>
           <SettingIcon width='2.4rem' height='2.4rem' />
-        </button>
-        <button onClick={onClickLeftSidebar} aria-label='왼쪽 사이드바 토글'>
+        </S.TransparentButton>
+        <S.TransparentButton onClick={onClickLeftSidebar} aria-label='왼쪽 사이드바 토글'>
           <SidebarLeftIcon width='2.4rem' height='2.4rem' />
-        </button>
-      </S.LeftIconsBox>
-      <S.RightIconsBox>
+        </S.TransparentButton>
+      </S.IconsBox>
+      <S.IconsBox>
         <Button size='small' variant='text' onClick={() => logout.mutate()}>
           로그아웃
         </Button>
         {isWritingViewerActive && (
-          <button onClick={onClickRightSidebar} aria-label='오른쪽 사이드바 토글'>
+          <S.TransparentButton onClick={onClickRightSidebar} aria-label='오른쪽 사이드바 토글'>
             <SidebarRightIcon width='2.4rem' height='2.4rem' />
-          </button>
+          </S.TransparentButton>
         )}
-      </S.RightIconsBox>
+      </S.IconsBox>
     </S.Container>
   );
 };
@@ -62,13 +62,16 @@ const S = {
     height: ${HEADER_STYLE.height};
   `,
 
-  LeftIconsBox: styled.div`
+  IconsBox: styled.div`
     display: flex;
-    gap: 0.8rem;
   `,
 
-  RightIconsBox: styled.div`
-    display: flex;
-    gap: 0.8rem;
+  TransparentButton: styled.button`
+    padding: 0.8rem 0.4rem;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.gray4};
+    }
   `,
 };

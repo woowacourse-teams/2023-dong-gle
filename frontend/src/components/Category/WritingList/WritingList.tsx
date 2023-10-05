@@ -113,6 +113,7 @@ const S = {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    width: 100%;
     min-width: 0;
     height: 100%;
     padding: 0.4rem 0 0.4rem 3.2rem;

@@ -13,10 +13,10 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
     @Query("""
             select b
             from Block b
-            where b in :blocks and
+            where b.id in :blockIds and
             type(b) = NormalBlock
             """)
-    List<NormalBlock> findNormalBlocks(@Param("blocks") List<Block> blocks);
+    List<NormalBlock> findNormalBlocks(@Param("blockIds") final List<Long> blockIds);
 
     @Override
     @Modifying

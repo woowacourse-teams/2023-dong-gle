@@ -14,13 +14,13 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.writing.Style;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,16 +62,17 @@ public class MemberService {
     }
 
     private void deleteStyles(final List<Writing> writings) {
-        final List<Long> totalStyleIds = new ArrayList<>();
-        writings.forEach(writing -> {
-            final List<NormalBlock> normalBlocks = blockRepository.findNormalBlocks(writing.getBlocks());
-            final List<Long> styleIds = normalBlocks.stream()
-                    .flatMap(block -> block.getStyles().stream())
-                    .map(Style::getId)
-                    .toList();
-            totalStyleIds.addAll(styleIds);
-        });
-        styleRepository.deleteAllById(totalStyleIds);
+        final List<Long> blockIds = writings.stream()
+                .flatMap(writing -> writing.getBlocks().stream().map(Block::getId))
+                .toList();
+
+        final List<NormalBlock> normalBlocks = blockRepository.findNormalBlocks(blockIds);
+
+        final List<Long> styleIds = normalBlocks.stream()
+                .flatMap(block -> block.getStyles().stream().map(Style::getId))
+                .toList();
+
+        styleRepository.deleteAllById(styleIds);
     }
 
     private void deleteWritings(final List<Writing> writings) {

@@ -1,39 +1,37 @@
 package org.donggle.backend.auth;
 
-import org.donggle.backend.domain.auth.JwtTokenProvider;
+import org.donggle.backend.domain.auth.RefreshToken;
+import org.donggle.backend.support.fix.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RefreshTokenProviderTest {
-    private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(
-            "wjdgustmdwjdgustmdwjdgustmdwjsadasdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd",
-            600000,
-            1200000
-    );
+
 
     @Test
-    @DisplayName("RefreshToken 발급 테스트")
-    void createRefreshToken() {
+    @DisplayName("refreshToken이 일치하는지 테스트")
+    void equalRefreshToken() {
         //given
+        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver_have_id);
         //when
-        final String token = jwtTokenProvider.createRefreshToken(1234L);
-        final Long payload = jwtTokenProvider.getPayload(token);
 
         //then
-        assertThat(payload).isEqualTo(1234L);
+        assertThat(refreshToken.isDifferentFrom("ingpyo")).isTrue();
+        assertThat(refreshToken.isDifferentFrom("jeoninpyo726")).isFalse();
     }
 
     @Test
-    @DisplayName("AccessToken 발급 테스트")
-    void createAccessToken() {
+    @DisplayName("refreshToken이 갱신이 되는지 테스트")
+    void updateRefreshToken() {
         //given
+        final RefreshToken refreshToken = new RefreshToken("jeoninpyo726", MemberFixture.beaver_have_id);
+
         //when
-        final String token = jwtTokenProvider.createAccessToken(23L);
-        final Long payload = jwtTokenProvider.getPayload(token);
+        refreshToken.update("ingpyo");
 
         //then
-        assertThat(payload).isEqualTo(23L);
+        assertThat(refreshToken.getRefreshToken()).isEqualTo("ingpyo");
     }
 }

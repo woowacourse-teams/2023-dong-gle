@@ -77,7 +77,7 @@ class AuthServiceTest {
         @DisplayName("기존에 refreshToken이 있든 없든(회원이든 아니든), accessToken과 refreshToken은 새로 발급된다.")
         @MethodSource("provideStringsForIsBlank")
         @ParameterizedTest
-        void login(Optional<RefreshToken> refreshToken) {
+        void login(final Optional<RefreshToken> refreshToken) {
             //given
             final MemberInfo memberInfo = mock(MemberInfo.class);
             final String newAccessToken = "newAccessToken";

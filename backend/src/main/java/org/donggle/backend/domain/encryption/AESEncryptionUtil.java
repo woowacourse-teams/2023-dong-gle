@@ -16,7 +16,9 @@ public class AESEncryptionUtil {
     private final SecretKeySpec secretKey;
     private final IvParameterSpec iv;
 
-    public AESEncryptionUtil(@Value("${encrypt_secret_key}") final String secretKey, @Value("${encrypt_iv}") final String iv) {
+    public AESEncryptionUtil(
+            @Value("${encrypt_secret_key}") final String secretKey,
+            @Value("${encrypt_iv}") final String iv) {
         this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
         this.iv = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
     }

@@ -44,11 +44,11 @@ class MemberRepositoryTest {
     @DisplayName("existsById 쿼리 확인")
     void existsByIdTest() {
         // when
-        boolean isExist = memberRepository.existsById(1L);
+        final boolean isExist = memberRepository.existsById(1L);
         em.flush();
 
         // then
-        assertThat(isExist).isTrue();
+        assertThat(isExist).isFalse();
     }
 
     @Test

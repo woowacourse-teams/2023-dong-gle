@@ -18,14 +18,14 @@ public class MDCInterceptor implements HandlerInterceptor {
         final String requestId = UUID.randomUUID().toString();
         final String requestUrl = request.getRequestURI();
         final String clientIP = getClientIP(request);
-        
+
         MDC.put("requestId", requestId);
         MDC.put("requestUrl", requestUrl);
         MDC.put("clientIP", clientIP);
-        
+
         return true;
     }
-    
+
     private String getClientIP(final HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (StringUtils.hasLength(ip)) {
@@ -35,7 +35,7 @@ public class MDCInterceptor implements HandlerInterceptor {
         }
         return ip;
     }
-    
+
     @Override
     public void afterCompletion(final HttpServletRequest request,
                                 final HttpServletResponse response,

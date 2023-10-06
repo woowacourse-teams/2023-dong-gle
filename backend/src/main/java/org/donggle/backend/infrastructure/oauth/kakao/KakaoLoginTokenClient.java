@@ -1,6 +1,7 @@
 package org.donggle.backend.infrastructure.oauth.kakao;
 
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.KakaoTokenResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -23,13 +24,24 @@ public class KakaoLoginTokenClient {
     private final String kakaoClientSecret;
     private final WebClient webClient;
 
+    @Autowired
     public KakaoLoginTokenClient(
             @Value("${kakao_client_id}") final String kakaoClientId,
             @Value("${kakao_client_secret}") final String kakaoClientSecret
     ) {
         this.kakaoClientId = kakaoClientId;
         this.kakaoClientSecret = kakaoClientSecret;
-        this.webClient = WebClient.create();
+        this.webClient = WebClient.create(TOKEN_URL);
+    }
+
+    public KakaoLoginTokenClient(
+            final String kakaoClientId,
+            final String kakaoClientSecret,
+            final WebClient webClient
+    ) {
+        this.kakaoClientId = kakaoClientId;
+        this.kakaoClientSecret = kakaoClientSecret;
+        this.webClient = webClient;
     }
 
     public String createRedirectUri(final String redirectUri) {
@@ -49,7 +61,6 @@ public class KakaoLoginTokenClient {
                 .with("client_secret", kakaoClientSecret);
 
         final KakaoTokenResponse kakaoTokenResponse = webClient.post()
-                .uri(TOKEN_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(bodyForm)

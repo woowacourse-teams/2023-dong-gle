@@ -6,4 +6,4 @@ import { MemberResponse } from 'types/apis/member';
 export const getMemberInfo = (): Promise<MemberResponse> => http.get(memberURL).json();
 
 // 멤버 탈퇴: POST
-export const deleteMemberAccount = () => http.post(`${memberURL}/delete`);
+export const deleteMemberAccount = () => http.delete(`${memberURL}`);

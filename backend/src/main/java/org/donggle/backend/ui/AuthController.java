@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,8 +66,8 @@ public class AuthController {
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@AuthenticationPrincipal final Long memberId) {
-        final TokenResponse response = authFacadeService.reissueAccessTokenAndRefreshToken(memberId);
+    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@CookieValue final String refreshToken) {
+        final TokenResponse response = authFacadeService.reissueAccessTokenAndRefreshToken(refreshToken);
 
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
 

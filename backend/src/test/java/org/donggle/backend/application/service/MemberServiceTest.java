@@ -1,11 +1,23 @@
 package org.donggle.backend.application.service;
 
+import jakarta.persistence.EntityManager;
+import org.donggle.backend.application.repository.BlogRepository;
+import org.donggle.backend.application.repository.BlogWritingRepository;
+import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.repository.TokenRepository;
+import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.member.MemberService;
+import org.donggle.backend.domain.auth.RefreshToken;
+import org.donggle.backend.domain.blog.Blog;
+import org.donggle.backend.domain.blog.BlogType;
+import org.donggle.backend.domain.blog.BlogWriting;
+import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.ui.response.MemberPageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +25,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.donggle.backend.TestFixtures.ANOTHER_CATEGORY;
+import static org.donggle.backend.TestFixtures.BASIC_CATEGORY;
+import static org.donggle.backend.TestFixtures.GENERAL_WRITING1;
+import static org.donggle.backend.TestFixtures.GENERAL_WRITING2;
+import static org.donggle.backend.TestFixtures.MEMBER;
+import static org.donggle.backend.TestFixtures.MEMBER_CREDENTIALS;
+import static org.donggle.backend.TestFixtures.REFRESH_TOKEN;
 import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -27,7 +47,19 @@ class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private WritingRepository writingRepository;
+    @Autowired
+    private BlogRepository blogRepository;
+    @Autowired
+    private BlogWritingRepository blogWritingRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
     private MemberCredentialsRepository memberCredentialsRepository;
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("회원 페이지 조회 - 아무것도 연결되어있지 않은 회원")
@@ -72,17 +104,42 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원을 탈퇴한다.")
-    void deleteMember() {
-        //given
-        final Member member = memberRepository.save(Member.of(new MemberName("동굴"), 123L, KAKAO));
-        assertThat(member.isDeleted()).isFalse();
+    void unregisterMember() {
+        // given
+        final Member member = memberRepository.save(MEMBER);
+        final MemberCredentials memberCredentials = memberCredentialsRepository.save(MEMBER_CREDENTIALS);
+        final Category basicCategory = categoryRepository.save(BASIC_CATEGORY);
+        final Category anotherCategory = categoryRepository.save(ANOTHER_CATEGORY);
+        basicCategory.changeNextCategory(anotherCategory);
+        final Writing writing1 = writingRepository.save(GENERAL_WRITING1);
+        final Writing writing2 = writingRepository.save(GENERAL_WRITING2);
+        writing1.changeNextWriting(writing2);
+        final Blog blog = blogRepository.findByBlogType(BlogType.TISTORY).orElseThrow();
+        final BlogWriting blogWriting = new BlogWriting(
+                blog,
+                GENERAL_WRITING1,
+                LocalDateTime.now(),
+                List.of("태그1", "태그2"),
+                "www.dongle.blog"
+        );
+        final BlogWriting savedBlogWriting = blogWritingRepository.save(blogWriting);
+        final RefreshToken refreshToken = tokenRepository.save(REFRESH_TOKEN);
+        em.flush();
+        em.clear();
 
-        //when
+        // when
         memberService.deleteMember(member.getId());
-        memberRepository.flush();
+        em.flush();
+        em.clear();
 
-        //then
-        final Optional<Member> memberOptional = memberRepository.findById(member.getId());
-        assertThat(memberOptional).isEmpty();
+        // then
+        assertAll(
+                () -> assertThat(writingRepository.findAllByMember(member)).isEmpty(),
+                () -> assertThat(blogWritingRepository.findById(savedBlogWriting.getId())).isEmpty(),
+                () -> assertThat(categoryRepository.findById(basicCategory.getId())).isEmpty(),
+                () -> assertThat(tokenRepository.findById(refreshToken.getId())).isEmpty(),
+                () -> assertThat(memberCredentialsRepository.findById(memberCredentials.getId())).isEmpty(),
+                () -> assertThat(memberRepository.findById(member.getId())).isEmpty()
+        );
     }
 }

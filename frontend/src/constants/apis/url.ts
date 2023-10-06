@@ -8,3 +8,4 @@ export const memberURL = `${baseURL}/member`;
 export const connectionsURL = `${baseURL}/connections`;
 export const loginURL = `${baseURL}/auth/login`;
 export const authURL = `${baseURL}/auth`;
+export const blogsURL = `${baseURL}/blogs`;

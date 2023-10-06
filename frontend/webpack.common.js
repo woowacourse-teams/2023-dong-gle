@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
@@ -69,6 +70,9 @@ module.exports = {
       openAnalyzer: false,
       generateStatsFile: true,
       statsFilename: 'bundle-report.json',
+    }),
+    new CopyPlugin({
+      patterns: [{ from: 'node_modules/prismjs/components/', to: 'prismjs/components/' }],
     }),
   ],
   devServer: {

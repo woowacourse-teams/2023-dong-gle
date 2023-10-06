@@ -1,19 +1,9 @@
 package org.donggle.backend.application.service.auth;
 
-import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.TokenRepository;
-import org.donggle.backend.domain.auth.JwtTokenProvider;
-import org.donggle.backend.domain.member.Member;
-import org.donggle.backend.domain.oauth.SocialType;
-import org.donggle.backend.exception.business.DuplicatedMemberException;
-import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
-import org.donggle.backend.ui.response.TokenResponse;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.auth.RefreshToken;
@@ -36,12 +26,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
-import static org.donggle.backend.support.fix.MemberFixture.beaver_have_id;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,7 +77,7 @@ class AuthServiceTest {
         @DisplayName("기존에 refreshToken이 있든 없든(회원이든 아니든), accessToken과 refreshToken은 새로 발급된다.")
         @MethodSource("provideStringsForIsBlank")
         @ParameterizedTest
-        void login(Optional<RefreshToken> refreshToken) {
+        void login(final Optional<RefreshToken> refreshToken) {
             //given
             final MemberInfo memberInfo = mock(MemberInfo.class);
             final String newAccessToken = "newAccessToken";

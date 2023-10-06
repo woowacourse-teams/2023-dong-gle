@@ -82,12 +82,11 @@ class AuthFacadeServiceTest {
     @DisplayName("reissueAccessTokenAndRefreshToken 테스트")
     void reissueAccessTokenAndRefreshToken() {
         // given
-        final Long memberId = 1L;
         final TokenResponse expectedResponse = new TokenResponse("access", "refresh");
-        given(authService.reissueAccessTokenAndRefreshToken(memberId)).willReturn(expectedResponse);
+        given(authService.reissueAccessTokenAndRefreshToken("refresh")).willReturn(expectedResponse);
 
         // when
-        final TokenResponse actualResponse = authFacadeService.reissueAccessTokenAndRefreshToken(memberId);
+        final TokenResponse actualResponse = authFacadeService.reissueAccessTokenAndRefreshToken("refresh");
 
         // then
         assertThat(actualResponse).usingRecursiveComparison().isEqualTo(expectedResponse);

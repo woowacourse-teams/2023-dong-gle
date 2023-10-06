@@ -65,7 +65,7 @@ class PublishServiceTest {
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
         given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getBlogToken(blogType)).willReturn(Optional.of("token"));
 
         // when
@@ -90,7 +90,7 @@ class PublishServiceTest {
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
         given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getBlogToken(blogType)).willReturn(Optional.empty());
 
         // when
@@ -133,7 +133,7 @@ class PublishServiceTest {
         given(blogRepository.findByBlogType(blogType)).willReturn(Optional.of(blog));
         given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(writingRepository.findByIdWithBlocks(writingId)).willReturn(Optional.of(writing_ACTIVE));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
         given(blogWritingRepository.findByWritingId(writingId)).willReturn(List.of(blogWriting));
 
         //when

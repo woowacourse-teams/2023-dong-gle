@@ -1,8 +1,8 @@
 package org.donggle.backend.ui;
 
 import org.donggle.backend.support.JwtSupporter;
-import org.donggle.backend.ui.response.TistoryCategoryListResposnse;
-import org.donggle.backend.ui.response.TistoryCategoryListResposnse.TistoryCategoryResponse;
+import org.donggle.backend.ui.response.TistoryCategoryListResponse;
+import org.donggle.backend.ui.response.TistoryCategoryListResponse.TistoryCategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class BlogControllerTest extends ControllerTest {
         //given
         final Long memberId = 1L;
         final String accessToken = JwtSupporter.generateToken(memberId);
-        final TistoryCategoryListResposnse tistoryCategoryListResposnse = new TistoryCategoryListResposnse(
+        final TistoryCategoryListResponse tistoryCategoryListResposnse = new TistoryCategoryListResponse(
                 List.of(new TistoryCategoryResponse("1", "카테고리1"), new TistoryCategoryResponse("2", "카테고리2")));
 
         given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);

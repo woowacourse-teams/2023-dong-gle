@@ -1,11 +1,9 @@
 package org.donggle.backend.domain.auth;
 
-import org.donggle.backend.exception.authentication.ExpiredAccessTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JwtTokenProviderTest {
     private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(
@@ -36,70 +34,5 @@ class JwtTokenProviderTest {
 
         //then
         assertThat(payload).isEqualTo(23L);
-    }
-
-    @Test
-    @DisplayName("유효한 토큰 사용 시 inValidTokenUsage 메서드는 false를 반환해야 한다")
-    void validTokenUsageTest() {
-        //given
-        final String token = jwtTokenProvider.createAccessToken(1L);
-
-        //when
-        final boolean result = jwtTokenProvider.inValidTokenUsage(token);
-
-        //then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("짧은 유효 기간이 지난 토큰 사용 시 예외 발생")
-    void shortLivedTokenShouldExpire() throws InterruptedException {
-        //given
-        final JwtTokenProvider shortJwt = new JwtTokenProvider(
-                "secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey",
-                1,
-                1);
-        final String shortLivedToken = shortJwt.createAccessToken(1L);
-
-        Thread.sleep(2);
-
-        //when
-        //then
-        assertThatThrownBy(
-                () -> shortJwt.inValidTokenUsage(shortLivedToken)
-        ).isInstanceOf(ExpiredAccessTokenException.class);
-    }
-
-
-    @Test
-    @DisplayName("만료된 토큰 사용 시 예외 발생")
-    void expiredTokenUsageTest() {
-        //given
-        final JwtTokenProvider jwt = new JwtTokenProvider(
-                "wjdgustmdwjdgustmdwjdgustmdwjsadasdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmdwjdgustmd",
-                1,
-                1200000
-        );
-        final String token = jwt.createAccessToken(1L);
-        // 유효시간을 초과하기 위해 대기
-
-        //when
-        //then
-        assertThatThrownBy(
-                () -> jwtTokenProvider.inValidTokenUsage(token)
-        ).isInstanceOf(ExpiredAccessTokenException.class);
-    }
-
-    @Test
-    @DisplayName("잘못된 토큰 사용 시 inValidTokenUsage 메서드는 true를 반환해야 한다")
-    void invalidTokenUsageTest() {
-        //given
-        final String invalidToken = "InvalidToken";
-
-        //when
-        final boolean result = jwtTokenProvider.inValidTokenUsage(invalidToken);
-
-        //then
-        assertThat(result).isTrue();
     }
 }

@@ -91,7 +91,7 @@ class AuthControllerTest extends ControllerTest {
 
         given(jwtTokenProvider.getPayload(accessToken)).willReturn(1L);
         given(tokenRepository.findByMemberId(memberId)).willReturn(Optional.of(new RefreshToken(refreshToken, beaver_have_id)));
-        given(authFacadeService.reissueAccessTokenAndRefreshToken(memberId)).willReturn(tokenResponse);
+        given(authFacadeService.reissueAccessTokenAndRefreshToken(refreshToken)).willReturn(tokenResponse);
 
         //when
         //then

@@ -9,7 +9,7 @@ import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.InvalidPublishRequestException;
 import org.donggle.backend.ui.response.PublishResponse;
-import org.donggle.backend.ui.response.TistoryCategoryListResposnse;
+import org.donggle.backend.ui.response.TistoryCategoryListResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -125,7 +125,7 @@ class TistoryApiClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
@@ -210,7 +210,7 @@ class TistoryApiClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
@@ -293,7 +293,7 @@ class TistoryApiClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
@@ -375,7 +375,7 @@ class TistoryApiClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
@@ -427,7 +427,7 @@ class TistoryApiClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getTistoryToken()).willReturn(Optional.of(accessToken));
         given(memberCredentials.isTistoryConnected()).willReturn(true);
         given(memberCredentials.getTistoryBlogName()).willReturn(Optional.of("jeoninpyo726"));
@@ -435,7 +435,7 @@ class TistoryApiClientTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(categoryListResponse).addHeader("Content-Type", "application/json"));
 
         // When
-        final TistoryCategoryListResposnse response = tistoryApiClient.findCategory(memberId);
+        final TistoryCategoryListResponse response = tistoryApiClient.findCategory(memberId);
 
         // Then
         assertThat(response.categories()).anyMatch(category -> categories.contains(category.name()));

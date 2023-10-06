@@ -70,7 +70,7 @@ class MediumConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(userInfo).addHeader("Content-Type", "application/json"));
         mediumConnectionClient.saveAccessToken(memberId, token);
 
@@ -110,7 +110,7 @@ class MediumConnectionClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(memberCredentialsRepository.findMemberCredentialsByMember(member)).thenReturn(Optional.of(memberCredentials));
+        when(memberCredentialsRepository.findByMember(member)).thenReturn(Optional.of(memberCredentials));
 
         // When
         mediumConnectionClient.deleteAccessToken(memberId);

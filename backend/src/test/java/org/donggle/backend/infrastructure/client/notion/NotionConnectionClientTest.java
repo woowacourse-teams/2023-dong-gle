@@ -78,7 +78,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -103,7 +103,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -129,7 +129,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(401).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -155,7 +155,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(403).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -181,7 +181,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(404).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -207,7 +207,7 @@ class NotionConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(member)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(member)).willReturn(Optional.of(memberCredentials));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(500).setBody(accessToken).addHeader("Content-Type", "application/json"));
 
@@ -228,7 +228,7 @@ class NotionConnectionClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(memberCredentialsRepository.findMemberCredentialsByMember(member)).thenReturn(Optional.of(memberCredentials));
+        when(memberCredentialsRepository.findByMember(member)).thenReturn(Optional.of(memberCredentials));
 
         // When
         notionConnectionClient.deleteAccessToken(memberId);

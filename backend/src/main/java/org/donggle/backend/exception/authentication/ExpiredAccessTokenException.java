@@ -8,6 +8,10 @@ public class ExpiredAccessTokenException extends UnAuthenticationException {
         super(MESSAGE);
     }
 
+    public ExpiredAccessTokenException(final Throwable cause) {
+        super(MESSAGE, cause);
+    }
+
     @Override
     public String getHint() {
         return "토큰이 만료되었습니다.";

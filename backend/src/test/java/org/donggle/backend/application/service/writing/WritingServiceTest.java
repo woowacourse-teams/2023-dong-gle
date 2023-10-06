@@ -92,7 +92,7 @@ class WritingServiceTest {
         memberCredentials.updateNotionToken("token");
         given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
 
         // when
         final MemberCategoryNotionInfo result = writingService.getMemberCategoryNotionInfo(memberId, categoryId);
@@ -113,7 +113,7 @@ class WritingServiceTest {
         final MemberCredentials memberCredentials = MemberCredentials.basic(beaver_have_id);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(beaver_have_id));
         given(categoryRepository.findByIdAndMemberId(categoryId, memberId)).willReturn(Optional.of(basicCategory));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(beaver_have_id)).willReturn(Optional.of(memberCredentials));
 
         // when
         // then

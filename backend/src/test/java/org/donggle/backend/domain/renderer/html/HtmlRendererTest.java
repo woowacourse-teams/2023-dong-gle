@@ -58,7 +58,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol></ul><ul><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code class=\"language-plaintext\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>checkedTaskList</input></div>";
+        final String expected = "<ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>3-1번줄</li><li>3-2번줄</li></ul><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>4번줄</li><li>5번줄</li><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>5-1번줄</li></ol></ul><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>6번줄</li></ul><h1>heading1</h1><h2>heading2</h2><h3>heading3</h3><h4>heading4</h4><h5>heading5</h5><h6>heading6</h6><blockquote>blockquote</blockquote><p>paragraph</p><pre><code class=\"language-plaintext\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>checkedTaskList</input></div>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -208,7 +208,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul><li>4번줄</li><li>5번줄</li><ol><li>5-1번줄</li></ol></ul><ul><li>6번줄</li></ul>";
+        final String expected = "<ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>3-1번줄</li><li>3-2번줄</li></ul><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>3-3번줄</li><li>3-4번줄</li></ol></ul><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>4번줄</li><li>5번줄</li><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>5-1번줄</li></ol></ul><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>6번줄</li></ul>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -279,7 +279,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<details><summary>토글제목</summary><ul><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul><li>3-1번줄</li><li>3-2번줄</li></ul><ol><li>3-3번줄</li><li>3-4번줄</li></ol></ul></details>";
+        final String expected = "<details><summary>토글제목</summary><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>1번줄</li><li>2번줄</li><li>3번줄</li><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>3-1번줄</li><li>3-2번줄</li></ul><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>3-3번줄</li><li>3-4번줄</li></ol></ul></details>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -308,7 +308,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<details><summary>토글제목</summary><ul><li>5번줄</li></ul><ol><li>5-1번줄</li></ol><h2>&emsp;heading2</h2><h3>&emsp;heading3</h3><h4>&emsp;heading4</h4><h5>&emsp;heading5</h5><h6>&emsp;heading6</h6><blockquote>&emsp;blockquote</blockquote><p>&emsp;paragraph</p><h1>&emsp;heading1</h1><pre><code class=\"language-java\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>&emsp;uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>&emsp;checkedTaskList</input></div></details>";
+        final String expected = "<details><summary>토글제목</summary><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>5번줄</li></ul><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>5-1번줄</li></ol><h2>&emsp;heading2</h2><h3>&emsp;heading3</h3><h4>&emsp;heading4</h4><h5>&emsp;heading5</h5><h6>&emsp;heading6</h6><blockquote>&emsp;blockquote</blockquote><p>&emsp;paragraph</p><h1>&emsp;heading1</h1><pre><code class=\"language-java\">public void(){}</code></pre><pre><code class=\"language-java\">&lt;button&gt;&NewLine;&Tab;&lt;p&gt;&quot;hihi&amp;&quot;&lt;/p&gt;&NewLine;&lt;/button&gt;</code></pre><hr></hr><div><input type=\"checkbox\" unchecked>&emsp;uncheckedTaskList</input></div><div><input type=\"checkbox\" checked>&emsp;checkedTaskList</input></div></details>";
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -327,7 +327,7 @@ class HtmlRendererTest {
 
         //when
         final String result = htmlRenderer.render(blocks);
-        final String expected = "<ol><li>First</li><ol><li>Second</li><ol><li>Third</li></ol></ol></ol><ul><li>First</li><ul><li>Second</li><ul><li>Third</li></ul></ul></ul>";
+        final String expected = "<ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>First</li><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>Second</li><ol style=\"list-style-type: decimal;\" data-ke-list-type=\"decimal\"><li>Third</li></ol></ol></ol><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>First</li><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>Second</li><ul style=\"list-style-type: disc;\" data-ke-list-type=\"disc\"><li>Third</li></ul></ul></ul>";
 
         //then
         assertThat(result).isEqualTo(expected);

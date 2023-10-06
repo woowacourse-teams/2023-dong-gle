@@ -12,8 +12,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +67,7 @@ class MemberControllerTest extends ControllerTest {
         //when
         //then
         mockMvc.perform(
-                        post("/member/delete")
+                        delete("/member")
                                 .contentType(APPLICATION_JSON)
                                 .header(AUTHORIZATION, "Bearer " + accessToken)
                 )

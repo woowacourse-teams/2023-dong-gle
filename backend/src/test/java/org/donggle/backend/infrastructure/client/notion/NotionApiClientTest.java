@@ -22,8 +22,9 @@ class NotionApiClientTest {
     void setUp() throws IOException {
         this.mockWebServer = new MockWebServer();
         this.mockWebServer.start();
-        final WebClient webClient = WebClient.create(mockWebServer.url("/").toString());
-        this.notionApiClient = new NotionApiClient(webClient);
+        final String baseUrl = mockWebServer.url("/").toString();
+        final WebClient webClient = WebClient.create(baseUrl);
+        this.notionApiClient = new NotionApiClient(webClient, baseUrl);
     }
 
     @AfterEach
@@ -111,6 +112,8 @@ class NotionApiClientTest {
                 		"object": "user",
                 		"id": "ee5f0f84-409a-440f-983a-a5315961c6e4"
                 	},
+                	"has_more": false,
+                	"next_cursor": null,
                 	"has_children": false,
                 	"archived": false,
                 	"type": "heading_2",

@@ -7,6 +7,10 @@ public abstract class UnAuthenticationException extends RuntimeException {
         super(message);
     }
 
+    public UnAuthenticationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
     public abstract String getHint();
 
     public int getErrorCode() {

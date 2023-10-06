@@ -30,7 +30,7 @@ class MemberCredentialsRepositoryTest {
         memberCredentialsRepository.save(memberCredentials);
 
         //when
-        final MemberCredentials findMemberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(member).get();
+        final MemberCredentials findMemberCredentials = memberCredentialsRepository.findByMember(member).get();
 
         //then
         assertThat(findMemberCredentials).usingRecursiveAssertion().ignoringFields("id").isEqualTo(memberCredentials);

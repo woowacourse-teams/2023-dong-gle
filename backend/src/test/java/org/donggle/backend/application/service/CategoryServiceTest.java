@@ -158,7 +158,6 @@ class CategoryServiceTest {
         final Category category2 = new Category(2L, new CategoryName("두 번째 카테고리"), category3, member);
         final Category category1 = new Category(1L, new CategoryName("기본"), category2, member);
 
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
         given(categoryRepository.findAllByMemberId(memberId)).willReturn(List.of(category1, category2, category3));
 
         //when

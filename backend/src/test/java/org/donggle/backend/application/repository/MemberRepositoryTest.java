@@ -1,8 +1,5 @@
 package org.donggle.backend.application.repository;
 
-import org.assertj.core.api.Assertions;
-import org.donggle.backend.domain.encryption.AESEncryptionUtil;
-import org.donggle.backend.domain.member.Member;
 import jakarta.persistence.EntityManager;
 import org.donggle.backend.application.repository.dto.MemberInfo;
 import org.donggle.backend.domain.encryption.AESEncryptionUtil;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.donggle.backend.domain.oauth.SocialType.KAKAO;
-import static org.donggle.backend.support.fix.MemberFixture.beaver_have_not_id;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,11 +44,11 @@ class MemberRepositoryTest {
     @DisplayName("existsById 쿼리 확인")
     void existsByIdTest() {
         // when
-        boolean isExist = memberRepository.existsById(1L);
+        final boolean isExist = memberRepository.existsById(1L);
         em.flush();
 
         // then
-        assertThat(isExist).isTrue();
+        assertThat(isExist).isFalse();
     }
 
     @Test

@@ -80,7 +80,7 @@ class TistoryConnectionClientTest {
         final Member member = mock(Member.class);
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        given(memberCredentialsRepository.findMemberCredentialsByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
+        given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         given(tistoryApiClient.findDefaultBlogName("accessToken")).willReturn("jeoninpyo726");
 
         tistoryConnectionClient.saveAccessToken(1L, new OAuthAccessTokenRequest("redirect_uri", "code"));
@@ -96,7 +96,7 @@ class TistoryConnectionClientTest {
         final MemberCredentials memberCredentials = mock(MemberCredentials.class);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(memberCredentialsRepository.findMemberCredentialsByMember(member)).thenReturn(Optional.of(memberCredentials));
+        when(memberCredentialsRepository.findByMember(member)).thenReturn(Optional.of(memberCredentials));
 
         // When
         tistoryConnectionClient.deleteAccessToken(memberId);

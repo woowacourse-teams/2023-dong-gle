@@ -1,6 +1,5 @@
 package org.donggle.backend.application.repository;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.donggle.backend.domain.category.Category;
 import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.encryption.AESEncryptionUtil;
@@ -27,6 +26,7 @@ import static org.donggle.backend.domain.writing.WritingStatus.ACTIVE;
 import static org.donggle.backend.domain.writing.WritingStatus.DELETED;
 import static org.donggle.backend.domain.writing.WritingStatus.TRASHED;
 import static org.donggle.backend.support.fix.MemberFixture.beaver_have_not_id;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 class WritingRepositoryTest {
@@ -54,24 +54,10 @@ class WritingRepositoryTest {
         final Writing findWriting = writingRepository.findByWithBlocks(saveWriting.getId(), member.getId()).get();
 
         //then
-        AssertionsForClassTypes.assertThat(findWriting.getBlocks()).usingRecursiveAssertion().isEqualTo(writing.getBlocks());
-    }
-
-    @Test
-    @DisplayName("사용자의 글ID에 해당하는 글 조회 테스트")
-    void findByIdAndMemberId() {
-        //given
-        final Member member = memberRepository.save(beaver_have_not_id);
-        final Category category = new Category(new CategoryName("안녕"), null, member);
-        final Category saveCategory = categoryRepository.save(category);
-        final Writing writing = Writing.of(member, new Title("Title 1"), saveCategory, List.of(new NormalBlock(Depth.from(1), BlockType.PARAGRAPH, RawText.from("안녕"), List.of())));
-        final Writing saveWriting = writingRepository.save(writing);
-
-        //when
-        final Writing findWriting = writingRepository.findByWithBlocks(saveWriting.getId(), member.getId()).get();
-
-        //then
-        assertThat(findWriting.getTitleValue()).isEqualTo("Title 1");
+        assertAll(
+                () -> assertThat(findWriting.getBlocks()).usingRecursiveAssertion().isEqualTo(writing.getBlocks()),
+                () -> assertThat(findWriting.getTitleValue()).isEqualTo("Title 1")
+        );
     }
 
     @Test
@@ -186,7 +172,7 @@ class WritingRepositoryTest {
     }
 
     @Test
-    @DisplayName("해당 카테고리에 첫번째 글을 가져오는 테스트")
+    @DisplayName("해당 카테고리에 마지막 글을 가져오는 테스트")
     void findLastWritingByCategoryId() {
         //given
         final Member member = memberRepository.save(beaver_have_not_id);

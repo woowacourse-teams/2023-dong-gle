@@ -11,7 +11,7 @@ import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.domain.writing.Writing;
-import org.donggle.backend.exception.business.TistoryNotConnectedException;
+import org.donggle.backend.exception.business.NotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.ui.response.PublishResponse;
@@ -97,7 +97,7 @@ class PublishServiceTest {
         // then
         Assertions.assertThatThrownBy(
                 () -> publishService.findPublishWriting(memberId, writingId, blogType)
-        ).isInstanceOf(TistoryNotConnectedException.class);
+        ).isInstanceOf(NotConnectedException.class);
     }
 
     @Test

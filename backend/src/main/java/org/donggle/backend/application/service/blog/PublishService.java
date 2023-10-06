@@ -15,7 +15,7 @@ import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.domain.writing.block.NormalBlock;
-import org.donggle.backend.exception.business.TistoryNotConnectedException;
+import org.donggle.backend.exception.business.NotConnectedException;
 import org.donggle.backend.exception.business.WritingAlreadyPublishedException;
 import org.donggle.backend.exception.notfound.BlogNotFoundException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
@@ -45,15 +45,13 @@ public class PublishService {
     public PublishWritingRequest findPublishWriting(final Long memberId, final Long writingId, final BlogType blogType) {
         final Blog blog = findBlog(blogType);
         final Member member = findMember(memberId);
-        final Writing writing = writingRepository.findByIdWithBlocks(writingId)
-                .orElseThrow(() -> new WritingNotFoundException(writingId));
+        final Writing writing = writingRepository.findByIdWithBlocks(writingId).orElseThrow(() -> new WritingNotFoundException(writingId));
         findStylesByNomalBlocks(writing);
 
         validateAuthorization(member.getId(), writing);
 
         final MemberCredentials memberCredentials = findMemberCredentials(member);
-        final String accessToken = memberCredentials.getBlogToken(blogType)
-                .orElseThrow(TistoryNotConnectedException::new);
+        final String accessToken = memberCredentials.getBlogToken(blogType).orElseThrow(() -> new NotConnectedException(blogType));
         final List<BlogWriting> publishedBlogs = blogWritingRepository.findByWritingId(writingId);
 
         checkWritingAlreadyPublished(publishedBlogs, blog.getBlogType(), writing);
@@ -63,10 +61,7 @@ public class PublishService {
     private void findStylesByNomalBlocks(final Writing writing) {
         final List<Block> blocks = writing.getBlocks();
         final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
-        final List<NormalBlock> normalBlocks = blocks.stream()
-                .filter(block -> !notNormalType.contains(block.getBlockType()))
-                .map(NormalBlock.class::cast)
-                .toList();
+        final List<NormalBlock> normalBlocks = blocks.stream().filter(block -> !notNormalType.contains(block.getBlockType())).map(NormalBlock.class::cast).toList();
         writingRepository.findStylesForBlocks(normalBlocks);
     }
 
@@ -76,19 +71,15 @@ public class PublishService {
 
 
     private MemberCredentials findMemberCredentials(final Member member) {
-        return memberCredentialsRepository.findByMember(member)
-                .orElseThrow(NoSuchElementException::new);
+        return memberCredentialsRepository.findByMember(member).orElseThrow(NoSuchElementException::new);
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        return memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
     private void checkWritingAlreadyPublished(final List<BlogWriting> publishedBlogs, final BlogType blogType, final Writing writing) {
-        final boolean isAlreadyPublished = publishedBlogs.stream()
-                .anyMatch(blogWriting -> blogWriting.isSameBlogType(blogType)
-                        && writing.getUpdatedAt().isBefore(blogWriting.getPublishedAt()));
+        final boolean isAlreadyPublished = publishedBlogs.stream().anyMatch(blogWriting -> blogWriting.isSameBlogType(blogType) && writing.getUpdatedAt().isBefore(blogWriting.getPublishedAt()));
 
         if (isAlreadyPublished) {
             throw new WritingAlreadyPublishedException(writing.getId(), blogType);
@@ -104,8 +95,7 @@ public class PublishService {
     private Blog findBlog(final BlogType blogType) {
         for (final BlogType type : BlogType.values()) {
             if (type.name().equals(blogType.name())) {
-                return blogRepository.findByBlogType(type)
-                        .orElseThrow(() -> new BlogNotFoundException(blogType.name()));
+                return blogRepository.findByBlogType(type).orElseThrow(() -> new BlogNotFoundException(blogType.name()));
             }
         }
         throw new BlogNotFoundException(blogType.name());

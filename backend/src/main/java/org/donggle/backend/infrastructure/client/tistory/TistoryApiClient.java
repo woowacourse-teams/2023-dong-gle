@@ -9,7 +9,7 @@ import org.donggle.backend.domain.blog.PublishStatus;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.InvalidPublishRequestException;
-import org.donggle.backend.exception.business.TistoryNotConnectedException;
+import org.donggle.backend.exception.business.NotConnectedException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishPropertyRequest;
@@ -156,7 +156,7 @@ public class TistoryApiClient implements BlogClient {
         final MemberCredentials memberCredentials = memberCredentialsRepository.findByMember(member)
                 .orElseThrow(NoSuchElementException::new);
         if (!memberCredentials.isTistoryConnected()) {
-            throw new TistoryNotConnectedException();
+            throw new NotConnectedException(TISTORY);
         }
         return memberCredentials;
     }

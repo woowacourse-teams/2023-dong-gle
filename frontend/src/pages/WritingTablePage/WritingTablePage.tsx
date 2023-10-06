@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSetGlobalState } from '@yogjin/react-global-state';
 import { getDetailWritings } from 'apis/writings';
+import { EmptyWritingTableIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
 import { activeCategoryIdState } from 'globalState';
@@ -38,7 +39,13 @@ const WritingTablePage = () => {
       {data?.writings && data.writings.length > 0 ? (
         <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
       ) : (
-        <S.AddWritingText>카테고리에 글을 추가해주세요😊</S.AddWritingText>
+        <S.EmptyMessage>
+          <EmptyWritingTableIcon width={80} height={80} />
+          <S.AddWritingTextContainer>
+            <S.AddWritingText>카테고리가 비어있어요.</S.AddWritingText>
+            <S.AddWritingText>글 가져오기를 통해 글을 추가해 보세요!</S.AddWritingText>
+          </S.AddWritingTextContainer>
+        </S.EmptyMessage>
       )}
     </S.Article>
   );
@@ -48,6 +55,7 @@ export default WritingTablePage;
 
 const S = {
   Article: styled.article`
+    position: relative;
     width: 100%;
     padding: 8rem;
   `,
@@ -57,9 +65,7 @@ const S = {
     margin-bottom: 5rem;
   `,
 
-  AddWritingText: styled.p`
-    font-size: 1.5rem;
-  `,
+  AddWritingText: styled.p``,
 
   SidebarSection: styled.section`
     ${sidebarStyle}
@@ -73,5 +79,24 @@ const S = {
     gap: 2rem;
     max-width: 100%;
     height: 100%;
+  `,
+
+  EmptyMessage: styled.p`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  `,
+
+  AddWritingTextContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
   `,
 };

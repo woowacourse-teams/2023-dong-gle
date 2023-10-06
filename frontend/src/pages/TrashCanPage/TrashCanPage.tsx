@@ -23,7 +23,7 @@ const TrashCanPage = () => {
         <TrashCanTable writings={deletedWritings} />
       ) : (
         <S.EmptyMessage>
-          <TrashCanEmptyIcon width={36} height={36} />
+          <TrashCanEmptyIcon width={80} height={80} />
           휴지통이 비어있어요.
         </S.EmptyMessage>
       )}
@@ -56,7 +56,7 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
   `,
 
   LoadingContainer: styled.div`

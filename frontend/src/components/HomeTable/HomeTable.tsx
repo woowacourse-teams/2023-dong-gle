@@ -21,7 +21,7 @@ const HomeTable = ({ initialPageIndex = 0 }: Props) => {
       <S.EmptyMessage>
         <EmptyWritingTableIcon width={80} height={80} />
         <S.AddWritingTextContainer>
-          <S.AddWritingText>동글에 오신 걸 환영합니다.</S.AddWritingText>
+          <S.AddWritingText>글이 없습니다.</S.AddWritingText>
           <S.AddWritingText>글 가져오기를 통해 글을 추가해 보세요!</S.AddWritingText>
         </S.AddWritingTextContainer>
       </S.EmptyMessage>

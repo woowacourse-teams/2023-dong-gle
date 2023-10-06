@@ -16,6 +16,7 @@ import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPubl
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryBlogNameResponse;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCategoryListResponseWrapper;
+import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCategoryListResponseWrapper.TistoryCategoryListResponse.TistoryCategoryResponse;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryPublishWritingResponseWrapper;
 import org.donggle.backend.ui.response.PublishResponse;
@@ -29,8 +30,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static org.donggle.backend.domain.blog.BlogType.TISTORY;
 import static org.donggle.backend.infrastructure.client.exception.ClientException.handle4xxException;
@@ -126,8 +130,12 @@ public class TistoryApiClient implements BlogClient {
                         .map(e -> new ClientInternalServerError(PLATFORM_NAME)))
                 .bodyToMono(TistoryCategoryListResponseWrapper.class)
                 .block();
+        final List<TistoryCategoryResponse> categories = categoryList.tistory().item().categories();
+        if (Objects.isNull(categories)) {
+            return new TistoryCategoryListResposne(Collections.emptyList());
+        }
         return new TistoryCategoryListResposne(
-                categoryList.tistory().item().categories().stream()
+                categories.stream()
                         .map(category -> new TistoryCategoryListResposne.TistoryCategoryResponse(category.id(), category.name()))
                         .toList());
     }

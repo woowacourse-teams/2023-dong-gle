@@ -197,7 +197,7 @@ public class CategoryService {
         source.changeNextCategoryNull();
         final Category preCategory = findPreCategory(source.getId());
         preCategory.changeNextCategory(nextCategory);
-
+        categoryRepository.flush();
         if (targetCategoryId == LAST_CATEGORY_FLAG) {
             lastCategory.changeNextCategory(source);
         } else {

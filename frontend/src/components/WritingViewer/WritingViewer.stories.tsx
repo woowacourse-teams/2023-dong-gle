@@ -1,6 +1,5 @@
 import { writingURL } from 'constants/apis/url';
 import { Meta, StoryObj } from '@storybook/react';
-import { writingContentMock } from 'mocks/writingContentMock';
 import { rest } from 'msw';
 import {
   StoryContainer,

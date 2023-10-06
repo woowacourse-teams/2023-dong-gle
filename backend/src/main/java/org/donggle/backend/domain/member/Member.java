@@ -15,20 +15,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.donggle.backend.domain.BaseEntity;
 import org.donggle.backend.domain.oauth.SocialType;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member SET is_deleted = true, deleted_at = now() WHERE id = ?")
-@Where(clause = "is_deleted = false")
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "SOCIAL_ID_TYPE_UNIQUE", columnNames = {"socialId", "socialType"})
-})
+@Table(uniqueConstraints = @UniqueConstraint(name = "SOCIAL_ID_TYPE_UNIQUE", columnNames = {"socialId", "socialType"}))
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +32,9 @@ public class Member extends BaseEntity {
     private Long socialId;
     @Enumerated(value = EnumType.STRING)
     private SocialType socialType;
-    private final boolean isDeleted = false;
-    private LocalDateTime deletedAt;
 
-    private Member(final MemberName memberName, final Long socialId, final SocialType socialType) {
+    private Member(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+        this.id = id;
         this.memberName = memberName;
         this.socialId = socialId;
         this.socialType = socialType;
@@ -57,7 +49,11 @@ public class Member extends BaseEntity {
     }
 
     public static Member of(final MemberName memberName, final Long socialId, final SocialType socialType) {
-        return new Member(memberName, socialId, socialType);
+        return of(null, memberName, socialId, socialType);
+    }
+
+    public static Member of(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+        return new Member(id, memberName, socialId, socialType);
     }
 
     @Override

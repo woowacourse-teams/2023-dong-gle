@@ -64,6 +64,7 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
         <S.Input
           type='text'
           placeholder='새 제목을 입력해주세요'
+          defaultValue={title}
           ref={inputRef}
           onBlur={resetInput}
           onKeyDown={escapeRename}
@@ -93,6 +94,7 @@ const S = {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 2rem;
+    gap: 0.3rem;
   `,
   Title: styled.h1`
     font-size: 4rem;
@@ -102,6 +104,7 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
     border-radius: 12px;
     padding: 1rem;
     background-color: ${({ theme }) => theme.color.gray4};

@@ -7,7 +7,10 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import org.donggle.backend.exception.authentication.ExpiredAccessTokenException;
+import org.donggle.backend.exception.authentication.InvalidRefreshTokenException;
+import org.donggle.backend.exception.authentication.RefreshTokenSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -57,21 +60,18 @@ public class JwtTokenProvider {
                 .get(MEMBER_ID_KEY, Long.class);
     }
 
-    public boolean inValidTokenUsage(final String token) {
+    public Jws<Claims> getClaims(final String token) {
         try {
-            final Jws<Claims> claims = getClaims(token);
-            return claims.getBody().getExpiration().before(new Date());
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
         } catch (final ExpiredJwtException e) {
-            throw new ExpiredAccessTokenException();
+            throw new ExpiredAccessTokenException(e);
+        } catch (final SecurityException e) {
+            throw new RefreshTokenSecurityException(e);
         } catch (final JwtException | IllegalArgumentException e) {
-            return true;
+            throw new InvalidRefreshTokenException(e);
         }
-    }
-
-    private Jws<Claims> getClaims(final String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
     }
 }

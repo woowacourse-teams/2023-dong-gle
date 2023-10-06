@@ -58,6 +58,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
+      favicon: path.join(__dirname, 'public', 'donggle-logo.png'),
     }),
     new webpack.DefinePlugin({
       PRODUCT_ENV: JSON.stringify(process.env.NODE_ENV),

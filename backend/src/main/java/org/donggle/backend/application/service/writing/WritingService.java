@@ -77,9 +77,8 @@ public class WritingService {
     public MemberCategoryNotionInfo getMemberCategoryNotionInfo(final Long memberId, final Long categoryId) {
         final Member findMember = findMember(memberId);
         final Category category = findCategory(memberId, categoryId);
-        final MemberCredentials memberCredentials = memberCredentialsRepository.findMemberCredentialsByMember(findMember).orElseThrow();
-        final String notionToken = memberCredentials.getNotionToken()
-                .orElseThrow(NotionNotConnectedException::new);
+        final MemberCredentials memberCredentials = memberCredentialsRepository.findByMember(findMember).orElseThrow();
+        final String notionToken = memberCredentials.getNotionToken().orElseThrow(NotionNotConnectedException::new);
         return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }
 
@@ -184,20 +183,21 @@ public class WritingService {
 
         if (isNotFirstWriting(source.getId())) {
             final Writing nextWriting = source.getNextWriting();
-            final Writing lastWriting = findLastWritingInCategory(request.targetCategoryId());
+            final Optional<Writing> lastWritingOptional = writingRepository.findLastWritingByCategoryId(request.targetCategoryId());
             source.changeNextWritingNull();
             final Writing preWriting = findPreWriting(source.getId());
             preWriting.changeNextWriting(nextWriting);
+            writingRepository.flush();
             if (request.nextWritingId() == LAST_WRITING_FLAG) {
-                lastWriting.changeNextWriting(source);
+                lastWritingOptional.ifPresent(lastWriting -> lastWriting.changeNextWriting(source));
                 changeCategory(memberId, request.targetCategoryId(), source);
                 return;
             }
         }
 
         if (request.nextWritingId() == LAST_WRITING_FLAG) {
-            final Writing lastWriting = findLastWritingInCategory(request.targetCategoryId());
-            lastWriting.changeNextWriting(source);
+            writingRepository.findLastWritingByCategoryId(request.targetCategoryId())
+                    .ifPresent(lastWriting -> lastWriting.changeNextWriting(source));
             source.changeNextWritingNull();
         } else {
             final Writing targetWriting = findActiveWriting(targetWritingId);

@@ -6,13 +6,13 @@ import {
   StoryItemContainerRow,
   StoryItemTitle,
 } from 'styles/storybook';
-import { getWritingTableMock } from 'mocks/writingTableMock';
+import { writingTable } from 'mocks/data/writingTablePage';
 
 const meta = {
   title: 'WritingTable',
   component: WritingTable,
   args: {
-    writings: getWritingTableMock(1).writings,
+    writings: writingTable.writings,
     categoryId: 1,
   },
   // argTypes: {},

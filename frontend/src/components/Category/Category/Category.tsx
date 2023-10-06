@@ -53,13 +53,14 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
   };
 
   return (
-    <S.Container>
+    <S.Container $isDefaultCategory={isDefaultCategory}>
       {isInputOpen ? (
         <Input
           type='text'
           variant='underlined'
           size='small'
           placeholder='변경할 카테고리 이름'
+          defaultValue={categoryName}
           ref={inputRef}
           isError={isError}
           onBlur={resetInput}
@@ -95,19 +96,22 @@ const Category = ({ categoryId, categoryName, isDefaultCategory }: Props) => {
 export default Category;
 
 const S = {
-  Container: styled.div`
+  Container: styled.div<{ $isDefaultCategory: boolean }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
     height: 3.6rem;
     border-radius: 4px;
     font-size: 1.4rem;
 
     &:hover {
+      & > button {
+        padding-right: ${({ $isDefaultCategory }) => !$isDefaultCategory && '5.2rem'};
+      }
+
       div {
-        display: inline-flex;
-        gap: 0.4rem;
+        opacity: 0.99;
       }
     }
   `,
@@ -140,8 +144,11 @@ const S = {
   `,
 
   IconContainer: styled.div`
-    display: none;
-    margin-right: 0.4rem;
+    display: flex;
+    position: absolute;
+    right: 0;
+    margin-right: 0.8rem;
+    opacity: 0;
   `,
 
   Button: styled.button`

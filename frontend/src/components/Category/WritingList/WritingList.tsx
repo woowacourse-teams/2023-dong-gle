@@ -99,9 +99,12 @@ const S = {
     &:hover {
       background-color: ${({ theme }) => theme.color.gray3};
 
+      & > button {
+        padding-right: 2.8rem;
+      }
+
       div {
-        display: flex;
-        flex-shrink: 0;
+        opacity: 0.99;
       }
     }
   `,
@@ -110,6 +113,7 @@ const S = {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    width: 100%;
     min-width: 0;
     height: 100%;
     padding: 0.4rem 0 0.4rem 3.2rem;
@@ -138,8 +142,10 @@ const S = {
   `,
 
   DeleteButtonWrapper: styled.div`
-    display: none;
+    position: absolute;
+    right: 0;
     margin-right: 0.8rem;
+    opacity: 0;
   `,
 
   DragLastSection: styled.div<{ $isDragOverTarget: boolean }>`

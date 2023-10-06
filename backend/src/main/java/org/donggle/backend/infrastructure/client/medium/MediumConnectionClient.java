@@ -9,6 +9,8 @@ import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.client.exception.ClientException;
 import org.donggle.backend.infrastructure.client.exception.ClientInvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.donggle.backend.infrastructure.client.exception.ClientException;
+import org.donggle.backend.infrastructure.client.exception.ClientInvalidTokenException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -78,7 +80,7 @@ public class MediumConnectionClient {
     }
 
     private MemberCredentials findMemberCredentials(final Member member) {
-        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+        return memberCredentialsRepository.findByMember(member)
                 .orElseThrow(NoSuchElementException::new);
     }
 

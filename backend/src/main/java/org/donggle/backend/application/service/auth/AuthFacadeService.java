@@ -30,7 +30,7 @@ public class AuthFacadeService {
         authService.logout(memberId);
     }
 
-    public TokenResponse reissueAccessTokenAndRefreshToken(final Long memberId) {
-        return authService.reissueAccessTokenAndRefreshToken(memberId);
+    public TokenResponse reissueAccessTokenAndRefreshToken(final String refreshToken) {
+        return authService.reissueAccessTokenAndRefreshToken(refreshToken);
     }
 }

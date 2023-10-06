@@ -422,392 +422,525 @@ class ModifyWritingOrderTest {
 
     @Nested
     @DisplayName("두 개의 카테고리에서 움직이는 경우")
-    class MovingInTwoCategoriesTest {
-        @Test
-        @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가]['1', 5, 6, 7, 8]")
-        void MovingInTwoCategories1() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(0).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
-            );
+    class movingInTwoCategoriesTest {
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        @Nested
+        @DisplayName("비어 있는 카테고리로 글을 이동시키는 경우")
+        class MoveWritingIntoEmptyCategory {
+            private Category emptyCategory;
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+            @BeforeEach
+            void setUp() {
+                emptyCategory = categoryRepository.save(Category.of(new CategoryName("empty"), member));
+                anotherCategory.changeNextCategory(emptyCategory);
+            }
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+            @Test
+            @DisplayName("[추가]['5', 6, 7, 8]/[empty][ ] -> [추가][6, 7, 8]/[empty]['5']")
+            void moveIntoEmptyCategory1() {
+                //given
+                writingService.modifyWritingOrder(
+                        member.getId(),
+                        anotherWritings.get(0).getId(),
+                        new WritingModifyRequest(null, emptyCategory.getId(), -1L)
+                );
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+                //when
+                final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+                assertThat(anotherCategoryWritings).hasSize(3);
+                final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
 
-                    () -> assertThat(another1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
+                final List<Writing> emptyCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(emptyCategory.getId(), ACTIVE);
+                assertThat(emptyCategoryWritings).hasSize(1);
+                final List<Writing> emptyNextWritings = emptyCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
+
+                anotherCategoryWritings.removeAll(anotherNextWritings);
+                emptyCategoryWritings.removeAll(emptyNextWritings);
+
+                //then
+                final Writing another1Writing = anotherCategoryWritings.get(0);
+                final Writing empty1Writing = emptyCategoryWritings.get(0);
+                assertAll(
+                        () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(1)),
+                        () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+
+                        () -> assertThat(empty1Writing).isEqualTo(anotherWritings.get(0)),
+                        () -> assertThat(empty1Writing.getNextWriting()).isNull()
+                );
+            }
+
+            @Test
+            @DisplayName("[추가][5, '6', 7, 8]/[empty][ ] -> [추가][5, 7, 8]/[empty]['6']")
+            void moveIntoEmptyCategory2() {
+                //given
+                writingService.modifyWritingOrder(
+                        member.getId(),
+                        anotherWritings.get(1).getId(),
+                        new WritingModifyRequest(null, emptyCategory.getId(), -1L)
+                );
+
+                //when
+                final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+                assertThat(anotherCategoryWritings).hasSize(3);
+                final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
+
+                final List<Writing> emptyCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(emptyCategory.getId(), ACTIVE);
+                assertThat(emptyCategoryWritings).hasSize(1);
+                final List<Writing> emptyNextWritings = emptyCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
+
+                anotherCategoryWritings.removeAll(anotherNextWritings);
+                emptyCategoryWritings.removeAll(emptyNextWritings);
+
+                //then
+                final Writing another1Writing = anotherCategoryWritings.get(0);
+                final Writing empty1Writing = emptyCategoryWritings.get(0);
+                assertAll(
+                        () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                        () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+
+                        () -> assertThat(empty1Writing).isEqualTo(anotherWritings.get(1)),
+                        () -> assertThat(empty1Writing.getNextWriting()).isNull()
+                );
+            }
+
+            @Test
+            @DisplayName("[추가][5, 6, 7, '8']/[empty][ ] -> [추가][5, 6, 7]/[empty]['8']")
+            void moveIntoEmptyCategory3() {
+                //given
+                writingService.modifyWritingOrder(
+                        member.getId(),
+                        anotherWritings.get(3).getId(),
+                        new WritingModifyRequest(null, emptyCategory.getId(), -1L)
+                );
+
+                //when
+                final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+                assertThat(anotherCategoryWritings).hasSize(3);
+                final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
+
+                final List<Writing> emptyCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(emptyCategory.getId(), ACTIVE);
+                assertThat(emptyCategoryWritings).hasSize(1);
+                final List<Writing> emptyNextWritings = emptyCategoryWritings.stream()
+                        .map(Writing::getNextWriting)
+                        .toList();
+
+                anotherCategoryWritings.removeAll(anotherNextWritings);
+                emptyCategoryWritings.removeAll(emptyNextWritings);
+
+                //then
+                final Writing another1Writing = anotherCategoryWritings.get(0);
+                final Writing empty1Writing = emptyCategoryWritings.get(0);
+                assertAll(
+                        () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                        () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                        () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+
+                        () -> assertThat(empty1Writing).isEqualTo(anotherWritings.get(3)),
+                        () -> assertThat(empty1Writing.getNextWriting()).isNull()
+                );
+            }
         }
+    }
 
-        @Test
-        @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가][5, '1', 6, 7, 8]")
-        void MovingInTwoCategories2() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(0).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(1).getId())
-            );
+    @Test
+    @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가]['1', 5, 6, 7, 8]")
+    void movingInTwoCategories1() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(0).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가][5, 6, 7, 8, '1']")
-        void MovingInTwoCategories3() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(0).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), -1L)
-            );
+    @Test
+    @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가][5, '1', 6, 7, 8]")
+    void movingInTwoCategories2() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(0).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(1).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가]['2', 5, 6, 7, 8]")
-        void MovingInTwoCategories4() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(1).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
-            );
+    @Test
+    @DisplayName("[기본]['1', 2, 3, 4]/[추가][5, 6, 7, 8] -> [기본][2, 3, 4]/[추가][5, 6, 7, 8, '1']")
+    void movingInTwoCategories3() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(0).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), -1L)
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가][5, 6, '2', 7, 8]")
-        void MovingInTwoCategories5() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(1).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(2).getId())
-            );
+    @Test
+    @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가]['2', 5, 6, 7, 8]")
+    void movingInTwoCategories4() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(1).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가][5, 6, 7, 8, '2']")
-        void MovingInTwoCategories6() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(1).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), -1L)
-            );
+    @Test
+    @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가][5, 6, '2', 7, 8]")
+    void movingInTwoCategories5() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(1).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(2).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가]['4', 5, 6, 7, 8]")
-        void MovingInTwoCategories7() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(3).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
-            );
+    @Test
+    @DisplayName("[기본][1, '2', 3, 4]/[추가][5, 6, 7, 8] -> [기본][1, 3, 4]/[추가][5, 6, 7, 8, '2']")
+    void movingInTwoCategories6() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(1).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), -1L)
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가][5, 6, '4', 7, 8]")
-        void MovingInTwoCategories8() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(3).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(2).getId())
-            );
+    @Test
+    @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가]['4', 5, 6, 7, 8]")
+    void movingInTwoCategories7() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(3).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(0).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
 
-        @Test
-        @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가][5, 6, 7, 8, '4']")
-        void MovingInTwoCategories9() {
-            //when
-            writingService.modifyWritingOrder(
-                    member.getId(),
-                    basicWritings.get(3).getId(),
-                    new WritingModifyRequest(null, anotherCategory.getId(), -1L)
-            );
+    @Test
+    @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가][5, 6, '4', 7, 8]")
+    void movingInTwoCategories8() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(3).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), anotherWritings.get(2).getId())
+        );
 
-            final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
-            assertThat(basicCategoryWritings).hasSize(3);
-            final List<Writing> basicNextWritings = basicCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
-            assertThat(anotherCategoryWritings).hasSize(5);
-            final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
-                    .map(Writing::getNextWriting)
-                    .toList();
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
 
-            basicCategoryWritings.removeAll(basicNextWritings);
-            anotherCategoryWritings.removeAll(anotherNextWritings);
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
 
-            //then
-            final Writing basic1Writing = basicCategoryWritings.get(0);
-            final Writing another1Writing = anotherCategoryWritings.get(0);
-            assertAll(
-                    () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
-                    () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
-                    () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
 
-                    () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
-                    () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
-                    () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
-            );
-        }
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
+    }
+
+    @Test
+    @DisplayName("[기본][1, 2, 3, '4']/[추가][5, 6, 7, 8] -> [기본][1, 2, 3]/[추가][5, 6, 7, 8, '4']")
+    void movingInTwoCategories9() {
+        //when
+        writingService.modifyWritingOrder(
+                member.getId(),
+                basicWritings.get(3).getId(),
+                new WritingModifyRequest(null, anotherCategory.getId(), -1L)
+        );
+
+        final List<Writing> basicCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(basicCategory.getId(), ACTIVE);
+        assertThat(basicCategoryWritings).hasSize(3);
+        final List<Writing> basicNextWritings = basicCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
+
+        final List<Writing> anotherCategoryWritings = writingRepository.findAllByCategoryIdAndStatus(anotherCategory.getId(), ACTIVE);
+        assertThat(anotherCategoryWritings).hasSize(5);
+        final List<Writing> anotherNextWritings = anotherCategoryWritings.stream()
+                .map(Writing::getNextWriting)
+                .toList();
+
+        basicCategoryWritings.removeAll(basicNextWritings);
+        anotherCategoryWritings.removeAll(anotherNextWritings);
+
+        //then
+        final Writing basic1Writing = basicCategoryWritings.get(0);
+        final Writing another1Writing = anotherCategoryWritings.get(0);
+        assertAll(
+                () -> assertThat(basic1Writing).isEqualTo(basicWritings.get(0)),
+                () -> assertThat(basic1Writing.getNextWriting()).isEqualTo(basicWritings.get(1)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(2)),
+                () -> assertThat(basic1Writing.getNextWriting().getNextWriting().getNextWriting()).isNull(),
+
+                () -> assertThat(another1Writing).isEqualTo(anotherWritings.get(0)),
+                () -> assertThat(another1Writing.getNextWriting()).isEqualTo(anotherWritings.get(1)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(2)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting()).isEqualTo(anotherWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isEqualTo(basicWritings.get(3)),
+                () -> assertThat(another1Writing.getNextWriting().getNextWriting().getNextWriting().getNextWriting().getNextWriting()).isNull()
+        );
     }
 }

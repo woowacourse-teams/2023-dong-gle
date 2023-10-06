@@ -1,8 +1,14 @@
 package org.donggle.backend.exception.authentication;
 
 public class InvalidRefreshTokenException extends UnAuthenticationException {
+    private static final String MESSAGE = "유효하지 않은 토큰입니다.";
+
     public InvalidRefreshTokenException() {
-        super(null);
+        super(MESSAGE);
+    }
+
+    public InvalidRefreshTokenException(final Throwable cause) {
+        super(null, cause);
     }
 
     @Override

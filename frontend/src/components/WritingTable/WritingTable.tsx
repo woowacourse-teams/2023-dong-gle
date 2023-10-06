@@ -47,6 +47,7 @@ const WritingTable = ({ writings, categoryId }: Props) => {
             tabIndex={0}
           >
             <td>{title}</td>
+            <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
             <td>
               <S.PublishedToIconContainer>
                 {publishedDetails.map(({ blogName }, index) => (
@@ -54,7 +55,6 @@ const WritingTable = ({ writings, categoryId }: Props) => {
                 ))}
               </S.PublishedToIconContainer>
             </td>
-            <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
           </tr>
         ))}
       </tbody>
@@ -74,6 +74,10 @@ const S = {
       color: ${({ theme }) => theme.color.gray8};
     }
 
+    tr {
+      height: 4.2rem;
+    }
+
     td {
       .publishedTo {
         display: flex;
@@ -83,7 +87,7 @@ const S = {
 
     th,
     td {
-      padding: 1.1rem;
+      padding: 0 1rem;
       border: 1px solid ${({ theme }) => theme.color.gray5};
     }
 
@@ -99,8 +103,7 @@ const S = {
 
     tbody tr:hover {
       cursor: pointer;
-      transform: scale(1.01);
-      transition: all 300ms;
+      background-color: ${({ theme }) => theme.color.gray3};
     }
   `,
 

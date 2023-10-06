@@ -1,11 +1,13 @@
 package org.donggle.backend.application.repository;
 
+import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.writing.Writing;
 import org.donggle.backend.domain.writing.WritingStatus;
 import org.donggle.backend.domain.writing.block.NormalBlock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -94,4 +96,10 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
     Page<Writing> findByMemberIdAndWritingStatusOrderByCreatedAtDesc(@Param("memberId") final Long memberId, final Pageable pageable);
 
     Optional<Writing> findByIdAndStatus(final Long id, final WritingStatus status);
+
+    List<Writing> findAllByMember(final Member member);
+
+    @Modifying
+    @Query("delete from Writing w where w = :writing")
+    void deleteImmediately(@Param("writing") final Writing writing);
 }

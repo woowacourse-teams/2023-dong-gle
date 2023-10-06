@@ -101,7 +101,7 @@ public class TistoryConnectionClient {
     }
 
     private MemberCredentials findMemberCredentials(final Member member) {
-        return memberCredentialsRepository.findMemberCredentialsByMember(member)
+        return memberCredentialsRepository.findByMember(member)
                 .orElseThrow(NoSuchElementException::new);
     }
 }

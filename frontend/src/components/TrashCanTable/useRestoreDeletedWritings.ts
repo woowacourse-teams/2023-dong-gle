@@ -3,13 +3,15 @@ import { restoreDeletedWritings as restoreDeletedWritingsAPI } from 'apis/trash'
 import { useToast } from 'hooks/@common/useToast';
 import { HttpError } from 'utils/apis/HttpError';
 
-export const useRestoreDeleteWritings = () => {
+export const useRestoreDeleteWritings = (onSuccessCbFn: () => void) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { mutate } = useMutation(restoreDeletedWritingsAPI, {
     onSuccess: () => {
       toast.show({ type: 'success', message: '글이 복구되었습니다.' });
+      onSuccessCbFn();
       queryClient.invalidateQueries(['deletedWritings']);
+      queryClient.invalidateQueries(['writingsInCategory']);
     },
     onError: (error) => {
       if (error instanceof HttpError) toast.show({ type: 'error', message: error.message });

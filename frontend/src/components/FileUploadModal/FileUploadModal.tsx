@@ -9,6 +9,7 @@ import { usePageNavigate } from 'hooks/usePageNavigate';
 import { useMember } from 'hooks/queries/useMember';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeCategoryIdState } from 'globalState';
+import { KeyboardEventHandler } from 'react';
 
 type Props = {
   isOpen: boolean;
@@ -24,6 +25,10 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
     });
   const { goMyPage } = usePageNavigate();
   const { notion } = useMember();
+
+  const uploadNotionWritingWithEnter: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter') uploadNotionWriting();
+  };
 
   return (
     <Modal
@@ -57,6 +62,7 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
                     placeholder='https://www.notion.so/..'
                     value={inputValue}
                     onChange={setNotionPageLink}
+                    onKeyUp={uploadNotionWritingWithEnter}
                   />
                 </S.Item>
                 <Button block={true} variant='secondary' onClick={uploadNotionWriting}>

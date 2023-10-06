@@ -99,6 +99,10 @@ const S = {
       color: ${({ theme }) => theme.color.gray8};
     }
 
+    tr {
+      height: 4.2rem;
+    }
+
     td {
       .publishedTo {
         display: flex;
@@ -108,7 +112,7 @@ const S = {
 
     th,
     td {
-      padding: 1.1rem;
+      padding: 0 1rem;
       border: 1px solid ${({ theme }) => theme.color.gray5};
     }
 
@@ -124,8 +128,7 @@ const S = {
 
     tbody tr:hover {
       cursor: pointer;
-      transform: scale(1.01);
-      transition: all 300ms;
+      background-color: ${({ theme }) => theme.color.gray3};
     }
   `,
 

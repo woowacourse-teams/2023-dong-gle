@@ -7,8 +7,14 @@ export const useTrashCanTable = (writings: DeletedWriting[]) => {
   const [writingIds, setWritingIds] = useState<number[]>([]);
   const [isAllCheckboxClicked, setIsAllAllCheckboxClicked] = useState(false);
   const rowRef = useRef<HTMLTableRowElement>(null);
-  const deletePermanentWritingsMutation = useDeletePermanentWritings();
-  const restoreDeletedWritingsMutation = useRestoreDeleteWritings();
+  const deletePermanentWritingsMutation = useDeletePermanentWritings(() => {
+    setWritingIds([]);
+    setIsAllAllCheckboxClicked(false);
+  });
+  const restoreDeletedWritingsMutation = useRestoreDeleteWritings(() => {
+    setWritingIds([]);
+    setIsAllAllCheckboxClicked(false);
+  });
 
   useEffect(() => {
     rowRef.current?.focus();

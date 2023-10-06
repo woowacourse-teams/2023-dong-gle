@@ -2,7 +2,7 @@ package org.donggle.backend.ui.response;
 
 import java.util.List;
 
-public record TistoryCategoryListResposne(
+public record TistoryCategoryListResponse(
         List<TistoryCategoryResponse> categories
 ) {
     public record TistoryCategoryResponse(

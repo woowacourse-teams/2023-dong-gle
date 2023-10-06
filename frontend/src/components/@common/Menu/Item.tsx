@@ -23,7 +23,7 @@ const S = {
     height: 4rem;
 
     &:not(:last-child) {
-      border: 1px solid ${({ theme }) => theme.color.gray4};
+      box-shadow: 0px 1px 0px ${({ theme }) => theme.color.gray4};
     }
 
     &:hover {

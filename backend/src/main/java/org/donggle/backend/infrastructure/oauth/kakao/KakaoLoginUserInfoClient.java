@@ -19,12 +19,15 @@ public class KakaoLoginUserInfoClient {
     private final WebClient webClient;
 
     public KakaoLoginUserInfoClient() {
-        this.webClient = WebClient.create();
+        this.webClient = WebClient.create(PROFILE_URL);
+    }
+
+    public KakaoLoginUserInfoClient(final WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public UserInfo request(final String accessToken) {
         return Objects.requireNonNull(webClient.get()
-                .uri(PROFILE_URL)
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> ClientException.handle4xxException(clientResponse.statusCode().value(), KAKAO.name()))

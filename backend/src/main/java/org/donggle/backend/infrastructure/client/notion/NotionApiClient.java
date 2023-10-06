@@ -26,10 +26,18 @@ public class NotionApiClient {
     public static final String PLATFORM_NAME = "Notion";
     private static final String NOTION_URL = "https://api.notion.com/v1";
 
+    private final String notionBaseUrl;
+
     private final WebClient webClient;
 
     public NotionApiClient() {
         this.webClient = WebClient.create(NOTION_URL);
+        this.notionBaseUrl = NOTION_URL;
+    }
+
+    public NotionApiClient(final WebClient webClient, final String notionBaseUrl) {
+        this.webClient = webClient;
+        this.notionBaseUrl = notionBaseUrl;
     }
 
     public NotionBlockNodeResponse retrieveParentBlockNode(final String parentBlockId, final String notionToken) {
@@ -53,7 +61,7 @@ public class NotionApiClient {
     }
 
     private URI getRequestUri(final String blockId, final String blockUrl, final String startCursor) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(NOTION_URL + blockUrl);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(notionBaseUrl + blockUrl);
         if (!startCursor.isEmpty()) {
             uriComponentsBuilder = uriComponentsBuilder.queryParam("start_cursor", startCursor);
         }

@@ -12,11 +12,6 @@ public class ClientNotFoundException extends ClientException {
         this.platformName = platformName;
     }
 
-    public ClientNotFoundException(final String message, final Throwable cause, final String platformName) {
-        super(message, cause);
-        this.platformName = platformName;
-    }
-
     @Override
     public String getHint() {
         return platformName + "에서 자원을 찾을 수 없습니다.";

@@ -19,7 +19,7 @@ public class HtmlStyleRenderer {
 
         return createHtmlStyleText(rawText, startTags, endTags);
     }
-    
+
     private void createTags(final List<Style> styles, final Map<Integer, List<String>> startTags, final Map<Integer, List<String>> endTags) {
         boolean isPrevLink = false;
         boolean isEmptyCaptionLink = false;

@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service;
 
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.service.category.CategoryService;
@@ -21,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
@@ -143,7 +143,7 @@ class ModifyCategoryOrderTest {
         @DisplayName("['1', 2, 3, 4] -> [2, 3, 4, '1']")
         void exceptionalModify1() {
             //when, then
-            assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), basicCategory.getId(), new CategoryModifyRequest(null, -1L)))
+            Assertions.assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), basicCategory.getId(), new CategoryModifyRequest(null, -1L)))
                     .isInstanceOf(InvalidBasicCategoryException.class);
         }
 
@@ -151,7 +151,7 @@ class ModifyCategoryOrderTest {
         @DisplayName("[1, 2, '3', 4] -> ['3', 1, 2, 4]")
         void exceptionalModify2() {
             //when
-            assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), thirdCategory.getId(), new CategoryModifyRequest(null, basicCategory.getId())))
+            Assertions.assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), thirdCategory.getId(), new CategoryModifyRequest(null, basicCategory.getId())))
                     .isInstanceOf(InvalidBasicCategoryException.class);
         }
 

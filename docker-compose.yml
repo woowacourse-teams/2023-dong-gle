@@ -6,7 +6,7 @@ services:
       - 3000
 
   backend:
-    image: ${DOCKER_USERNAME}/dong-gle-backend-${INFRA_PROFILE}
+    image: ${DOCKER_USERNAME}/dong-gle-backend
     expose:
       - 8080
     volumes:

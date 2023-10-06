@@ -62,7 +62,7 @@ public interface WritingRepository extends JpaRepository<Writing, Long> {
             where w.id = :writingId and
             w.status = 'ACTIVE'
             """)
-    Optional<Writing> findByIdWithBlocks(@Param("writingId") Long writingId);
+    Optional<Writing> findByIdWithBlocks(@Param("writingId") final Long writingId);
 
     @Query("SELECT b FROM NormalBlock b LEFT JOIN FETCH b.styles WHERE b IN :blocks")
     List<NormalBlock> findStylesForBlocks(@Param("blocks") List<NormalBlock> blocks);

@@ -7,10 +7,6 @@ public class ExpiredRefreshTokenException extends UnAuthenticationException {
         super(MESSAGE);
     }
 
-    public ExpiredRefreshTokenException(final Throwable cause) {
-        super(MESSAGE, cause);
-    }
-
     @Override
     public String getHint() {
         return "RefreshToken이 만료되었습니다. 다시 로그인을 진행하세요.";

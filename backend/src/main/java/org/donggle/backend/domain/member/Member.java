@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private SocialType socialType;
 
-    private Member(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+    public Member(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
         this.id = id;
         this.memberName = memberName;
         this.socialId = socialId;

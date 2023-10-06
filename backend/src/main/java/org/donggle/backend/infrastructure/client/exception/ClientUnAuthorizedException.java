@@ -11,11 +11,6 @@ public class ClientUnAuthorizedException extends ClientException {
         this.platformName = platformName;
     }
 
-    public ClientUnAuthorizedException(final String platformName, final Throwable cause) {
-        super(MESSAGE, cause);
-        this.platformName = platformName;
-    }
-
     @Override
     public String getHint() {
         return platformName + "에 인증되지 않은 사용자입니다.";

@@ -274,7 +274,7 @@ public class WritingService {
                 .toList();
     }
 
-    private Writing findActiveWriting(Long writingId) {
+    private Writing findActiveWriting(final Long writingId) {
         return writingRepository.findByIdAndStatus(writingId, ACTIVE)
                 .orElseThrow(() -> new WritingNotFoundException(writingId));
     }

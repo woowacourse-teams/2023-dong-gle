@@ -7,10 +7,8 @@ import { GetHomeWritingsResponse } from 'types/apis/writings';
 export const useHomeTable = (initialPageIndex: number) => {
   const [activePage, setActivePage] = useState(initialPageIndex);
   const [fetchOption, setFetchOption] = useState(`?page=${activePage}`);
-  const { data } = useQuery<GetHomeWritingsResponse>(
-    ['homeWritings', fetchOption],
-    () => getHomeWritings(fetchOption),
-    { suspense: true },
+  const { data } = useQuery<GetHomeWritingsResponse>(['homeWritings', fetchOption], () =>
+    getHomeWritings(fetchOption),
   );
   const rowRef = useRef<HTMLTableRowElement>(null);
 

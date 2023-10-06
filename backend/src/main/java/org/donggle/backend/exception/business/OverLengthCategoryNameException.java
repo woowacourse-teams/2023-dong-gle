@@ -9,10 +9,6 @@ public class OverLengthCategoryNameException extends BusinessException {
         super(MESSAGE);
     }
 
-    public OverLengthCategoryNameException(final Throwable cause) {
-        super(MESSAGE, cause);
-    }
-
     @Override
     public String getHint() {
         return "카테고리 이름은 30자를 넘을 수 없습니다.";

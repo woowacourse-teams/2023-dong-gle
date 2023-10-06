@@ -1,11 +1,11 @@
 package org.donggle.backend.ui;
 
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.application.service.request.TokenAddRequest;
 import org.donggle.backend.infrastructure.client.medium.MediumConnectionClient;
 import org.donggle.backend.infrastructure.client.notion.NotionConnectionClient;
 import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
-import org.donggle.backend.application.service.request.TokenAddRequest;
-import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

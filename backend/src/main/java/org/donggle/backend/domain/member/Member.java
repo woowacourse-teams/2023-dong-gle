@@ -33,14 +33,19 @@ public class Member extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private SocialType socialType;
 
-    private Member(final MemberName memberName, final Long socialId, final SocialType socialType) {
+    private Member(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+        this.id = id;
         this.memberName = memberName;
         this.socialId = socialId;
         this.socialType = socialType;
     }
 
     public static Member of(final MemberName memberName, final Long socialId, final SocialType socialType) {
-        return new Member(memberName, socialId, socialType);
+        return of(null, memberName, socialId, socialType);
+    }
+
+    public static Member of(final Long id, final MemberName memberName, final Long socialId, final SocialType socialType) {
+        return new Member(id, memberName, socialId, socialType);
     }
 
     @Override

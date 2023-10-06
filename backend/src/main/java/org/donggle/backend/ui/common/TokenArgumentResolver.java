@@ -13,7 +13,6 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override

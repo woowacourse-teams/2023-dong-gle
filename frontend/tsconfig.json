@@ -14,8 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
-    "types": ["cypress", "@testing-library/cypress", "cypress-real-events", "cypress-file-upload"]
+    "skipLibCheck": true
   },
   "include": ["src", "__tests__"],
   "exclude": ["node_modules"]

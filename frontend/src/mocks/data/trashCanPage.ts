@@ -7,6 +7,11 @@ export const trashcanWritingTable = {
       title: '너 버려진거야',
       categoryId: 1,
     },
+    {
+      id: writingId++,
+      title: '너 버려진거야2',
+      categoryId: 1,
+    },
   ],
 };
 

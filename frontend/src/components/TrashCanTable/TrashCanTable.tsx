@@ -58,6 +58,7 @@ const TrashCanTable = ({ writings }: Props) => {
                   type='checkbox'
                   checked={getIsChecked(id)}
                   onChange={() => toggleCheckbox(id)}
+                  aria-label={`휴지통 글 ${title} 선택`}
                 />
               </td>
               <td

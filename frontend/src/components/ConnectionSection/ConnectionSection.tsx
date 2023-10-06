@@ -46,7 +46,11 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
               <S.PlatformTitle>티스토리</S.PlatformTitle>
             </S.IconContainer>
             {tistory.isConnected ? (
-              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.tistory)}>
+              <Button
+                size='small'
+                onClick={() => disconnect(ConnectionPlatforms.tistory)}
+                aria-label='티스토리 연결 해제하기'
+              >
                 해제하기
               </Button>
             ) : (
@@ -54,6 +58,7 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 variant='secondary'
                 size='small'
                 onClick={() => redirect(ConnectionPlatforms.tistory)}
+                aria-label='티스토리 연결하기'
               >
                 연결하기
               </Button>
@@ -62,10 +67,14 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
           <S.ConnectionItem>
             <S.IconContainer>
               <MediumLogoIcon width={40} height={40} />
-              <S.PlatformTitle>미디움</S.PlatformTitle>
+              <S.PlatformTitle>미디엄</S.PlatformTitle>
             </S.IconContainer>
             {medium.isConnected ? (
-              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.medium)}>
+              <Button
+                size='small'
+                onClick={() => disconnect(ConnectionPlatforms.medium)}
+                aria-label='미디엄 연결 해제하기'
+              >
                 해제하기
               </Button>
             ) : isInputOpen ? (
@@ -79,10 +88,15 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 onBlur={resetInput}
                 onKeyDown={escapeInput}
                 onKeyUp={storeMediumInfo}
-                aria-label='미디움 토큰 입력 창'
+                aria-label='미디엄 토큰 입력 창'
               />
             ) : (
-              <Button variant='secondary' size='small' onClick={openInput}>
+              <Button
+                variant='secondary'
+                size='small'
+                onClick={openInput}
+                aria-label='미디엄 연결하기'
+              >
                 연결하기
               </Button>
             )}
@@ -98,7 +112,11 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
               <S.PlatformTitle>노션</S.PlatformTitle>
             </S.IconContainer>
             {notion.isConnected ? (
-              <Button size='small' onClick={() => disconnect(ConnectionPlatforms.notion)}>
+              <Button
+                size='small'
+                onClick={() => disconnect(ConnectionPlatforms.notion)}
+                aria-label='노션 연결 해제하기'
+              >
                 해제하기
               </Button>
             ) : (
@@ -106,6 +124,7 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
                 variant='secondary'
                 size='small'
                 onClick={() => redirect(ConnectionPlatforms.notion)}
+                aria-label='노션 연결하기'
               >
                 연결하기
               </Button>

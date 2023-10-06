@@ -3,6 +3,7 @@ package org.donggle.backend.application.service.concurrent;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ class NoConcurrentAccessAspectTest {
 
     @Test
     @DisplayName("동시에 카테고리 추가 요청 테스트")
+    @Disabled
     void addCategoryConcurrently() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);

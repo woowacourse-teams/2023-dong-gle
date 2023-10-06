@@ -79,7 +79,6 @@ public class HtmlRenderer {
         final HtmlType htmlType = HtmlType.findByBlockType(block.getBlockType());
         final String depth = renderDepth(block.getDepthValue());
         final String rawText = htmlStyleRenderer.render(block.getRawTextValue(), block.getStyles());
-
         return htmlType.getStartTag() + depth + rawText + htmlType.getEndTag();
     }
 
@@ -95,8 +94,6 @@ public class HtmlRenderer {
             case "plain text" -> htmlType.getStartTag().replace("${language}", "plaintext");
             default -> htmlType.getStartTag().replace("${language}", language);
         };
-
-
         return startTag + rawText + htmlType.getEndTag();
     }
 
@@ -151,7 +148,7 @@ public class HtmlRenderer {
             if (depthDifference > 0) {
                 for (int j = 0; j < depthDifference; j++) {
                     result.append(ends.removeLast());
-                    currentDepth = currentDepth - depthDifference;
+                    currentDepth -= 1;
                 }
                 if ((preBlock.getBlockType() != currentBlock.getBlockType()) && !ends.isEmpty()) {
                     result.append(ends.removeLast());

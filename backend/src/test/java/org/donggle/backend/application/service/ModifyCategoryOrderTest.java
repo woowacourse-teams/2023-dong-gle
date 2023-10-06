@@ -1,179 +1,215 @@
 package org.donggle.backend.application.service;
 
+import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
-import org.donggle.backend.application.repository.WritingRepository;
 import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
+import org.donggle.backend.domain.category.CategoryName;
 import org.donggle.backend.domain.member.Member;
+import org.donggle.backend.domain.member.MemberName;
+import org.donggle.backend.domain.oauth.SocialType;
 import org.donggle.backend.exception.business.InvalidBasicCategoryException;
-import org.donggle.backend.support.fix.CategoryFixture;
+import org.donggle.backend.ui.response.CategoryListResponse;
+import org.donggle.backend.ui.response.CategoryResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
-@ExtendWith(MockitoExtension.class)
+@Transactional
+@SpringBootTest
 class ModifyCategoryOrderTest {
 
-    @InjectMocks
+    @Autowired
     private CategoryService categoryService;
-    @Mock
+    @Autowired
     private MemberRepository memberRepository;
-    @Mock
+    @Autowired
     private CategoryRepository categoryRepository;
-    @Mock
-    private WritingRepository writingRepository;
 
+    private Member member;
+    private Category basicCategory;
+    private Category secondCategory;
+    private Category thirdCategory;
+    private Category fourthCategory;
+
+    @BeforeEach
+    void setUp() {
+        //given
+        member = memberRepository.save(Member.of(
+                new MemberName("테스트 멤버"),
+                1234L,
+                SocialType.KAKAO
+        ));
+
+        basicCategory = categoryRepository.save(Category.of(new CategoryName("기본"), member));
+        secondCategory = categoryRepository.save(Category.of(new CategoryName("두 번째 카테고리"), member));
+        thirdCategory = categoryRepository.save(Category.of(new CategoryName("세 번째 카테고리"), member));
+        fourthCategory = categoryRepository.save(Category.of(new CategoryName("네 번째 카테고리"), member));
+
+        basicCategory.changeNextCategory(secondCategory);
+        secondCategory.changeNextCategory(thirdCategory);
+        thirdCategory.changeNextCategory(fourthCategory);
+    }
 
     @Test
-    @DisplayName("[1, '2', 3] -> [1, 3, '2']")
+    @DisplayName("[1, '2', 3, 4] -> [1, 3, '2', 4]")
     void modifyCategoryOrder2() {
-        // given
-        final Long memberId = 1L;
-        final Long movingCategoryId = 2L;
-        final Long targetCategoryId = 3L;
-        final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
-        final Member member = mock(Member.class);
-        final Category firstCategory = mock(Category.class);
-        final Category movingCategory = mock(Category.class);
-        final Category thirdCategory = mock(Category.class);
-        final Category lastCategory = mock(Category.class);
+        //when
+        categoryService.modifyCategoryOrder(member.getId(), secondCategory.getId(), new CategoryModifyRequest(null, fourthCategory.getId()));
 
-        given(categoryRepository.findByIdAndMemberId(movingCategoryId, memberId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getNextCategory()).willReturn(thirdCategory);
-        given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findLastCategoryByMemberId(memberId)).willReturn(Optional.of(lastCategory));
-        given(categoryRepository.findByIdAndMemberId(targetCategoryId, memberId)).willReturn(Optional.of(thirdCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(movingCategoryId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(targetCategoryId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getId()).willReturn(2L);
-        given(movingCategory.getMember()).willReturn(member);
-        given(member.getId()).willReturn(1L);
-        // when
-        categoryService.modifyCategoryOrder(memberId, movingCategoryId, request);
-
-        // then
-        then(movingCategory).should().changeNextCategoryNull();
-        then(firstCategory).should().changeNextCategory(thirdCategory);
-        then(categoryRepository).should().flush();
-        then(movingCategory).should().changeNextCategory(thirdCategory);
+        //then
+        final CategoryListResponse response = categoryService.findAll(member.getId());
+        assertAll(
+                () -> assertThat(response.categories()).hasSize(4),
+                () -> assertThat(response.categories()).containsExactly(
+                        new CategoryResponse(basicCategory.getId(), "기본"),
+                        new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                        new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                        new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리")
+                )
+        );
     }
 
+    @Test
+    @DisplayName("[1, '2', 3, 4] -> [1, 3, 4, '2']")
+    void modifyCategoryOrder3() {
+        //when
+        categoryService.modifyCategoryOrder(member.getId(), secondCategory.getId(), new CategoryModifyRequest(null, -1L));
+
+        //then
+        final CategoryListResponse response = categoryService.findAll(member.getId());
+        assertAll(
+                () -> assertThat(response.categories()).hasSize(4),
+                () -> assertThat(response.categories()).containsExactly(
+                        new CategoryResponse(basicCategory.getId(), "기본"),
+                        new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                        new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리"),
+                        new CategoryResponse(secondCategory.getId(), "두 번째 카테고리")
+                )
+        );
+    }
 
     @Test
-    @DisplayName("[1, 2, '3'] -> ['3', 1, 2]")
+    @DisplayName("[1, 2, '3', 4] -> [1, '3', 2, 4]")
     void modifyCategoryOrder4() {
-        // given
-        final Long memberId = 1L;
-        final Long movingCategoryId = 3L;
-        final Long targetCategoryId = 1L;
-        final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
-        final Member member = mock(Member.class);
-        final Category firstCategory = mock(Category.class);
-        final Category secondCategory = mock(Category.class);
-        final Category movingCategory = mock(Category.class);
+        //when
+        categoryService.modifyCategoryOrder(member.getId(), thirdCategory.getId(), new CategoryModifyRequest(null, secondCategory.getId()));
 
-        given(categoryRepository.findByIdAndMemberId(movingCategoryId, memberId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getNextCategory()).willReturn(null);
-        given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findByIdAndMemberId(targetCategoryId, memberId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(movingCategoryId)).willReturn(Optional.of(secondCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(targetCategoryId)).willReturn(Optional.of(movingCategory));
-        given(categoryRepository.findLastCategoryByMemberId(memberId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getId()).willReturn(3L);
-        given(movingCategory.getMember()).willReturn(member);
-        given(member.getId()).willReturn(1L);
-
-        // when
-        categoryService.modifyCategoryOrder(memberId, movingCategoryId, request);
-
-        // then
-        then(secondCategory).should().changeNextCategory(null);
-        then(movingCategory).should().changeNextCategory(firstCategory);
-        then(categoryRepository).should().flush();
+        //then
+        final CategoryListResponse response = categoryService.findAll(member.getId());
+        assertAll(
+                () -> assertThat(response.categories()).hasSize(4),
+                () -> assertThat(response.categories()).containsExactly(
+                        new CategoryResponse(basicCategory.getId(), "기본"),
+                        new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                        new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                        new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리")
+                )
+        );
     }
 
     @Test
-    @DisplayName("[1, 2, '3'] -> [1, '3', 2]")
+    @DisplayName("[1, 2, 3, '4'] -> [1, '4', 2, 3]")
     void modifyCategoryOrder5() {
-        // given
-        final Long memberId = 1L;
-        final Long movingCategoryId = 3L;
-        final Long targetCategoryId = 2L;
-        final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
-        final Member member = mock(Member.class);
-        final Category firstCategory = mock(Category.class);
-        final Category secondCategory = mock(Category.class);
-        final Category movingCategory = mock(Category.class);
+        //when
+        categoryService.modifyCategoryOrder(member.getId(), fourthCategory.getId(), new CategoryModifyRequest(null, secondCategory.getId()));
 
-        given(categoryRepository.findByIdAndMemberId(movingCategoryId, memberId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getNextCategory()).willReturn(null);
-        given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findByIdAndMemberId(targetCategoryId, memberId)).willReturn(Optional.of(secondCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(movingCategoryId)).willReturn(Optional.of(secondCategory));
-        given(categoryRepository.findPreCategoryByCategoryId(targetCategoryId)).willReturn(Optional.of(firstCategory));
-        given(categoryRepository.findLastCategoryByMemberId(memberId)).willReturn(Optional.of(movingCategory));
-        given(movingCategory.getId()).willReturn(3L);
-        given(movingCategory.getMember()).willReturn(member);
-        given(member.getId()).willReturn(1L);
-
-        // when
-        categoryService.modifyCategoryOrder(memberId, movingCategoryId, request);
-
-        // then
-        then(firstCategory).should().changeNextCategory(movingCategory);
-        then(movingCategory).should().changeNextCategory(secondCategory);
-        then(categoryRepository).should().flush();
+        //then
+        final CategoryListResponse response = categoryService.findAll(member.getId());
+        assertAll(
+                () -> assertThat(response.categories()).hasSize(4),
+                () -> assertThat(response.categories()).containsExactly(
+                        new CategoryResponse(basicCategory.getId(), "기본"),
+                        new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리"),
+                        new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                        new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리")
+                )
+        );
     }
 
     @Nested
     @DisplayName("예외적인 요청에 대한 처리")
     class ExceptionalCategoryOrderModifyTest {
         @Test
-        @DisplayName("['1', 2, 3] -> [2, 3, '1']")
+        @DisplayName("['1', 2, 3, 4] -> [2, 3, 4, '1']")
         void exceptionalModify1() {
-            final Long memberId = 10L;
-            final Long movingCategoryId = 10L;
-            final Long targetCategoryId = 3L;
-            final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
-            final Category movingCategory = CategoryFixture.basicCategory;
-            given(categoryRepository.findByIdAndMemberId(movingCategoryId, memberId)).willReturn(Optional.of(movingCategory));
-            given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(movingCategory));
-
             //when, then
-            assertThatThrownBy(
-                    () -> categoryService.modifyCategoryOrder(memberId, movingCategoryId, request)
-            ).isInstanceOf(InvalidBasicCategoryException.class);
+            Assertions.assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), basicCategory.getId(), new CategoryModifyRequest(null, -1L)))
+                    .isInstanceOf(InvalidBasicCategoryException.class);
         }
 
         @Test
-        @DisplayName("[1, 2, '3'] -> ['3', 1, 2]")
+        @DisplayName("[1, 2, '3', 4] -> ['3', 1, 2, 4]")
         void exceptionalModify2() {
             //when
-            final Long memberId = 10L;
-            final Long movingCategoryId = 3L;
-            final Long targetCategoryId = 1L;
-            final CategoryModifyRequest request = new CategoryModifyRequest("동글", targetCategoryId);
-            final Category movingCategory = CategoryFixture.categoryBy(3L);
-            given(categoryRepository.findByIdAndMemberId(movingCategoryId, memberId)).willReturn(Optional.of(movingCategory));
-            given(categoryRepository.findFirstByMemberId(memberId)).willReturn(Optional.of(movingCategory));
+            Assertions.assertThatThrownBy(() -> categoryService.modifyCategoryOrder(member.getId(), thirdCategory.getId(), new CategoryModifyRequest(null, basicCategory.getId())))
+                    .isInstanceOf(InvalidBasicCategoryException.class);
+        }
 
-            //when, then
-            assertThatThrownBy(
-                    () -> categoryService.modifyCategoryOrder(memberId, movingCategoryId, request)
-            ).isInstanceOf(InvalidBasicCategoryException.class);
+        @Test
+        @DisplayName("[1, '2', 3, 4] -> [1, '2', 3, 4]")
+        void exceptionalModify3() {
+            //when
+            categoryService.modifyCategoryOrder(member.getId(), secondCategory.getId(), new CategoryModifyRequest(null, thirdCategory.getId()));
+
+            //then
+            final CategoryListResponse response = categoryService.findAll(member.getId());
+            assertAll(
+                    () -> assertThat(response.categories()).hasSize(4),
+                    () -> assertThat(response.categories()).containsExactly(
+                            new CategoryResponse(basicCategory.getId(), "기본"),
+                            new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                            new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                            new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리")
+                    )
+            );
+        }
+
+        @Test
+        @DisplayName("[1, '2', 3, 4] -> [1, '2', 3, 4] (자기 자신을 참조)")
+        void exceptionalModify4() {
+            //when
+            categoryService.modifyCategoryOrder(member.getId(), secondCategory.getId(), new CategoryModifyRequest(null, secondCategory.getId()));
+
+            //then
+            final CategoryListResponse response = categoryService.findAll(member.getId());
+            assertAll(
+                    () -> assertThat(response.categories()).hasSize(4),
+                    () -> assertThat(response.categories()).containsExactly(
+                            new CategoryResponse(basicCategory.getId(), "기본"),
+                            new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                            new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                            new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리")
+                    )
+            );
+        }
+
+        @Test
+        @DisplayName("[1, 2, 3, '4'] -> [1, 2, 3, '4']")
+        void exceptionalModify5() {
+            //when
+            categoryService.modifyCategoryOrder(member.getId(), fourthCategory.getId(), new CategoryModifyRequest(null, -1L));
+
+            //then
+            final CategoryListResponse response = categoryService.findAll(member.getId());
+            assertAll(
+                    () -> assertThat(response.categories()).hasSize(4),
+                    () -> assertThat(response.categories()).containsExactly(
+                            new CategoryResponse(basicCategory.getId(), "기본"),
+                            new CategoryResponse(secondCategory.getId(), "두 번째 카테고리"),
+                            new CategoryResponse(thirdCategory.getId(), "세 번째 카테고리"),
+                            new CategoryResponse(fourthCategory.getId(), "네 번째 카테고리")
+                    )
+            );
         }
     }
 }

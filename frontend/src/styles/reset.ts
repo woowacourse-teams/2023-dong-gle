@@ -21,6 +21,14 @@ export const reset = css`
 
   a {
     text-decoration: none;
+
+    &:link {
+      color: #000000;
+    }
+
+    &:visited {
+      color: #000000;
+    }
   }
 
   button {

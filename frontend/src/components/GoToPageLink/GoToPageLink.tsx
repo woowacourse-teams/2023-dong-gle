@@ -34,9 +34,5 @@ const S = {
     &:hover {
       background-color: ${({ theme }) => theme.color.gray3};
     }
-
-    &:visited {
-      color: ${({ theme }) => theme.color.gray13};
-    }
   `,
 };

@@ -13,7 +13,7 @@ export const memberHandlers = [
   }),
 
   // 회원 탈퇴: POST
-  rest.post(`${memberURL}/delete`, (req, res, ctx) => {
+  rest.delete(`${memberURL}`, (req, res, ctx) => {
     if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
     return res(...withoutJson());

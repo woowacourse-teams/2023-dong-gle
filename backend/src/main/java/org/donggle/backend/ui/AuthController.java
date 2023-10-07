@@ -2,7 +2,7 @@ package org.donggle.backend.ui;
 
 import org.donggle.backend.application.service.auth.AuthFacadeService;
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
-import org.donggle.backend.ui.common.AuthenticationPrincipal;
+import org.donggle.backend.exception.authentication.ExpiredRefreshTokenException;
 import org.donggle.backend.ui.response.AccessTokenResponse;
 import org.donggle.backend.ui.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -60,17 +62,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal final Long memberId) {
-        authFacadeService.logout(memberId);
+    public ResponseEntity<Void> logout(@CookieValue(required = false) final String refreshToken) {
+        if (Objects.nonNull(refreshToken)) {
+            authFacadeService.logout(refreshToken);
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@CookieValue final String refreshToken) {
+    public ResponseEntity<AccessTokenResponse> reissueAccessToken(@CookieValue(required = false) final String refreshToken) {
+        if (Objects.isNull(refreshToken)) {
+            throw new ExpiredRefreshTokenException();
+        }
         final TokenResponse response = authFacadeService.reissueAccessTokenAndRefreshToken(refreshToken);
-
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Set-Cookie", cookie.toString())

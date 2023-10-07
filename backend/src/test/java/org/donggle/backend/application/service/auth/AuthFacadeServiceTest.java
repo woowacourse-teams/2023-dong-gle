@@ -1,6 +1,7 @@
 package org.donggle.backend.application.service.auth;
 
 import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
+import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.domain.oauth.SocialType;
 import org.donggle.backend.infrastructure.oauth.kakao.dto.response.UserInfo;
 import org.donggle.backend.ui.response.TokenResponse;
@@ -26,6 +27,8 @@ class AuthFacadeServiceTest {
     private LoginClients oauthClients;
     @Mock
     private AuthService authService;
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
     @InjectMocks
     private AuthFacadeService authFacadeService;
 
@@ -69,13 +72,13 @@ class AuthFacadeServiceTest {
     @DisplayName("logout 메서드 테스트")
     void testLogout() {
         // given
-        final Long memberId = 1L;
+        given(jwtTokenProvider.getPayload(anyString())).willReturn(1L);
 
         // when
-        authFacadeService.logout(memberId);
+        authFacadeService.logout("validRefreshToken");
 
         // then
-        then(authService).should(times(1)).logout(memberId);
+        then(authService).should(times(1)).logout(1L);
     }
 
     @Test

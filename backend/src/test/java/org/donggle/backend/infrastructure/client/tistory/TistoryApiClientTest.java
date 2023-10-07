@@ -18,9 +18,8 @@ import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +58,7 @@ class TistoryApiClientTest {
         // given
         final String accessToken = "testToken";
         final String content = "<p>Test Content</p>";
-        final LocalDateTime dateTime = Instant.ofEpochMilli(1442286338435L).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        final LocalDateTime dateTime = LocalDateTime.parse("2023-06-01 12:30:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PUBLIC", "", "", "");
         final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
 
@@ -114,7 +113,7 @@ class TistoryApiClientTest {
                             "tags":{
                                 "tag":["open", "api"]
                             },
-                            "date":"1442286338435"
+                            "date":"2023-06-01 12:30:00"
                         }
                     }
                 }
@@ -144,7 +143,7 @@ class TistoryApiClientTest {
         // given
         final String accessToken = "testToken";
         final String content = "<p>Test Content</p>";
-        final LocalDateTime dateTime = Instant.ofEpochMilli(1442286338435L).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        final LocalDateTime dateTime = LocalDateTime.parse("2023-06-01 12:30:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PROTECT", "", "", "");
         final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
 
@@ -199,7 +198,7 @@ class TistoryApiClientTest {
                             "tags":{
                                 "tag":["open", "api"]
                             },
-                            "date":"1442286338435"
+                            "date":"2023-06-01 12:30:00"
                         }
                     }
                 }
@@ -282,7 +281,7 @@ class TistoryApiClientTest {
                             "tags":{
                                 "tag":["open", "api"]
                             },
-                            "date":"1442286338435"
+                            "date":"2023-06-01 12:30:00"
                         }
                     }
                 }
@@ -364,7 +363,7 @@ class TistoryApiClientTest {
                             "tags":{
                                 "tag":["open", "api"]
                             },
-                            "date":"1442286338435"
+                            "date":"2023-06-01 12:30:00"
                         }
                     }
                 }

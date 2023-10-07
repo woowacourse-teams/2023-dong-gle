@@ -4,13 +4,21 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.donggle.backend.infrastructure.client.tistory.util.TistoryTagsDeserializer;
 import org.donggle.backend.ui.response.PublishResponse;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public record TistoryGetWritingResponseWrapper(
         TistoryItemResponse<TistoryGetWritingResponse> tistory
 ) {
+
+    public PublishResponse toPublishResponse() {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return PublishResponse.builder()
+                .dateTime(LocalDateTime.parse(tistory.item().date, formatter))
+                .tags(tistory.item().tags.tags())
+                .url(tistory.item().postUrl)
+                .build();
+    }
 
     public record TistoryGetWritingResponse(
             String url,
@@ -30,13 +38,5 @@ public record TistoryGetWritingResponseWrapper(
             @JsonDeserialize(using = TistoryTagsDeserializer.class)
             TistoryTagsResponse tags
     ) {
-    }
-
-    public PublishResponse toPublishResponse() {
-        return PublishResponse.builder()
-                .dateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(tistory.item().date)), ZoneId.systemDefault()))
-                .tags(tistory.item().tags.tags())
-                .url(tistory.item().postUrl)
-                .build();
     }
 }

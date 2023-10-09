@@ -8,7 +8,7 @@ public class InvalidRefreshTokenException extends UnAuthenticationException {
     }
 
     public InvalidRefreshTokenException(final Throwable cause) {
-        super(null, cause);
+        super(MESSAGE, cause);
     }
 
     @Override

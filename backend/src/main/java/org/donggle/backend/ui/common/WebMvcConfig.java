@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
                 .addPathPatterns("/member/**", "/writings/**", "/categories/**", "/trash/**", "/connections/**", "/auth/**")
-                .excludePathPatterns("/connections/**/redirect", "/auth/login/**", "/auth/token/refresh")
+                .excludePathPatterns("/connections/**/redirect", "/auth/login/**", "/auth/token/refresh", "/auth/logout")
                 .order(2);
     }
 

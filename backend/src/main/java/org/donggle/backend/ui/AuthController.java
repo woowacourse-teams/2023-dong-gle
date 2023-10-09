@@ -71,15 +71,19 @@ public class AuthController {
 
     @PostMapping("/token/refresh")
     public ResponseEntity<AccessTokenResponse> reissueAccessToken(@CookieValue(required = false) final String refreshToken) {
-        if (Objects.isNull(refreshToken)) {
-            throw new ExpiredRefreshTokenException();
-        }
+        validateRefreshToken(refreshToken);
         final TokenResponse response = authFacadeService.reissueAccessTokenAndRefreshToken(refreshToken);
         final ResponseCookie cookie = createRefreshTokenCookie(response.refreshToken());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Set-Cookie", cookie.toString())
                 .body(new AccessTokenResponse(response.accessToken()));
+    }
+
+    private void validateRefreshToken(final String refreshToken) {
+        if (Objects.isNull(refreshToken)) {
+            throw new ExpiredRefreshTokenException();
+        }
     }
 
     private ResponseCookie createRefreshTokenCookie(final String refreshToken) {

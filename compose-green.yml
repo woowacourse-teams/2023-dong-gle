@@ -1,14 +1,10 @@
 version: "3"
 services:
-  frontend:
+  frontend-green:
     image: ${DOCKER_USERNAME}/dong-gle-frontend-${INFRA_PROFILE}
-    ports:
-      - 3001:3000
 
-  backend:
+  backend-green:
     image: ${DOCKER_USERNAME}/dong-gle-backend-${INFRA_PROFILE}
-    ports:
-      - 8081:8080
     volumes:
       - /home/ubuntu/logs/:/logs/
     environment:

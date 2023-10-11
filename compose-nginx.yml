@@ -1,0 +1,13 @@
+version: "3"
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    volumes:
+      - /home/ubuntu/certs/:/etc/nginx/certs/
+      - ./conf-${INFRA_PROFILE}/:/etc/nginx/conf.d/
+      - /home/ubuntu/nginx-logs/:/var/log/nginx/
+    ports:
+      - 80:80
+      - 443:443

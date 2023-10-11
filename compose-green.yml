@@ -13,3 +13,7 @@ services:
       - /home/ubuntu/logs/:/logs/
     environment:
       - SPRING_PROFILES_ACTIVE
+networks:
+  default:
+    external:
+      name: donggle-network

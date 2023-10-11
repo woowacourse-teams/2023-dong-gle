@@ -33,12 +33,32 @@ fi
  
 sleep 10
 INFRA_PROFILE=$1
+
+# 도커 네트워크 이름
+NETWORK_NAME="donggle-network"
+
+# 도커 네트워크가 존재하는지 확인
+sudo docker network inspect $NETWORK_NAME >/dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+  echo "Network '$NETWORK_NAME' already exists, nothing to do here..."
+else
+  echo "Network '$NETWORK_NAME' does not exist, creating..."
+  sudo docker network create $NETWORK_NAME
+
+  if [ $? -eq 0 ]; then
+    echo "Network '$NETWORK_NAME' created successfully!"
+  else
+    echo "Failed to create network '$NETWORK_NAME'"
+    exit 1
+  fi
+fi
  
 # 새로운 컨테이너가 제대로 떴는지 확인
 EXIST_AFTER=$(sudo docker compose -p compose-${AFTER_COMPOSE_COLOR} -f compose-${AFTER_COMPOSE_COLOR}.yml ps | grep Up)
 if [ -n "$EXIST_AFTER" ]; then
   # nginx.config를 컨테이너에 맞게 변경해주고 reload 한다
-  envsubst < conf-${INFRA_PROFILE}/nginx.template > conf-${INFRA_PROFILE}/nginx.conf
+  envsubst '${FRONTEND_PORT},${BACKEND_PORT}' < conf-${INFRA_PROFILE}/nginx.template > conf-${INFRA_PROFILE}/nginx.conf
   sudo docker compose -f compose-nginx.yml exec nginx nginx -s reload
  
   # 이전 컨테이너 종료

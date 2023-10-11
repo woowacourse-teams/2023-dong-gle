@@ -29,8 +29,6 @@ fi
  
 sleep 10
 INFRA_PROFILE=$1
-export BACKEND_PORT=8080
-export FRONTEND_PORT=3000
 
 # 도커 네트워크 이름
 NETWORK_NAME="donggle-network"

@@ -20,9 +20,7 @@ jobs:
           echo "INFRA_PROFILE=${{ vars.INFRA_PROFILE_DEVELOPMENT }}" >> .env
       ## deploy to production
       - name: Deploy to prod
-        env:
-          INFRA_PROFILE: ${{ vars.INFRA_PROFILE_DEVELOPMENT }}
         run: |
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo chmod +x deploy.sh
-          sudo ./deploy.sh
+          sudo ./deploy.sh ${{ vars.INFRA_PROFILE_DEVELOPMENT }}

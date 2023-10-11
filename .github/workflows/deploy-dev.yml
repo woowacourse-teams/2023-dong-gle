@@ -9,20 +9,20 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: [self-hosted,dev]
+    runs-on: [self-hosted, dev]
     steps:
-    - uses: actions/checkout@v3
-    - name: create .env
-      run: |
-        touch .env
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-        echo "SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE_DEVELOPMENT }}" >> .env
-        echo "INFRA_PROFILE=${{ vars.INFRA_PROFILE_DEVELOPMENT }}" >> .env
-    ## deploy to production
-    - name: Deploy to prod
-      run: |
-        sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose down
-        sudo docker compose pull
-        sudo docker compose up -d
-        sudo docker image prune -af
+      - uses: actions/checkout@v3
+      - name: create .env
+        run: |
+          touch .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE_DEVELOPMENT }}" >> .env
+          echo "INFRA_PROFILE=${{ vars.INFRA_PROFILE_DEVELOPMENT }}" >> .env
+      ## deploy to production
+      - name: Deploy to prod
+        env:
+          INFRA_PROFILE: ${{ vars.INFRA_PROFILE_DEVELOPMENT }}
+        run: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo chmod +x deploy.sh
+          sudo ./deploy.sh

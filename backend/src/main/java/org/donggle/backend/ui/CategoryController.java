@@ -2,6 +2,7 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.donggle.backend.application.service.category.CategoryFacadeService;
 import org.donggle.backend.application.service.category.CategoryService;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
@@ -24,6 +25,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
+    private final CategoryFacadeService categoryFacadeService;
     private final CategoryService categoryService;
 
     @PostMapping
@@ -31,7 +33,7 @@ public class CategoryController {
             @AuthenticationPrincipal final Long memberId,
             @Valid @RequestBody final CategoryAddRequest request
     ) {
-        final Long categoryId = categoryService.addCategory(memberId, request);
+        final Long categoryId = categoryFacadeService.addCategory(memberId, request);
         return ResponseEntity.created(URI.create("/categories/" + categoryId)).build();
     }
 

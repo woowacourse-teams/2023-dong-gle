@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.CategoryRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
-import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.request.CategoryModifyRequest;
 import org.donggle.backend.domain.category.Category;
@@ -22,6 +21,7 @@ import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.donggle.backend.ui.response.WritingSimpleResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
 
-    @NoConcurrentExecution
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());

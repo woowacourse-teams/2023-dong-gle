@@ -22,13 +22,14 @@ jobs:
       - name: Create .env.development file
         run: |
           touch .env.development
-          echo "BASE_URL=${{secrets.BASE_URL_DEVELOPMENT}}" >> .env.development
+          echo "BASE_URL=${{vars.API_SERVER_URL_DEVELOPMENT}}" >> .env.development
+          echo "DOMAIN_URL=${{vars.WEB_URL_DEVELOPMENT}}" >> .env.development
 
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           start: yarn start:mocking
-          wait-on: 'http://localhost:3000'
+          wait-on: "http://localhost:3000"
           browser: chrome
           working-directory: ./frontend
         env:

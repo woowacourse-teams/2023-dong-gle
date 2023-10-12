@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.blog;
+package org.donggle.backend.application.service.publish;
 
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.writing.Writing;

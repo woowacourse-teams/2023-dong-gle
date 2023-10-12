@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.blog;
+package org.donggle.backend.application.service.publish;
 
 import org.assertj.core.api.Assertions;
 import org.donggle.backend.application.repository.BlogRepository;

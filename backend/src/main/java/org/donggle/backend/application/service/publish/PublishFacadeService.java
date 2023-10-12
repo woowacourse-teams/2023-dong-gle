@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.blog;
+package org.donggle.backend.application.service.publish;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.request.PublishRequest;

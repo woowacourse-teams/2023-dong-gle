@@ -2,7 +2,7 @@ package org.donggle.backend.ui;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.blog.PublishFacadeService;
+import org.donggle.backend.application.service.publish.PublishFacadeService;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;

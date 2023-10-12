@@ -29,6 +29,7 @@ import org.donggle.backend.ui.response.WritingPropertiesResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -82,6 +83,7 @@ public class WritingService {
         return new MemberCategoryNotionInfo(findMember, category, notionToken);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Writing saveAndGetWriting(final Category findCategory, final Writing writing) {
         if (isNotEmptyCategory(findCategory)) {
             final Writing lastWriting = findLastWritingInCategory(findCategory.getId());

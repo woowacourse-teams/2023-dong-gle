@@ -21,7 +21,6 @@ import org.donggle.backend.ui.response.CategoryResponse;
 import org.donggle.backend.ui.response.CategoryWritingsResponse;
 import org.donggle.backend.ui.response.WritingSimpleResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final WritingRepository writingRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         final Member findMember = findMember(memberId);
         final CategoryName categoryName = new CategoryName(request.categoryName());

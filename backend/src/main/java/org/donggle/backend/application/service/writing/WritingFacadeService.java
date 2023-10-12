@@ -1,7 +1,6 @@
 package org.donggle.backend.application.service.writing;
 
 import lombok.RequiredArgsConstructor;
-import org.donggle.backend.application.service.concurrent.NoConcurrentExecution;
 import org.donggle.backend.application.service.parse.NotionParseService;
 import org.donggle.backend.application.service.request.MarkdownUploadRequest;
 import org.donggle.backend.application.service.request.NotionUploadRequest;
@@ -38,8 +37,8 @@ public class WritingFacadeService {
     private final NotionParseService notionParser;
     private final MarkDownParser markDownParser;
     private final HtmlRenderer htmlRenderer;
+    private final LockRepository lockRepository;
 
-    @NoConcurrentExecution
     public Long uploadMarkDownFile(final Long memberId, final MarkdownUploadRequest request) throws IOException {
         final String originalFilename = request.file().getOriginalFilename();
         if (!Objects.requireNonNull(originalFilename).endsWith(MD_FORMAT)) {
@@ -48,10 +47,11 @@ public class WritingFacadeService {
         final String originalFileText = new String(request.file().getBytes(), StandardCharsets.UTF_8);
         final List<Block> blocks = markDownParser.parse(originalFileText);
 
-        return writingService.saveByFile(memberId, request.categoryId(), originalFilename, blocks);
+        return lockRepository.executeWithLock(
+                memberId.toString(),
+                () -> writingService.saveByFile(memberId, request.categoryId(), originalFilename, blocks));
     }
 
-    @NoConcurrentExecution
     public Long uploadNotionPage(final Long memberId, final NotionUploadRequest request) {
         final NotionApiClient notionApiService = new NotionApiClient();
         final MemberCategoryNotionInfo memberCategoryNotionInfo = writingService.getMemberCategoryNotionInfo(memberId, request.categoryId());
@@ -63,7 +63,9 @@ public class WritingFacadeService {
         final String title = notionApiService.findTitle(parentBlockNode);
         final List<Block> blocks = notionParser.parseBody(bodyBlockNodes);
         final Writing writing = Writing.of(member, new Title(title), category, blocks);
-        return writingService.saveAndGetWriting(category, writing).getId();
+        return lockRepository.executeWithLock(
+                memberId.toString(),
+                () -> writingService.saveAndGetWriting(category, writing).getId());
     }
 
     public WritingResponse findWriting(final Long memberId, final Long writingId) {

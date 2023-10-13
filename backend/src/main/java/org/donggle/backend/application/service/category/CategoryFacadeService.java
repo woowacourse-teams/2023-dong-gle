@@ -3,20 +3,17 @@ package org.donggle.backend.application.service.category;
 import org.donggle.backend.application.service.request.CategoryAddRequest;
 import org.donggle.backend.application.service.writing.LockRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryFacadeService {
     private final CategoryService categoryService;
     private final LockRepository lockRepository;
 
-
     public CategoryFacadeService(final CategoryService categoryService, final LockRepository lockRepository) {
         this.categoryService = categoryService;
         this.lockRepository = lockRepository;
     }
 
-    @Transactional
     public Long addCategory(final Long memberId, final CategoryAddRequest request) {
         return lockRepository.executeWithLock(
                 memberId.toString(),

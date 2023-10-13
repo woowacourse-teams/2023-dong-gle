@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.writing;
+package org.donggle.backend.infrastructure.concurrent;
 
 import org.donggle.backend.application.service.concurrent.ConcurrentAccessException;
 import org.springframework.stereotype.Repository;
@@ -26,7 +26,6 @@ public class LockRepository {
         try (final Connection connection = dataSource.getConnection()) {
             try {
                 getLock(connection, memberId);
-                System.out.println("slkdjflasfljasdf");
                 return supplier.get();
             } finally {
                 releaseLock(connection, memberId);

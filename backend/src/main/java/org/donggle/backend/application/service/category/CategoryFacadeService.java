@@ -1,7 +1,7 @@
 package org.donggle.backend.application.service.category;
 
 import org.donggle.backend.application.service.request.CategoryAddRequest;
-import org.donggle.backend.application.service.writing.LockRepository;
+import org.donggle.backend.infrastructure.concurrent.LockRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -15,6 +15,7 @@ import org.donggle.backend.domain.writing.block.Block;
 import org.donggle.backend.exception.business.InvalidFileFormatException;
 import org.donggle.backend.infrastructure.client.notion.NotionApiClient;
 import org.donggle.backend.infrastructure.client.notion.dto.response.NotionBlockNodeResponse;
+import org.donggle.backend.infrastructure.concurrent.LockRepository;
 import org.donggle.backend.ui.response.WritingHomeResponse;
 import org.donggle.backend.ui.response.WritingListWithCategoryResponse;
 import org.donggle.backend.ui.response.WritingPropertiesResponse;

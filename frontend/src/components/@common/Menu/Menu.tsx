@@ -56,6 +56,7 @@ const S = {
     width: 20rem;
 
     border: 1px solid ${({ theme }) => theme.color.gray4};
+    border-radius: 4px;
     background-color: ${({ theme }) => theme.color.gray1};
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   `,

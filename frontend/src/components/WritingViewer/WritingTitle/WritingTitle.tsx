@@ -38,20 +38,24 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
   });
 
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key !== 'Enter') return;
+    try {
+      if (e.key !== 'Enter') return;
 
-    const writingTitle = e.currentTarget.value.trim();
+      const writingTitle = e.currentTarget.value.trim();
 
-    validateWritingTitle(writingTitle);
+      validateWritingTitle(writingTitle);
 
-    resetInput();
+      resetInput();
 
-    updateWritingTitle({
-      writingId,
-      body: {
-        title: writingTitle,
-      },
-    });
+      updateWritingTitle({
+        writingId,
+        body: {
+          title: writingTitle,
+        },
+      });
+    } catch (error) {
+      toast.show({ type: 'error', message: getErrorMessage(error) });
+    }
   };
 
   useEffect(() => {

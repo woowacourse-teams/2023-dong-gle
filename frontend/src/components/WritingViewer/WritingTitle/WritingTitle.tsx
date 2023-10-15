@@ -124,5 +124,9 @@ const S = {
       border: 1px solid ${theme.color.gray1};
       outline: 1px solid ${theme.color.gray1};
     `}
+    ${({ disabled }) => css`
+      background-color: ${disabled ? 'initial' : 'desiredColor'};
+      color: ${disabled ? 'initial' : 'desiredColor'};
+    `}
   `,
 };

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { css, styled } from 'styled-components';
 import { PencilIcon } from 'assets/icons';
-import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
 import { updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
 import { KeyboardEventHandler, useEffect, useRef } from 'react';
 import { getErrorMessage } from 'utils/error';
 import { useToast } from 'hooks/@common/useToast';
 import { validateWritingTitle } from 'utils/validators';
+import useControlledInput from 'hooks/@common/useControlledInput';
 
 type Props = {
   writingId: number;
@@ -17,12 +17,14 @@ type Props = {
 
 const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Props) => {
   const {
+    value: inputTitle,
+    setValue: setInputTitle,
     inputRef,
     escapeInput: escapeRename,
     isInputOpen,
     openInput,
     resetInput,
-  } = useUncontrolledInput();
+  } = useControlledInput(title);
   const myRef = useRef<HTMLHeadingElement>(null);
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -64,28 +66,25 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
 
   return (
     <S.TitleWrapper>
-      {isInputOpen ? (
+      <>
         <S.Input
           type='text'
           placeholder='새 제목을 입력해주세요'
           defaultValue={title}
+          value={inputTitle}
           ref={inputRef}
+          onChange={(e: any) => setInputTitle(e.target.value)}
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
+          disabled={!isInputOpen}
         />
-      ) : (
-        <>
-          <S.Title ref={myRef} tabIndex={0}>
-            {title}
-          </S.Title>
-          {canEditTitle && (
-            <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
-              <PencilIcon width={20} height={20} />
-            </S.Button>
-          )}
-        </>
-      )}
+        {!isInputOpen && canEditTitle && (
+          <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
+            <PencilIcon width={20} height={20} />
+          </S.Button>
+        )}
+      </>
     </S.TitleWrapper>
   );
 };

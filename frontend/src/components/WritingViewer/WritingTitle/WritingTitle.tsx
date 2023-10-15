@@ -6,6 +6,8 @@ import { KeyboardEventHandler, useEffect, useRef } from 'react';
 import { getErrorMessage } from 'utils/error';
 import { useToast } from 'hooks/@common/useToast';
 import { validateWritingTitle } from 'utils/validators';
+import { GetWritingResponse } from 'types/apis/writings';
+import { GetCategoryDetailResponse } from 'types/apis/category';
 import useControlledInput from 'hooks/@common/useControlledInput';
 
 type Props = {
@@ -30,12 +32,48 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
   const toast = useToast();
 
   const { mutate: updateWritingTitle } = useMutation(updateWritingTitleRequest, {
-    onSuccess: () => {
+    onMutate: async ({ writingId, body: { title } }) => {
+      await queryClient.cancelQueries(['writings', writingId]);
+      await queryClient.cancelQueries(['writingsInCategory', categoryId]);
+
+      const previousWritings = queryClient.getQueryData<GetWritingResponse>([
+        'writings',
+        writingId,
+      ]);
+      const previousWritingsInCategory = queryClient.getQueryData<GetCategoryDetailResponse>([
+        'writingsInCategory',
+        categoryId,
+      ]);
+
+      previousWritings &&
+        queryClient.setQueryData(['writings', writingId], (old: any) => {
+          return { ...old, title };
+        });
+
+      previousWritingsInCategory &&
+        queryClient.setQueryData(['writingsInCategory', categoryId], (old: any) => {
+          return {
+            ...old,
+            writings: old.writings.map((writing: any) => {
+              return writing.id === writingId ? { id: writing.id, title } : writing;
+            }),
+          };
+        });
+
+      return { previousWritings, previousWritingsInCategory };
+    },
+    onError: (error, _, context) => {
+      setInputTitle(context?.previousWritings?.title || '');
+      queryClient.setQueryData(['writings', writingId], context?.previousWritings);
+      queryClient.setQueryData(
+        ['writingsInCategory', categoryId],
+        context?.previousWritingsInCategory,
+      );
+      toast.show({ type: 'error', message: '글 제목 수정에 실패했습니다.' });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries(['writings', writingId]);
       queryClient.invalidateQueries(['writingsInCategory', categoryId]);
-    },
-    onError: (error) => {
-      toast.show({ type: 'error', message: getErrorMessage(error) });
     },
   });
 

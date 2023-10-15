@@ -23,12 +23,13 @@ describe('글 페이지', () => {
 
   describe('글 테스트', () => {
     it('글 제목을 변경한다.', () => {
+      cy.findByLabelText('기본 카테고리 왼쪽 사이드바에서 열기').click().wait(1000);
+
       cy.findByLabelText('글 제목 수정').click();
-      cy.findByPlaceholderText('새 제목을 입력해주세요')
-        .focus()
-        .type('새로운 제목이에요{enter}')
-        .wait(1000);
-      cy.findByText('새로운 제목이에요').should('exist');
+      cy.findByPlaceholderText('새 제목을 입력해주세요').focus().type('짜잔{enter}').wait(1000);
+
+      cy.findAllByDisplayValue('동글을 소개합니다 🎉짜잔').should('exist');
+      cy.findAllByDisplayValue('동글을 소개합니다 🎉').should('not.exist');
     });
 
     it('발행 하기 탭이 있다.', () => {

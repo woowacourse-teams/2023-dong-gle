@@ -169,3 +169,8 @@ export const addRestoredWritings = (writingIds: number[]) => {
     }),
   );
 };
+
+// 기본 카테고리의 첫 글에서 변경
+export const renameWritingTitleIn사이드바기본카테고리 = (newTitle: string) => {
+  writingsIn사이드바기본카테고리.writings[0].title = newTitle;
+};

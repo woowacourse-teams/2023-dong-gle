@@ -25,33 +25,33 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
   } = useUncontrolledInput();
   const myRef = useRef<HTMLHeadingElement>(null);
   const queryClient = useQueryClient();
+  const toast = useToast();
+
   const { mutate: updateWritingTitle } = useMutation(updateWritingTitleRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['writings', writingId]);
       queryClient.invalidateQueries(['writingsInCategory', categoryId]);
     },
+    onError: (error) => {
+      toast.show({ type: 'error', message: getErrorMessage(error) });
+    },
   });
-  const toast = useToast();
 
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    try {
-      if (e.key !== 'Enter') return;
+    if (e.key !== 'Enter') return;
 
-      const writingTitle = e.currentTarget.value.trim();
+    const writingTitle = e.currentTarget.value.trim();
 
-      validateWritingTitle(writingTitle);
+    validateWritingTitle(writingTitle);
 
-      resetInput();
+    resetInput();
 
-      updateWritingTitle({
-        writingId,
-        body: {
-          title: writingTitle,
-        },
-      });
-    } catch (error) {
-      toast.show({ type: 'error', message: getErrorMessage(error) });
-    }
+    updateWritingTitle({
+      writingId,
+      body: {
+        title: writingTitle,
+      },
+    });
   };
 
   useEffect(() => {

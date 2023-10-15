@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { css, styled } from 'styled-components';
 import { PencilIcon } from 'assets/icons';
 import { updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
-import { KeyboardEventHandler, useEffect, useRef } from 'react';
+import { ChangeEvent, KeyboardEventHandler, useEffect, useRef } from 'react';
 import { getErrorMessage } from 'utils/error';
 import { useToast } from 'hooks/@common/useToast';
 import { validateWritingTitle } from 'utils/validators';
@@ -111,7 +111,7 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
           defaultValue={title}
           value={inputTitle}
           ref={inputRef}
-          onChange={(e: any) => setInputTitle(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setInputTitle(e.target.value)}
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}

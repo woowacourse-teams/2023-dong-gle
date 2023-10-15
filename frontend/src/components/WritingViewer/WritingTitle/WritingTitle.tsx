@@ -104,7 +104,7 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
 
   return (
     <S.TitleWrapper>
-      <>
+      {isInputOpen ? (
         <S.Input
           type='text'
           placeholder='새 제목을 입력해주세요'
@@ -117,12 +117,18 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
           onKeyUp={requestChangedName}
           disabled={!isInputOpen}
         />
-        {!isInputOpen && canEditTitle && (
-          <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
-            <PencilIcon width={20} height={20} />
-          </S.Button>
-        )}
-      </>
+      ) : (
+        <>
+          <S.Title ref={myRef} tabIndex={0}>
+            {inputTitle}
+          </S.Title>
+          {canEditTitle && (
+            <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
+              <PencilIcon width={20} height={20} />
+            </S.Button>
+          )}
+        </>
+      )}
     </S.TitleWrapper>
   );
 };

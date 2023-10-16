@@ -6,6 +6,7 @@ import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.request.PublishWritingRequest;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;

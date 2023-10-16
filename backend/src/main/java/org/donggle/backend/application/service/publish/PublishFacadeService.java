@@ -2,6 +2,7 @@ package org.donggle.backend.application.service.publish;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.application.service.request.PublishWritingRequest;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogClients;
 import org.donggle.backend.domain.blog.BlogType;
@@ -21,6 +22,7 @@ public class PublishFacadeService {
         final PublishWritingRequest request = publishService.findPublishWriting(memberId, writingId, blogType);
         final Blog blog = request.blog();
         final Writing writing = request.writing();
+
 
         final String content = htmlRenderer.render(writing.getBlocks());
 

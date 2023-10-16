@@ -4,10 +4,12 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.service.request.ImageUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.member.Member;
 import org.donggle.backend.domain.member.MemberCredentials;
 import org.donggle.backend.exception.business.InvalidPublishRequestException;
+import org.donggle.backend.ui.response.ImageUploadResponse;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.ui.response.TistoryCategoryListResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +17,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,6 +37,38 @@ import static org.mockito.Mockito.mock;
 
 class TistoryApiClientTest {
 
+    public static final String BLOG_NAME_RESPONSE = """
+            {
+               "tistory": {
+                 "status": "200",
+                 "item": {
+                   "id": "blog_oauth_test@daum.net",
+                   "userId": "12345",
+                   "blogs": [
+                     {
+                       "name": "oauth-test",
+                       "default": "Y",
+                       "blogIconUrl": "https://blog_icon_url",
+                       "faviconUrl": "https://favicon_url",
+                       "profileThumbnailImageUrl": "https://profile_image",
+                       "profileImageUrl": "https://profile_image",
+                       "role": "소유자",
+                       "blogId": "123",
+                       "statistics": {
+                         "post": "182",
+                         "comment": "146",
+                         "trackback": "0",
+                         "guestbook": "39",
+                         "invitation": "0"
+                       }
+                     }
+                   ]
+                 }
+               }
+             }
+            """;
+    private final Member member = mock(Member.class);
+    private final MemberCredentials memberCredentials = mock(MemberCredentials.class);
     private MemberRepository memberRepository;
     private MemberCredentialsRepository memberCredentialsRepository;
     private MockWebServer mockWebServer;
@@ -63,36 +100,6 @@ class TistoryApiClientTest {
         final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
 
         final String titleValue = "Test Title";
-        final String defaultBlogName = """
-                {
-                   "tistory": {
-                     "status": "200",
-                     "item": {
-                       "id": "blog_oauth_test@daum.net",
-                       "userId": "12345",
-                       "blogs": [
-                         {
-                           "name": "oauth-test",
-                           "default": "Y",
-                           "blogIconUrl": "https://blog_icon_url",
-                           "faviconUrl": "https://favicon_url",
-                           "profileThumbnailImageUrl": "https://profile_image",
-                           "profileImageUrl": "https://profile_image",
-                           "role": "소유자",
-                           "blogId": "123",
-                           "statistics": {
-                             "post": "182",
-                             "comment": "146",
-                             "trackback": "0",
-                             "guestbook": "39",
-                             "invitation": "0"
-                           }
-                         }
-                       ]
-                     }
-                   }
-                 }
-                """;
         final String publishResponseBody = """
                 {
                     "tistory": {
@@ -120,14 +127,11 @@ class TistoryApiClientTest {
                 """;
 
 
-        final Member member = mock(Member.class);
-        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
-
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishPropertyResponseBody).addHeader("Content-Type", "application/json"));
 
         // when
@@ -148,36 +152,6 @@ class TistoryApiClientTest {
         final PublishResponse expectedResponse = PublishResponse.builder().dateTime(dateTime).tags(List.of("open", "api")).url("http://sampleUrl.tistory.com/74").build();
 
         final String titleValue = "Test Title";
-        final String defaultBlogName = """
-                {
-                   "tistory": {
-                     "status": "200",
-                     "item": {
-                       "id": "blog_oauth_test@daum.net",
-                       "userId": "12345",
-                       "blogs": [
-                         {
-                           "name": "oauth-test",
-                           "default": "Y",
-                           "blogIconUrl": "https://blog_icon_url",
-                           "faviconUrl": "https://favicon_url",
-                           "profileThumbnailImageUrl": "https://profile_image",
-                           "profileImageUrl": "https://profile_image",
-                           "role": "소유자",
-                           "blogId": "123",
-                           "statistics": {
-                             "post": "182",
-                             "comment": "146",
-                             "trackback": "0",
-                             "guestbook": "39",
-                             "invitation": "0"
-                           }
-                         }
-                       ]
-                     }
-                   }
-                 }
-                """;
         final String publishResponseBody = """
                 {
                     "tistory": {
@@ -205,14 +179,11 @@ class TistoryApiClientTest {
                 """;
 
 
-        final Member member = mock(Member.class);
-        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
-
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishPropertyResponseBody).addHeader("Content-Type", "application/json"));
 
         // when
@@ -231,36 +202,6 @@ class TistoryApiClientTest {
         final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PUBLIC", "", "", "2001-06-01 12:30:00.000");
 
         final String titleValue = "Test Title";
-        final String defaultBlogName = """
-                {
-                   "tistory": {
-                     "status": "200",
-                     "item": {
-                       "id": "blog_oauth_test@daum.net",
-                       "userId": "12345",
-                       "blogs": [
-                         {
-                           "name": "oauth-test",
-                           "default": "Y",
-                           "blogIconUrl": "https://blog_icon_url",
-                           "faviconUrl": "https://favicon_url",
-                           "profileThumbnailImageUrl": "https://profile_image",
-                           "profileImageUrl": "https://profile_image",
-                           "role": "소유자",
-                           "blogId": "123",
-                           "statistics": {
-                             "post": "182",
-                             "comment": "146",
-                             "trackback": "0",
-                             "guestbook": "39",
-                             "invitation": "0"
-                           }
-                         }
-                       ]
-                     }
-                   }
-                 }
-                """;
         final String publishResponseBody = """
                 {
                     "tistory": {
@@ -288,14 +229,11 @@ class TistoryApiClientTest {
                 """;
 
 
-        final Member member = mock(Member.class);
-        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
-
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishPropertyResponseBody).addHeader("Content-Type", "application/json"));
 
         // when
@@ -313,36 +251,6 @@ class TistoryApiClientTest {
         final PublishRequest publishRequest = new PublishRequest(List.of("tag1", "tag2"), "PUBLIC", "", "", "1231254323");
 
         final String titleValue = "Test Title";
-        final String defaultBlogName = """
-                {
-                   "tistory": {
-                     "status": "200",
-                     "item": {
-                       "id": "blog_oauth_test@daum.net",
-                       "userId": "12345",
-                       "blogs": [
-                         {
-                           "name": "oauth-test",
-                           "default": "Y",
-                           "blogIconUrl": "https://blog_icon_url",
-                           "faviconUrl": "https://favicon_url",
-                           "profileThumbnailImageUrl": "https://profile_image",
-                           "profileImageUrl": "https://profile_image",
-                           "role": "소유자",
-                           "blogId": "123",
-                           "statistics": {
-                             "post": "182",
-                             "comment": "146",
-                             "trackback": "0",
-                             "guestbook": "39",
-                             "invitation": "0"
-                           }
-                         }
-                       ]
-                     }
-                   }
-                 }
-                """;
         final String publishResponseBody = """
                 {
                     "tistory": {
@@ -370,14 +278,11 @@ class TistoryApiClientTest {
                 """;
 
 
-        final Member member = mock(Member.class);
-        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
-
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishResponseBody).addHeader("Content-Type", "application/json"));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(defaultBlogName).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publishPropertyResponseBody).addHeader("Content-Type", "application/json"));
 
         // When
@@ -422,14 +327,11 @@ class TistoryApiClientTest {
                       }
                     }
                 """;
-
-        final Member member = mock(Member.class);
-        final MemberCredentials memberCredentials = mock(MemberCredentials.class);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
         given(memberCredentialsRepository.findByMember(any(Member.class))).willReturn(Optional.of(memberCredentials));
         given(memberCredentials.getTistoryToken()).willReturn(Optional.of(accessToken));
         given(memberCredentials.isTistoryConnected()).willReturn(true);
-        given(memberCredentials.getTistoryBlogName()).willReturn(Optional.of("jeoninpyo726"));
+        given(memberCredentials.getTistoryBlogName()).willReturn(Optional.of("testBlog"));
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(categoryListResponse).addHeader("Content-Type", "application/json"));
 
@@ -438,5 +340,37 @@ class TistoryApiClientTest {
 
         // Then
         assertThat(response.categories()).anyMatch(category -> categories.contains(category.name()));
+    }
+
+    @Test
+    @DisplayName("Tistory 파일 업로드 테스트")
+    void attachFile() {
+        //given
+        final Long memberId = 1L;
+        final String accessToken = "testToken";
+        final String blogName = "testBlog";
+        final Flux<DataBuffer> imageData = Flux.just(mock(DataBuffer.class));
+        final ImageUploadRequest imageUploadRequest = new ImageUploadRequest(imageData, MediaType.IMAGE_PNG);
+
+        final String fileUploadResponse = """
+                {
+                    "tistory": {
+                        "status": "200",
+                        "url": "http://cfile1.uf.tistory.com/image/dddd",
+                        "replacer": "http://cfile1.uf.tistory.com/image/dddd"
+                    }
+                }
+                """;
+
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(BLOG_NAME_RESPONSE).addHeader("Content-Type", "application/json"));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(fileUploadResponse).addHeader("Content-Type", "application/json"));
+
+        System.out.println("enqueue");
+        //when
+        final ImageUploadResponse imageUploadResponse = tistoryApiClient.uploadImage(accessToken, imageUploadRequest);
+
+        System.out.println("uploadImage");
+        //then
+        assertThat(imageUploadResponse.url()).isEqualTo("http://cfile1.uf.tistory.com/image/dddd");
     }
 }

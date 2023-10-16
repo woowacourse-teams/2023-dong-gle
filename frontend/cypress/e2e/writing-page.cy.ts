@@ -1,4 +1,5 @@
 import { MOCK_ACCESS_TOKEN } from '../../src/mocks/auth';
+import { overrideWritingTitleWithError } from '../overrideHandler/writing';
 
 describe('글 페이지', () => {
   beforeEach(() => {
@@ -50,6 +51,20 @@ describe('글 페이지', () => {
 
     it('발행 하기 탭이 없다.', () => {
       cy.findByLabelText('발행 하기').should('not.exist');
+    });
+  });
+
+  describe('에러 테스트', () => {
+    it('글 제목 변경에 실패한다.', () => {
+      overrideWritingTitleWithError();
+
+      cy.findByLabelText('기본 카테고리 왼쪽 사이드바에서 열기').click().wait(1000);
+
+      cy.findByLabelText('글 제목 수정').click();
+      cy.findByPlaceholderText('새 제목을 입력해주세요').focus().type('짜잔{enter}').wait(1000);
+
+      cy.findAllByText('동글을 소개합니다 🎉').should('exist');
+      cy.findByText('글 제목 수정에 실패했습니다.').should('exist');
     });
   });
 });

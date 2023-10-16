@@ -115,7 +115,6 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
-          disabled={!isInputOpen}
         />
       ) : (
         <>

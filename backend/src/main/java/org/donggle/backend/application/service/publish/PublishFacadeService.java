@@ -11,8 +11,12 @@ import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.renderer.html.HtmlRenderer;
 import org.donggle.backend.domain.writing.BlockType;
 import org.donggle.backend.domain.writing.Writing;
+import org.donggle.backend.domain.writing.block.Block;
+import org.donggle.backend.domain.writing.block.Depth;
 import org.donggle.backend.domain.writing.block.ImageBlock;
 import org.donggle.backend.domain.writing.block.ImageUrl;
+import org.donggle.backend.domain.writing.block.NormalBlock;
+import org.donggle.backend.domain.writing.block.RawText;
 import org.donggle.backend.ui.response.ImageUploadResponse;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.net.URLConnection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,22 +40,30 @@ public class PublishFacadeService {
         final PublishWritingRequest request = publishService.findPublishWriting(memberId, writingId, blogType);
         final Blog blog = request.blog();
         final Writing writing = request.writing();
+        final List<Block> blocks = writing.getBlocks();
+        if (blogType == BlogType.TISTORY) {
+            replaceTistoryImage(blogType, blocks, request.accessToken());
+        }
 
-        writing.getBlocks().stream()
-                .filter(block -> block.getBlockType() == BlockType.IMAGE)
-                .map(block -> (ImageBlock) block)
-                .forEach(imageBlock -> {
-                    final ImageUrl imageUrl = imageBlock.getImageUrl();
-                    final Flux<DataBuffer> imageData = fileDownloadClient.downloadAsFlux(imageUrl.getImageUrl());
-                    final MediaType mediaType = parseMediaTypeFromFileName(imageUrl.getImageUrl());
-                    final ImageUploadRequest imageUploadRequest = new ImageUploadRequest(imageData, mediaType);
-                    final ImageUploadResponse imageUploadResponse = blogClients.uploadImage(blogType, request.accessToken(), imageUploadRequest);
-                    imageBlock.updateImageUrl(new ImageUrl(imageUploadResponse.url()));
-                });
-        final String content = htmlRenderer.render(writing.getBlocks());
+        final String content = htmlRenderer.render(blocks);
 
         final PublishResponse response = blogClients.publish(blogType, publishRequest, content, request.accessToken(), writing.getTitleValue());
         publishService.saveProperties(blog, writing, response);
+    }
+
+    private void replaceTistoryImage(final BlogType blogType, final List<Block> blocks, final String accessToken) {
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i).getBlockType() == BlockType.IMAGE) {
+                final ImageBlock imageBlock = (ImageBlock) blocks.get(i);
+                final ImageUrl imageUrl = imageBlock.getImageUrl();
+                final Flux<DataBuffer> imageData = fileDownloadClient.downloadAsFlux(imageUrl.getImageUrl());
+                final MediaType mediaType = parseMediaTypeFromFileName(imageUrl.getImageUrl());
+                final ImageUploadRequest imageUploadRequest = new ImageUploadRequest(imageData, mediaType);
+                final ImageUploadResponse imageUploadResponse = blogClients.uploadImage(blogType, accessToken, imageUploadRequest);
+                final NormalBlock imageReplacer = new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from(imageUploadResponse.replacer()), List.of());
+                blocks.set(i, imageReplacer);
+            }
+        }
     }
 
     private MediaType parseMediaTypeFromFileName(final String fileName) {

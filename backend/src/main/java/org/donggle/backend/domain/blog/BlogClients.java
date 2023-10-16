@@ -1,7 +1,9 @@
 package org.donggle.backend.domain.blog;
 
 import org.donggle.backend.application.client.BlogClient;
+import org.donggle.backend.application.service.request.ImageUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
+import org.donggle.backend.ui.response.ImageUploadResponse;
 import org.donggle.backend.ui.response.PublishResponse;
 
 import java.util.EnumMap;
@@ -32,5 +34,10 @@ public class BlogClients {
     private BlogClient getClient(final BlogType blogType) {
         return Optional.ofNullable(clients.get(blogType))
                 .orElseThrow(() -> new IllegalArgumentException("해당 블로그는 지원하지 않습니다."));
+    }
+
+    public ImageUploadResponse uploadImage(final BlogType blogType, final String accessToken, final ImageUploadRequest imageUploadRequest) {
+        final BlogClient client = getClient(blogType);
+        return client.uploadImage(accessToken, imageUploadRequest);
     }
 }

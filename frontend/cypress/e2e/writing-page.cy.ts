@@ -28,8 +28,8 @@ describe('글 페이지', () => {
       cy.findByLabelText('글 제목 수정').click();
       cy.findByPlaceholderText('새 제목을 입력해주세요').focus().type('짜잔{enter}').wait(1000);
 
-      cy.findAllByDisplayValue('동글을 소개합니다 🎉짜잔').should('exist');
-      cy.findAllByDisplayValue('동글을 소개합니다 🎉').should('not.exist');
+      cy.findAllByText('동글을 소개합니다 🎉짜잔').should('exist');
+      cy.findAllByText('동글을 소개합니다 🎉').should('not.exist');
     });
 
     it('발행 하기 탭이 있다.', () => {

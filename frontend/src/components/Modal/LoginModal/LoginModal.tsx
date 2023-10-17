@@ -30,20 +30,35 @@ const S = {
     gap: 3rem;
     width: 50vw;
     height: 20vh;
-    max-width: 40rem;
   `,
+
   Title: styled.h1`
     font-size: 2rem;
     font-weight: 700;
+
+    @media (max-width: 320px) {
+      font-size: 2rem;
+      font-weight: 600;
+    }
   `,
+
   Content: styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 7rem;
+    width: 100%;
     height: 100%;
     margin: 2rem 0;
     font-size: 1.3rem;
+
+    @media (max-width: 768px) {
+      margin: 1.6rem 0;
+    }
+
+    @media (max-width: 320px) {
+      margin: 1.2rem 0;
+    }
   `,
 };

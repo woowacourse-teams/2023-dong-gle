@@ -20,7 +20,7 @@ export default KakaoLoginButton;
 const S = {
   KakaoLoginButton: styled.button`
     display: flex;
-    width: 300px;
+    width: 100%;
     height: 45px;
     justify-content: center;
     align-items: center;
@@ -37,5 +37,9 @@ const S = {
 
   KakaoLoginText: styled.span`
     flex: 1;
+
+    @media (max-width: 320px) {
+      display: none;
+    }
   `,
 };

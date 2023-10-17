@@ -19,6 +19,10 @@ public class ImageUrl {
         this.imageUrl = imageUrl;
     }
 
+    public boolean isUploadedAtDonggle() {
+        return imageUrl.contains("image.donggle.blog");
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

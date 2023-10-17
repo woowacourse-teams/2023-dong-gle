@@ -1,8 +1,13 @@
 package org.donggle.backend.infrastructure.file;
 
+import org.donggle.backend.application.client.FileDownloadClient;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Optional;
@@ -24,5 +29,14 @@ public class SyncFileDownloadClient implements FileDownloadClient {
         } catch (final Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Flux<DataBuffer> downloadAsFlux(final String url) {
+        final WebClient webClient = WebClient.create();
+        return webClient.get()
+                .uri(URI.create(url))
+                .retrieve()
+                .bodyToFlux(DataBuffer.class);
     }
 }

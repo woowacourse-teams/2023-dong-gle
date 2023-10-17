@@ -1,4 +1,4 @@
-package org.donggle.backend.infrastructure.file;
+package org.donggle.backend.application.client;
 
 import org.springframework.http.MediaType;
 

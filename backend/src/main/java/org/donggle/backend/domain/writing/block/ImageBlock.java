@@ -33,6 +33,10 @@ public class ImageBlock extends Block {
         this.imageCaption = imageCaption;
     }
 
+    public void updateImageUrl(final ImageUrl imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getImageUrlValue() {
         return imageUrl.getImageUrl();
     }

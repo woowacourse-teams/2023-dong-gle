@@ -1,6 +1,8 @@
 package org.donggle.backend.infrastructure.file;
 
+import org.donggle.backend.application.client.FileDownloadClient;
 import org.donggle.backend.application.client.FileHandlerClient;
+import org.donggle.backend.application.client.FileUploadClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 

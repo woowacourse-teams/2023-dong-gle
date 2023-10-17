@@ -1,12 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSetGlobalState } from '@yogjin/react-global-state';
 import { getDetailWritings } from 'apis/writings';
 import { EmptyWritingTableIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
-import { activeCategoryIdState } from 'globalState';
 import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
-import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';

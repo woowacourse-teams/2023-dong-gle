@@ -54,14 +54,27 @@ const S = {
     gap: 1rem;
     height: 100%;
     margin: 2rem 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   `,
   ButtonContainer: styled.div`
     display: flex;
     gap: 1rem;
+
     button {
       padding: 1rem 6rem;
       border-radius: 8px;
+
+      @media (max-width: 768px) {
+        padding: 0.8rem 4rem;
+      }
+
+      @media (max-width: 480px) {
+        padding: 0.6rem 2rem;
+      }
+
+      @media (max-width: 320px) {
+        padding: 0.4rem 1.6rem;
+      }
     }
   `,
   DeleteAccountButton: styled.button`

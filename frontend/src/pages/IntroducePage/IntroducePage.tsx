@@ -64,11 +64,48 @@ const IntroducePage = () => {
 export default IntroducePage;
 
 const S = {
-  AbsoluteDiv: styled.div`
-    position: absolute;
-    top: -40%;
-    opacity: 0.7;
+  Container: styled.div`
+    background: linear-gradient(to top, #ffffff, #fef8ee);
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   `,
+
+  Header: styled.header`
+    position: sticky;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: #ffffffbc;
+    flex: 0 0 5rem;
+    z-index: 1;
+  `,
+
+  Logo: styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    font-weight: 900;
+  `,
+
+  LoginModalButton: styled.button`
+    background: linear-gradient(50deg, #eb23f9, #7733ff);
+    box-shadow:
+      rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.04) 0px 24px 48px,
+      rgba(0, 0, 0, 0.02) 0px 4px 16px;
+    color: #fff;
+    width: 11rem;
+    height: 3.5rem;
+    border-radius: 8px;
+    z-index: 2;
+  `,
+
   Content: styled.section`
     flex: 1;
     display: flex;
@@ -87,6 +124,7 @@ const S = {
       transform: scale(1.1);
     }
   `,
+
   Introduce: styled.div`
     display: flex;
     height: 100%;
@@ -96,6 +134,12 @@ const S = {
     position: relative;
 
     gap: 4rem;
+  `,
+
+  AbsoluteDiv: styled.div`
+    position: absolute;
+    top: -40%;
+    opacity: 0.7;
   `,
 
   Title: styled.h1`
@@ -124,26 +168,6 @@ const S = {
     }
   `,
 
-  Container: styled.div`
-    background: linear-gradient(to top, #ffffff, #fef8ee);
-
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  `,
-
-  LoginModalButton: styled.button`
-    background: linear-gradient(50deg, #eb23f9, #7733ff);
-    box-shadow:
-      rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.04) 0px 24px 48px,
-      rgba(0, 0, 0, 0.02) 0px 4px 16px;
-    color: #fff;
-    width: 11rem;
-    height: 3.5rem;
-    border-radius: 8px;
-    z-index: 2;
-  `,
   LoginModalButtonLarge: styled.button`
     background: linear-gradient(50deg, #eb23f9, #7733ff);
     box-shadow:
@@ -157,24 +181,5 @@ const S = {
     height: 5rem;
     border-radius: 8px;
     z-index: 2;
-  `,
-  Header: styled.header`
-    position: sticky;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 5%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: #ffffffbc;
-    flex: 0 0 5rem;
-    z-index: 1;
-  `,
-  Logo: styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 2rem;
-    font-weight: 900;
   `,
 };

@@ -33,11 +33,10 @@ const IntroducePage = () => {
           <S.AbsoluteDiv>
             <BlurBackgroundIcon />
           </S.AbsoluteDiv>
-          <h1>
-            동글에서 블로그 글을
-            <br /> 간편하게 포스팅 하세요
-          </h1>
-          <p>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</p>
+          <S.Title>
+            동글에서 블로그 글을 <br /> 간편하게 포스팅 하세요
+          </S.Title>
+          <S.Description>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</S.Description>
           <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
           <picture>
             <source
@@ -97,16 +96,34 @@ const S = {
     position: relative;
 
     gap: 4rem;
+  `,
 
-    h1 {
-      font-size: 4rem;
-      text-align: center;
+  Title: styled.h1`
+    font-size: 4rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 3.6rem;
     }
-    p {
-      font-size: 2rem;
-      color: ${({ theme }) => theme.color.gray8};
+
+    @media (max-width: 320px) {
+      font-size: 3.2rem;
     }
   `,
+
+  Description: styled.p`
+    font-size: 2rem;
+    color: ${({ theme }) => theme.color.gray8};
+
+    @media (max-width: 768px) {
+      font-size: 1.6rem;
+    }
+
+    @media (max-width: 320px) {
+      font-size: 1.2rem;
+    }
+  `,
+
   Container: styled.div`
     background: linear-gradient(to top, #ffffff, #fef8ee);
 
@@ -147,7 +164,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10%;
+    padding: 0 5%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     background-color: #ffffffbc;
     flex: 0 0 5rem;

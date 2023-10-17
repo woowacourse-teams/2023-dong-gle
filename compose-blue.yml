@@ -7,8 +7,14 @@ services:
     image: ${DOCKER_USERNAME}/dong-gle-backend-${INFRA_PROFILE}
     volumes:
       - /home/ubuntu/logs/:/logs/
+      - /home/ubuntu/javaagent/:/javaagent/
     environment:
       - SPRING_PROFILES_ACTIVE
+      - DD_ENV=dev
+      - DD_SERVICE=Backend
+      - DD_AGENT_HOST=datadog-agent
+      - DD_TRACE_AGENT_PORT=8126
+      - DD_LOGS_INJECTION=true
 networks:
   default:
     name: donggle-network

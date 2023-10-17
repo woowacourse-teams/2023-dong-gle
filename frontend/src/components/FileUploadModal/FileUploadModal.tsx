@@ -89,8 +89,15 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    width: 50vw;
-    max-width: 40rem;
+    width: 40vw;
+
+    @media (max-width: 768px) {
+      width: 360px;
+    }
+
+    @media (max-width: 480px) {
+      width: 280px;
+    }
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -104,6 +111,10 @@ const S = {
     height: 100%;
     margin: 2rem 0;
     font-size: 1.3rem;
+
+    @media (max-width: 480px) {
+      gap: 2rem;
+    }
   `,
   Item: styled.div`
     display: flex;

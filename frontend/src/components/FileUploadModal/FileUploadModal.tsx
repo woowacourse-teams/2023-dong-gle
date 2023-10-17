@@ -49,7 +49,12 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
           <S.Content>
             <S.Item>
               <S.ItemTitle>내 컴퓨터에서 가져오기</S.ItemTitle>
-              <FileUploader accept='.md' height='15rem' onFileSelect={uploadOnServer} />
+              <FileUploader
+                accept='.md'
+                width='100%'
+                height='15rem'
+                onFileSelect={uploadOnServer}
+              />
             </S.Item>
             {notion && notion.isConnected ? (
               <>
@@ -88,15 +93,19 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
-    width: 40vw;
+    gap: 2rem;
+    width: 30vw;
 
-    @media (max-width: 768px) {
-      width: 360px;
+    @media (max-width: 1080px) {
+      width: 40vw;
+    }
+
+    @media (max-width: 786px) {
+      width: 60vw;
     }
 
     @media (max-width: 480px) {
-      width: 280px;
+      width: 80vw;
     }
   `,
   Title: styled.h1`
@@ -107,13 +116,15 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7rem;
+    gap: 8rem;
+    width: 100%;
     height: 100%;
     margin: 2rem 0;
-    font-size: 1.3rem;
+    padding: 0 4rem;
+    font-size: 1.2rem;
 
-    @media (max-width: 480px) {
-      gap: 2rem;
+    @media (max-width: 768px) {
+      padding: 0 2rem;
     }
   `,
   Item: styled.div`

@@ -143,6 +143,17 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    button {
+      @media (max-width: 320px) {
+        p {
+          width: 20px;
+          height: 20px;
+          font-size: 1rem;
+          border-radius: 50%;
+        }
+      }
+    }
   `,
 
   ContentContainerTitle: styled.h2``,
@@ -166,6 +177,10 @@ const S = {
     width: 100%;
     padding: 1.2rem;
     background-color: ${({ theme }) => theme.color.gray2};
+
+    @media (max-width: 768px) {
+      gap: 4rem;
+    }
   `,
 
   IconContainer: styled.div`
@@ -176,7 +191,11 @@ const S = {
     font-size: 1.6rem;
   `,
 
-  PlatformTitle: styled.h3``,
+  PlatformTitle: styled.h3`
+    @media (max-width: 768px) {
+      font-size: 1.6rem;
+    }
+  `,
 
   AlreadyConnection: styled.p``,
 };

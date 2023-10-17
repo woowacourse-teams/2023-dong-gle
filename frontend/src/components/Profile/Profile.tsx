@@ -37,7 +37,13 @@ const S = {
     background-color: ${({ theme }) => theme.color.gray2};
     font-size: 2rem;
     font-weight: bold;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      border-bottom: 1px solid ${({ theme }) => theme.color.gray5};
+    }
   `,
+
   DeleteAccountButton: styled.button`
     padding: 0.1rem 0;
     color: ${({ theme }) => theme.color.gray7};

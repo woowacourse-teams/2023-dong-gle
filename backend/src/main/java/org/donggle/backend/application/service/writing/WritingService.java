@@ -113,7 +113,8 @@ public class WritingService {
     private void findStyleByNomalBlocks(final Writing writing) {
         final List<Block> blocks = writing.getBlocks();
         final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
-        final List<NormalBlock> normalBlocks = blocks.stream().filter(block -> !notNormalType.contains(block.getBlockType()))
+        final List<NormalBlock> normalBlocks = blocks.stream()
+                .filter(block -> !notNormalType.contains(block.getBlockType()))
                 .map(NormalBlock.class::cast)
                 .toList();
         writingRepository.findStylesForBlocks(normalBlocks);

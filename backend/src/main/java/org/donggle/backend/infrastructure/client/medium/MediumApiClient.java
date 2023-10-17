@@ -1,6 +1,7 @@
 package org.donggle.backend.infrastructure.client.medium;
 
 import org.donggle.backend.application.client.BlogClient;
+import org.donggle.backend.application.service.request.ImageUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.PublishStatus;
@@ -9,6 +10,7 @@ import org.donggle.backend.infrastructure.client.exception.ClientInternalServerE
 import org.donggle.backend.infrastructure.client.medium.dto.request.MediumRequestBody;
 import org.donggle.backend.infrastructure.client.medium.dto.response.MediumPublishResponse;
 import org.donggle.backend.infrastructure.client.medium.dto.response.MediumUserResponse;
+import org.donggle.backend.ui.response.ImageUploadResponse;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -53,6 +55,11 @@ public class MediumApiClient implements BlogClient {
                         .map(e -> new ClientInternalServerError(PLATFORM_NAME)))
                 .bodyToMono(MediumPublishResponse.class)
                 .block().data().toPublishResponse();
+    }
+
+    @Override
+    public ImageUploadResponse uploadImage(final String accessToken, final ImageUploadRequest imageUploadRequest) {
+        return null;
     }
 
     private MediumRequestBody makePublishRequest(final String titleValue, final String content, final PublishRequest publishRequest) {

@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./backend
-          file: ./backend/Dockerfile
+          file: ./backend/Dockerfile-prod
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-prod:latest
           platforms: linux/arm64

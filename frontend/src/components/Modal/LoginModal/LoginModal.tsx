@@ -28,8 +28,13 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    width: 50vw;
+    width: 30vw;
+    max-width: 40vw;
     height: 20vh;
+
+    @media (max-width: 1080px) {
+      width: 50vw;
+    }
   `,
 
   Title: styled.h1`

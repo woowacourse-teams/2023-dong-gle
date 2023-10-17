@@ -10,17 +10,23 @@ const KakaoLoginButton = () => {
   return (
     <S.KakaoLoginButton onClick={redirectToKakao} aria-label='카카오 로그인 화면으로 이동'>
       <KakaoSymbol width='18px' height='18px' />
-      <S.KakaoLoginText>카카오로 시작하기</S.KakaoLoginText>
+      <S.KakaoLoginDesktopText>카카오로 시작하기</S.KakaoLoginDesktopText>
+      <S.KakaoLoginMobileText>로그인</S.KakaoLoginMobileText>
     </S.KakaoLoginButton>
   );
 };
 
 export default KakaoLoginButton;
 
+const KakaoLoginText = styled.p`
+  flex: 1;
+  font-size: 1.6rem;
+`;
+
 const S = {
   KakaoLoginButton: styled.button`
     display: flex;
-    width: 100%;
+    width: 320px;
     height: 45px;
     justify-content: center;
     align-items: center;
@@ -33,13 +39,23 @@ const S = {
     &:hover {
       background-color: #ffe000;
     }
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `,
 
-  KakaoLoginText: styled.span`
-    flex: 1;
-
-    @media (max-width: 320px) {
+  KakaoLoginDesktopText: styled(KakaoLoginText)`
+    @media (max-width: 480px) {
       display: none;
+    }
+  `,
+
+  KakaoLoginMobileText: styled(KakaoLoginText)`
+    display: none;
+
+    @media (max-width: 480px) {
+      display: block;
     }
   `,
 };

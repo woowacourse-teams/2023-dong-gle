@@ -106,17 +106,16 @@ const S = {
     height: 3.5rem;
     font-size: 1.2rem;
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       width: 8rem;
       height: 3rem;
       font-size: 1rem;
     }
 
     @media (max-width: 320px) {
-      width: 4rem;
-      height: 4rem;
+      width: 6rem;
+      height: 3rem;
       font-size: 0.8rem;
-      border-radius: 50%;
     }
   `,
 
@@ -126,7 +125,7 @@ const S = {
     font-size: 2rem;
     font-weight: 500;
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       width: 16rem;
       height: 4rem;
       font-size: 1.6rem;
@@ -151,15 +150,11 @@ const S = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: relative;
-
     gap: 4rem;
+    position: relative;
+    padding: 0 4rem;
 
-    @media (max-width: 768px) {
-      gap: 3rem;
-    }
-
-    @media (max-width: 320px) {
+    @media (max-width: 480px) {
       gap: 2rem;
     }
   `,
@@ -174,8 +169,8 @@ const S = {
     font-size: 4rem;
     text-align: center;
 
-    @media (max-width: 768px) {
-      font-size: 3.2rem;
+    @media (max-width: 480px) {
+      font-size: 2.4rem;
     }
 
     @media (max-width: 320px) {
@@ -187,23 +182,23 @@ const S = {
     font-size: 2rem;
     color: ${({ theme }) => theme.color.gray8};
 
-    @media (max-width: 768px) {
-      font-size: 1.6rem;
+    @media (max-width: 480px) {
+      font-size: 1.2rem;
     }
 
     @media (max-width: 320px) {
-      font-size: 1.2rem;
+      font-size: 0.8rem;
     }
   `,
 
   Picture: styled.picture`
     display: flex;
     justify-content: center;
-    width: 100%;
+    max-width: 600px;
     z-index: 2;
 
     & > img {
-      width: 70%;
+      width: 100%;
       border-radius: 4px;
       box-shadow:
         rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,

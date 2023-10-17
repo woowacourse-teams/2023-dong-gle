@@ -32,3 +32,5 @@ export { ReactComponent as PasswordIcon } from './password.svg';
 export { ReactComponent as PublishIcon } from './publish.svg';
 export { ReactComponent as EmptyWritingTableIcon } from './empty-writing-table.svg';
 export { ReactComponent as CategoryIcon } from './category.svg';
+export { ReactComponent as HelpMenuBook } from './help-menu-book.svg';
+export { ReactComponent as HelpMenuFeedback } from './help-menu-feedback.svg';

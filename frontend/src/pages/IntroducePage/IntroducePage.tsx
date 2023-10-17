@@ -25,7 +25,7 @@ const IntroducePage = () => {
           <DonggleIcon width={20} height={20} />
           동글
         </S.Logo>
-        <S.LoginModalButton onClick={openModal}>로그인하기</S.LoginModalButton>
+        <S.SmallLoginButton onClick={openModal}>로그인</S.SmallLoginButton>
         <LoginModal isOpen={isOpen} closeModal={closeModal} />
       </S.Header>
       <S.Content>
@@ -37,24 +37,21 @@ const IntroducePage = () => {
             동글에서 블로그 글을 <br /> 간편하게 포스팅 하세요
           </S.Title>
           <S.Description>블로그 포스팅뿐만 아니라 글 관리까지 한 번에</S.Description>
-          <S.LoginModalButtonLarge onClick={openModal}>동글 시작하기</S.LoginModalButtonLarge>
-          <picture>
+          <S.LargeLoginButton onClick={openModal}>동글 시작하기</S.LargeLoginButton>
+          <S.Picture>
             <source
               type='image/avif'
-              style={{ width: '600px' }}
               srcSet={`${donggleExampleAvif}, ${donggleExampleAvif2X} 2x`}
             />
             <source
               type='image/webp'
-              style={{ width: '600px' }}
               srcSet={`${donggleExampleWebp}, ${donggleExampleWebp2X} 2x`}
             />
             <img
               src={donggleExamplePng}
-              style={{ width: '600px' }}
               srcSet={`${donggleExamplePng}, ${donggleExamplePng2X} 2x`}
             />
-          </picture>
+          </S.Picture>
         </S.Introduce>
       </S.Content>
     </S.Container>
@@ -62,6 +59,17 @@ const IntroducePage = () => {
 };
 
 export default IntroducePage;
+
+const SmallLoginButton = styled.button`
+  background: linear-gradient(50deg, #eb23f9, #7733ff);
+  box-shadow:
+    rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.04) 0px 24px 48px,
+    rgba(0, 0, 0, 0.02) 0px 4px 16px;
+  color: #ffffffdf;
+  border-radius: 8px;
+  z-index: 2;
+`;
 
 const S = {
   Container: styled.div`
@@ -93,36 +101,48 @@ const S = {
     font-weight: 900;
   `,
 
-  LoginModalButton: styled.button`
-    background: linear-gradient(50deg, #eb23f9, #7733ff);
-    box-shadow:
-      rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.04) 0px 24px 48px,
-      rgba(0, 0, 0, 0.02) 0px 4px 16px;
-    color: #fff;
+  SmallLoginButton: styled(SmallLoginButton)`
     width: 11rem;
     height: 3.5rem;
-    border-radius: 8px;
-    z-index: 2;
+    font-size: 1.2rem;
+
+    @media (max-width: 768px) {
+      width: 8rem;
+      height: 3rem;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 320px) {
+      width: 4rem;
+      height: 4rem;
+      font-size: 0.8rem;
+      border-radius: 50%;
+    }
+  `,
+
+  LargeLoginButton: styled(SmallLoginButton)`
+    width: 20rem;
+    height: 5rem;
+    font-size: 2rem;
+    font-weight: 500;
+
+    @media (max-width: 768px) {
+      width: 16rem;
+      height: 4rem;
+      font-size: 1.6rem;
+    }
+
+    @media (max-width: 320px) {
+      width: 12rem;
+      height: 3rem;
+      font-size: 1.2rem;
+    }
   `,
 
   Content: styled.section`
     flex: 1;
     display: flex;
     flex-direction: column;
-    picture {
-      border-radius: 4px;
-      box-shadow:
-        rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
-        rgba(0, 0, 0, 0.04) 0px 24px 48px,
-        rgba(0, 0, 0, 0.02) 0px 4px 16px;
-      z-index: 2;
-    }
-
-    picture:hover {
-      transition: 0.4s all;
-      transform: scale(1.1);
-    }
   `,
 
   Introduce: styled.div`
@@ -134,6 +154,14 @@ const S = {
     position: relative;
 
     gap: 4rem;
+
+    @media (max-width: 768px) {
+      gap: 3rem;
+    }
+
+    @media (max-width: 320px) {
+      gap: 2rem;
+    }
   `,
 
   AbsoluteDiv: styled.div`
@@ -147,11 +175,11 @@ const S = {
     text-align: center;
 
     @media (max-width: 768px) {
-      font-size: 3.6rem;
+      font-size: 3.2rem;
     }
 
     @media (max-width: 320px) {
-      font-size: 3.2rem;
+      font-size: 2rem;
     }
   `,
 
@@ -168,18 +196,24 @@ const S = {
     }
   `,
 
-  LoginModalButtonLarge: styled.button`
-    background: linear-gradient(50deg, #eb23f9, #7733ff);
-    box-shadow:
-      rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.04) 0px 24px 48px,
-      rgba(0, 0, 0, 0.02) 0px 4px 16px;
-    color: #ffffffdf;
-    width: 20rem;
-    font-size: 2rem;
-    font-weight: 500;
-    height: 5rem;
-    border-radius: 8px;
+  Picture: styled.picture`
+    display: flex;
+    justify-content: center;
+    width: 100%;
     z-index: 2;
+
+    & > img {
+      width: 70%;
+      border-radius: 4px;
+      box-shadow:
+        rgba(31, 34, 37, 0.09) 0px 0px 0px 1px,
+        rgba(0, 0, 0, 0.04) 0px 24px 48px,
+        rgba(0, 0, 0, 0.02) 0px 4px 16px;
+
+      &:hover {
+        transition: 0.4s all;
+        transform: scale(1.1);
+      }
+    }
   `,
 };

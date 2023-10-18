@@ -4,10 +4,11 @@ import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
 import { NAVIGATE_PATH } from 'constants/path';
+import { DEVICE } from 'constants/style';
 import { useMember } from 'hooks/queries/useMember';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { Link } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 const MyPage = () => {
   const { isLoading, name, tistory, medium, notion } = useMember();
@@ -52,6 +53,57 @@ const MyPage = () => {
 
 export default MyPage;
 
+const generateResponsiveStyle = {
+  header: () => {
+    return css`
+      @media (max-width: ${DEVICE.tablet}) {
+        position: relative;
+        justify-content: center;
+
+        & > a {
+          display: block;
+        }
+
+        & > button {
+          display: none;
+        }
+      }
+    `;
+  },
+
+  title: () => {
+    return css`
+      @media (max-width: ${DEVICE.tablet}) {
+        height: 8rem;
+        font-size: 2.8rem;
+      }
+
+      @media (max-width: ${DEVICE.mobileSmall}) {
+        height: 4rem;
+        font-size: 2rem;
+      }
+    `;
+  },
+
+  container: () => {
+    return css`
+      @media (max-width: ${DEVICE.tablet}) {
+        flex-direction: column;
+      }
+    `;
+  },
+
+  contentContainer: () => {
+    return css`
+      @media (max-width: ${DEVICE.tablet}) {
+        gap: 4rem;
+        width: 100%;
+        padding: 2.4rem;
+      }
+    `;
+  },
+};
+
 const S = {
   Section: styled.section`
     width: 100vw;
@@ -64,18 +116,7 @@ const S = {
     align-items: center;
     padding: 0 4rem;
 
-    @media (max-width: 768px) {
-      position: relative;
-      justify-content: center;
-
-      & > a {
-        display: block;
-      }
-
-      & > button {
-        display: none;
-      }
-    }
+    ${() => generateResponsiveStyle.header()}
   `,
 
   GoToSpacePage: styled(Link)`
@@ -90,15 +131,7 @@ const S = {
     height: 10rem;
     font-size: 3.2rem;
 
-    @media (max-width: 768px) {
-      height: 8rem;
-      font-size: 2.8rem;
-    }
-
-    @media (max-width: 320px) {
-      height: 4rem;
-      font-size: 2rem;
-    }
+    ${() => generateResponsiveStyle.title()}
   `,
 
   Container: styled.div<{ $isLoading: boolean }>`
@@ -109,9 +142,7 @@ const S = {
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};
 
-    @media (max-width: 768px) {
-      flex-direction: column;
-    }
+    ${() => generateResponsiveStyle.container()}
   `,
 
   ContentContainer: styled.div`
@@ -122,10 +153,7 @@ const S = {
     padding: 4rem;
     font-size: 1.2rem;
 
-    @media (max-width: 768px) {
-      width: 100%;
-      padding: 2rem;
-    }
+    ${() => generateResponsiveStyle.contentContainer()}
   `,
 
   SpinnerContainer: styled.div`

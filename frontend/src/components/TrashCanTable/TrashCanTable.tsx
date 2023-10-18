@@ -93,12 +93,17 @@ const S = {
     width: 100%;
     text-align: left;
     font-size: 1.4rem;
+    table-layout: fixed;
 
     th {
       color: ${({ theme }) => theme.color.gray8};
     }
 
     td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
       .publishedTo {
         display: flex;
         gap: 0.8rem;

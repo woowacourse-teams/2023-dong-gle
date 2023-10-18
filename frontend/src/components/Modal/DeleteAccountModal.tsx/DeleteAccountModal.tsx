@@ -41,6 +41,7 @@ const S = {
     gap: 3rem;
     width: 50vw;
     max-width: 40rem;
+    padding: 0 2rem;
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -52,28 +53,30 @@ const S = {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    width: 100%;
     height: 100%;
-    margin: 2rem 0;
     font-size: 1.2rem;
+    word-break: keep-all;
   `,
   ButtonContainer: styled.div`
     display: flex;
-    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
 
     button {
       padding: 1rem 6rem;
       border-radius: 8px;
 
       @media (max-width: 768px) {
-        padding: 0.8rem 4rem;
+        padding: 0.8rem 3.2rem;
       }
 
       @media (max-width: 480px) {
-        padding: 0.6rem 2rem;
+        padding: 0.6rem 1.6rem;
       }
 
       @media (max-width: 320px) {
-        padding: 0.4rem 1.6rem;
+        padding: 0.4rem 0.8rem;
       }
     }
   `,

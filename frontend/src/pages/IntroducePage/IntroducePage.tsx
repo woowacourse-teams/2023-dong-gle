@@ -1,7 +1,7 @@
 import { BlurBackgroundIcon, DonggleIcon } from 'assets/icons';
 import LoginModal from 'components/Modal/LoginModal/LoginModal';
 import { useModal } from 'hooks/@common/useModal';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import donggleExamplePng from 'assets/icons/donggle-example-png.png';
 import donggleExampleWebp from 'assets/icons/donggle-example-webp.webp';
 import donggleExampleAvif from 'assets/icons/donggle-example-avif.avif';
@@ -11,6 +11,7 @@ import donggleExampleAvif2X from 'assets/icons/donggle-example-avif-2x.avif';
 import { Navigate } from 'react-router-dom';
 import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
+import { DEVICE } from 'constants/style';
 
 const IntroducePage = () => {
   const { authToken } = useAuthToken();
@@ -60,6 +61,72 @@ const IntroducePage = () => {
 
 export default IntroducePage;
 
+const generateResponsiveStyle = {
+  smallLoginButton: () => {
+    return css`
+      @media (max-width: ${DEVICE.mobileLarge}) {
+        width: 8rem;
+        height: 3rem;
+        font-size: 1rem;
+      }
+
+      @media (max-width: ${DEVICE.mobileSmall}) {
+        width: 6rem;
+        height: 3rem;
+        font-size: 0.8rem;
+      }
+    `;
+  },
+
+  largeLoginButton: () => {
+    return css`
+      @media (max-width: ${DEVICE.mobileLarge}) {
+        width: 16rem;
+        height: 4rem;
+        font-size: 1.6rem;
+      }
+
+      @media (max-width: ${DEVICE.mobileSmall}) {
+        width: 12rem;
+        height: 3rem;
+        font-size: 1.2rem;
+      }
+    `;
+  },
+
+  introduce: () => {
+    return css`
+      @media (max-width: ${DEVICE.mobileLarge}) {
+        gap: 2rem;
+      }
+    `;
+  },
+
+  title: () => {
+    return css`
+      @media (max-width: ${DEVICE.mobileLarge}) {
+        font-size: 2.4rem;
+      }
+
+      @media (max-width: ${DEVICE.mobileSmall}) {
+        font-size: 2rem;
+      }
+    `;
+  },
+
+  description: () => {
+    return css`
+      @media (max-width: ${DEVICE.mobileLarge}) {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: ${DEVICE.mobileSmall}) {
+        font-size: 0.8rem;
+      }
+    `;
+  },
+};
+
 const SmallLoginButton = styled.button`
   background: linear-gradient(50deg, #eb23f9, #7733ff);
   box-shadow:
@@ -106,17 +173,7 @@ const S = {
     height: 3.5rem;
     font-size: 1.2rem;
 
-    @media (max-width: 480px) {
-      width: 8rem;
-      height: 3rem;
-      font-size: 1rem;
-    }
-
-    @media (max-width: 320px) {
-      width: 6rem;
-      height: 3rem;
-      font-size: 0.8rem;
-    }
+    ${() => generateResponsiveStyle.smallLoginButton()}
   `,
 
   LargeLoginButton: styled(SmallLoginButton)`
@@ -125,17 +182,7 @@ const S = {
     font-size: 2rem;
     font-weight: 500;
 
-    @media (max-width: 480px) {
-      width: 16rem;
-      height: 4rem;
-      font-size: 1.6rem;
-    }
-
-    @media (max-width: 320px) {
-      width: 12rem;
-      height: 3rem;
-      font-size: 1.2rem;
-    }
+    ${() => generateResponsiveStyle.largeLoginButton()}
   `,
 
   Content: styled.section`
@@ -154,9 +201,7 @@ const S = {
     position: relative;
     padding: 0 4rem;
 
-    @media (max-width: 480px) {
-      gap: 2rem;
-    }
+    ${() => generateResponsiveStyle.introduce()}
   `,
 
   AbsoluteDiv: styled.div`
@@ -169,26 +214,14 @@ const S = {
     font-size: 4rem;
     text-align: center;
 
-    @media (max-width: 480px) {
-      font-size: 2.4rem;
-    }
-
-    @media (max-width: 320px) {
-      font-size: 2rem;
-    }
+    ${() => generateResponsiveStyle.title()}
   `,
 
   Description: styled.p`
     font-size: 2rem;
     color: ${({ theme }) => theme.color.gray8};
 
-    @media (max-width: 480px) {
-      font-size: 1.2rem;
-    }
-
-    @media (max-width: 320px) {
-      font-size: 0.8rem;
-    }
+    ${() => generateResponsiveStyle.description()}
   `,
 
   Picture: styled.picture`

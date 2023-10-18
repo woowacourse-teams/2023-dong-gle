@@ -1,14 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { getDetailWritings } from 'apis/writings';
 import { EmptyWritingTableIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
+import { mediaQueryMobileState } from 'globalState';
 import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
 import { useLocation } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { sidebarStyle } from 'styles/layoutStyle';
 
 const WritingTablePage = () => {
+  const isMobile = useGlobalStateValue(mediaQueryMobileState);
+
   const {
     state: { categoryId },
   } = useLocation();
@@ -16,6 +20,8 @@ const WritingTablePage = () => {
   const { data, isLoading } = useQuery(['detailWritings', categoryId], () =>
     getDetailWritings(categoryId),
   );
+
+  const hasWritings = data?.writings && data.writings.length > 0;
 
   use활성화된카테고리설정(categoryId);
 
@@ -33,8 +39,8 @@ const WritingTablePage = () => {
   return (
     <S.Article>
       <S.CategoryNameTitle>{data?.categoryName}</S.CategoryNameTitle>
-      {data?.writings && data.writings.length > 0 ? (
-        <WritingTable categoryId={categoryId} writings={data?.writings ?? []} />
+      {hasWritings ? (
+        <WritingTable categoryId={categoryId} writings={data?.writings ?? []} isMobile={isMobile} />
       ) : (
         <S.EmptyMessage>
           <EmptyWritingTableIcon width={80} height={80} />
@@ -50,11 +56,23 @@ const WritingTablePage = () => {
 
 export default WritingTablePage;
 
+const generateResponsiveStyle = {
+  article: () => {
+    return css`
+      @media (max-width: 820px) {
+        padding: 8rem 2.4rem;
+      }
+    `;
+  },
+};
+
 const S = {
   Article: styled.article`
     position: relative;
     width: 100%;
     padding: 8rem;
+
+    ${() => generateResponsiveStyle.article()}
   `,
 
   CategoryNameTitle: styled.h1`

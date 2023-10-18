@@ -9,6 +9,7 @@ import { dateFormatter } from 'utils/date';
 type Props = {
   writings: Writing[];
   categoryId: number;
+  isMobile?: boolean;
 };
 
 export const blogIcon: Record<Blog, ReactElement> = {
@@ -16,7 +17,7 @@ export const blogIcon: Record<Blog, ReactElement> = {
   TISTORY: <TistoryLogoIcon width='2.4rem' height='2.4rem' />,
 };
 
-const WritingTable = ({ writings, categoryId }: Props) => {
+const WritingTable = ({ writings, categoryId, isMobile = false }: Props) => {
   const { goWritingPage } = usePageNavigate();
   const rowRef = useRef<HTMLTableRowElement>(null);
 
@@ -29,13 +30,13 @@ const WritingTable = ({ writings, categoryId }: Props) => {
       <colgroup>
         <col width='60%' />
         <col width='20%' />
-        <col width='20%' />
+        {isMobile ? null : <col width='20%' />}
       </colgroup>
       <thead>
         <tr ref={rowRef} tabIndex={0}>
           <th>글 제목</th>
-          <th>생성 날짜</th>
-          <th>발행한 블로그 플랫폼</th>
+          {isMobile ? null : <th>생성 날짜</th>}
+          {isMobile ? <th>블로그</th> : <th>발행한 블로그 플랫폼</th>}
         </tr>
       </thead>
       <tbody>
@@ -47,7 +48,7 @@ const WritingTable = ({ writings, categoryId }: Props) => {
             tabIndex={0}
           >
             <td>{title}</td>
-            <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
+            {isMobile ? null : <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>}
             <td>
               <S.PublishedToIconContainer>
                 {publishedDetails.map(({ blogName }, index) => (

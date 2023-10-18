@@ -1,8 +1,9 @@
 import { TrashCanEmptyIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
+import { DEVICE } from 'constants/style';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 const TrashCanPage = () => {
   const { deletedWritings, isLoading } = useDeletedWritings();
@@ -33,6 +34,16 @@ const TrashCanPage = () => {
 
 export default TrashCanPage;
 
+const generateResponsiveStyle = {
+  article: () => {
+    return css`
+      @media (max-width: ${DEVICE.tablet}) {
+        padding: 8rem 2.4rem;
+      }
+    `;
+  },
+};
+
 const S = {
   Article: styled.article`
     position: relative;
@@ -40,6 +51,8 @@ const S = {
     padding: 8rem;
 
     background-color: ${({ theme }) => theme.color.gray1};
+
+    ${() => generateResponsiveStyle.article()}
   `,
 
   CategoryNameTitle: styled.h1`

@@ -21,6 +21,7 @@ export const sidebarStyle = css`
   flex-direction: column;
   gap: 2rem;
   width: ${SIDEBAR_STYLE.width};
+  height: 100%;
   box-shadow: ${LAYOUT_STYLE.boxShadow};
   border-radius: 8px;
   padding: 2rem;

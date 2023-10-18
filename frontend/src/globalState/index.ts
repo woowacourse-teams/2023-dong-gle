@@ -9,3 +9,8 @@ export const activeWritingInfoState = globalState<ActiveWritingInfo | null>(null
 
 const initialActiveCategoryId = -1;
 export const activeCategoryIdState = globalState<number>(initialActiveCategoryId);
+
+export const mediaQueryMobileState = globalState(false);
+
+export const leftDrawerState = globalState(false);
+export const rightDrawerState = globalState(false);

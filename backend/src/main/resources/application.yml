@@ -3,6 +3,9 @@ spring:
     active: local
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL;
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:10}
+      minimum-idle: ${HIKARI_MIN_IDLE:10}
   h2:
     console:
       enabled: true
@@ -40,3 +43,10 @@ aws:
     key: key
 uploader:
   image-url: https://image.donggle.blog/
+
+server:
+  tomcat:
+    threads:
+      max: ${TOMCAT_MAX_THREADS:200}
+    accept-count: ${TOMCAT_ACCEPT_COUNT:100}
+    max-connections: ${TOMCAT_MAX_CONNECTIONS:10000}

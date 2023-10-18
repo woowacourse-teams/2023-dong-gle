@@ -2,7 +2,7 @@ import Button from 'components/@common/Button/Button';
 import FileUploader from 'components/@common/FileUploader/FileUploader';
 import Modal from 'components/@common/Modal/Modal';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { usePageNavigate } from 'hooks/usePageNavigate';
@@ -10,6 +10,7 @@ import { useMember } from 'hooks/queries/useMember';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeCategoryIdState } from 'globalState';
 import { KeyboardEventHandler } from 'react';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   isOpen: boolean;
@@ -88,6 +89,32 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
 
 export default FileUploadModal;
 
+const generateResponsiveStyle = {
+  container: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.tablet}) {
+        width: 40vw;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        width: 60vw;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+        width: 80vw;
+      }
+    `;
+  },
+
+  content: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        padding: 0 2rem;
+      }
+    `;
+  },
+};
+
 const S = {
   Container: styled.div`
     display: flex;
@@ -96,17 +123,7 @@ const S = {
     gap: 2rem;
     width: 30vw;
 
-    @media (max-width: 1080px) {
-      width: 40vw;
-    }
-
-    @media (max-width: 786px) {
-      width: 60vw;
-    }
-
-    @media (max-width: 480px) {
-      width: 80vw;
-    }
+    ${() => generateResponsiveStyle.container()}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -123,9 +140,7 @@ const S = {
     padding: 0 4rem;
     font-size: 1.2rem;
 
-    @media (max-width: 768px) {
-      padding: 0 2rem;
-    }
+    ${() => generateResponsiveStyle.content()}
   `,
   Item: styled.div`
     display: flex;

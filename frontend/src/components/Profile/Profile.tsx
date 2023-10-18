@@ -1,6 +1,6 @@
 import { DefaultUserProfileIcon } from 'assets/icons';
 import DeleteAccountModal from 'components/Modal/DeleteAccountModal.tsx/DeleteAccountModal';
-import { DEVICE } from 'constants/style';
+import { MAX_WIDTH } from 'constants/style';
 import { useModal } from 'hooks/@common/useModal';
 import { css, styled } from 'styled-components';
 
@@ -28,7 +28,7 @@ export default Profile;
 const generateResponsiveStyle = {
   profile: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
         justify-content: center;
         width: 100%;
         height: initial;

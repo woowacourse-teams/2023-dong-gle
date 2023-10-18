@@ -1,6 +1,9 @@
+import { useGlobalStateValue } from '@yogjin/react-global-state';
 import Modal from 'components/@common/Modal/Modal';
 import KakaoLoginButton from 'components/Login/KakaoLoginButton';
-import { styled } from 'styled-components';
+import { MAX_WIDTH } from 'constants/style';
+import { mediaQueryMobileState } from 'globalState';
+import { css, styled } from 'styled-components';
 
 type Props = {
   isOpen: boolean;
@@ -8,8 +11,10 @@ type Props = {
 };
 
 const LoginModal = ({ isOpen, closeModal }: Props) => {
+  const isMobile = useGlobalStateValue(mediaQueryMobileState);
+
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal isOpen={isOpen} closeModal={closeModal} hasCloseButton={!isMobile}>
       <S.Container>
         <S.Title>간편 로그인</S.Title>
         <S.Content>
@@ -22,6 +27,37 @@ const LoginModal = ({ isOpen, closeModal }: Props) => {
 
 export default LoginModal;
 
+const generateResponsiveStyle = {
+  container: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.tablet}) {
+        width: 50vw;
+      }
+    `;
+  },
+
+  title: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+        font-size: 2rem;
+        font-weight: 600;
+      }
+    `;
+  },
+
+  content: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        margin: 1.6rem 0;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+        margin: 1.2rem 0;
+      }
+    `;
+  },
+};
+
 const S = {
   Container: styled.div`
     display: flex;
@@ -32,19 +68,14 @@ const S = {
     max-width: 40vw;
     height: 20vh;
 
-    @media (max-width: 1080px) {
-      width: 50vw;
-    }
+    ${() => generateResponsiveStyle.container()}
   `,
 
   Title: styled.h1`
     font-size: 2rem;
     font-weight: 700;
 
-    @media (max-width: 320px) {
-      font-size: 2rem;
-      font-weight: 600;
-    }
+    ${() => generateResponsiveStyle.title()}
   `,
 
   Content: styled.div`
@@ -57,13 +88,5 @@ const S = {
     height: 100%;
     margin: 2rem 0;
     font-size: 1.3rem;
-
-    @media (max-width: 768px) {
-      margin: 1.6rem 0;
-    }
-
-    @media (max-width: 320px) {
-      margin: 1.2rem 0;
-    }
   `,
 };

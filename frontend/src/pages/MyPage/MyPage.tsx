@@ -4,7 +4,7 @@ import Spinner from 'components/@common/Spinner/Spinner';
 import ConnectionSection from 'components/ConnectionSection/ConnectionSection';
 import Profile from 'components/Profile/Profile';
 import { NAVIGATE_PATH } from 'constants/path';
-import { DEVICE } from 'constants/style';
+import { MAX_WIDTH } from 'constants/style';
 import { useMember } from 'hooks/queries/useMember';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { Link } from 'react-router-dom';
@@ -56,7 +56,7 @@ export default MyPage;
 const generateResponsiveStyle = {
   header: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
         position: relative;
         justify-content: center;
 
@@ -73,12 +73,12 @@ const generateResponsiveStyle = {
 
   title: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
         height: 8rem;
         font-size: 2.8rem;
       }
 
-      @media (max-width: ${DEVICE.mobileSmall}) {
+      @media (max-width: ${MAX_WIDTH.small}) {
         height: 4rem;
         font-size: 2rem;
       }
@@ -87,7 +87,7 @@ const generateResponsiveStyle = {
 
   container: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
         flex-direction: column;
       }
     `;
@@ -95,7 +95,7 @@ const generateResponsiveStyle = {
 
   contentContainer: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
         gap: 4rem;
         width: 100%;
         padding: 2.4rem;

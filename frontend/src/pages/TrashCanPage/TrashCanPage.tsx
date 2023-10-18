@@ -1,7 +1,6 @@
 import { TrashCanEmptyIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
-import { DEVICE } from 'constants/style';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
 import { css, styled } from 'styled-components';
 

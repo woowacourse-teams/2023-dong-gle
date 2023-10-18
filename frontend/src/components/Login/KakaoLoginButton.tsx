@@ -1,6 +1,7 @@
 import { KakaoSymbol } from 'assets/icons';
 import { OauthPlatforms, getOauthPlatformURL } from 'constants/components/oauth';
-import { styled } from 'styled-components';
+import { MAX_WIDTH } from 'constants/style';
+import { css, styled } from 'styled-components';
 
 const KakaoLoginButton = () => {
   const redirectToKakao = () => {
@@ -17,6 +18,32 @@ const KakaoLoginButton = () => {
 };
 
 export default KakaoLoginButton;
+
+const generateResponsiveStyle = {
+  kakaoLoginButton: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        width: 100%;
+      }
+    `;
+  },
+
+  kakaoLoginDesktopText: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        display: none;
+      }
+    `;
+  },
+
+  kakaoLoginMobileText: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        display: block;
+      }
+    `;
+  },
+};
 
 const KakaoLoginText = styled.p`
   flex: 1;
@@ -40,22 +67,16 @@ const S = {
       background-color: #ffe000;
     }
 
-    @media (max-width: 768px) {
-      width: 100%;
-    }
+    ${() => generateResponsiveStyle.kakaoLoginButton()}
   `,
 
   KakaoLoginDesktopText: styled(KakaoLoginText)`
-    @media (max-width: 480px) {
-      display: none;
-    }
+    ${() => generateResponsiveStyle.kakaoLoginDesktopText()}
   `,
 
   KakaoLoginMobileText: styled(KakaoLoginText)`
     display: none;
 
-    @media (max-width: 480px) {
-      display: block;
-    }
+    ${() => generateResponsiveStyle.kakaoLoginMobileText()}
   `,
 };

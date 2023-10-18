@@ -3,10 +3,11 @@ import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
 import { ConnectionPlatforms } from 'constants/components/myPage';
 import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
 import { KeyboardEventHandler } from 'react';
 import { useConnect } from './useConnect';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   tistory: TistoryConnection;
@@ -138,14 +139,10 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
 
 export default ConnectionSection;
 
-const S = {
-  ConnectionContainer: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-
-    button {
-      @media (max-width: 320px) {
+const generateResponsiveStyle = {
+  connectionContainerButton: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
         p {
           width: 20px;
           height: 20px;
@@ -153,6 +150,34 @@ const S = {
           border-radius: 50%;
         }
       }
+    `;
+  },
+
+  connectionItem: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        gap: 4rem;
+      }
+    `;
+  },
+
+  platformTitle: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        font-size: 1.6rem;
+      }
+    `;
+  },
+};
+
+const S = {
+  ConnectionContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    button {
+      ${() => generateResponsiveStyle.connectionContainerButton()}
     }
   `,
 
@@ -178,9 +203,7 @@ const S = {
     padding: 1.2rem;
     background-color: ${({ theme }) => theme.color.gray2};
 
-    @media (max-width: 768px) {
-      gap: 4rem;
-    }
+    ${() => generateResponsiveStyle.connectionItem()}
   `,
 
   IconContainer: styled.div`
@@ -192,9 +215,7 @@ const S = {
   `,
 
   PlatformTitle: styled.h3`
-    @media (max-width: 768px) {
-      font-size: 1.6rem;
-    }
+    ${() => generateResponsiveStyle.platformTitle()}
   `,
 
   AlreadyConnection: styled.p``,

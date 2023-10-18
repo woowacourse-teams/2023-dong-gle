@@ -11,7 +11,7 @@ import donggleExampleAvif2X from 'assets/icons/donggle-example-avif-2x.avif';
 import { Navigate } from 'react-router-dom';
 import { useAuthToken } from 'hooks/useAuthToken';
 import { PATH } from 'constants/path';
-import { DEVICE } from 'constants/style';
+import { MAX_WIDTH } from 'constants/style';
 
 const IntroducePage = () => {
   const { authToken } = useAuthToken();
@@ -64,13 +64,13 @@ export default IntroducePage;
 const generateResponsiveStyle = {
   smallLoginButton: () => {
     return css`
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         width: 8rem;
         height: 3rem;
         font-size: 1rem;
       }
 
-      @media (max-width: ${DEVICE.mobileSmall}) {
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
         width: 6rem;
         height: 3rem;
         font-size: 0.8rem;
@@ -80,13 +80,13 @@ const generateResponsiveStyle = {
 
   largeLoginButton: () => {
     return css`
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         width: 16rem;
         height: 4rem;
         font-size: 1.6rem;
       }
 
-      @media (max-width: ${DEVICE.mobileSmall}) {
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
         width: 12rem;
         height: 3rem;
         font-size: 1.2rem;
@@ -96,7 +96,7 @@ const generateResponsiveStyle = {
 
   introduce: () => {
     return css`
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         gap: 2rem;
       }
     `;
@@ -104,11 +104,11 @@ const generateResponsiveStyle = {
 
   title: () => {
     return css`
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         font-size: 2.4rem;
       }
 
-      @media (max-width: ${DEVICE.mobileSmall}) {
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
         font-size: 2rem;
       }
     `;
@@ -116,11 +116,11 @@ const generateResponsiveStyle = {
 
   description: () => {
     return css`
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         font-size: 1.2rem;
       }
 
-      @media (max-width: ${DEVICE.mobileSmall}) {
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
         font-size: 0.8rem;
       }
     `;

@@ -6,7 +6,7 @@ import Spinner from 'components/@common/Spinner/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import WritingTitle from './WritingTitle/WritingTitle';
 import useCodeHighlight from 'hooks/@common/useCodeHighlight';
-import { DEVICE } from 'constants/style';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   writingId: number;
@@ -51,11 +51,11 @@ export default WritingViewer;
 const generateResponsiveStyle = {
   writingViewerContainer: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: ${MAX_WIDTH.laptop}) {
         padding: 4rem 4rem;
       }
 
-      @media (max-width: ${DEVICE.mobileLarge}) {
+      @media (max-width: ${MAX_WIDTH.tablet}) {
         padding: 4rem 2.4rem;
       }
     `;

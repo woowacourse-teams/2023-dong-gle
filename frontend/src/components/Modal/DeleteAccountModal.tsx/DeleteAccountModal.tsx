@@ -1,6 +1,7 @@
 import Modal from 'components/@common/Modal/Modal';
+import { MAX_WIDTH } from 'constants/style';
 import { useMemberDelete } from 'hooks/queries/member/useMemberDelete';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 type Props = {
   isOpen: boolean;
@@ -32,6 +33,24 @@ const DeleteAccountModal = ({ isOpen, closeModal }: Props) => {
 };
 
 export default DeleteAccountModal;
+
+const generateResponsiveStyle = {
+  button: () => {
+    return css`
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        padding: 0.8rem 3.2rem;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+        padding: 0.6rem 1.6rem;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+        padding: 0.4rem 0.8rem;
+      }
+    `;
+  },
+};
 
 const S = {
   Container: styled.div`
@@ -67,17 +86,7 @@ const S = {
       padding: 1rem 6rem;
       border-radius: 8px;
 
-      @media (max-width: 768px) {
-        padding: 0.8rem 3.2rem;
-      }
-
-      @media (max-width: 480px) {
-        padding: 0.6rem 1.6rem;
-      }
-
-      @media (max-width: 320px) {
-        padding: 0.4rem 0.8rem;
-      }
+      ${() => generateResponsiveStyle.button()}
     }
   `,
   DeleteAccountButton: styled.button`

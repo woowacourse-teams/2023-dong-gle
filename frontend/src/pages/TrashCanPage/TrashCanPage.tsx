@@ -37,7 +37,7 @@ export default TrashCanPage;
 const generateResponsiveStyle = {
   article: () => {
     return css`
-      @media (max-width: ${DEVICE.tablet}) {
+      @media (max-width: 820px) {
         padding: 8rem 2.4rem;
       }
     `;

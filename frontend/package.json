@@ -19,6 +19,7 @@
     "analyze": "webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes gzip"
   },
   "dependencies": {
+    "@donggle/layout-component": "0.0.2",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.32.6",
     "@yogjin/react-global-state": "^0.0.3",

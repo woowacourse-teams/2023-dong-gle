@@ -1,6 +1,7 @@
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import Spinner from 'components/@common/Spinner/Spinner';
 import HomeTable from 'components/HomeTable/HomeTable';
+import { MAX_WIDTH } from 'constants/style';
 import { mediaQueryMobileState } from 'globalState';
 import { Suspense } from 'react';
 import styled, { css } from 'styled-components';
@@ -28,13 +29,32 @@ const HomePage = () => {
 export default HomePage;
 
 const generateResponsiveStyle = {
-  article: () => {
-    return css`
-      @media (max-width: 820px) {
-        padding: 8rem 2.4rem;
-      }
-    `;
-  },
+  article: css`
+    @media (max-width: 820px) {
+      padding: 8rem 2.4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 4rem 2.4rem;
+    }
+  `,
+
+  categoryNameTitle: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      font-size: 3.2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      font-size: 2.8rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      font-size: 2.4rem;
+      margin-bottom: 4rem;
+    }
+  `,
 };
 
 const S = {
@@ -55,11 +75,13 @@ const S = {
 
     background-color: ${({ theme }) => theme.color.gray1};
 
-    ${() => generateResponsiveStyle.article()}
+    ${() => generateResponsiveStyle.article}
   `,
 
   CategoryNameTitle: styled.h1`
     font-size: 4rem;
     margin-bottom: 5rem;
+
+    ${() => generateResponsiveStyle.categoryNameTitle}
   `,
 };

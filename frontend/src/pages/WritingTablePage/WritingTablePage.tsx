@@ -4,6 +4,7 @@ import { getDetailWritings } from 'apis/writings';
 import { EmptyWritingTableIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import WritingTable from 'components/WritingTable/WritingTable';
+import { MAX_WIDTH } from 'constants/style';
 import { mediaQueryMobileState } from 'globalState';
 import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
 import { useLocation } from 'react-router-dom';
@@ -57,13 +58,32 @@ const WritingTablePage = () => {
 export default WritingTablePage;
 
 const generateResponsiveStyle = {
-  article: () => {
-    return css`
-      @media (max-width: 820px) {
-        padding: 8rem 2.4rem;
-      }
-    `;
-  },
+  article: css`
+    @media (max-width: 820px) {
+      padding: 8rem 2.4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 4rem 2.4rem;
+    }
+  `,
+
+  categoryNameTitle: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      font-size: 3.2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      font-size: 2.8rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      font-size: 2.4rem;
+      margin-bottom: 4rem;
+    }
+  `,
 };
 
 const S = {
@@ -72,12 +92,14 @@ const S = {
     width: 100%;
     padding: 8rem;
 
-    ${() => generateResponsiveStyle.article()}
+    ${() => generateResponsiveStyle.article}
   `,
 
   CategoryNameTitle: styled.h1`
     font-size: 4rem;
     margin-bottom: 5rem;
+
+    ${() => generateResponsiveStyle.categoryNameTitle}
   `,
 
   AddWritingText: styled.p``,

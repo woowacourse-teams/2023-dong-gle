@@ -62,68 +62,17 @@ const IntroducePage = () => {
 export default IntroducePage;
 
 const generateResponsiveStyle = {
-  smallLoginButton: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        width: 8rem;
-        height: 3rem;
-        font-size: 1.2rem;
-      }
+  title: css`
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      font-size: 3.6rem;
+    }
+  `,
 
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        width: 6rem;
-        height: 3rem;
-      }
-    `;
-  },
-
-  largeLoginButton: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        width: 16rem;
-        height: 4rem;
-        font-size: 1.6rem;
-      }
-
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        width: 12rem;
-        height: 3rem;
-        font-size: 1.2rem;
-      }
-    `;
-  },
-
-  introduce: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        gap: 2rem;
-      }
-    `;
-  },
-
-  title: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        font-size: 2.4rem;
-      }
-
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        font-size: 2rem;
-      }
-    `;
-  },
-
-  description: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        font-size: 1.2rem;
-      }
-
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        font-size: 0.8rem;
-      }
-    `;
-  },
+  description: css`
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      font-size: 1.8rem;
+    }
+  `,
 };
 
 const SmallLoginButton = styled.button`
@@ -171,8 +120,6 @@ const S = {
     width: 11rem;
     height: 3.5rem;
     font-size: 1.6rem;
-
-    ${() => generateResponsiveStyle.smallLoginButton()}
   `,
 
   LargeLoginButton: styled(SmallLoginButton)`
@@ -180,8 +127,6 @@ const S = {
     height: 5rem;
     font-size: 2rem;
     font-weight: 500;
-
-    ${() => generateResponsiveStyle.largeLoginButton()}
   `,
 
   Content: styled.section`
@@ -199,8 +144,6 @@ const S = {
     gap: 4rem;
     position: relative;
     padding: 0 4rem;
-
-    ${() => generateResponsiveStyle.introduce()}
   `,
 
   AbsoluteDiv: styled.div`
@@ -213,14 +156,14 @@ const S = {
     font-size: 4rem;
     text-align: center;
 
-    ${() => generateResponsiveStyle.title()}
+    ${() => generateResponsiveStyle.title}
   `,
 
   Description: styled.p`
     font-size: 2rem;
     color: ${({ theme }) => theme.color.gray8};
 
-    ${() => generateResponsiveStyle.description()}
+    ${() => generateResponsiveStyle.description}
   `,
 
   Picture: styled.picture`

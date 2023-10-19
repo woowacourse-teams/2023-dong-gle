@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { css, styled } from 'styled-components';
 import { PencilIcon } from 'assets/icons';
-import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
 import { updateWritingTitle as updateWritingTitleRequest } from 'apis/writings';
-import { KeyboardEventHandler, useEffect, useRef } from 'react';
+import { ChangeEvent, KeyboardEventHandler, useEffect, useRef } from 'react';
 import { getErrorMessage } from 'utils/error';
 import { useToast } from 'hooks/@common/useToast';
 import { validateWritingTitle } from 'utils/validators';
+import { GetWritingResponse } from 'types/apis/writings';
+import { GetCategoryDetailResponse } from 'types/apis/category';
+import useControlledInput from 'hooks/@common/useControlledInput';
 
 type Props = {
   writingId: number;
@@ -17,21 +19,63 @@ type Props = {
 
 const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Props) => {
   const {
+    value: inputTitle,
+    setValue: setInputTitle,
     inputRef,
     escapeInput: escapeRename,
     isInputOpen,
     openInput,
     resetInput,
-  } = useUncontrolledInput();
+  } = useControlledInput(title);
   const myRef = useRef<HTMLHeadingElement>(null);
   const queryClient = useQueryClient();
+  const toast = useToast();
+
   const { mutate: updateWritingTitle } = useMutation(updateWritingTitleRequest, {
-    onSuccess: () => {
+    onMutate: async ({ writingId, body: { title } }) => {
+      await queryClient.cancelQueries(['writings', writingId]);
+      await queryClient.cancelQueries(['writingsInCategory', categoryId]);
+
+      const previousWritings = queryClient.getQueryData<GetWritingResponse>([
+        'writings',
+        writingId,
+      ]);
+      const previousWritingsInCategory = queryClient.getQueryData<GetCategoryDetailResponse>([
+        'writingsInCategory',
+        categoryId,
+      ]);
+
+      previousWritings &&
+        queryClient.setQueryData(['writings', writingId], (old: any) => {
+          return { ...old, title };
+        });
+
+      previousWritingsInCategory &&
+        queryClient.setQueryData(['writingsInCategory', categoryId], (old: any) => {
+          return {
+            ...old,
+            writings: old.writings.map((writing: any) => {
+              return writing.id === writingId ? { id: writing.id, title } : writing;
+            }),
+          };
+        });
+
+      return { previousWritings, previousWritingsInCategory };
+    },
+    onError: (error, _, context) => {
+      setInputTitle(context?.previousWritings?.title || '');
+      queryClient.setQueryData(['writings', writingId], context?.previousWritings);
+      queryClient.setQueryData(
+        ['writingsInCategory', categoryId],
+        context?.previousWritingsInCategory,
+      );
+      toast.show({ type: 'error', message: '글 제목 수정에 실패했습니다.' });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries(['writings', writingId]);
       queryClient.invalidateQueries(['writingsInCategory', categoryId]);
     },
   });
-  const toast = useToast();
 
   const requestChangedName: KeyboardEventHandler<HTMLInputElement> = (e) => {
     try {
@@ -65,7 +109,9 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
           type='text'
           placeholder='새 제목을 입력해주세요'
           defaultValue={title}
+          value={inputTitle}
           ref={inputRef}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setInputTitle(e.target.value)}
           onBlur={resetInput}
           onKeyDown={escapeRename}
           onKeyUp={requestChangedName}
@@ -73,7 +119,7 @@ const WritingTitle = ({ writingId, categoryId, title, canEditTitle = true }: Pro
       ) : (
         <>
           <S.Title ref={myRef} tabIndex={0}>
-            {title}
+            {inputTitle}
           </S.Title>
           {canEditTitle && (
             <S.Button aria-label={'글 제목 수정'} onClick={openInput}>
@@ -120,6 +166,10 @@ const S = {
     ${({ theme }) => css`
       border: 1px solid ${theme.color.gray1};
       outline: 1px solid ${theme.color.gray1};
+    `}
+    ${({ disabled }) => css`
+      background-color: ${disabled ? 'initial' : 'desiredColor'};
+      color: ${disabled ? 'initial' : 'desiredColor'};
     `}
   `,
 };

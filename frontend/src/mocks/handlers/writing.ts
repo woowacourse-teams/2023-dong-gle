@@ -15,6 +15,7 @@ import { errorCtx, jsonCtx, withoutJson } from './utils';
 import { renameWritingTitle, writing, writingProperties } from 'mocks/data/writingPage';
 import { writingTable } from 'mocks/data/writingTablePage';
 import { isConnected } from 'mocks/data/member';
+import { renameWritingTitleIn사이드바기본카테고리 } from 'mocks/data/category';
 
 export const writingHandlers = [
   // 전체 글 조회: GET
@@ -82,6 +83,7 @@ export const writingHandlers = [
     if (hasDefinedField<UpdateWritingTitleArgs['body']>(body, 'title')) {
       if (!isValidAccessToken(req)) return res(...errorCtx(ERROR_RESPONSE, 401));
 
+      renameWritingTitleIn사이드바기본카테고리(body.title);
       renameWritingTitle(body.title);
     }
 

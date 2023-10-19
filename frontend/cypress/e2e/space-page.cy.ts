@@ -6,7 +6,7 @@ describe('스페이스 페이지 왼쪽 사이드바', () => {
     cy.viewport(1440, 810);
     cy.window().its('localStorage').invoke('setItem', 'accessToken', MOCK_ACCESS_TOKEN);
 
-    cy.visit('/space');
+    cy.visit('/space').wait(1000);
   });
 
   describe('글 가져오기 테스트', () => {
@@ -37,24 +37,26 @@ describe('스페이스 페이지 왼쪽 사이드바', () => {
 
     it('카테고리 이름을 수정할 수 있다.', () => {
       cy.findByLabelText('쿠마 카테고리 메인 화면에 열기').realHover().wait(1000);
+
       cy.findByLabelText('쿠마 카테고리 이름 수정').click().wait(1000);
-      cy.findByLabelText('쿠마 카테고리 이름 수정 입력 창')
-        .focus()
-        .type('쿠쿠마{enter}')
-        .wait(1000);
+      cy.findByLabelText('쿠마 카테고리 이름 수정 입력 창').focus().type('짜잔{enter}').wait(1000);
+
       cy.findByLabelText('쿠마 카테고리 메인 화면에 열기').should('not.exist');
-      cy.findByLabelText('쿠쿠마 카테고리 메인 화면에 열기').should('exist');
+      cy.findByLabelText('쿠마짜잔 카테고리 메인 화면에 열기').should('exist');
     });
 
     it('카테고리를 삭제할 수 있다.', () => {
       cy.findByLabelText('쿠마 카테고리 메인 화면에 열기').realHover().wait(1000);
+
       cy.findByLabelText('쿠마 카테고리 삭제').click().wait(1000);
+
       cy.findByLabelText('쿠마 카테고리 메인 화면에 열기').should('not.exist');
     });
 
     it('글을 삭제하면 휴지통 페이지로 이동한다.', () => {
       cy.findByLabelText('쿠마 카테고리 왼쪽 사이드바에서 열기').click().wait(1000);
       cy.findByLabelText('곰이란 무엇인가?글 메인화면에 열기').realHover().wait(1000);
+
       cy.findByLabelText('곰이란 무엇인가?글 삭제').click();
 
       cy.location('pathname').should('eq', '/space/trash-can');

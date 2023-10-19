@@ -20,29 +20,23 @@ const KakaoLoginButton = () => {
 export default KakaoLoginButton;
 
 const generateResponsiveStyle = {
-  kakaoLoginButton: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        width: 100%;
-      }
-    `;
-  },
+  kakaoLoginButton: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 100%;
+    }
+  `,
 
-  kakaoLoginDesktopText: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        display: none;
-      }
-    `;
-  },
+  kakaoLoginDesktopText: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      display: none;
+    }
+  `,
 
-  kakaoLoginMobileText: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        display: block;
-      }
-    `;
-  },
+  kakaoLoginMobileText: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      display: block;
+    }
+  `,
 };
 
 const KakaoLoginText = styled.p`
@@ -67,16 +61,16 @@ const S = {
       background-color: #ffe000;
     }
 
-    ${() => generateResponsiveStyle.kakaoLoginButton()}
+    ${() => generateResponsiveStyle.kakaoLoginButton}
   `,
 
   KakaoLoginDesktopText: styled(KakaoLoginText)`
-    ${() => generateResponsiveStyle.kakaoLoginDesktopText()}
+    ${() => generateResponsiveStyle.kakaoLoginDesktopText}
   `,
 
   KakaoLoginMobileText: styled(KakaoLoginText)`
     display: none;
 
-    ${() => generateResponsiveStyle.kakaoLoginMobileText()}
+    ${() => generateResponsiveStyle.kakaoLoginMobileText}
   `,
 };

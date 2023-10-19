@@ -1,3 +1,5 @@
+import { useGlobalStateValue } from '@yogjin/react-global-state';
+import { mediaQueryMobileState } from 'globalState';
 import styled from 'styled-components';
 
 type Props = {
@@ -7,6 +9,7 @@ type Props = {
 };
 
 const Pagination = ({ pageLength, activePage, changeActivePage }: Props) => {
+  const isMobile = useGlobalStateValue(mediaQueryMobileState);
   const isShowPrevious = activePage > 0;
   const isShowNext = activePage < pageLength - 1;
 
@@ -26,24 +29,33 @@ const Pagination = ({ pageLength, activePage, changeActivePage }: Props) => {
 
   return (
     <S.Container>
-      <S.PaginationButton $isShow={isShowPrevious} onClick={() => changeActivePage(activePage - 1)}>
+      <S.PaginationButton
+        disabled={!isShowPrevious}
+        onClick={() => changeActivePage(activePage - 1)}
+      >
         {'<'}
       </S.PaginationButton>
-      {Array.from({ length: endPage - startPage + 1 }, (_, index) => {
-        const pageIndex = startPage + index;
+      {isMobile ? (
+        <S.PageButton $isActive={true} onClick={() => {}}>
+          {activePage + 1}
+        </S.PageButton>
+      ) : (
+        Array.from({ length: endPage - startPage + 1 }, (_, index) => {
+          const pageIndex = startPage + index;
 
-        return (
-          <li key={pageIndex}>
-            <S.PageButton
-              $isActive={pageIndex === activePage}
-              onClick={() => changeActivePage(pageIndex)}
-            >
-              {pageIndex + 1}
-            </S.PageButton>
-          </li>
-        );
-      })}
-      <S.PaginationButton $isShow={isShowNext} onClick={() => changeActivePage(activePage + 1)}>
+          return (
+            <li key={pageIndex}>
+              <S.PageButton
+                $isActive={pageIndex === activePage}
+                onClick={() => changeActivePage(pageIndex)}
+              >
+                {pageIndex + 1}
+              </S.PageButton>
+            </li>
+          );
+        })
+      )}
+      <S.PaginationButton disabled={!isShowNext} onClick={() => changeActivePage(activePage + 1)}>
         {'>'}
       </S.PaginationButton>
     </S.Container>
@@ -58,15 +70,19 @@ const S = {
     gap: 16px;
   `,
 
-  PaginationButton: styled.button<{ $isShow: boolean }>`
+  PaginationButton: styled.button`
     width: 2.8rem;
     height: 2.8rem;
     border-radius: 4px;
 
     font-size: 2rem;
 
-    opacity: ${({ $isShow }) => ($isShow ? 1 : 0)};
-    pointer-events: ${({ $isShow }) => ($isShow ? 'auto' : 'none')};
+    &:disabled {
+      &:hover {
+        background-color: transparent;
+      }
+      cursor: default;
+    }
 
     &:hover {
       background-color: ${({ theme }) => theme.color.gray3};

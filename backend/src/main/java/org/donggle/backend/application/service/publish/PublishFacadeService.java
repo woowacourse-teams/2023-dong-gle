@@ -1,5 +1,6 @@
 package org.donggle.backend.application.service.publish;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.client.FileDownloadClient;
 import org.donggle.backend.application.service.request.ImageUploadRequest;
@@ -35,12 +36,14 @@ public class PublishFacadeService {
     private final HtmlRenderer htmlRenderer;
     private final BlogClients blogClients;
     private final FileDownloadClient fileDownloadClient;
+    private final EntityManager entityManager;
 
     public void publishWriting(final Long memberId, final Long writingId, final BlogType blogType, final PublishRequest publishRequest) {
         final PublishWritingRequest request = publishService.findPublishWriting(memberId, writingId, blogType);
         final Blog blog = request.blog();
         final Writing writing = request.writing();
         final List<Block> blocks = writing.getBlocks();
+        entityManager.detach(blocks);
         if (blogType == BlogType.TISTORY) {
             replaceTistoryImage(blogType, blocks, request.accessToken());
         }

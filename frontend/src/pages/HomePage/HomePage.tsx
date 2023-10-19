@@ -31,11 +31,11 @@ export default HomePage;
 const generateResponsiveStyle = {
   article: css`
     @media (max-width: 820px) {
-      padding: 8rem 2.4rem;
+      padding: 5rem;
     }
 
     @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-      padding: 4rem 2.4rem;
+      padding: 4rem;
     }
   `,
 
@@ -47,12 +47,10 @@ const generateResponsiveStyle = {
 
     @media (max-width: ${MAX_WIDTH.mobileMedium}) {
       font-size: 2.8rem;
-      margin-bottom: 4rem;
     }
 
     @media (max-width: ${MAX_WIDTH.mobileSmall}) {
       font-size: 2.4rem;
-      margin-bottom: 4rem;
     }
   `,
 };
@@ -69,9 +67,11 @@ const S = {
   `,
 
   Article: styled.article`
+    display: flex;
+    flex-direction: column;
     position: relative;
     width: 100%;
-    padding: 8rem;
+    padding: 6rem;
 
     background-color: ${({ theme }) => theme.color.gray1};
 

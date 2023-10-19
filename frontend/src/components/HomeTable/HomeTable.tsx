@@ -94,10 +94,11 @@ const S = {
   Container: styled.div`
     display: flex;
     position: relative;
+    height: 100%;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 50px;
+    gap: 1.5rem;
   `,
 
   EmptyMessage: styled.p`

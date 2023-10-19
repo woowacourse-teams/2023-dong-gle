@@ -32,8 +32,8 @@ const HomeTable = ({ initialPageIndex = 0, isMobile = false }: Props) => {
     <S.Container>
       <S.HomeTable summary='카테고리 내부 글 목록을 나타낸다'>
         <colgroup>
-          <col width='30%' />
-          <col width='70%' />
+          <col width='20%' />
+          <col width='40%' />
           {isMobile ? null : <col width='20%' />}
           {isMobile ? null : <col width='20%' />}
         </colgroup>

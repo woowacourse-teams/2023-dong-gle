@@ -9,6 +9,11 @@ services:
       - /home/ubuntu/logs/:/logs/
       - /home/ubuntu/javaagent/:/javaagent/
     environment:
+      - HIKARI_MAX_POOL_SIZE
+      - HIKARI_MIN_IDLE
+      - TOMCAT_MAX_THREADS
+      - TOMCAT_ACCEPT_COUNT
+      - TOMCAT_MAX_CONNECTIONS
       - SPRING_PROFILES_ACTIVE
       - DD_ENV=dev
       - DD_SERVICE=Backend

@@ -54,54 +54,34 @@ const MyPage = () => {
 export default MyPage;
 
 const generateResponsiveStyle = {
-  header: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        position: relative;
-        justify-content: center;
+  header: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      position: relative;
+      justify-content: center;
 
-        & > a {
-          display: block;
-        }
-
-        & > button {
-          display: none;
-        }
-      }
-    `;
-  },
-
-  title: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        height: 8rem;
-        font-size: 2.8rem;
+      & > a {
+        display: block;
       }
 
-      @media (max-width: ${MAX_WIDTH.small}) {
-        height: 4rem;
-        font-size: 2rem;
+      & > button {
+        display: none;
       }
-    `;
-  },
+    }
+  `,
 
-  container: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        flex-direction: column;
-      }
-    `;
-  },
+  container: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      flex-direction: column;
+    }
+  `,
 
-  contentContainer: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        gap: 4rem;
-        width: 100%;
-        padding: 2.4rem;
-      }
-    `;
-  },
+  contentContainer: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      gap: 4rem;
+      width: 100%;
+      padding: 2.4rem;
+    }
+  `,
 };
 
 const S = {
@@ -116,7 +96,7 @@ const S = {
     align-items: center;
     padding: 0 4rem;
 
-    ${() => generateResponsiveStyle.header()}
+    ${() => generateResponsiveStyle.header}
   `,
 
   GoToSpacePage: styled(Link)`
@@ -130,8 +110,6 @@ const S = {
     align-items: center;
     height: 10rem;
     font-size: 3.2rem;
-
-    ${() => generateResponsiveStyle.title()}
   `,
 
   Container: styled.div<{ $isLoading: boolean }>`
@@ -142,7 +120,7 @@ const S = {
     height: calc(100% - 12rem);
     border-top: 1px solid ${({ theme }) => theme.color.gray5};
 
-    ${() => generateResponsiveStyle.container()}
+    ${() => generateResponsiveStyle.container}
   `,
 
   ContentContainer: styled.div`
@@ -153,7 +131,7 @@ const S = {
     padding: 4rem;
     font-size: 1.2rem;
 
-    ${() => generateResponsiveStyle.contentContainer()}
+    ${() => generateResponsiveStyle.contentContainer}
   `,
 
   SpinnerContainer: styled.div`

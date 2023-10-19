@@ -6,13 +6,13 @@ import { StoryContainer, StoryItemContainer } from 'styles/storybook';
 const meta = {
   title: 'common/Menu',
   args: {
-    isOpen: true,
+    initialIsOpen: true,
     verticalDirection: 'down',
     horizonDirection: 'left',
   },
   argTypes: {
-    isOpen: {
-      description: '메뉴의 상태입니다.',
+    initialIsOpen: {
+      description: '메뉴의 초기 열림/닫힘 상태입니다.',
     },
     verticalDirection: {
       description: '메뉴가 수직을 기준으로 렌더링 되는 위치입니다.',
@@ -39,11 +39,7 @@ export const Playground: Story = {
     return (
       <StoryContainer>
         <StoryItemContainer>
-          <Menu
-            isOpen={args.isOpen}
-            verticalDirection={args.verticalDirection}
-            horizonDirection={args.horizonDirection}
-          >
+          <Menu verticalDirection={args.verticalDirection} horizonDirection={args.horizonDirection}>
             {MenuValues.map(({ title, handleMenuItemClick }) => {
               return (
                 <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />

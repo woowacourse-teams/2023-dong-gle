@@ -1,7 +1,4 @@
 import WritingViewer from 'components/WritingViewer/WritingViewer';
-import { useEffect } from 'react';
-import { useSetGlobalState } from '@yogjin/react-global-state';
-import { activeCategoryIdState, activeWritingInfoState } from 'globalState';
 import { useLocation } from 'react-router-dom';
 import use활성화된카테고리설정 from 'hooks/use활성화된카테고리설정';
 import use활성화된글설정 from 'hooks/use활성화된글설정';

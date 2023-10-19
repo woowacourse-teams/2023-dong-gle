@@ -1,15 +1,7 @@
 import Menu from 'components/@common/Menu/Menu';
-import useOutsideClickEffect from 'hooks/@common/useOutsideClickEffect';
-import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const HelpMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  const closeMenu = () => setIsOpen(false);
-  useOutsideClickEffect(menuRef, closeMenu);
-
   const helpMenus = [
     {
       title: '사용법',
@@ -25,10 +17,10 @@ const HelpMenu = () => {
   ];
 
   return (
-    <div ref={menuRef}>
-      <S.HelpMenu onClick={() => setIsOpen(!isOpen)}>
+    <div>
+      <S.HelpMenu>
         ?
-        <Menu isOpen={isOpen} verticalDirection='up'>
+        <Menu verticalDirection='up'>
           {helpMenus.map(({ title, handleMenuItemClick }) => {
             return (
               <Menu.Item key={title} title={title} handleMenuItemClick={handleMenuItemClick} />
@@ -44,9 +36,7 @@ export default HelpMenu;
 
 const S = {
   HelpMenu: styled.button`
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    position: relative;
     width: 40px;
     height: 40px;
     border: 1px solid ${({ theme }) => theme.color.gray5};

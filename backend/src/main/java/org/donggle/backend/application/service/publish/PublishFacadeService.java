@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service.publish;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.client.FileDownloadClient;
 import org.donggle.backend.application.service.request.ImageUploadRequest;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,16 +36,15 @@ public class PublishFacadeService {
     private final HtmlRenderer htmlRenderer;
     private final BlogClients blogClients;
     private final FileDownloadClient fileDownloadClient;
-    private final EntityManager entityManager;
 
     public void publishWriting(final Long memberId, final Long writingId, final BlogType blogType, final PublishRequest publishRequest) {
         final PublishWritingRequest request = publishService.findPublishWriting(memberId, writingId, blogType);
         final Blog blog = request.blog();
         final Writing writing = request.writing();
-        final List<Block> blocks = writing.getBlocks();
-        entityManager.detach(blocks);
+        List<Block> blocks = writing.getBlocks();
+
         if (blogType == BlogType.TISTORY) {
-            replaceTistoryImage(blogType, blocks, request.accessToken());
+            blocks = replaceTistoryImage(blogType, blocks, request.accessToken());
         }
 
         final String content = htmlRenderer.render(blocks);
@@ -54,7 +53,8 @@ public class PublishFacadeService {
         publishService.saveProperties(blog, writing, response);
     }
 
-    private void replaceTistoryImage(final BlogType blogType, final List<Block> blocks, final String accessToken) {
+    private List<Block> replaceTistoryImage(final BlogType blogType, final List<Block> blocks, final String accessToken) {
+        final List<Block> replacedBlocks = new ArrayList<>();
         for (int i = 0; i < blocks.size(); i++) {
             if (blocks.get(i).getBlockType() == BlockType.IMAGE) {
                 final ImageBlock imageBlock = (ImageBlock) blocks.get(i);
@@ -64,9 +64,12 @@ public class PublishFacadeService {
                 final ImageUploadRequest imageUploadRequest = new ImageUploadRequest(imageData, mediaType);
                 final ImageUploadResponse imageUploadResponse = blogClients.uploadImage(blogType, accessToken, imageUploadRequest);
                 final NormalBlock imageReplacer = new NormalBlock(Depth.empty(), BlockType.PARAGRAPH, RawText.from(imageUploadResponse.replacer()), List.of());
-                blocks.set(i, imageReplacer);
+                replacedBlocks.add(imageReplacer);
+            } else {
+                replacedBlocks.add(blocks.get(i));
             }
         }
+        return replacedBlocks;
     }
 
     private MediaType parseMediaTypeFromFileName(final String fileName) {

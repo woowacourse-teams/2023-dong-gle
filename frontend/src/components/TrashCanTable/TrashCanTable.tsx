@@ -1,9 +1,10 @@
 import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
 import { usePageNavigate } from 'hooks/usePageNavigate';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { DeletedWriting } from 'types/apis/trash';
 import { useTrashCanTable } from './useTrashCanTable';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   writings: DeletedWriting[];
@@ -28,7 +29,7 @@ const TrashCanTable = ({ writings }: Props) => {
           영구 삭제
         </Button>
         <Button variant='secondary' size='small' onClick={restoreDeletedWritings}>
-          글 복구
+          복구
         </Button>
       </S.ButtonContainer>
       <S.Table summary='휴지통 내부 글 목록을 나타낸다'>
@@ -76,6 +77,17 @@ const TrashCanTable = ({ writings }: Props) => {
 
 export default TrashCanTable;
 
+const generateResponsiveStyle = {
+  buttonContainer: css`
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      button {
+        padding: 0.6rem 1rem;
+        font-size: 1.2rem;
+      }
+    }
+  `,
+};
+
 const S = {
   Container: styled.div`
     display: flex;
@@ -87,6 +99,8 @@ const S = {
   ButtonContainer: styled.div`
     display: flex;
     gap: 0.8rem;
+
+    ${() => generateResponsiveStyle.buttonContainer}
   `,
 
   Table: styled.table`

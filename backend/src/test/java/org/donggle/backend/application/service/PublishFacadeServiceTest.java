@@ -1,6 +1,5 @@
 package org.donggle.backend.application.service;
 
-import jakarta.persistence.EntityManager;
 import org.donggle.backend.application.service.publish.PublishFacadeService;
 import org.donggle.backend.application.service.publish.PublishService;
 import org.donggle.backend.application.service.request.PublishRequest;
@@ -34,8 +33,6 @@ class PublishFacadeServiceTest {
     private BlogClients blogClients;
     @Mock
     private PublishService publishService;
-    @Mock
-    private EntityManager entityManager;
 
     @Test
     @DisplayName("블로그 발행 테스트")

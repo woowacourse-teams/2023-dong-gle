@@ -68,6 +68,7 @@ const S = {
     $type: ToastType;
   }>`
     position: relative;
+    white-space: nowrap;
     width: fit-content;
     padding: 1.4rem 2.7rem;
     background-color: ${({ theme, $type, $toastTheme }) =>

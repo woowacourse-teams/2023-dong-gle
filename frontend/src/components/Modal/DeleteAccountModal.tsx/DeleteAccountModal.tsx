@@ -48,21 +48,19 @@ const generateResponsiveStyle = {
       width: 240px;
     }
   `,
-  button: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        padding: 1rem 5rem;
-      }
+  button: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 1rem 5rem;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        padding: 1rem 4rem;
-      }
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      padding: 1rem 4rem;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
-        padding: 1rem 4rem;
-      }
-    `;
-  },
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      padding: 1rem 4rem;
+    }
+  `,
 };
 
 const S = {
@@ -73,7 +71,7 @@ const S = {
     gap: 3rem;
     width: 400px;
 
-    ${() => generateResponsiveStyle.container}
+    ${generateResponsiveStyle.container}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -98,7 +96,7 @@ const S = {
       padding: 1rem 6rem;
       border-radius: 8px;
 
-      ${() => generateResponsiveStyle.button()}
+      ${generateResponsiveStyle.button}
     }
   `,
   DeleteAccountButton: styled.button`

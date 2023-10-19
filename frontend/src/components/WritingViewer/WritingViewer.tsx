@@ -1,11 +1,12 @@
 import DOMPurify from 'dompurify';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { getWriting } from 'apis/writings';
 import Divider from 'components/@common/Divider/Divider';
 import Spinner from 'components/@common/Spinner/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import WritingTitle from './WritingTitle/WritingTitle';
 import useCodeHighlight from 'hooks/@common/useCodeHighlight';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   writingId: number;
@@ -47,8 +48,26 @@ const WritingViewer = ({ writingId, categoryId, isDeletedWriting }: Props) => {
 
 export default WritingViewer;
 
+const generateResponsiveStyle = {
+  writingViewerContainer: css`
+    @media (max-width: ${MAX_WIDTH.tablet}) {
+      padding: 6rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 5rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      padding: 3rem;
+    }
+  `,
+};
+
 const S = {
   WritingViewerContainer: styled.section`
+    ${generateResponsiveStyle.writingViewerContainer}
+
     padding: 8rem;
     width: 100%;
     overflow-wrap: break-word;

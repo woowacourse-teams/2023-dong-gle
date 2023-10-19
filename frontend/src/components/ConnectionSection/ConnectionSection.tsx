@@ -3,10 +3,11 @@ import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
 import { ConnectionPlatforms } from 'constants/components/myPage';
 import useUncontrolledInput from 'hooks/@common/useUncontrolledInput';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { MediumConnection, NotionConnection, TistoryConnection } from 'types/apis/member';
 import { KeyboardEventHandler } from 'react';
 import { useConnect } from './useConnect';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   tistory: TistoryConnection;
@@ -138,11 +139,40 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
 
 export default ConnectionSection;
 
+const generateResponsiveStyle = {
+  connectionContainerButton: css`
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      p {
+        width: 20px;
+        height: 20px;
+        font-size: 1rem;
+        border-radius: 50%;
+      }
+    }
+  `,
+
+  connectionItem: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      gap: 4rem;
+    }
+  `,
+
+  platformTitle: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      font-size: 1.6rem;
+    }
+  `,
+};
+
 const S = {
   ConnectionContainer: styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    button {
+      ${generateResponsiveStyle.connectionContainerButton}
+    }
   `,
 
   ContentContainerTitle: styled.h2``,
@@ -166,6 +196,8 @@ const S = {
     width: 100%;
     padding: 1.2rem;
     background-color: ${({ theme }) => theme.color.gray2};
+
+    ${generateResponsiveStyle.connectionItem}
   `,
 
   IconContainer: styled.div`
@@ -176,7 +208,9 @@ const S = {
     font-size: 1.6rem;
   `,
 
-  PlatformTitle: styled.h3``,
+  PlatformTitle: styled.h3`
+    ${generateResponsiveStyle.platformTitle}
+  `,
 
   AlreadyConnection: styled.p``,
 };

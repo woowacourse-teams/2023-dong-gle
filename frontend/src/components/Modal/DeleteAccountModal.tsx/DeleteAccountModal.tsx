@@ -1,6 +1,7 @@
 import Modal from 'components/@common/Modal/Modal';
+import { MAX_WIDTH } from 'constants/style';
 import { useMemberDelete } from 'hooks/queries/member/useMemberDelete';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 type Props = {
   isOpen: boolean;
@@ -33,14 +34,44 @@ const DeleteAccountModal = ({ isOpen, closeModal }: Props) => {
 
 export default DeleteAccountModal;
 
+const generateResponsiveStyle = {
+  container: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 360px;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      width: 320px;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      width: 240px;
+    }
+  `,
+  button: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 1rem 5rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      padding: 1rem 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      padding: 1rem 4rem;
+    }
+  `,
+};
+
 const S = {
   Container: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    width: 50vw;
-    max-width: 40rem;
+    width: 400px;
+
+    ${generateResponsiveStyle.container}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -52,16 +83,20 @@ const S = {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    width: 100%;
     height: 100%;
-    margin: 2rem 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    word-break: keep-all;
+    text-align: center;
   `,
   ButtonContainer: styled.div`
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     button {
       padding: 1rem 6rem;
       border-radius: 8px;
+
+      ${generateResponsiveStyle.button}
     }
   `,
   DeleteAccountButton: styled.button`

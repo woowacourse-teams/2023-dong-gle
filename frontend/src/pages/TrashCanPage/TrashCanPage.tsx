@@ -1,8 +1,9 @@
 import { TrashCanEmptyIcon } from 'assets/icons';
 import Spinner from 'components/@common/Spinner/Spinner';
 import TrashCanTable from 'components/TrashCanTable/TrashCanTable';
+import { MAX_WIDTH } from 'constants/style';
 import { useDeletedWritings } from 'hooks/useDeletedWritings';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 const TrashCanPage = () => {
   const { deletedWritings, isLoading } = useDeletedWritings();
@@ -33,6 +34,35 @@ const TrashCanPage = () => {
 
 export default TrashCanPage;
 
+const generateResponsiveStyle = {
+  article: css`
+    @media (max-width: 820px) {
+      padding: 8rem 2.4rem 0 2.4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 4rem 2.4rem 0 2.4rem;
+    }
+  `,
+
+  categoryNameTitle: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      font-size: 3.2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      font-size: 2.8rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      font-size: 2.4rem;
+      margin-bottom: 4rem;
+    }
+  `,
+};
+
 const S = {
   Article: styled.article`
     position: relative;
@@ -40,11 +70,15 @@ const S = {
     padding: 8rem;
 
     background-color: ${({ theme }) => theme.color.gray1};
+
+    ${generateResponsiveStyle.article}
   `,
 
   CategoryNameTitle: styled.h1`
     font-size: 4rem;
     margin-bottom: 5rem;
+
+    ${generateResponsiveStyle.categoryNameTitle}
   `,
 
   EmptyMessage: styled.p`

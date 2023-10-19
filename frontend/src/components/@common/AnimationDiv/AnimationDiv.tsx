@@ -100,6 +100,8 @@ const S = {
     $animation: Animation;
     $duration: number;
   }>`
+    display: flex;
+    justify-content: center;
     animation: ${({ $displayState, $animation, $directionTo, $duration }) => css`
       ${genAnimationStyle($displayState, $animation, $directionTo)} ${$duration}s
     `};

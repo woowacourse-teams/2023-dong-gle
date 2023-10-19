@@ -1,29 +1,32 @@
-import { PropsWithChildren, forwardRef } from 'react';
+import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import Item from './Item';
+import { useMenu } from './useMenu';
 
 type VerticalDirection = 'up' | 'down';
 type HorizonDirection = 'left' | 'right';
 
 type Props = {
-  isOpen: boolean;
+  initialIsOpen?: boolean;
   verticalDirection?: VerticalDirection;
   horizonDirection?: HorizonDirection;
 } & PropsWithChildren;
 
 const Menu = ({
-  isOpen,
+  initialIsOpen = false,
   verticalDirection = 'down',
   horizonDirection = 'left',
   children,
 }: Props) => {
-  if (!isOpen) return null;
+  const { menuRef, isOpen, toggleIsOpen } = useMenu(initialIsOpen);
 
   return (
-    <S.Menu>
-      <S.MenuList $verticalDirection={verticalDirection} $horizonDirection={horizonDirection}>
-        {children}
-      </S.MenuList>
+    <S.Menu ref={menuRef} onClick={toggleIsOpen}>
+      {isOpen ? (
+        <S.MenuList $verticalDirection={verticalDirection} $horizonDirection={horizonDirection}>
+          {children}
+        </S.MenuList>
+      ) : null}
     </S.Menu>
   );
 };
@@ -33,7 +36,13 @@ Menu.Item = Item;
 export default Menu;
 
 const S = {
-  Menu: styled.div``,
+  Menu: styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  `,
 
   MenuList: styled.ul<{
     $verticalDirection: VerticalDirection;
@@ -45,19 +54,30 @@ const S = {
     ${({ $verticalDirection }) =>
       $verticalDirection === 'up' &&
       `
-    	bottom: 80%;
+    	bottom: 100%;
+  	`}
+    ${({ $verticalDirection }) =>
+      $verticalDirection === 'down' &&
+      `
+			top: 100%;
   	`}
     ${({ $horizonDirection }) =>
       $horizonDirection === 'right' &&
       `
-    	left: 50%;
+    	left: 0;
   	`}
-    right: 50%;
-    width: 20rem;
+		${({ $horizonDirection }) =>
+      $horizonDirection === 'left' &&
+      `
+    	right: 0;
+  	`}
+    width: fit-content;
 
     border: 1px solid ${({ theme }) => theme.color.gray4};
     border-radius: 4px;
     background-color: ${({ theme }) => theme.color.gray1};
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+
+    z-index: 1;
   `,
 };

@@ -9,9 +9,10 @@ import { EmptyWritingTableIcon } from 'assets/icons';
 
 type Props = {
   initialPageIndex?: number;
+  isMobile?: boolean;
 };
 
-const HomeTable = ({ initialPageIndex = 0 }: Props) => {
+const HomeTable = ({ initialPageIndex = 0, isMobile = false }: Props) => {
   const { content, totalPages, rowRef, activePage, changeActivePage } =
     useHomeTable(initialPageIndex);
   const { goWritingPage } = usePageNavigate();
@@ -33,15 +34,15 @@ const HomeTable = ({ initialPageIndex = 0 }: Props) => {
         <colgroup>
           <col width='20%' />
           <col width='40%' />
-          <col width='20%' />
-          <col width='20%' />
+          {isMobile ? null : <col width='20%' />}
+          {isMobile ? null : <col width='20%' />}
         </colgroup>
         <thead>
           <tr ref={rowRef} tabIndex={0}>
             <th>카테고리</th>
             <th>글 제목</th>
-            <th>생성 날짜</th>
-            <th>발행한 블로그 플랫폼</th>
+            {isMobile ? null : <th>생성 날짜</th>}
+            {isMobile ? null : <th>발행한 블로그 플랫폼</th>}
           </tr>
         </thead>
         <tbody>
@@ -63,14 +64,16 @@ const HomeTable = ({ initialPageIndex = 0 }: Props) => {
               >
                 <td>{categoryName}</td>
                 <td>{title}</td>
-                <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>
-                <td>
-                  <S.PublishedToIconContainer>
-                    {publishedDetails.map(({ blogName }, index) => (
-                      <Fragment key={index}>{blogIcon[blogName]}</Fragment>
-                    ))}
-                  </S.PublishedToIconContainer>
-                </td>
+                {isMobile ? null : <td>{dateFormatter(createdAt, 'YYYY.MM.DD.')}</td>}
+                {isMobile ? null : (
+                  <td>
+                    <S.PublishedToIconContainer>
+                      {publishedDetails.map(({ blogName }, index) => (
+                        <Fragment key={index}>{blogIcon[blogName]}</Fragment>
+                      ))}
+                    </S.PublishedToIconContainer>
+                  </td>
+                )}
               </tr>
             ),
           )}
@@ -91,10 +94,11 @@ const S = {
   Container: styled.div`
     display: flex;
     position: relative;
+    height: 100%;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 50px;
+    gap: 1.5rem;
   `,
 
   EmptyMessage: styled.p`
@@ -122,6 +126,7 @@ const S = {
     width: 100%;
     text-align: left;
     font-size: 1.4rem;
+    table-layout: fixed;
 
     th {
       color: ${({ theme }) => theme.color.gray8};
@@ -132,6 +137,10 @@ const S = {
     }
 
     td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
       .publishedTo {
         display: flex;
         gap: 0.8rem;

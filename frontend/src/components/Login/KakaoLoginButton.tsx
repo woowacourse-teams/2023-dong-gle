@@ -1,6 +1,7 @@
 import { KakaoSymbol } from 'assets/icons';
 import { OauthPlatforms, getOauthPlatformURL } from 'constants/components/oauth';
-import { styled } from 'styled-components';
+import { MAX_WIDTH } from 'constants/style';
+import { css, styled } from 'styled-components';
 
 const KakaoLoginButton = () => {
   const redirectToKakao = () => {
@@ -10,17 +11,43 @@ const KakaoLoginButton = () => {
   return (
     <S.KakaoLoginButton onClick={redirectToKakao} aria-label='카카오 로그인 화면으로 이동'>
       <KakaoSymbol width='18px' height='18px' />
-      <S.KakaoLoginText>카카오로 시작하기</S.KakaoLoginText>
+      <S.KakaoLoginDesktopText>카카오로 시작하기</S.KakaoLoginDesktopText>
+      <S.KakaoLoginMobileText>로그인</S.KakaoLoginMobileText>
     </S.KakaoLoginButton>
   );
 };
 
 export default KakaoLoginButton;
 
+const generateResponsiveStyle = {
+  kakaoLoginButton: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 100%;
+    }
+  `,
+
+  kakaoLoginDesktopText: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      display: none;
+    }
+  `,
+
+  kakaoLoginMobileText: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      display: block;
+    }
+  `,
+};
+
+const KakaoLoginText = styled.p`
+  flex: 1;
+  font-size: 1.6rem;
+`;
+
 const S = {
   KakaoLoginButton: styled.button`
     display: flex;
-    width: 300px;
+    width: 320px;
     height: 45px;
     justify-content: center;
     align-items: center;
@@ -33,9 +60,17 @@ const S = {
     &:hover {
       background-color: #ffe000;
     }
+
+    ${generateResponsiveStyle.kakaoLoginButton}
   `,
 
-  KakaoLoginText: styled.span`
-    flex: 1;
+  KakaoLoginDesktopText: styled(KakaoLoginText)`
+    ${generateResponsiveStyle.kakaoLoginDesktopText}
+  `,
+
+  KakaoLoginMobileText: styled(KakaoLoginText)`
+    display: none;
+
+    ${generateResponsiveStyle.kakaoLoginMobileText}
   `,
 };

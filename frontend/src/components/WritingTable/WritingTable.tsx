@@ -1,4 +1,5 @@
 import { MediumLogoIcon, TistoryLogoIcon } from 'assets/icons';
+import { MAX_WIDTH } from 'constants/style';
 import { usePageNavigate } from 'hooks/usePageNavigate';
 import { Fragment, ReactElement, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
@@ -68,6 +69,12 @@ export default WritingTable;
 const S = {
   WritingTableContainer: styled.table`
     width: 100%;
+    padding-bottom: 8rem;
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding-bottom: 4rem;
+    }
+
     text-align: left;
     font-size: 1.4rem;
     table-layout: fixed;

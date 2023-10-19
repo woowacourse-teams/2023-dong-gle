@@ -94,6 +94,12 @@ const S = {
     flex-direction: column;
     align-items: end;
     gap: 2rem;
+
+    padding-bottom: 8rem;
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding-bottom: 4rem;
+    }
   `,
 
   ButtonContainer: styled.div`

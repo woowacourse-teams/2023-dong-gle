@@ -60,11 +60,11 @@ export default WritingTablePage;
 const generateResponsiveStyle = {
   article: css`
     @media (max-width: 820px) {
-      padding: 8rem 2.4rem;
+      padding: 8rem 2.4rem 0 2.4rem;
     }
 
     @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-      padding: 4rem 2.4rem;
+      padding: 4rem 2.4rem 0 2.4rem;
     }
   `,
 

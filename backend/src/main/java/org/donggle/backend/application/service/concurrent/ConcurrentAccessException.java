@@ -10,6 +10,6 @@ public class ConcurrentAccessException extends RuntimeException {
     }
 
     public int getErrorCode() {
-        return HttpStatus.CONFLICT.value();
+        return HttpStatus.BAD_REQUEST.value();
     }
 }

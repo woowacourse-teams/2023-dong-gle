@@ -35,18 +35,31 @@ const DeleteAccountModal = ({ isOpen, closeModal }: Props) => {
 export default DeleteAccountModal;
 
 const generateResponsiveStyle = {
+  container: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 360px;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      width: 320px;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      width: 240px;
+    }
+  `,
   button: () => {
     return css`
       @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        padding: 0.8rem 3.2rem;
+        padding: 1rem 5rem;
       }
 
       @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        padding: 0.6rem 1.6rem;
+        padding: 1rem 4rem;
       }
 
       @media (max-width: ${MAX_WIDTH.mobileSmall}) {
-        padding: 0.4rem 0.8rem;
+        padding: 1rem 4rem;
       }
     `;
   },
@@ -58,9 +71,9 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    width: 50vw;
-    max-width: 40rem;
-    padding: 0 2rem;
+    width: 400px;
+
+    ${() => generateResponsiveStyle.container}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -76,12 +89,11 @@ const S = {
     height: 100%;
     font-size: 1.2rem;
     word-break: keep-all;
+    text-align: center;
   `,
   ButtonContainer: styled.div`
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-
+    gap: 2rem;
     button {
       padding: 1rem 6rem;
       border-radius: 8px;

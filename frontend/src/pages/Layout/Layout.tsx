@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
-import HelpMenu from 'components/HelpMenu/HelpMenu';
 import { useGlobalState, useGlobalStateValue } from '@yogjin/react-global-state';
 import {
   activeWritingInfoState,
@@ -70,7 +69,6 @@ const Layout = () => {
         )}
         <S.Main>
           <Outlet />
-          <HelpMenu />
         </S.Main>
         {isWritingViewerActive && isMobile && (
           <Drawer

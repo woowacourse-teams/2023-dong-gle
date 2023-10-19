@@ -34,3 +34,5 @@ export { ReactComponent as EmptyWritingTableIcon } from './empty-writing-table.s
 export { ReactComponent as CategoryIcon } from './category.svg';
 export { ReactComponent as HelpMenuBook } from './help-menu-book.svg';
 export { ReactComponent as HelpMenuFeedback } from './help-menu-feedback.svg';
+export { ReactComponent as Meatballs } from './meatballs.svg';
+export { ReactComponent as LogoutIcon } from './logout.svg';

@@ -67,13 +67,12 @@ const generateResponsiveStyle = {
       @media (max-width: ${MAX_WIDTH.tablet}) {
         width: 8rem;
         height: 3rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
 
       @media (max-width: ${MAX_WIDTH.mobileMedium}) {
         width: 6rem;
         height: 3rem;
-        font-size: 0.8rem;
       }
     `;
   },
@@ -171,7 +170,7 @@ const S = {
   SmallLoginButton: styled(SmallLoginButton)`
     width: 11rem;
     height: 3.5rem;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
 
     ${() => generateResponsiveStyle.smallLoginButton()}
   `,

@@ -1,8 +1,6 @@
-import { useGlobalStateValue } from '@yogjin/react-global-state';
 import Modal from 'components/@common/Modal/Modal';
 import KakaoLoginButton from 'components/Login/KakaoLoginButton';
 import { MAX_WIDTH } from 'constants/style';
-import { mediaQueryMobileState } from 'globalState';
 import { css, styled } from 'styled-components';
 
 type Props = {
@@ -11,10 +9,8 @@ type Props = {
 };
 
 const LoginModal = ({ isOpen, closeModal }: Props) => {
-  const isMobile = useGlobalStateValue(mediaQueryMobileState);
-
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} hasCloseButton={!isMobile}>
+    <Modal isOpen={isOpen} closeModal={closeModal}>
       <S.Container>
         <S.Title>간편 로그인</S.Title>
         <S.Content>
@@ -31,7 +27,12 @@ const generateResponsiveStyle = {
   container: () => {
     return css`
       @media (max-width: ${MAX_WIDTH.tablet}) {
-        width: 50vw;
+        width: 360px;
+      }
+
+      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+        width: 60vw;
+        max-width: 360px;
       }
     `;
   },
@@ -64,8 +65,7 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    width: 30vw;
-    max-width: 40vw;
+    width: 360px;
     height: 20vh;
 
     ${() => generateResponsiveStyle.container()}

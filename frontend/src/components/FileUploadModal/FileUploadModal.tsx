@@ -90,29 +90,25 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
 export default FileUploadModal;
 
 const generateResponsiveStyle = {
-  container: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        width: 40vw;
-      }
+  container: css`
+    @media (max-width: ${MAX_WIDTH.tablet}) {
+      width: 40vw;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        width: 60vw;
-      }
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 60vw;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileMedium}) {
-        width: 80vw;
-      }
-    `;
-  },
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      width: 80vw;
+    }
+  `,
 
-  content: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        padding: 0 2rem;
-      }
-    `;
-  },
+  content: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 0 2rem;
+    }
+  `,
 };
 
 const S = {
@@ -123,7 +119,7 @@ const S = {
     gap: 2rem;
     width: 30vw;
 
-    ${() => generateResponsiveStyle.container()}
+    ${generateResponsiveStyle.container}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -140,7 +136,7 @@ const S = {
     padding: 0 4rem;
     font-size: 1.2rem;
 
-    ${() => generateResponsiveStyle.content()}
+    ${generateResponsiveStyle.content}
   `,
   Item: styled.div`
     display: flex;

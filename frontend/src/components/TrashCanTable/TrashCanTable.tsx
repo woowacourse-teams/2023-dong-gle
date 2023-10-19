@@ -106,7 +106,7 @@ const S = {
     display: flex;
     gap: 0.8rem;
 
-    ${() => generateResponsiveStyle.buttonContainer}
+    ${generateResponsiveStyle.buttonContainer}
   `,
 
   Table: styled.table`

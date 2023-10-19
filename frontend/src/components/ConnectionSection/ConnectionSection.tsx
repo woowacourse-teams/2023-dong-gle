@@ -140,34 +140,28 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
 export default ConnectionSection;
 
 const generateResponsiveStyle = {
-  connectionContainerButton: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
-        p {
-          width: 20px;
-          height: 20px;
-          font-size: 1rem;
-          border-radius: 50%;
-        }
+  connectionContainerButton: css`
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      p {
+        width: 20px;
+        height: 20px;
+        font-size: 1rem;
+        border-radius: 50%;
       }
-    `;
-  },
+    }
+  `,
 
-  connectionItem: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        gap: 4rem;
-      }
-    `;
-  },
+  connectionItem: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      gap: 4rem;
+    }
+  `,
 
-  platformTitle: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        font-size: 1.6rem;
-      }
-    `;
-  },
+  platformTitle: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      font-size: 1.6rem;
+    }
+  `,
 };
 
 const S = {
@@ -177,7 +171,7 @@ const S = {
     gap: 2rem;
 
     button {
-      ${() => generateResponsiveStyle.connectionContainerButton()}
+      ${generateResponsiveStyle.connectionContainerButton}
     }
   `,
 
@@ -203,7 +197,7 @@ const S = {
     padding: 1.2rem;
     background-color: ${({ theme }) => theme.color.gray2};
 
-    ${() => generateResponsiveStyle.connectionItem()}
+    ${generateResponsiveStyle.connectionItem}
   `,
 
   IconContainer: styled.div`
@@ -215,7 +209,7 @@ const S = {
   `,
 
   PlatformTitle: styled.h3`
-    ${() => generateResponsiveStyle.platformTitle()}
+    ${generateResponsiveStyle.platformTitle}
   `,
 
   AlreadyConnection: styled.p``,

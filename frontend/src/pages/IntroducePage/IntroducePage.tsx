@@ -156,14 +156,14 @@ const S = {
     font-size: 4rem;
     text-align: center;
 
-    ${() => generateResponsiveStyle.title}
+    ${generateResponsiveStyle.title}
   `,
 
   Description: styled.p`
     font-size: 2rem;
     color: ${({ theme }) => theme.color.gray8};
 
-    ${() => generateResponsiveStyle.description}
+    ${generateResponsiveStyle.description}
   `,
 
   Picture: styled.picture`

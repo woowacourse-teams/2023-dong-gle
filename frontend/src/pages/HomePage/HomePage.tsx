@@ -75,13 +75,13 @@ const S = {
 
     background-color: ${({ theme }) => theme.color.gray1};
 
-    ${() => generateResponsiveStyle.article}
+    ${generateResponsiveStyle.article}
   `,
 
   CategoryNameTitle: styled.h1`
     font-size: 4rem;
     margin-bottom: 5rem;
 
-    ${() => generateResponsiveStyle.categoryNameTitle}
+    ${generateResponsiveStyle.categoryNameTitle}
   `,
 };

@@ -61,16 +61,16 @@ const S = {
       background-color: #ffe000;
     }
 
-    ${() => generateResponsiveStyle.kakaoLoginButton}
+    ${generateResponsiveStyle.kakaoLoginButton}
   `,
 
   KakaoLoginDesktopText: styled(KakaoLoginText)`
-    ${() => generateResponsiveStyle.kakaoLoginDesktopText}
+    ${generateResponsiveStyle.kakaoLoginDesktopText}
   `,
 
   KakaoLoginMobileText: styled(KakaoLoginText)`
     display: none;
 
-    ${() => generateResponsiveStyle.kakaoLoginMobileText}
+    ${generateResponsiveStyle.kakaoLoginMobileText}
   `,
 };

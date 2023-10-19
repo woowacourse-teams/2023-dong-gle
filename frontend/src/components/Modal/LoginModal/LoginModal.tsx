@@ -24,39 +24,33 @@ const LoginModal = ({ isOpen, closeModal }: Props) => {
 export default LoginModal;
 
 const generateResponsiveStyle = {
-  container: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        width: 360px;
-      }
+  container: css`
+    @media (max-width: ${MAX_WIDTH.tablet}) {
+      width: 360px;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        width: 60vw;
-        max-width: 360px;
-      }
-    `;
-  },
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 60vw;
+      max-width: 360px;
+    }
+  `,
 
-  title: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
-        font-size: 2rem;
-        font-weight: 600;
-      }
-    `;
-  },
+  title: css`
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+  `,
 
-  content: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        margin: 1.6rem 0;
-      }
+  content: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      margin: 1.6rem 0;
+    }
 
-      @media (max-width: ${MAX_WIDTH.mobileSmall}) {
-        margin: 1.2rem 0;
-      }
-    `;
-  },
+    @media (max-width: ${MAX_WIDTH.mobileSmall}) {
+      margin: 1.2rem 0;
+    }
+  `,
 };
 
 const S = {
@@ -68,14 +62,14 @@ const S = {
     width: 360px;
     height: 20vh;
 
-    ${() => generateResponsiveStyle.container()}
+    ${generateResponsiveStyle.container}
   `,
 
   Title: styled.h1`
     font-size: 2rem;
     font-weight: 700;
 
-    ${() => generateResponsiveStyle.title()}
+    ${generateResponsiveStyle.title}
   `,
 
   Content: styled.div`

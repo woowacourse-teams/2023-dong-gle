@@ -26,16 +26,14 @@ const Profile = ({ name }: Props) => {
 export default Profile;
 
 const generateResponsiveStyle = {
-  profile: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.mobileLarge}) {
-        justify-content: center;
-        width: 100%;
-        height: initial;
-        border-bottom: 1px solid ${({ theme }) => theme.color.gray5};
-      }
-    `;
-  },
+  profile: () => css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      justify-content: center;
+      width: 100%;
+      height: initial;
+      border-bottom: 1px solid ${({ theme }) => theme.color.gray5};
+    }
+  `,
 };
 
 const S = {
@@ -52,7 +50,7 @@ const S = {
     font-size: 2rem;
     font-weight: bold;
 
-    ${() => generateResponsiveStyle.profile()}
+    ${generateResponsiveStyle.profile()}
   `,
 
   DeleteAccountButton: styled.button`

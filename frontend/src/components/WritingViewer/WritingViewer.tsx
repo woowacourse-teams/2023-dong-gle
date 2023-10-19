@@ -49,27 +49,29 @@ const WritingViewer = ({ writingId, categoryId, isDeletedWriting }: Props) => {
 export default WritingViewer;
 
 const generateResponsiveStyle = {
-  writingViewerContainer: () => {
-    return css`
-      @media (max-width: ${MAX_WIDTH.laptop}) {
-        padding: 4rem 4rem;
-      }
+  writingViewerContainer: css`
+    @media (max-width: ${MAX_WIDTH.tablet}) {
+      padding: 6rem;
+    }
 
-      @media (max-width: ${MAX_WIDTH.tablet}) {
-        padding: 4rem 2.4rem;
-      }
-    `;
-  },
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 5rem;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      padding: 3rem;
+    }
+  `,
 };
 
 const S = {
   WritingViewerContainer: styled.section`
+    ${generateResponsiveStyle.writingViewerContainer}
+
     padding: 8rem;
     width: 100%;
     overflow-wrap: break-word;
     background-color: ${({ theme }) => theme.color.gray1};
-
-    ${() => generateResponsiveStyle.writingViewerContainer()}
   `,
 
   LoadingContainer: styled.div`

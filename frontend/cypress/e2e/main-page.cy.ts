@@ -6,7 +6,7 @@ describe('메인 페이지', () => {
 
   describe('로그인 성공 테스트', () => {
     it('로그인 하기 버튼을 누르면 로그인 모달 창이 열린다.', () => {
-      cy.findByText('로그인하기').click();
+      cy.findByText('로그인').click();
 
       cy.findByText('간편 로그인').should('be.visible');
     });

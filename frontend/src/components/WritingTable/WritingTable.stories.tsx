@@ -9,7 +9,7 @@ import {
 import { writingTable } from 'mocks/data/writingTablePage';
 
 const meta = {
-  title: 'WritingTable',
+  title: 'writing/WritingTable',
   component: WritingTable,
   args: {
     writings: writingTable.writings,

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import WritingList from './WritingList';
 
 const meta: Meta<typeof WritingList> = {
-  title: 'WritingList',
+  title: 'writing/WritingList',
   component: WritingList,
   args: {
     categoryId: 1,

@@ -1,0 +1,49 @@
+name: Deploy Storybook
+
+on:
+  pull_request:
+    branches: develop
+    paths:
+      - frontend/**
+
+defaults:
+  run:
+    working-directory: ./frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'yarn'
+          cache-dependency-path: ${{ vars.FE_DIRECTORY }}/yarn.lock
+
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+        working-directory: ${{ vars.FE_DIRECTORY }}
+
+      - name: Set PUBLIC_URL
+        run: |
+          PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
+          echo PUBLIC_URL=$PUBLIC_URL > .env
+
+      - name: Build storybook
+        run: |
+          yarn build-storybook
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static

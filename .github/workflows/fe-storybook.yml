@@ -33,11 +33,6 @@ jobs:
           yarn install --frozen-lockfile
         working-directory: ${{ vars.FE_DIRECTORY }}
 
-      - name: Set PUBLIC_URL
-        run: |
-          PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
-          echo PUBLIC_URL=$PUBLIC_URL > .env
-
       - name: Build storybook
         run: |
           yarn build-storybook
@@ -46,4 +41,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
+          publish_dir: ./frontend/storybook-static

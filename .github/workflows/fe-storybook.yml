@@ -36,6 +36,8 @@ jobs:
       - name: Build storybook
         run: |
           yarn build-storybook
+          mkdir ./storybook-static/storybook
+          mv ./storybook-static/* ./storybook-static/storybook
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3

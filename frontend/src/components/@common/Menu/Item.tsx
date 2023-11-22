@@ -1,14 +1,19 @@
+import { ReactElement } from 'react';
 import styled from 'styled-components';
 
 type Props = {
   title: string;
   handleMenuItemClick: () => void;
+  icon?: ReactElement;
 };
 
-const Item = ({ title, handleMenuItemClick }: Props) => {
+const Item = ({ title, handleMenuItemClick, icon }: Props) => {
   return (
     <S.Item>
-      <button onClick={handleMenuItemClick}>{title}</button>
+      <button onClick={handleMenuItemClick}>
+        {title}
+        {icon}
+      </button>
     </S.Item>
   );
 };
@@ -21,7 +26,7 @@ const S = {
     align-items: center;
     width: 100%;
     height: 4rem;
-
+    padding: 0 0.4rem;
     &:not(:last-child) {
       box-shadow: 0px 1px 0px ${({ theme }) => theme.color.gray4};
     }
@@ -31,11 +36,13 @@ const S = {
     }
 
     button {
-      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100px;
       height: 100%;
       margin: 0 8px;
 
-      text-align: start;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

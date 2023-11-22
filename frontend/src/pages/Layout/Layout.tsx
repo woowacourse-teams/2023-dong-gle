@@ -1,35 +1,47 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { HomeBorderIcon, PlusCircleIcon, TrashCanIcon } from 'assets/icons';
-import Button from 'components/@common/Button/Button';
 import { HEADER_STYLE, LAYOUT_STYLE, sidebarStyle } from 'styles/layoutStyle';
 import Header from 'components/Header/Header';
 import WritingSideBar from 'components/WritingSideBar/WritingSideBar';
-import CategorySection from 'components/Category/Section/Section';
-import { useModal } from 'hooks/@common/useModal';
-import FileUploadModal from 'components/FileUploadModal/FileUploadModal';
-import Divider from 'components/@common/Divider/Divider';
-import HelpMenu from 'components/HelpMenu/HelpMenu';
-import { useGlobalStateValue } from '@yogjin/react-global-state';
-import { activeWritingInfoState } from 'globalState';
-import { NAVIGATE_PATH } from 'constants/path';
-import GoToPageLink from 'components/GoToPageLink/GoToPageLink';
+import { useGlobalState, useGlobalStateValue } from '@yogjin/react-global-state';
+import {
+  activeWritingInfoState,
+  leftDrawerState,
+  mediaQueryMobileState,
+  rightDrawerState,
+} from 'globalState';
+import LeftSideBar from 'components/LeftSideBar/LeftSideBar';
+import { Drawer } from '@donggle/layout-component';
 
 const Layout = () => {
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
+  const isMobile = useGlobalStateValue(mediaQueryMobileState);
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(isMobile ? false : true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
   const activeWritingInfo = useGlobalStateValue(activeWritingInfoState);
-  const { isOpen, openModal, closeModal } = useModal();
+  const [isLeftDrawerOpen, setIsLeftDrawerOpen] = useGlobalState(leftDrawerState);
+  const [isRightDrawerOpen, setIsRightDrawerOpen] = useGlobalState(rightDrawerState);
+  const location = useLocation();
+
   const isWritingViewerActive = activeWritingInfo !== null;
 
   const toggleLeftSidebar = () => {
-    setIsLeftSidebarOpen(!isLeftSidebarOpen);
+    isMobile ? setIsLeftDrawerOpen(true) : setIsLeftSidebarOpen(!isLeftSidebarOpen);
   };
 
   const toggleRightSidebar = () => {
-    setIsRightSidebarOpen(!isRightSidebarOpen);
+    isMobile ? setIsRightDrawerOpen(true) : setIsRightSidebarOpen(!isRightSidebarOpen);
   };
+
+  // 모바일 환경이 아닐 때 사이드바를 연 상태로 변경하기 위함.
+  useEffect(() => {
+    if (!isMobile) setIsLeftSidebarOpen(true);
+  }, [isMobile]);
+
+  // 모바일 환경에서 왼쪽 사이드바로 페이지 이동 시(location.pathname 변경 시) 사이드바를 닫기 위함.
+  useEffect(() => {
+    setIsLeftDrawerOpen(false);
+  }, [location.pathname]);
 
   return (
     <S.Container>
@@ -39,36 +51,38 @@ const Layout = () => {
         isWritingViewerActive={isWritingViewerActive}
       />
       <S.Row>
-        <S.LeftSidebarSection $isLeftSidebarOpen={isLeftSidebarOpen}>
-          <Button
-            size={'large'}
-            icon={<PlusCircleIcon width={22} height={22} />}
-            block={true}
-            align='left'
-            onClick={openModal}
-            aria-label='글 가져오기'
+        {isMobile ? (
+          <Drawer
+            anchor='left'
+            size='30rem'
+            open={isLeftDrawerOpen}
+            onClose={() => setIsLeftDrawerOpen(false)}
           >
-            글 가져오기
-          </Button>
-          <FileUploadModal isOpen={isOpen} closeModal={closeModal} />
-          <Divider />
-          <GoToPageLink pathname={NAVIGATE_PATH.spacePage}>
-            <HomeBorderIcon />
-            <S.GoToPageLinkText>전체 글</S.GoToPageLinkText>
-          </GoToPageLink>
-          <Divider />
-          <CategorySection />
-          <Divider />
-          <GoToPageLink pathname={NAVIGATE_PATH.trashCanPage}>
-            <TrashCanIcon width={20} height={20} />
-            <S.GoToPageLinkText>휴지통</S.GoToPageLinkText>
-          </GoToPageLink>
-        </S.LeftSidebarSection>
+            <S.LeftSidebarSection $isLeftSidebarOpen={true}>
+              <LeftSideBar />
+            </S.LeftSidebarSection>
+          </Drawer>
+        ) : (
+          <S.LeftSidebarSection $isLeftSidebarOpen={isLeftSidebarOpen}>
+            <LeftSideBar />
+          </S.LeftSidebarSection>
+        )}
         <S.Main>
           <Outlet />
-          <HelpMenu />
         </S.Main>
-        {isWritingViewerActive && (
+        {isWritingViewerActive && isMobile && (
+          <Drawer
+            anchor='right'
+            size='30rem'
+            open={isRightDrawerOpen}
+            onClose={() => setIsRightDrawerOpen(false)}
+          >
+            <S.RightSidebarSection $isRightSidebarOpen={true}>
+              <WritingSideBar isPublishingSectionActive={!activeWritingInfo?.isDeleted} />
+            </S.RightSidebarSection>
+          </Drawer>
+        )}
+        {isWritingViewerActive && !isMobile && (
           <S.RightSidebarSection $isRightSidebarOpen={isRightSidebarOpen}>
             <WritingSideBar isPublishingSectionActive={!activeWritingInfo?.isDeleted} />
           </S.RightSidebarSection>
@@ -113,10 +127,5 @@ const S = {
   RightSidebarSection: styled.section<{ $isRightSidebarOpen: boolean }>`
     ${sidebarStyle}
     display: ${({ $isRightSidebarOpen }) => !$isRightSidebarOpen && 'none'};
-  `,
-
-  GoToPageLinkText: styled.p`
-    font-size: 1.4rem;
-    font-weight: 500;
   `,
 };

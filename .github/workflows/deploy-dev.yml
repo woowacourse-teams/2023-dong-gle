@@ -24,3 +24,4 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo chmod +x deploy.sh
           sudo ./deploy.sh ${{ vars.INFRA_PROFILE_DEVELOPMENT }}
+          sudo docker image prune -af

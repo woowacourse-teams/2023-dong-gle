@@ -1,28 +1,35 @@
 name: Run Docker Compose Production
 
 on:
-  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  fe-build:
+    uses: ./.github/workflows/build-fe-prod.yml
+    secrets: inherit
+
+  be-build:
+    uses: ./.github/workflows/build-be-prod.yml
+    secrets: inherit
+
   deploy:
-    runs-on: [self-hosted,prod]
+    runs-on: [self-hosted, prod]
+    needs: [fe-build, be-build]
     steps:
-    - uses: actions/checkout@v3
-    - name: create .env
-      run: |
-        touch .env
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-        echo "SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE_PRODUCTION }}" >> .env
-        echo "INFRA_PROFILE=${{ vars.INFRA_PROFILE_PRODUCTION}}" >> .env
-    ## deploy to production
-    - name: Deploy to prod
-      run: |
-        sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        sudo docker compose down
-        sudo docker compose pull
-        sudo docker compose up -d
-        sudo docker image prune -af
+      - uses: actions/checkout@v3
+      - name: create .env
+        run: |
+          touch .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE_PRODUCTION }}" >> .env
+          echo "INFRA_PROFILE=${{ vars.INFRA_PROFILE_PRODUCTION}}" >> .env
+      ## deploy to production
+      - name: Deploy to prod
+        run: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo chmod +x ./deploy.sh
+          sudo ./deploy.sh ${{ vars.INFRA_PROFILE_PRODUCTION }}
+          sudo docker image prune -af

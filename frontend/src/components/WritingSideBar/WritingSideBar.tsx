@@ -6,9 +6,8 @@ import { InfoIcon, PublishingIcon } from 'assets/icons';
 import { useEffect, useState } from 'react';
 import { Blog } from 'types/domain';
 import WritingPropertySection from 'components/WritingPropertySection/WritingPropertySection';
-import { useGlobalStateValue } from '@yogjin/react-global-state';
-import { activeWritingInfoState } from 'globalState';
-import Button from 'components/@common/Button/Button';
+import { useGlobalStateValue, useSetGlobalState } from '@yogjin/react-global-state';
+import { activeWritingInfoState, rightDrawerState } from 'globalState';
 import TistoryPublishingPropertySection from 'components/PublishingPropertySection/TistoryPublishingPropertySection';
 
 export enum TabKeys {
@@ -34,6 +33,11 @@ const WritingSideBar = ({ isPublishingSectionActive = true }: Props) => {
   const writingId = activeWritingInfo?.id;
   const { currentTab, selectCurrentTab } = useCurrentTab<TabKeys>(TabKeys.WritingProperty);
   const [publishTo, setPublishTo] = useState<Blog | null>(null);
+  const setIsRightDrawerOpen = useSetGlobalState(rightDrawerState);
+
+  useEffect(() => {
+    return () => setIsRightDrawerOpen(false);
+  }, []);
 
   useEffect(() => {
     selectCurrentTab(TabKeys.WritingProperty);

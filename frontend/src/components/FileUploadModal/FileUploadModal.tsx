@@ -2,7 +2,7 @@ import Button from 'components/@common/Button/Button';
 import FileUploader from 'components/@common/FileUploader/FileUploader';
 import Modal from 'components/@common/Modal/Modal';
 import Spinner from 'components/@common/Spinner/Spinner';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { useFileUploadModal } from './useFileUploadModal';
 import Input from 'components/@common/Input/Input';
 import { usePageNavigate } from 'hooks/usePageNavigate';
@@ -10,6 +10,7 @@ import { useMember } from 'hooks/queries/useMember';
 import { useGlobalStateValue } from '@yogjin/react-global-state';
 import { activeCategoryIdState } from 'globalState';
 import { KeyboardEventHandler } from 'react';
+import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
   isOpen: boolean;
@@ -49,7 +50,12 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
           <S.Content>
             <S.Item>
               <S.ItemTitle>내 컴퓨터에서 가져오기</S.ItemTitle>
-              <FileUploader accept='.md' height='15rem' onFileSelect={uploadOnServer} />
+              <FileUploader
+                accept='.md'
+                width='100%'
+                height='15rem'
+                onFileSelect={uploadOnServer}
+              />
             </S.Item>
             {notion && notion.isConnected ? (
               <>
@@ -83,14 +89,37 @@ const FileUploadModal = ({ isOpen, closeModal }: Props) => {
 
 export default FileUploadModal;
 
+const generateResponsiveStyle = {
+  container: css`
+    @media (max-width: ${MAX_WIDTH.tablet}) {
+      width: 40vw;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      width: 60vw;
+    }
+
+    @media (max-width: ${MAX_WIDTH.mobileMedium}) {
+      width: 80vw;
+    }
+  `,
+
+  content: css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      padding: 0 2rem;
+    }
+  `,
+};
+
 const S = {
   Container: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
-    width: 50vw;
-    max-width: 40rem;
+    gap: 2rem;
+    width: 30vw;
+
+    ${generateResponsiveStyle.container}
   `,
   Title: styled.h1`
     font-size: 2rem;
@@ -100,10 +129,14 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7rem;
+    gap: 8rem;
+    width: 100%;
     height: 100%;
     margin: 2rem 0;
-    font-size: 1.3rem;
+    padding: 0 4rem;
+    font-size: 1.2rem;
+
+    ${generateResponsiveStyle.content}
   `,
   Item: styled.div`
     display: flex;

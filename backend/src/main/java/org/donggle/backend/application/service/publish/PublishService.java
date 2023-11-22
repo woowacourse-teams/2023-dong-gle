@@ -1,4 +1,4 @@
-package org.donggle.backend.application.service.blog;
+package org.donggle.backend.application.service.publish;
 
 import lombok.RequiredArgsConstructor;
 import org.donggle.backend.application.repository.BlogRepository;
@@ -6,6 +6,7 @@ import org.donggle.backend.application.repository.BlogWritingRepository;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
 import org.donggle.backend.application.repository.WritingRepository;
+import org.donggle.backend.application.service.request.PublishWritingRequest;
 import org.donggle.backend.domain.blog.Blog;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.BlogWriting;
@@ -34,7 +35,7 @@ import static org.donggle.backend.domain.writing.BlockType.IMAGE;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@RequiredArgsConstructor()
 public class PublishService {
     private final BlogRepository blogRepository;
     private final WritingRepository writingRepository;
@@ -46,8 +47,7 @@ public class PublishService {
         final Blog blog = findBlog(blogType);
         final Member member = findMember(memberId);
         final Writing writing = writingRepository.findByIdWithBlocks(writingId).orElseThrow(() -> new WritingNotFoundException(writingId));
-        findStylesByNomalBlocks(writing);
-
+        findStylesByNormalBlocks(writing);
         validateAuthorization(member.getId(), writing);
 
         final MemberCredentials memberCredentials = findMemberCredentials(member);
@@ -58,17 +58,20 @@ public class PublishService {
         return new PublishWritingRequest(blog, writing, accessToken);
     }
 
-    private void findStylesByNomalBlocks(final Writing writing) {
-        final List<Block> blocks = writing.getBlocks();
-        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
-        final List<NormalBlock> normalBlocks = blocks.stream().filter(block -> !notNormalType.contains(block.getBlockType())).map(NormalBlock.class::cast).toList();
-        writingRepository.findStylesForBlocks(normalBlocks);
-    }
-
     public void saveProperties(final Blog blog, final Writing writing, final PublishResponse response) {
         blogWritingRepository.save(new BlogWriting(blog, writing, response.dateTime(), response.tags(), response.url()));
     }
 
+
+    private void findStylesByNormalBlocks(final Writing writing) {
+        final List<Block> blocks = writing.getBlocks();
+        final Set<BlockType> notNormalType = Set.of(CODE_BLOCK, IMAGE, HORIZONTAL_RULES);
+        final List<NormalBlock> normalBlocks = blocks.stream()
+                .filter(block -> !notNormalType.contains(block.getBlockType()))
+                .map(NormalBlock.class::cast)
+                .toList();
+        writingRepository.findStylesForBlocks(normalBlocks);
+    }
 
     private MemberCredentials findMemberCredentials(final Member member) {
         return memberCredentialsRepository.findByMember(member).orElseThrow(NoSuchElementException::new);

@@ -1,11 +1,7 @@
-name: CICD for Frontend Production 
+name: CICD for Frontend Production
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'frontend/**'
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -19,15 +15,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
-          cache: 'yarn'
+          node-version: "18.x"
+          cache: "yarn"
           cache-dependency-path: ${{ vars.FE_DIRECTORY }}/yarn.lock
 
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile
         working-directory: ${{ vars.FE_DIRECTORY }}
-      
+
       - name: Create .env.production variable
         run: |
           touch .env.production
@@ -57,8 +53,3 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-frontend-prod:latest
           platforms: linux/arm64
-
-  deploy:
-    needs: build
-    uses: ./.github/workflows/deploy-prod.yml
-    secrets: inherit

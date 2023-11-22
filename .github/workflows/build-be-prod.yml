@@ -1,11 +1,7 @@
 name: CICD for Backend Production
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "backend/**"
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -62,12 +58,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./backend
-          file: ./backend/Dockerfile
+          file: ./backend/Dockerfile-prod
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-prod:latest
           platforms: linux/arm64
-
-  deploy:
-    needs: build
-    uses: ./.github/workflows/deploy-prod.yml
-    secrets: inherit

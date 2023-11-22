@@ -3,6 +3,7 @@ package org.donggle.backend.infrastructure.client.tistory;
 import org.donggle.backend.application.client.BlogClient;
 import org.donggle.backend.application.repository.MemberCredentialsRepository;
 import org.donggle.backend.application.repository.MemberRepository;
+import org.donggle.backend.application.service.request.ImageUploadRequest;
 import org.donggle.backend.application.service.request.PublishRequest;
 import org.donggle.backend.domain.blog.BlogType;
 import org.donggle.backend.domain.blog.PublishStatus;
@@ -12,6 +13,7 @@ import org.donggle.backend.exception.business.InvalidPublishRequestException;
 import org.donggle.backend.exception.business.NotConnectedException;
 import org.donggle.backend.exception.notfound.MemberNotFoundException;
 import org.donggle.backend.infrastructure.client.exception.ClientInternalServerError;
+import org.donggle.backend.infrastructure.client.tistory.dto.TistoryImageUploadResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishPropertyRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.request.TistoryPublishRequest;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryBlogNameResponse;
@@ -19,12 +21,16 @@ import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCat
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryCategoryListResponseWrapper.TistoryCategoryListResponse.TistoryCategoryResponse;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryGetWritingResponseWrapper;
 import org.donggle.backend.infrastructure.client.tistory.dto.response.TistoryPublishWritingResponseWrapper;
+import org.donggle.backend.ui.response.ImageUploadResponse;
 import org.donggle.backend.ui.response.PublishResponse;
 import org.donggle.backend.ui.response.TistoryCategoryListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -80,6 +86,33 @@ public class TistoryApiClient implements BlogClient {
                 .block();
         return findPublishProperty(makeTistoryPublishPropertyRequest(accessToken, response.tistory().postId()))
                 .toPublishResponse();
+    }
+
+    @Override
+    public ImageUploadResponse uploadImage(final String accessToken, final ImageUploadRequest imageUploadRequest) {
+        final MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.asyncPart("uploadedfile", imageUploadRequest.imageDataFlux(), DataBuffer.class)
+                .contentType(imageUploadRequest.mediaType())
+                .filename("uploadedfile");
+        builder.part("access_token", accessToken);
+        builder.part("blogName", findDefaultBlogName(accessToken));
+        builder.part("output", "json");
+
+        System.out.println("builder.build() = " + builder.build());
+
+        final TistoryImageUploadResponseWrapper response = webClient
+                .post()
+                .uri("/post/attach")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(builder.build()))
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> handle4xxException(clientResponse.statusCode().value(), PLATFORM_NAME))
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> clientResponse.bodyToMono(String.class)
+                        .map(e -> new ClientInternalServerError(PLATFORM_NAME)))
+                .bodyToMono(TistoryImageUploadResponseWrapper.class)
+                .block();
+        System.out.println("response = " + response);
+        return response.toImageUploadResponse();
     }
 
     private TistoryPublishPropertyRequest makeTistoryPublishPropertyRequest(final String accessToken, final Long postId) {

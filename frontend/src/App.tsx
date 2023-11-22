@@ -5,8 +5,9 @@ import ToastProvider from 'contexts/ToastProvider';
 import ToastContainer from 'components/@common/Toast/ToastContainer';
 import { Outlet } from 'react-router-dom';
 import ErrorPage from 'pages/ErrorPage/ErrorPage';
+import { useMediaQuery } from 'hooks/@common/useMediaQuery';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       useErrorBoundary: true,
@@ -16,6 +17,8 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  useMediaQuery();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>

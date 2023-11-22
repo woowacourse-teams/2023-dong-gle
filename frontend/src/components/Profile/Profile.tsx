@@ -1,7 +1,8 @@
 import { DefaultUserProfileIcon } from 'assets/icons';
 import DeleteAccountModal from 'components/Modal/DeleteAccountModal.tsx/DeleteAccountModal';
+import { MAX_WIDTH } from 'constants/style';
 import { useModal } from 'hooks/@common/useModal';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 type Props = {
   name: string;
@@ -24,6 +25,17 @@ const Profile = ({ name }: Props) => {
 
 export default Profile;
 
+const generateResponsiveStyle = {
+  profile: () => css`
+    @media (max-width: ${MAX_WIDTH.mobileLarge}) {
+      justify-content: center;
+      width: 100%;
+      height: initial;
+      border-bottom: 1px solid ${({ theme }) => theme.color.gray5};
+    }
+  `,
+};
+
 const S = {
   Profile: styled.div`
     display: flex;
@@ -37,7 +49,10 @@ const S = {
     background-color: ${({ theme }) => theme.color.gray2};
     font-size: 2rem;
     font-weight: bold;
+
+    ${generateResponsiveStyle.profile()}
   `,
+
   DeleteAccountButton: styled.button`
     padding: 0.1rem 0;
     color: ${({ theme }) => theme.color.gray7};

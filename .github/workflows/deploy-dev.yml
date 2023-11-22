@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, dev]
+    runs-on: [self-hosted, donggle-dev]
     steps:
       - uses: actions/checkout@v3
       - name: create .env

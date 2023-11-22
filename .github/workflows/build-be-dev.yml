@@ -65,7 +65,7 @@ jobs:
           file: ./backend/Dockerfile-dev
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dong-gle-backend-dev:latest
-          platforms: linux/arm64
+          platforms: linux/amd64
 
   deploy:
     needs: build

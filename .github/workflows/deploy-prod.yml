@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
 
   deploy:
-    runs-on: [self-hosted, prod]
+    runs-on: [self-hosted, donggle-prod]
     needs: [fe-build, be-build]
     steps:
       - uses: actions/checkout@v3

@@ -1,0 +1,52 @@
+name: Deploy Storybook
+
+on: # 언제 실행?
+  pull_request: # PR을 날렸을 때
+    branches: develop # develop 브랜치에서
+    paths:
+      - frontend/** # 어떤 경로의 디렉터리에서
+
+defaults: # 스크립트를 실행할 디렉터리 경로
+  run:
+    working-directory: ./frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 실행 환경
+    permissions: # workflow에 줄 권한
+      contents: write # peaceiris/actions-gh-pages@v3에서 요구하는 설정: 쓰기권한
+    concurrency: # 현재 스크립트가 한번만 실행되도록 해주는 옵션
+      group: ${{ github.workflow }}
+      cancel-in-progress: true # 똑같은 group에서 이전에 실행중인 작업이 있다면 취소
+
+    steps:
+      # 레포지토리의 소스 코드를 사용한다.
+      - uses: actions/checkout@v3
+
+      # node.js 런타임을 사용한다 .
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: # 의존성 캐싱 옵션
+          node-version: '18.x'
+          cache: 'yarn'
+          cache-dependency-path: ${{ vars.FE_DIRECTORY }}/yarn.lock
+
+      # 의존성 설치
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile # 정확한 버전의 패키지 설치 (== npm ci)
+        working-directory: ${{ vars.FE_DIRECTORY }}
+
+      # 스토리북 빌드
+      - name: Build storybook
+        run: | # 명령어 한줄 씩 실행
+          yarn build-storybook
+          mkdir ./dist
+          mv ./storybook-static ./dist/storybook
+
+      # gh-pages를 이용해 스토리북 빌드 파일 배포
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend/dist

@@ -12,11 +12,11 @@ type Props = {
 };
 
 const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
-  const { tistory, medium } = useMember();
+  const { medium } = useMember();
   const { goMyPage } = usePageNavigate();
 
-  const 블로그가하나라도연결되었는지 = tistory?.isConnected || medium?.isConnected;
-  const 모든블로그가연결되었는지 = tistory?.isConnected && medium?.isConnected;
+  const 블로그가하나라도연결되었는지 = medium?.isConnected;
+  const 모든블로그가연결되었는지 = medium?.isConnected;
 
   const openPublishingPropertySection = (blog: Blog) => {
     onBlogButtonClick(blog);
@@ -24,10 +24,6 @@ const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
     switch (blog) {
       case 'MEDIUM':
         onTabClick(TabKeys.MediumPublishingProperty);
-        break;
-
-      case 'TISTORY':
-        onTabClick(TabKeys.TistoryPublishingProperty);
         break;
     }
   };
@@ -40,9 +36,7 @@ const PublishingSection = ({ onTabClick, onBlogButtonClick }: Props) => {
           <S.BlogPublishButtonList>
             {Object.values(BLOG_LIST).map((name) => {
               // 연결 여부 확인을 위한 로직 추가
-              const shouldRenderButton =
-                (name === 'TISTORY' && tistory?.isConnected) ||
-                (name === 'MEDIUM' && medium?.isConnected);
+              const shouldRenderButton = name === 'MEDIUM' && medium?.isConnected;
 
               // 연결이 확인되지 않으면, 버튼을 렌더링하지 않는다.
               if (!shouldRenderButton) {

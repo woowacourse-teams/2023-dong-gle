@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 
 const MyPage = () => {
-  const { isLoading, name, tistory, medium, notion } = useMember();
+  const { isLoading, name, medium, notion } = useMember();
   const { goSpacePage } = usePageNavigate();
 
   if (isLoading)
@@ -22,7 +22,7 @@ const MyPage = () => {
       </S.SpinnerContainer>
     );
 
-  if (!name || !tistory || !medium || !notion) return null;
+  if (!name || !medium || !notion) return null;
 
   return (
     <S.Section>
@@ -40,7 +40,7 @@ const MyPage = () => {
           <>
             <Profile name={name} />
             <S.ContentContainer>
-              <ConnectionSection tistory={tistory} medium={medium} notion={notion} />
+              <ConnectionSection medium={medium} notion={notion} />
             </S.ContentContainer>
           </>
         ) : (

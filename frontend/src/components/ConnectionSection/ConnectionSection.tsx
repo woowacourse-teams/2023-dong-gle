@@ -1,4 +1,4 @@
-import { MediumLogoIcon, NotionIcon, TistoryLogoIcon } from 'assets/icons';
+import { MediumLogoIcon, NotionIcon } from 'assets/icons';
 import Button from 'components/@common/Button/Button';
 import Input from 'components/@common/Input/Input';
 import { ConnectionPlatforms } from 'constants/components/myPage';
@@ -10,12 +10,11 @@ import { useConnect } from './useConnect';
 import { MAX_WIDTH } from 'constants/style';
 
 type Props = {
-  tistory: TistoryConnection;
   medium: MediumConnection;
   notion: NotionConnection;
 };
 
-const ConnectionSection = ({ tistory, medium, notion }: Props) => {
+const ConnectionSection = ({ medium, notion }: Props) => {
   const { inputRef, escapeInput, isInputOpen, openInput, resetInput, isError, setIsError } =
     useUncontrolledInput();
   const { requestStoreMediumInfo, redirect, disconnect } = useConnect();
@@ -41,30 +40,6 @@ const ConnectionSection = ({ tistory, medium, notion }: Props) => {
       <S.ConnectionContainer>
         <S.ContentContainerTitle>블로그와 연결하기</S.ContentContainerTitle>
         <S.ConnectionList>
-          <S.ConnectionItem>
-            <S.IconContainer>
-              <TistoryLogoIcon width={40} height={40} />
-              <S.PlatformTitle>티스토리</S.PlatformTitle>
-            </S.IconContainer>
-            {tistory.isConnected ? (
-              <Button
-                size='small'
-                onClick={() => disconnect(ConnectionPlatforms.tistory)}
-                aria-label='티스토리 연결 해제하기'
-              >
-                해제하기
-              </Button>
-            ) : (
-              <Button
-                variant='secondary'
-                size='small'
-                onClick={() => redirect(ConnectionPlatforms.tistory)}
-                aria-label='티스토리 연결하기'
-              >
-                연결하기
-              </Button>
-            )}
-          </S.ConnectionItem>
           <S.ConnectionItem>
             <S.IconContainer>
               <MediumLogoIcon width={40} height={40} />

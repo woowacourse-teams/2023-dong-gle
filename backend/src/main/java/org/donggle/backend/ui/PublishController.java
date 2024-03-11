@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublishController {
     private final PublishFacadeService blogService;
 
-    @PostMapping("/tistory")
-    public ResponseEntity<Void> publishToTistory(
-            @AuthenticationPrincipal final Long memberId,
-            @PathVariable final Long writingId,
-            @Valid @RequestBody final PublishRequest request
-    ) {
-        blogService.publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(request));
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/tistory")
+//    public ResponseEntity<Void> publishToTistory(
+//            @AuthenticationPrincipal final Long memberId,
+//            @PathVariable final Long writingId,
+//            @Valid @RequestBody final PublishRequest request
+//    ) {
+//        blogService.publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(request));
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping("/medium")
     public ResponseEntity<Void> publishToMedium(

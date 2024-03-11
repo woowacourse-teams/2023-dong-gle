@@ -5,7 +5,6 @@ import org.donggle.backend.application.service.request.OAuthAccessTokenRequest;
 import org.donggle.backend.application.service.request.TokenAddRequest;
 import org.donggle.backend.infrastructure.client.medium.MediumConnectionClient;
 import org.donggle.backend.infrastructure.client.notion.NotionConnectionClient;
-import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
 import org.donggle.backend.ui.common.AuthenticationPrincipal;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,38 +20,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/connections")
 public class ConnectionController {
-    private final TistoryConnectionClient tistoryConnectService;
+//    private final TistoryConnectionClient tistoryConnectService;
     private final NotionConnectionClient notionConnectionService;
     private final MediumConnectionClient mediumConnectionClient;
 
-    @GetMapping("/tistory/redirect")
-    public ResponseEntity<Void> connectionsRedirectTistory(
-            @RequestParam final String redirect_uri
-    ) {
-        final String redirectUri = tistoryConnectService.createAuthorizeRedirectUri(redirect_uri);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, redirectUri)
-                .build();
-    }
+//    @GetMapping("/tistory/redirect")
+//    public ResponseEntity<Void> connectionsRedirectTistory(
+//            @RequestParam final String redirect_uri
+//    ) {
+//        final String redirectUri = tistoryConnectService.createAuthorizeRedirectUri(redirect_uri);
+//        return ResponseEntity
+//                .status(HttpStatus.FOUND)
+//                .header(HttpHeaders.LOCATION, redirectUri)
+//                .build();
+//    }
 
-    @PostMapping("/tistory")
-    public ResponseEntity<Void> connectionsAddTistory(
-            @AuthenticationPrincipal final Long memberId,
-            @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
-    ) {
-        tistoryConnectService.saveAccessToken(memberId, oAuthAccessTokenRequest);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/tistory")
+//    public ResponseEntity<Void> connectionsAddTistory(
+//            @AuthenticationPrincipal final Long memberId,
+//            @RequestBody final OAuthAccessTokenRequest oAuthAccessTokenRequest
+//    ) {
+//        tistoryConnectService.saveAccessToken(memberId, oAuthAccessTokenRequest);
+//        return ResponseEntity.ok().build();
+//    }
 
-    @PostMapping("/tistory/disconnect")
-    public ResponseEntity<Void> connectionsDisconnectTistory(
-            @AuthenticationPrincipal final Long memberId
-    ) {
-        tistoryConnectService.deleteAccessToken(memberId);
-        return ResponseEntity.ok().build();
-    }
-
+//    @PostMapping("/tistory/disconnect")
+//    public ResponseEntity<Void> connectionsDisconnectTistory(
+//            @AuthenticationPrincipal final Long memberId
+//    ) {
+//        tistoryConnectService.deleteAccessToken(memberId);
+//        return ResponseEntity.ok().build();
+//    }
+//
     @GetMapping("/notion/redirect")
     public ResponseEntity<Void> connectionsRedirectNotion(
             @RequestParam final String redirect_uri

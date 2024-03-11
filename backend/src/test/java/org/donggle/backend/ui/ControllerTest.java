@@ -12,8 +12,8 @@ import org.donggle.backend.application.service.writing.WritingFacadeService;
 import org.donggle.backend.domain.auth.JwtTokenProvider;
 import org.donggle.backend.infrastructure.client.medium.MediumConnectionClient;
 import org.donggle.backend.infrastructure.client.notion.NotionConnectionClient;
-import org.donggle.backend.infrastructure.client.tistory.TistoryApiClient;
-import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
+//import org.donggle.backend.infrastructure.client.tistory.TistoryApiClient;
+//import org.donggle.backend.infrastructure.client.tistory.TistoryConnectionClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({
         AuthController.class,
-        BlogController.class,
+//        BlogController.class,
         CategoryController.class,
         ConnectionController.class,
         MemberController.class,
@@ -42,12 +42,12 @@ public abstract class ControllerTest {
     protected JwtTokenProvider jwtTokenProvider;
     @MockBean
     protected TokenRepository tokenRepository;
-    @MockBean
-    protected TistoryApiClient tistoryApiService;
+//    @MockBean
+//    protected TistoryApiClient tistoryApiService;
     @MockBean
     protected CategoryService categoryService;
-    @MockBean
-    protected TistoryConnectionClient tistoryConnectService;
+//    @MockBean
+//    protected TistoryConnectionClient tistoryConnectService;
     @MockBean
     protected NotionConnectionClient notionConnectionService;
     @MockBean

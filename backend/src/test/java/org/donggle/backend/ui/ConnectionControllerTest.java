@@ -17,68 +17,68 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ConnectionControllerTest extends ControllerTest {
-    @Test
-    @DisplayName("tistory의 RedirectUri를 정상적으로 반한했을때 302를 반환한다.")
-    void connectionsRedirectTistory() throws Exception {
-        //given
-        final String redirectUri = "redirect_uri";
-        final String serviceRedirectUri = "https://donggle.blog";
+//    @Test
+//    @DisplayName("tistory의 RedirectUri를 정상적으로 반한했을때 302를 반환한다.")
+//    void connectionsRedirectTistory() throws Exception {
+//        //given
+//        final String redirectUri = "redirect_uri";
+//        final String serviceRedirectUri = "https://donggle.blog";
+//
+//        given(tistoryConnectService.createAuthorizeRedirectUri(redirectUri)).willReturn(serviceRedirectUri);
+//
+//        //when
+//        //then
+//        mockMvc.perform(
+//                        get("/connections/tistory/redirect")
+//                                .param("redirect_uri", redirectUri)
+//                )
+//                .andExpect(status().isFound())
+//                .andExpect(header().string(HttpHeaders.LOCATION, serviceRedirectUri));
+//    }
 
-        given(tistoryConnectService.createAuthorizeRedirectUri(redirectUri)).willReturn(serviceRedirectUri);
-
-        //when
-        //then
-        mockMvc.perform(
-                        get("/connections/tistory/redirect")
-                                .param("redirect_uri", redirectUri)
-                )
-                .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, serviceRedirectUri));
-    }
-
-    @Test
-    @DisplayName("tistory의 token을 정상적으로 받았을 때 200을 반환한다.")
-    void connectionsAddTistory() throws Exception {
-        //given
-        final Long memberId = 1L;
-        final String redirectUri = "redirect_uri";
-        final String code = "code";
-        final String accessToken = JwtSupporter.generateToken(memberId);
-        final OAuthAccessTokenRequest oAuthAccessTokenRequest = new OAuthAccessTokenRequest(redirectUri, code);
-
-        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
-        willDoNothing().given(tistoryConnectService).saveAccessToken(memberId, oAuthAccessTokenRequest);
-
-        //when
-        //then
-        mockMvc.perform(
-                        post("/connections/tistory")
-                                .contentType(APPLICATION_JSON)
-                                .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(objectMapper.writeValueAsString(oAuthAccessTokenRequest))
-                )
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("tistory의 token을 정상적으로 삭제했을 때 200을 반환한다.")
-    void connectionsDisconnectTistory() throws Exception {
-        //given
-        final Long memberId = 1L;
-        final String accessToken = JwtSupporter.generateToken(memberId);
-
-        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
-        willDoNothing().given(tistoryConnectService).deleteAccessToken(memberId);
-
-        //when
-        //then
-        mockMvc.perform(
-                        post("/connections/tistory/disconnect")
-                                .contentType(APPLICATION_JSON)
-                                .header(AUTHORIZATION, "Bearer " + accessToken)
-                )
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("tistory의 token을 정상적으로 받았을 때 200을 반환한다.")
+//    void connectionsAddTistory() throws Exception {
+//        //given
+//        final Long memberId = 1L;
+//        final String redirectUri = "redirect_uri";
+//        final String code = "code";
+//        final String accessToken = JwtSupporter.generateToken(memberId);
+//        final OAuthAccessTokenRequest oAuthAccessTokenRequest = new OAuthAccessTokenRequest(redirectUri, code);
+//
+//        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
+//        willDoNothing().given(tistoryConnectService).saveAccessToken(memberId, oAuthAccessTokenRequest);
+//
+//        //when
+//        //then
+//        mockMvc.perform(
+//                        post("/connections/tistory")
+//                                .contentType(APPLICATION_JSON)
+//                                .header(AUTHORIZATION, "Bearer " + accessToken)
+//                                .content(objectMapper.writeValueAsString(oAuthAccessTokenRequest))
+//                )
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @DisplayName("tistory의 token을 정상적으로 삭제했을 때 200을 반환한다.")
+//    void connectionsDisconnectTistory() throws Exception {
+//        //given
+//        final Long memberId = 1L;
+//        final String accessToken = JwtSupporter.generateToken(memberId);
+//
+//        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
+//        willDoNothing().given(tistoryConnectService).deleteAccessToken(memberId);
+//
+//        //when
+//        //then
+//        mockMvc.perform(
+//                        post("/connections/tistory/disconnect")
+//                                .contentType(APPLICATION_JSON)
+//                                .header(AUTHORIZATION, "Bearer " + accessToken)
+//                )
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     @DisplayName("notion의 RedirectUri를 정상적으로 반한했을때 302를 반환한다.")

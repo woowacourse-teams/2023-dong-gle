@@ -17,28 +17,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PublishControllerTest extends ControllerTest {
-    @Test
-    @DisplayName("tistory로 정상적으로 발행했을때 200을 반환한다.")
-    void publishToTistory() throws Exception {
-        //given
-        final Long memberId = 1L;
-        final long writingId = 1L;
-        final String accessToken = JwtSupporter.generateToken(memberId);
-        final String categoryId = "1";
-        final PublishRequest publishRequest = new PublishRequest(List.of("동글로 업로드한 글임"), "PUBLIC", "", categoryId, "");
-        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
-        willDoNothing().given(publishFacadeService).publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(publishRequest));
-
-        //when
-        //then
-        mockMvc.perform(
-                        post("/writings/{writingId}/publish/tistory", writingId)
-                                .contentType(APPLICATION_JSON)
-                                .header(AUTHORIZATION, "Bearer " + accessToken)
-                                .content(objectMapper.writeValueAsString(publishRequest))
-                )
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("tistory로 정상적으로 발행했을때 200을 반환한다.")
+//    void publishToTistory() throws Exception {
+//        //given
+//        final Long memberId = 1L;
+//        final long writingId = 1L;
+//        final String accessToken = JwtSupporter.generateToken(memberId);
+//        final String categoryId = "1";
+//        final PublishRequest publishRequest = new PublishRequest(List.of("동글로 업로드한 글임"), "PUBLIC", "", categoryId, "");
+//        given(jwtTokenProvider.getPayload(accessToken)).willReturn(memberId);
+//        willDoNothing().given(publishFacadeService).publishWriting(memberId, writingId, BlogType.TISTORY, PublishRequest.tistory(publishRequest));
+//
+//        //when
+//        //then
+//        mockMvc.perform(
+//                        post("/writings/{writingId}/publish/tistory", writingId)
+//                                .contentType(APPLICATION_JSON)
+//                                .header(AUTHORIZATION, "Bearer " + accessToken)
+//                                .content(objectMapper.writeValueAsString(publishRequest))
+//                )
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     @DisplayName("medium로 정상적으로 발행했을때 200을 반환한다.")

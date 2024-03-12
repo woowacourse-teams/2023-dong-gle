@@ -9,6 +9,8 @@ import GlobalStyle from '../src/styles/GlobalStyle';
 import { theme } from '../src/styles/theme';
 import ToastProvider from '../src/contexts/ToastProvider';
 import ToastContainer from '../src/components/@common/Toast/ToastContainer';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '../src/App';
 
 // msw init
 initialize();
@@ -33,13 +35,15 @@ export default preview;
 
 export const decorators = [
   (Story) => (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <ToastProvider>
-        <Story />
-        <ToastContainer />
-      </ToastProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <ToastProvider>
+          <Story />
+          <ToastContainer />
+        </ToastProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   ),
   withRouter,
 ];

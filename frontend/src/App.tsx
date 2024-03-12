@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 import ErrorPage from 'pages/ErrorPage/ErrorPage';
 import { useMediaQuery } from 'hooks/@common/useMediaQuery';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       useErrorBoundary: true,

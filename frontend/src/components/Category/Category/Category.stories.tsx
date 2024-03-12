@@ -3,7 +3,7 @@ import Category from './Category';
 import { StoryContainer, StoryItemContainer } from 'styles/storybook';
 
 const meta: Meta<typeof Category> = {
-  title: 'Category',
+  title: 'category/Category',
   component: Category,
   args: {
     categoryName: '프로젝트 기록',

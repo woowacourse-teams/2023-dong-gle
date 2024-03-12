@@ -43,14 +43,14 @@ describe('휴지통 페이지', () => {
   describe('글 복구 테스트', () => {
     it('글을 복구 한다.', () => {
       cy.findByLabelText('휴지통 글 너 버려진거야2 선택').click();
-      cy.findByText('글 복구').click().wait(1000);
+      cy.findByText('복구').click().wait(1000);
 
       cy.findByText('너 버려진거야2').should('not.exist');
     });
 
     it('글 복구 시 "글이 복구되었습니다." toast가 보인다.', () => {
       cy.findByLabelText('휴지통 글 너 버려진거야2 선택').click();
-      cy.findByText('글 복구').click().wait(1000);
+      cy.findByText('복구').click().wait(1000);
 
       cy.findByText('글이 복구되었습니다.').should('be.visible');
     });
@@ -59,7 +59,7 @@ describe('휴지통 페이지', () => {
       cy.findByLabelText('기본 카테고리 왼쪽 사이드바에서 열기').click().wait(1000);
 
       cy.findByLabelText('휴지통 글 너 버려진거야2 선택').click();
-      cy.findByText('글 복구').click().wait(1000);
+      cy.findByText('복구').click().wait(1000);
 
       cy.findByText('복구된 글 2').should('be.visible');
     });

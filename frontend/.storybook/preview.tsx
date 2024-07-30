@@ -13,7 +13,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../src/App';
 
 // msw init
-initialize();
+initialize({
+  serviceWorker: {
+    url: './mockServiceWorker.js',
+  },
+});
 
 const preview: Preview = {
   parameters: {
